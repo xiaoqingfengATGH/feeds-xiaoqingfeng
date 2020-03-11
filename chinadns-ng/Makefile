@@ -1,12 +1,11 @@
 include $(TOPDIR)/rules.mk
 
 PKG_NAME:=chinadns-ng
-PKG_VERSION:=SNAPSHOT-2020.03.03
-PKG_RELEASE:=2
+PKG_VERSION:=1.0-beta.17
+PKG_RELEASE:=1
 
 PKG_SOURCE_PROTO:=git
 PKG_SOURCE_URL:=https://github.com/zfl9/chinadns-ng.git
-#PKG_SOURCE_VERSION:=3fd72098e58fa2970e39f36ce64fe2a14179eab9
 PKG_SOURCE_VERSION:=f7f44cf26bd3ecc8fd86992267da2a842c7aa9d7
 PKG_SOURCE_SUBDIR:=$(PKG_NAME)-$(PKG_VERSION)-$(PKG_SOURCE_VERSION)
 PKG_SOURCE:=$(PKG_NAME)-$(PKG_VERSION)-$(PKG_SOURCE_VERSION).tar.gz
@@ -53,6 +52,7 @@ define Package/chinadns-ng/install
 	$(INSTALL_DATA) files/chnroute6.txt $(1)/etc/chinadns-ng
 	$(INSTALL_DATA) files/gfwlist.txt $(1)/etc/chinadns-ng
 	$(INSTALL_DATA) files/chinalist.txt $(1)/etc/chinadns-ng
+	$(INSTALL_BIN) files/updateChinadns-ngConfig.sh $(1)/etc/chinadns-ng
 endef
 
 define Package/chinadns-ng/postrm

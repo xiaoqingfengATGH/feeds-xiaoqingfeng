@@ -7,8 +7,8 @@ language: ""
 rlimit_nofile: 0
 web_session_ttl: 720
 dns:
-  bind_host: ##ROUTER_IP##
-  port: 53
+  bind_host: 127.0.0.1
+  port: 7913
   statistics_interval: 1
   querylog_enabled: false
   querylog_interval: 1
@@ -32,7 +32,7 @@ dns:
   safebrowsing_block_host: ""
   cache_size: 4194304
   upstream_dns:
-  - 127.0.0.1
+  - 127.0.0.1:5053
   filtering_enabled: true
   filters_update_interval: 24
   parental_sensitivity: 13

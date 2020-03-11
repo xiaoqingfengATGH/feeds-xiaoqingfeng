@@ -11,6 +11,8 @@
   + chinadns-ng作为AdGuardHome的上游DNS，解决DNS污染，实现国内域名国内解析，国外域名（受干扰域名）国外解析。
   + smartdns作为chinadns-ng的上游DNS，维护国内及国外两组DNS服务器，对同一个域名解析，通过对多个DNS返回结果进行测速，保证返回最快响应IP。
 
+  AdGuardHome监听路由127.0.0.1:7913，上游-> chinadns-ng 127.0.0.1:5053，chinadns-ng 国内DNS指向 Smart DNS 主DNS 0.0.0.0:6053，chinadns-ng 可信DNS指向 Smart DNS 第二DNS 0.0.0.0:7053
+  
   去广告套件三个组件已经全部升级最新版本。
   
 + 提供基于Web的百度网盘下载工具。

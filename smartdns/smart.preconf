@@ -1,6 +1,6 @@
-
-config smartdns
-	option server_name 'smartdns'
+config 'smartdns'
+	option 'enabled' '1'
+	option server_name 'openwrtDNS'
 	option port '6053'
 	option tcp_server '1'
 	option dualstack_ip_selection '0'
@@ -23,7 +23,6 @@ config smartdns
 	option rr_ttl_max '600'
 	option redirect 'none'
 	option cache_size '4096'
-	option enabled '0'
 	list old_redirect 'none'
 	list old_port '6053'
 	list old_enabled '1'
@@ -34,7 +33,7 @@ config server
 	option blacklist_ip '0'
 	option type 'https'
 	option ip 'https://dns.google/dns-query'
-	option enabled '0'
+	option enabled '1'
 	option addition_arg '-exclude-default-group'
 
 config server
@@ -56,7 +55,27 @@ config server
 	option addition_arg '-exclude-default-group'
 
 config server
-	option enabled '1'
+        option enabled '0'
+        option name 'Google DNS #1 TLS'
+        option port '853'
+        option type 'tls'
+        option server_group 'overseas'
+        option blacklist_ip '0'
+        option ip '8.8.8.8'
+        option addition_arg '-exclude-default-group'
+
+config server
+        option enabled '0'
+        option name 'Quad9 #2 TLS'
+        option ip '149.112.112.112'
+        option port '853'
+        option type 'tls'
+        option server_group 'overseas'
+        option blacklist_ip '0'
+        option addition_arg '-exclude-default-group'
+
+config server
+	option enabled '0'
 	option type 'udp'
 	option name 'OpenDNS #1'
 	option ip '208.67.222.222'
@@ -119,24 +138,3 @@ config server
 	option ip '223.5.5.5'
 	option server_group 'mainland'
 	option blacklist_ip '0'
-
-config server
-	option enabled '1'
-	option name 'Google DNS #1 TLS'
-	option port '853'
-	option type 'tls'
-	option server_group 'overseas'
-	option blacklist_ip '0'
-	option ip '8.8.8.8'
-	option addition_arg '-exclude-default-group'
-
-config server
-	option enabled '1'
-	option name 'Quad9 #2 TLS'
-	option ip '149.112.112.112'
-	option port '853'
-	option type 'tls'
-	option server_group 'overseas'
-	option blacklist_ip '0'
-	option addition_arg '-exclude-default-group'
-

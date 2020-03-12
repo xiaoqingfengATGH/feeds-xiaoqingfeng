@@ -57,6 +57,7 @@ define Package/smartdns/install
 	$(INSTALL_CONF) $(PKG_BUILD_DIR)/package/openwrt/custom.conf $(1)/etc/smartdns/custom.conf
 	#$(INSTALL_CONF) $(PKG_BUILD_DIR)/package/openwrt/files/etc/config/smartdns $(1)/etc/config/smartdns
 	$(INSTALL_CONF) smart.preconf $(1)/etc/config/smartdns
+	$(INSTALL_CONF) custom.conf $(1)/etc/smartdns/custom.conf
 endef
 
 $(eval $(call BuildPackage,smartdns))

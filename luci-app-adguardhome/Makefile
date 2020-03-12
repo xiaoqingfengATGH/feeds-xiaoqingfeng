@@ -36,7 +36,7 @@ define Package/luci-app-adguardhome/install
 	cp -pR ./luasrc/* $(1)/usr/lib/lua/luci
 	$(INSTALL_DIR) $(1)/etc/init.d
 	$(INSTALL_BIN) ./root/etc/init.d/AdGuardHome $(1)/etc/init.d/
-	$(INSTALL_BIN) ./root/etc/AdGuardHome/updateAdGuardHomeIP.sh $(1)/etc/AdGuardHome/
+	$(INSTALL_BIN) ./root/etc/AdGuardHome/initConfig.sh $(1)/etc/AdGuardHome/
 	$(INSTALL_BIN) ./root/etc/AdGuardHome/startAdGuardHome.sh $(1)/etc/AdGuardHome/
 	$(INSTALL_DATA) ./root/etc/AdGuardHome/AdGuardHome.yaml.template $(1)/etc/AdGuardHome/
 	$(INSTALL_DIR) $(1)/etc/config

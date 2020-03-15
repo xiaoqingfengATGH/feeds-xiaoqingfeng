@@ -36,7 +36,7 @@ Block ISP ads on NXDOMAIN result (like 114so).
 endef
 
 define Package/$(PKG_NAME)/install
-	$(INSTALL_DIR) $(1)/etc/dnsmasq-china-list $(1)/etc/dnsmasq-china-list/template $(1)/etc/dnsmasq.d
+	$(INSTALL_DIR) $(1)/etc/dnsmasq-china-list $(1)/etc/dnsmasq-china-list/template $(1)/etc/dnsmasq.d $(1)/etc/init.d
 	$(INSTALL_BIN) files/etc/init.d/dnsmasq-china-list $(1)/etc/init.d
 	$(INSTALL_BIN) files/etc/dnsmasq-china-list/install.sh $(1)/etc/dnsmasq-china-list
 	$(INSTALL_BIN) files/etc/dnsmasq-china-list/clearConf.sh $(1)/etc/dnsmasq-china-list

@@ -7,12 +7,12 @@ language: ""
 rlimit_nofile: 0
 web_session_ttl: 720
 dns:
-  bind_host: 127.0.0.1
-  port: 7913
+  bind_host: 0.0.0.0
+  port: 53
   statistics_interval: 1
   querylog_enabled: false
   querylog_interval: 1
-  querylog_memsize: 1000
+  querylog_memsize: 0
   protection_enabled: true
   blocking_mode: nxdomain
   blocking_ipv4: ""
@@ -25,14 +25,18 @@ dns:
   - 1.1.1.1
   all_servers: false
   edns_client_subnet: false
-  allowed_clients: []
+  allowed_clients:
+  - 10.0.0.0/8
+  - 172.16.0.0/12
+  - 192.168.0.0/16
+  - 127.0.0.1
   disallowed_clients: []
   blocked_hosts: []
-  parental_block_host: ""
-  safebrowsing_block_host: ""
+  parental_block_host: family-block.dns.adguard.com
+  safebrowsing_block_host: standard-block.dns.adguard.com
   cache_size: 4194304
   upstream_dns:
-  - 127.0.0.1:5053
+  - 127.0.0.1:54
   filtering_enabled: true
   filters_update_interval: 24
   parental_sensitivity: 13

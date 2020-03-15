@@ -23,15 +23,3 @@ reload()
 	stop
 	start
 }
-
-enable()
-{
-	/etc/dnsmasq-china-list/enable.sh
-	echo "[Service]dnsmasq-china-list enabled."
-}
-
-disable()
-{
-	/etc/dnsmasq-china-list/disable.sh
-	echo "[Service]dnsmasq-china-list disabled."
-}

@@ -54,6 +54,7 @@ endef
 
 define Package/$(PKG_NAME)/postinst
 #!/bin/sh
+/etc/init.d/dnsmasq-china-list enable
 /etc/dnsmasq-china-list/enable.sh
 exit 0
 endef

@@ -1,4 +1,4 @@
-# openwrt-adguardhome
+# 基于openwrt-adguardhome修改版
 
 [![Last commit](https://img.shields.io/github/last-commit/KFERMercer/openwrt-adguardhome)](https://github.com/KFERMercer/openwrt-adguardhome/commits/master)
 

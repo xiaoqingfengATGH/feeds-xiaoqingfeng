@@ -14,7 +14,7 @@ dns:
   querylog_interval: 1
   querylog_memsize: 0
   protection_enabled: true
-  blocking_mode: nxdomain
+  blocking_mode: default
   blocking_ipv4: ""
   blocking_ipv6: ""
   blocked_response_ttl: 10

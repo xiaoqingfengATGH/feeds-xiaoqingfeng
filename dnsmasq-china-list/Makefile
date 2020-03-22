@@ -6,7 +6,7 @@ include $(TOPDIR)/rules.mk
 
 PKG_NAME:=dnsmasq-china-list
 PKG_VERSION:=1.0
-PKG_RELEASE:=1
+PKG_RELEASE:=2
 PKG_DATE:=20200314
 PKG_BUILD_DIR:=$(BUILD_DIR)/$(PKG_NAME)
 
@@ -20,7 +20,7 @@ define Package/$(PKG_NAME)
   SECTION:=net
   CATEGORY:=Network
   TITLE:=chinalist for dnsmasq
-  DEPENDS:=+dnsmasq-full
+  DEPENDS:=+dnsmasq-full +bash
   PKGARCH:=all
   URL:=https://github.com/felixonmars/dnsmasq-china-list
 endef

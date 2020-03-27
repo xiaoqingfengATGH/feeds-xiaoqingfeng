@@ -1,4 +1,4 @@
-﻿/**
+/**
  *  Material is a clean HTML5 theme for LuCI. It is based on luci-theme-bootstrap and MUI
  *
  *  luci-theme-material
@@ -165,7 +165,6 @@ input,
     vertical-align: baseline;
     border-radius: 3px;
 }
-
 
 select:not([multiple="multiple"]):focus,
 input:focus {
@@ -551,7 +550,10 @@ color: #8965e0!important;
     content: "\e00a";
     color: #f3a4b5!important;
 }
-
+.main > .main-left > .nav > .slide > a[data-title="Docker"]:before {
+    content: "\e025";
+    color: #66CC00!important;
+}
 .main > .main-left > .nav > .slide > a[data-title="Bandwidth Monitor"]:before {
     content: "\e00f";
 color: #2dce89!important;
@@ -648,7 +650,7 @@ color: #FF99CC;
 }
 
 .main > .main-left > .nav > .slide > .slide-menu > .active {
-    background-color: #154360;
+   
 }
 
 .main > .main-left > .nav > .slide > .slide-menu > li > a {
@@ -671,21 +673,22 @@ color: #FF99CC;
 }
 
 .main > .main-left > .nav > .slide > .slide-menu > .active > a {
- /* border-left: #ffffff 10px solid; */
-  color: #FF9933;
+ /* border-left: #ffffff 15px solid; */
+  color: #FFFF00;
+
 
 }
 
 .main > .main-left > .nav > .slide > .slide-menu > li:hover {
        /* border-left: #ffffff 3px solid; */
 	color: white;
-	background: #9933CC;
+	background: #3366CC;
 }
 
 .main > .main-left > .nav > .slide > .slide-menu > .active:hover {
    /* border-left: #ffffff 3px solid; */
 	color: white;
-	background-color: #8A2BE2;
+	background-color: #003366;
 	cursor: hand;
 }
 
@@ -847,7 +850,7 @@ fieldset > .table > .tr:nth-of-type(odd) {
 #memcache > div > div,
 #memtotal > div > div {
     height: 1.4rem !important;
-    background-color: #CCFFFF!important;
+    background-color: #44cef6!important;
 }
 
 /* fix multiple table */
@@ -875,28 +878,22 @@ td > table > tbody > tr > td,
 /* button style */
 
 .cbi-button {
-	-webkit-appearance: none;
-	text-transform: uppercase;
-	color: rgba(0, 0, 0, 0.87);
-	background-color: #F0F0F0;
-	transition: all 0.2s ease-in-out;
+cursor: pointer;
 	display: inline-block;
-	padding: 0 0.8rem;
-	border: none;
-	border-radius: 0.2rem;
-	cursor: pointer;
-	-ms-touch-action: manipulation;
-	touch-action: manipulation;
-	background-image: none;
-	text-align: center;
-	vertical-align: middle;
-	white-space: nowrap;
-	-webkit-user-select: none;
-	-moz-user-select: none;
-	-ms-user-select: none;
-	user-select: none;
-	font-size: 0.8rem;
-	width: auto !important;
+	background-color: #e6e6e6;
+	background-repeat: no-repeat;	
+	padding: 5px 14px 6px;
+	color: #333;
+	font-size: 14px;
+	line-height: normal;
+	border: 1px solid #ccc;
+	border-bottom-color: #bbb;
+	-webkit-border-radius: 4px;
+	-moz-border-radius: 4px;
+	border-radius: 4px;
+	-webkit-box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.2), 0 1px 2px rgba(0, 0, 0, 0.05);
+	-moz-box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.2), 0 1px 2px rgba(0, 0, 0, 0.05);
+	box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.2), 0 1px 2px rgba(0, 0, 0, 0.05);
 }
 
 .cbi-button:hover,

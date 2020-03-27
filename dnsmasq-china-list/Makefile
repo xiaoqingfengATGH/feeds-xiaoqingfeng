@@ -20,7 +20,7 @@ define Package/$(PKG_NAME)
   SECTION:=net
   CATEGORY:=Network
   TITLE:=chinalist for dnsmasq
-  DEPENDS:=+dnsmasq-full +bash
+  DEPENDS:=+dnsmasq-full +bash +wget
   PKGARCH:=all
   URL:=https://github.com/felixonmars/dnsmasq-china-list
 endef

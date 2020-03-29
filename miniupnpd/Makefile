@@ -8,12 +8,12 @@
 include $(TOPDIR)/rules.mk
 
 PKG_NAME:=miniupnpd
-PKG_VERSION:=2.1.20190408
-PKG_RELEASE:=2
+PKG_VERSION:=2.1.20191006
+PKG_RELEASE:=5
 
 PKG_SOURCE_URL:=https://miniupnp.tuxfamily.org/files
 PKG_SOURCE:=$(PKG_NAME)-$(PKG_VERSION).tar.gz
-PKG_HASH:=4175d588f600e2877503c781c5d75320dfce572669fcab7604434b07ec5c0d5d
+PKG_HASH:=218fad7af31f3c22fb4c9db28a55a2a8b5067d41f5b38f52008a057a00d2206d
 
 PKG_LICENSE:=BSD-3-Clause
 PKG_LICENSE_FILES:=LICENSE
@@ -25,7 +25,7 @@ include $(INCLUDE_DIR)/version.mk
 define Package/miniupnpd
   SECTION:=net
   CATEGORY:=Network
-  DEPENDS:=+iptables +libip4tc +IPV6:libip6tc +IPV6:ip6tables +libuuid
+  DEPENDS:=+iptables +libip4tc +libuuid
   TITLE:=Lightweight UPnP IGD, NAT-PMP & PCP daemon
   SUBMENU:=Firewall
   URL:=https://miniupnp.tuxfamily.org/
@@ -45,10 +45,8 @@ TARGET_LDFLAGS += -Wl,--gc-sections,--as-needed
 
 MAKE_FLAGS += \
 	TARGET_OPENWRT=1 TEST=0 LIBS="" \
-	CC="$(TARGET_CC) -DIPTABLES_143 -lip4tc -luuid \
-		$(if $(CONFIG_IPV6),-lip6tc)" \
-	CONFIG_OPTIONS="--portinuse --leasefile --igd2 \
-		$(if $(CONFIG_IPV6),--ipv6)" \
+	CC="$(TARGET_CC) -DIPTABLES_143 -lip4tc -luuid" \
+	CONFIG_OPTIONS="--portinuse --leasefile --igd2" \
 	-f Makefile.linux miniupnpd
 
 define Package/miniupnpd/install

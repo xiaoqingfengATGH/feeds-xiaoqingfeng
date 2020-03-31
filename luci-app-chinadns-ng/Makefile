@@ -2,7 +2,7 @@ include $(TOPDIR)/rules.mk
 
 PKG_NAME:=luci-app-chinadns-ng
 PKG_VERSION:=1.0
-PKG_RELEASE:=3
+PKG_RELEASE:=3-xiaoqingfengMod
 
 LUCI_TITLE:=LuCI for chinadns-ng
 LUCI_DESCRIPTION:=Provides Luci for chinadnsng

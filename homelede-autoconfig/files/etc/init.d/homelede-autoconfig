@@ -1,0 +1,31 @@
+#!/bin/sh /etc/rc.common
+#
+# Copyright (C) 2018-2020 xiaoqingfeng(Richard) <xiaoqingfengatgm@gmail.com>.
+#
+
+START=13
+NAME=homelede-autoconfig
+
+DOCKER_CONFIG="[ -x /etc/init.d/dockerd ] && /etc/init.d/dockerd restart"
+SMARTDNS_CONFIG="0 0 0/6 * * ? [ -x /etc/init.d/smartdns ] && /etc/init.d/smartdns restart > /dev/null 2>&1 &"
+
+start()
+{	
+	# Schedule auto reboot for smartdns to bypass secondary dns stop work issue
+	sed -i '/^.*smartdns.*/d' /etc/crontabs/root >/dev/null 2>&1
+	echo $SMARTDNS_CONFIG >>/etc/crontabs/root
+	
+	# Force dockerd to restart to bypass docker does not create iptable rules issue
+	sed -i '/^\[ -x \/etc\/init\.d\/dockerd.*/d' /etc/rc.local >/dev/null 2>&1
+	sed -i '/exit 0/i '"$DOCKER_CONFIG" /etc/rc.local
+}
+
+stop()
+{
+}
+
+reload()
+{
+	stop
+	start
+}

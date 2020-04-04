@@ -19,9 +19,9 @@ fi
 
 # Force dockerd to restart to bypass docker does not create iptable rules issue
 if [ -x /etc/init.d/dockerd ]; then
-echo Added docker restart script.
 #sed -i '/^\[ -x \/etc\/init\.d\/dockerd.*/d' /etc/rc.local >/dev/null 2>&1
 #sed -i '/exit 0/i '"$DOCKER_CONFIG" /etc/rc.local
+echo Added docker restart script.
 fi
 }
 

@@ -34,7 +34,7 @@ dns:
   blocked_hosts: []
   parental_block_host: family-block.dns.adguard.com
   safebrowsing_block_host: standard-block.dns.adguard.com
-  cache_size: 4194304
+  cache_size: 0
   upstream_dns:
   - 127.0.0.1:54
   filtering_enabled: true

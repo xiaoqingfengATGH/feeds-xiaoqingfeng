@@ -8,10 +8,10 @@
 include $(TOPDIR)/rules.mk
 
 PKG_NAME:=mwan3
-PKG_VERSION:=2.8.1
-PKG_RELEASE:=1
+PKG_VERSION:=2.8.3
+PKG_RELEASE:=2
 PKG_MAINTAINER:=Florian Eckert <fe@dev.tdt.de>
-PKG_LICENSE:=GPLv2
+PKG_LICENSE:=GPL-2.0
 
 include $(INCLUDE_DIR)/package.mk
 
@@ -50,7 +50,6 @@ define Package/mwan3/postinst
 if [ -z "$${IPKG_INSTROOT}" ]; then
 	/etc/init.d/rpcd restart
 fi
-chmod +x /etc/init.d/mwan3
 exit 0
 endef
 

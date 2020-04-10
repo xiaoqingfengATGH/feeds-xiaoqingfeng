@@ -6,13 +6,15 @@
 include $(TOPDIR)/rules.mk
 
 PKG_NAME:=smartdns
-PKG_VERSION:=Release30-xiaoqingfengMod
-PKG_RELEASE:=1
+PKG_VERSION:=2020.4.6
+PKG_RELEASE:=1-xiaoqingfengMod
+
+PKG_SOURCE:=$(PKG_NAME)-$(PKG_VERSION).tar.xz
+PKG_SOURCE_SUBDIR:=$(PKG_NAME)-$(PKG_VERSION)
 
 PKG_SOURCE_PROTO:=git
 PKG_SOURCE_URL:=https://www.github.com/pymumu/smartdns.git
-#PKG_SOURCE_VERSION:=982002e836e486fb4e360bc10e84e7e7197caf46
-PKG_SOURCE_VERSION:=b31792ad9b3ef8c3bf87dd0f8bae0d0a5b5c9122
+PKG_SOURCE_VERSION:=b78c9eb6feeca9121bbfe0def83e4fb0c8bbb3c9
 #PKG_MIRROR_HASH:=ae889b521ecf114660ce5597af5c361f5970a7dcb75dadf61b938ba3d2baba54
 
 PKG_MAINTAINER:=Nick Peng <pymumu@gmail.com>

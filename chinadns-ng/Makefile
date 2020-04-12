@@ -1,20 +1,21 @@
 include $(TOPDIR)/rules.mk
 
 PKG_NAME:=chinadns-ng
-PKG_VERSION:=1.0-beta.17
-PKG_RELEASE:=1-xiaoqingfengMod
+PKG_VERSION:=1.0-beta.22
+PKG_RELEASE:=3-xiaoqingfengMod
 
 PKG_SOURCE_PROTO:=git
 PKG_SOURCE_URL:=https://github.com/zfl9/chinadns-ng.git
-PKG_SOURCE_VERSION:=f7f44cf26bd3ecc8fd86992267da2a842c7aa9d7
-PKG_SOURCE_SUBDIR:=$(PKG_NAME)-$(PKG_VERSION)-$(PKG_SOURCE_VERSION)
+PKG_SOURCE_VERSION:=83fd24bc259414358134fb5015ad3495b96bb451
+
 PKG_SOURCE:=$(PKG_NAME)-$(PKG_VERSION)-$(PKG_SOURCE_VERSION).tar.gz
-PKG_BUILD_DIR:=$(BUILD_DIR)/$(PKG_NAME)/$(PKG_NAME)-$(PKG_VERSION)-$(PKG_SOURCE_VERSION)
+PKG_SOURCE_SUBDIR:=$(PKG_NAME)-$(PKG_VERSION)-$(PKG_SOURCE_VERSION)
+PKG_BUILD_DIR:=$(BUILD_DIR)/$(PKG_NAME)/$(PKG_SOURCE_SUBDIR)
 
 PKG_BUILD_PARALLEL:=1
 PKG_USE_MIPS16:=0
 
-PKG_LICENSE:=GPLv3
+PKG_LICENSE:=GPL-3.0
 PKG_LICENSE_FILES:=LICENSE
 PKG_MAINTAINER:=pexcn <i@pexcn.me>
 
@@ -53,10 +54,10 @@ define Package/chinadns-ng/install
 	$(INSTALL_DATA) files/gfwlist.txt $(1)/etc/chinadns-ng
 	$(INSTALL_DATA) files/chinalist.txt $(1)/etc/chinadns-ng
 	$(INSTALL_BIN) files/updateChinadns-ngConfig.sh $(1)/etc/chinadns-ng
-	$(INSTALL_BIN) $(PKG_BUILD_DIR)/update-chnlist.sh $(1)/etc/chinadns-ng
-	$(INSTALL_BIN) $(PKG_BUILD_DIR)/update-chnroute.sh $(1)/etc/chinadns-ng
-	$(INSTALL_BIN) $(PKG_BUILD_DIR)/update-chnroute6.sh $(1)/etc/chinadns-ng
-	$(INSTALL_BIN) $(PKG_BUILD_DIR)/update-gfwlist.sh $(1)/etc/chinadns-ng
+	$(INSTALL_BIN) files/update-chnlist.sh $(1)/etc/chinadns-ng
+	$(INSTALL_BIN) files/update-chnroute.sh $(1)/etc/chinadns-ng
+	$(INSTALL_BIN) files/update-chnroute6.sh $(1)/etc/chinadns-ng
+	$(INSTALL_BIN) files/update-gfwlist.sh $(1)/etc/chinadns-ng
 endef
 
 define Package/chinadns-ng/postrm

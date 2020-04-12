@@ -7,6 +7,7 @@ START=13
 NAME=homelede-autoconfig
 
 DOCKER_CONFIG="[ -x /etc/init.d/dockerd ] && /etc/init.d/dockerd restart"
+CGROUP_MEMORY_CONGIF="echo 1 > /sys/fs/cgroup/memory/memory.use_hierarchy"
 SMARTDNS_CONFIG="0 0 0/6 * * ? [ -x /etc/init.d/smartdns ] && /etc/init.d/smartdns restart > /dev/null 2>&1 &"
 start()
 {
@@ -21,6 +22,8 @@ fi
 if [ -x /etc/init.d/dockerd ]; then
 #sed -i '/^\[ -x \/etc\/init\.d\/dockerd.*/d' /etc/rc.local >/dev/null 2>&1
 #sed -i '/exit 0/i '"$DOCKER_CONFIG" /etc/rc.local
+sed -i '/sys\/fs\/cgroup\/memory\/memory\.use_hierarchy/d' /etc/rc.local
+sed -i '/exit 0/i '"$CGROUP_MEMORY_CONGIF" /etc/rc.local
 echo Added docker restart script.
 fi
 }

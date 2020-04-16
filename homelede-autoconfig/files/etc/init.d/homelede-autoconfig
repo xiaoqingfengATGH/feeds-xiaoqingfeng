@@ -11,20 +11,30 @@ CGROUP_MEMORY_CONGIF="echo 1 > /sys/fs/cgroup/memory/memory.use_hierarchy"
 SMARTDNS_CONFIG="0 0 0/6 * * ? [ -x /etc/init.d/smartdns ] && /etc/init.d/smartdns restart > /dev/null 2>&1 &"
 start()
 {
-# Schedule auto reboot for smartdns to bypass secondary dns stop work issue
-if [ -x /etc/init.d/smartdns ]; then
+# Schedule auto reboot for smartdns to bypass secondary dns stop working issue
 sed -i '/^.*smartdns.*/d' /etc/crontabs/root >/dev/null 2>&1
+if [ -x /etc/init.d/smartdns ]; then
 echo "$SMARTDNS_CONFIG" >>/etc/crontabs/root
 echo Added smartdns auto restart script.
 fi
 
 # Force dockerd to restart to bypass docker does not create iptable rules issue
-if [ -x /etc/init.d/dockerd ]; then
 #sed -i '/^\[ -x \/etc\/init\.d\/dockerd.*/d' /etc/rc.local >/dev/null 2>&1
+if [ -x /etc/init.d/dockerd ]; then
 #sed -i '/exit 0/i '"$DOCKER_CONFIG" /etc/rc.local
+# set cgroup memory.use_hierarchy to avoid dockerd warning
 sed -i '/sys\/fs\/cgroup\/memory\/memory\.use_hierarchy/d' /etc/rc.local
 sed -i '/exit 0/i '"$CGROUP_MEMORY_CONGIF" /etc/rc.local
 echo Added docker restart script.
+fi
+
+# Add ipsec iptable rules to allow ipsec client access router
+sed -i '/^.*--pol ipsec.*/d' /etc/firewall.user
+if [ -x /etc/init.d/ipsecvpn ]; then
+echo "iptables -I INPUT -m policy --dir in --pol ipsec --proto esp -j ACCEPT" >> /etc/firewall.user
+echo "iptables -I FORWARD -m policy --dir in --pol ipsec --proto esp -j ACCEPT" >> /etc/firewall.user
+echo "iptables -I FORWARD -m policy --dir out --pol ipsec --proto esp -j ACCEPT" >> /etc/firewall.user
+echo "iptables -I OUTPUT -m policy --dir out --pol ipsec --proto esp -j ACCEPT" >> /etc/firewall.user
 fi
 }
 

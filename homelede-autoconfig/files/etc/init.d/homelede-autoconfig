@@ -36,6 +36,12 @@ echo "iptables -I FORWARD -m policy --dir in --pol ipsec --proto esp -j ACCEPT" 
 echo "iptables -I FORWARD -m policy --dir out --pol ipsec --proto esp -j ACCEPT" >> /etc/firewall.user
 echo "iptables -I OUTPUT -m policy --dir out --pol ipsec --proto esp -j ACCEPT" >> /etc/firewall.user
 fi
+
+if [ -d /www/luci-static/infinityfreedom ]; then
+	if [ ! -r /www/luci-static/infinityfreedom/images/brand.png ]; then
+		cp /etc/brand /www/luci-static/infinityfreedom/images/brand.png >/dev/null 2>&1
+	fi
+fi
 }
 
 reload()

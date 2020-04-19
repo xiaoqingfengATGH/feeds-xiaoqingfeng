@@ -1,2 +1,0 @@
-# luci-theme-opentomcat
-

@@ -106,6 +106,7 @@ user_rules:
 - '@@||jd.com^'
 - '@@||etao.com^'
 - '@@||tongdun.net^'
+- '@@||taobao.com^'
 dhcp:
   enabled: false
   interface_name: ""

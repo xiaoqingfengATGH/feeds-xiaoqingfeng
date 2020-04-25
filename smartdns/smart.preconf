@@ -34,24 +34,16 @@ config smartdns
 config server
 	option enabled '1'
 	option type 'udp'
-	option name 'QINGHUA #1'
-	option ip '166.111.8.28'
+	option name 'DNSPOD#1'
+	option ip '119.29.29.29'
 	option server_group 'mainland'
 	option blacklist_ip '0'
-
+	
 config server
 	option enabled '1'
 	option type 'udp'
-	option name 'USTC #1'
-	option ip '202.141.160.95'
-	option server_group 'mainland'
-	option blacklist_ip '0'
-
-config server
-	option enabled '1'
-	option type 'udp'
-	option name 'LN_UNICOM #1'
-	option ip '202.96.69.38'
+	option name 'ALI#1'
+	option ip '223.5.5.5'
 	option server_group 'mainland'
 	option blacklist_ip '0'
 
@@ -66,14 +58,6 @@ config server
 config server
 	option enabled '1'
 	option type 'udp'
-	option name 'DNSPOD#1'
-	option ip '119.29.29.29'
-	option server_group 'mainland'
-	option blacklist_ip '0'
-
-config server
-	option enabled '1'
-	option type 'udp'
 	option name 'BAIDU'
 	option ip '180.76.76.76'
 	option server_group 'mainland'
@@ -82,13 +66,13 @@ config server
 config server
 	option enabled '1'
 	option type 'udp'
-	option name 'ALI#1'
-	option ip '223.5.5.5'
+	option name 'LN_UNICOM #1'
+	option ip '202.96.69.38'
 	option server_group 'mainland'
 	option blacklist_ip '0'
 
 config server
-	option enabled '0'
+	option enabled '1'
 	option name 'Google DNS #1'
 	option server_group 'overseas'
 	option blacklist_ip '0'
@@ -97,7 +81,7 @@ config server
 	option addition_arg '-exclude-default-group'
 
 config server
-	option enabled '0'
+	option enabled '1'
 	option name 'CloudFlare #1'
 	option type 'https'
 	option server_group 'overseas'

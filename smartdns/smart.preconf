@@ -1,10 +1,9 @@
-
 config smartdns
 	option enabled '1'
-	option server_name 'openwrtDNS'
+	option server_name 'HomeLedeDNS'
 	option port '6053'
 	option dualstack_ip_selection '0'
-	option prefetch_domain '0'
+	option prefetch_domain '1'
 	option server_group 'mainland'
 	option seconddns_port '7053'
 	option seconddns_no_speed_check '0'
@@ -19,7 +18,7 @@ config smartdns
 	option seconddns_no_dualstack_selection '1'
 	option ipv6_server '0'
 	option redirect 'none'
-	option cache_size '4096'
+	option cache_size '1536'
 	option tcp_server '0'
 	option serve_expired '1'
 	option rr_ttl '3600'

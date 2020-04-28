@@ -3,50 +3,54 @@ local e=luci.model.uci.cursor()
 local e=require"nixio.fs"
 require("luci.sys")
 local t,e,o
-local m,s
-t=Map("aliddns",translate("阿里DDNS客户端"),translate("基于阿里云解析的私人DDNS解决方案"))
 
-e=t:section(TypedSection,"base")
+t=Map("aliddns",translate("AliDDNS"))
+
+e=t:section(TypedSection,"base",translate("Base"))
 e.anonymous=true
 
-e:tab("basic",  translate("设置"))
-
-enable=e:taboption("basic",Flag,"enable",translate("开启"),translate("开启或关闭aliddns动态域名"))
+enable=e:option(Flag,"enable",translate("enable"))
 enable.rmempty=false
-token=e:taboption("basic",Value,"app_key",translate("APP KEY"))
-email=e:taboption("basic",Value,"app_secret",translate("APP SECRET"))
-iface=e:taboption("basic",ListValue,"interface",translate("选择外网接口"),translate("限定要动态aliddns的外网接口，如pppoe-wan"))
-iface:value("",translate("选择要动态更新的外网接口"))
-for t,e in ipairs(a.net.devices())do
-if e~="lo"then iface:value(e)end
-end
+
+enable=e:option(Flag,"clean",translate("Clean Before Update"))
+enable.rmempty=false
+
+token=e:option(Value,"app_key",translate("Access Key ID"))
+email=e:option(Value,"app_secret",translate("Access Key Secret"))
+
+iface=e:option(ListValue,"interface",translate("WAN-IP Source"),translate("Select the WAN-IP Source for AliDDNS, like wan/internet"))
+iface:value("",translate("Select WAN-IP Source"))
+iface:value("internet")
+iface:value("wan")
+
 iface.rmempty=false
-main=e:taboption("basic",Value,"main_domain",translate("主域名"),"想要解析的主域名，例如:baidu.com")
+main=e:option(Value,"main_domain",translate("Main Domain"),translate("For example: test.github.com -> github.com"))
 main.rmempty=false
-sub=e:taboption("basic",Value,"sub_domain",translate("子域名"),"想要解析的子域名，例如:test hehe")
+sub=e:option(Value,"sub_domain",translate("Sub Domain"),translate("For example: test.github.com -> test"))
 sub.rmempty=false
-time=e:taboption("basic",Value,"time",translate("检查时间"),"域名检查时间，单位分钟，范围1-59")
+time=e:option(Value,"time",translate("Inspection Time"),translate("Unit: Minute, Range: 1-59"))
 time.rmempty=false
 
-e:tab("log",  translate("更新记录"))
---e=t:section(TypedSection,"base",translate("更新记录"))
+e=t:section(TypedSection,"base",translate("Update Log"))
 e.anonymous=true
 local a="/var/log/aliddns.log"
-tvlog=e:taboption("log",TextValue,"sylogtext")
-tvlog.rows=14
+tvlog=e:option(TextValue,"sylogtext")
+tvlog.rows=16
 tvlog.readonly="readonly"
 tvlog.wrap="off"
+
 function tvlog.cfgvalue(e,e)
-sylogtext=""
-if a and nixio.fs.access(a)then
-sylogtext=luci.sys.exec("tail -n 100 %s"%a)
+	sylogtext=""
+	if a and nixio.fs.access(a) then
+		sylogtext=luci.sys.exec("tail -n 100 %s"%a)
+	end
+	return sylogtext
 end
-return sylogtext
-end
+
 tvlog.write=function(e,e,e)
 end
 local e=luci.http.formvalue("cbi.apply")
 if e then
-io.popen("/etc/init.d/aliddns restart")
+	io.popen("/etc/init.d/aliddns restart")
 end
 return t

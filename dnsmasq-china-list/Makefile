@@ -6,8 +6,8 @@ include $(TOPDIR)/rules.mk
 
 PKG_NAME:=dnsmasq-china-list
 PKG_VERSION:=1.0
-PKG_RELEASE:=3
-PKG_DATE:=20200314
+PKG_RELEASE:=4
+PKG_DATE:=20200501
 PKG_BUILD_DIR:=$(BUILD_DIR)/$(PKG_NAME)
 
 PKG_MAINTAINER:=xiaoqingfeng <xiaoqingfengatgm@gmail.com>
@@ -49,6 +49,7 @@ define Package/$(PKG_NAME)/install
 	$(INSTALL_CONF) files/etc/dnsmasq-china-list/dnslist.sh $(1)/etc/dnsmasq-china-list
 	$(INSTALL_DATA) files/etc/dnsmasq-china-list/template/accelerated-domains.china.conf $(1)/etc/dnsmasq-china-list/template
 	$(INSTALL_DATA) files/etc/dnsmasq-china-list/template/apple.china.conf $(1)/etc/dnsmasq-china-list/template
+	$(INSTALL_DATA) files/etc/dnsmasq-china-list/template/google.china.conf $(1)/etc/dnsmasq-china-list/template
 	$(INSTALL_DATA) files/etc/dnsmasq-china-list/template/bogus-nxdomain.china.conf $(1)/etc/dnsmasq-china-list/template
 endef
 

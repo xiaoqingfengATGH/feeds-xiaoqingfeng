@@ -37,6 +37,14 @@ echo "iptables -I FORWARD -m policy --dir out --pol ipsec --proto esp -j ACCEPT"
 echo "iptables -I OUTPUT -m policy --dir out --pol ipsec --proto esp -j ACCEPT" >> /etc/firewall.user
 fi
 
+# Temporary add scripts for aliddns fix
+if [ -r /etc/init.d/aliddns ]; then
+	if [ ! -x /etc/init.d/aliddns ]; then
+		chmod +x /etc/init.d/aliddns
+		chmod +x /usr/sbin/aliddns
+	fi
+fi
+
 if [ -d /www/luci-static/infinityfreedom ]; then
 	if [ ! -r /www/luci-static/infinityfreedom/images/brand.png ]; then
 		cp /etc/brand /www/luci-static/infinityfreedom/images/brand.png >/dev/null 2>&1

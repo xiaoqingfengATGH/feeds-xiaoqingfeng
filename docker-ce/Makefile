@@ -2,7 +2,7 @@ include $(TOPDIR)/rules.mk
 
 PKG_NAME:=docker-ce
 PKG_VERSION:=19.03.8
-PKG_RELEASE:=2
+PKG_RELEASE:=3
 PKG_LICENSE:=Apache-2.0
 PKG_LICENSE_FILES:=components/cli/LICENSE components/engine/LICENSE
 
@@ -33,7 +33,7 @@ PKG_BUILD_PARALLEL:=1
 GO_PKG:=github.com/docker
 
 include $(INCLUDE_DIR)/package.mk
-include $(TOPDIR)/feeds/packages/lang/golang/golang-package.mk
+include ../../lang/golang/golang-package.mk
 
 define Package/docker-ce/config
   source "$(SOURCE)/Config.in"
@@ -44,9 +44,8 @@ define Package/docker-ce
   CATEGORY:=Utilities
   TITLE:=Docker Community Edition
   URL:=https://www.docker.com/
-  DEPENDS:=$(GO_ARCH_DEPENDS) @HAS_FPU @(aarch64||arm||x86_64) +btrfs-progs +ca-certificates +cgroupfs-mount +containerd +libdevmapper +libnetwork +tini \
-           +DOCKER_SECCOMP:libseccomp +iptables-mod-extra +kmod-br-netfilter +kmod-ikconfig +kmod-nf-conntrack-netlink +kmod-nf-ipvs +kmod-veth \
-           +@KERNEL_CGROUPS  +@KERNEL_CGROUP_CPUACCT +@KERNEL_CGROUP_SCHED
+  DEPENDS:=$(GO_ARCH_DEPENDS) @(aarch64||arm||x86_64) +btrfs-progs +ca-certificates +cgroupfs-mount +containerd +libdevmapper +libnetwork +tini \
+           +DOCKER_SECCOMP:libseccomp +iptables-mod-extra +kmod-br-netfilter +kmod-ikconfig +kmod-nf-conntrack-netlink +kmod-nf-ipvs +kmod-veth
   USERID:=docker:docker
   MENU:=1
 endef
@@ -114,6 +113,11 @@ define Package/docker-ce/install
 
 	$(INSTALL_DIR) $(1)/etc/docker
 	$(INSTALL_CONF) ./files/daemon.json $(1)/etc/docker/
+
+	# Must be after systcl 11-br-netfilter.conf from kmod-br-netfilter
+	$(INSTALL_DIR) $(1)/etc/sysctl.d
+	$(INSTALL_DATA) ./files/etc/sysctl.d/sysctl-br-netfilter-ip.conf \
+		$(1)/etc/sysctl.d/12-br-netfilter-ip.conf
 endef
 
 $(eval $(call BuildPackage,docker-ce))

@@ -4,5 +4,5 @@ function index()
 	if not nixio.fs.access("/etc/config/chinadns-ng") then
 		return
 	end
-	entry({"admin", "services", "chinadns-ng"}, cbi("chinadns-ng"), _("ChinaDNS-NG"), 70).dependent = true
+	entry({"admin", "dns", "chinadns-ng"}, cbi("chinadns-ng"), _("ChinaDNS-NG"), 70).dependent = true
 end

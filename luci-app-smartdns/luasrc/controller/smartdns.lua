@@ -23,11 +23,11 @@ function index()
 	end
 
 	local page
-	page = entry({"admin", "services", "smartdns"}, cbi("smartdns/smartdns"), _("SmartDNS"), 60)
+	page = entry({"admin", "dns", "smartdns"}, cbi("smartdns/smartdns"), _("SmartDNS"), 60)
 	page.dependent = true
-	page = entry({"admin", "services", "smartdns", "status"}, call("act_status"))
+	page = entry({"admin", "dns", "smartdns", "status"}, call("act_status"))
 	page.leaf = true
-	page = entry({"admin", "services", "smartdns", "upstream"}, cbi("smartdns/upstream"), nil)
+	page = entry({"admin", "dns", "smartdns", "upstream"}, cbi("smartdns/upstream"), nil)
 	page.leaf = true
 end
 

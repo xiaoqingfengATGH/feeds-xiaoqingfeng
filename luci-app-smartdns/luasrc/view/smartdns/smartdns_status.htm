@@ -1,5 +1,5 @@
 <script type="text/javascript">//<![CDATA[
-XHR.poll(3, '<%=luci.dispatcher.build_url("admin", "services", "smartdns", "status")%>', null,
+XHR.poll(3, '<%=luci.dispatcher.build_url("admin", "dns", "smartdns", "status")%>', null,
 	function(x, data) {
 		var tb = document.getElementById('smartdns_status');
 		if (data && tb) {

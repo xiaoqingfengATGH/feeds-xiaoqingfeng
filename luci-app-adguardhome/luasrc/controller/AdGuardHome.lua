@@ -3,8 +3,8 @@ function index()
 if not nixio.fs.access("/etc/config/AdGuardHome")then
 return
 end
-	entry({"admin","services","AdGuardHome"},cbi("AdGuardHome"),_("AdGuard Home"),30).dependent=true
-    entry({"admin","services","AdGuardHome","status"},call("act_status")).leaf=true
+	entry({"admin","dns","AdGuardHome"},cbi("AdGuardHome"),_("AdGuard Home"),30).dependent=true
+    entry({"admin","dns","AdGuardHome","status"},call("act_status")).leaf=true
 end 
 
 function act_status()

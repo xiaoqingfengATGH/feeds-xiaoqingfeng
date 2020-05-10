@@ -46,7 +46,6 @@ set_forward_dnsmasq()
 		[ "$server" = "$addr" ] && continue
 		uci add_list dhcp.@dnsmasq[0].server="$server"
 	done
-
 	uci set dhcp.@dnsmasq[0].noresolv=1
 	uci commit dhcp
 	/etc/init.d/dnsmasq restart
@@ -123,7 +122,6 @@ service_triggers() {
 	procd_add_reload_trigger firewall
 	procd_add_reload_trigger smartdns
 }
-
 
 conf_append()
 {
@@ -280,6 +278,8 @@ load_service()
 	else
 		conf_append "bind" ":$port"
 	fi
+
+	conf_append "speed-check-mode tcp:443,tcp:80"
 
 	[ "$tcp_server" = "1" ] && {
 		if [ "$ipv6_server" = "1" ]; then

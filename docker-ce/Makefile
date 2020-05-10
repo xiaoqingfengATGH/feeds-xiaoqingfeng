@@ -33,7 +33,7 @@ PKG_BUILD_PARALLEL:=1
 GO_PKG:=github.com/docker
 
 include $(INCLUDE_DIR)/package.mk
-include ../../lang/golang/golang-package.mk
+include $(TOPDIR)/feeds/packages/lang/golang/golang-package.mk
 
 define Package/docker-ce/config
   source "$(SOURCE)/Config.in"

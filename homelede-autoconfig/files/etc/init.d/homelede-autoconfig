@@ -8,7 +8,7 @@ NAME=homelede-autoconfig
 
 DOCKER_CONFIG="[ -x /etc/init.d/dockerd ] && /etc/init.d/dockerd restart"
 CGROUP_MEMORY_CONGIF="echo 1 > /sys/fs/cgroup/memory/memory.use_hierarchy"
-SMARTDNS_CONFIG="0 0 0/6 * * ? [ -x /etc/init.d/smartdns ] && /etc/init.d/smartdns restart > /dev/null 2>&1 &"
+SMARTDNS_CONFIG="0 */6 * * * [ -x /etc/init.d/smartdns ] && /etc/init.d/smartdns restart > /dev/null 2>&1 &"
 start()
 {
 # Schedule auto reboot for smartdns to bypass secondary dns stop working issue

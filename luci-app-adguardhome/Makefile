@@ -6,7 +6,7 @@
 include $(TOPDIR)/rules.mk
 
 PKG_NAME:=luci-app-adguardhome
-PKG_VERSION:=1.2
+PKG_VERSION:=v0.102.0
 PKG_RELEASE:=1-xiaoqingfengMod
 
 PKG_BUILD_DIR:=$(BUILD_DIR)/$(PKG_NAME)

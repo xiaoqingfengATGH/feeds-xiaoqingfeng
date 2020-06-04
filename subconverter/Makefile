@@ -8,7 +8,7 @@ include $(TOPDIR)/rules.mk
 
 PKG_NAME:=subconverter
 PKG_VERSION:=0.5.2-8385792
-PKG_RELEASE:=1
+PKG_RELEASE:=1-xiaoqingfengMod
 
 PKG_SOURCE_PROTO:=git
 PKG_SOURCE_URL:=https://github.com/tindy2013/subconverter.git

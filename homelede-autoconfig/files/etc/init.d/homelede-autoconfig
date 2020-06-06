@@ -29,13 +29,18 @@ echo Added docker restart script.
 fi
 
 # Add ipsec iptable rules to allow ipsec client access router
-# sed -i '/^.*--pol ipsec.*/d' /etc/firewall.user
-# if [ -x /etc/init.d/ipsecvpn ]; then
-# echo "iptables -I INPUT -m policy --dir in --pol ipsec --proto esp -j ACCEPT" >> /etc/firewall.user
-# echo "iptables -I FORWARD -m policy --dir in --pol ipsec --proto esp -j ACCEPT" >> /etc/firewall.user
-# echo "iptables -I FORWARD -m policy --dir out --pol ipsec --proto esp -j ACCEPT" >> /etc/firewall.user
-# echo "iptables -I OUTPUT -m policy --dir out --pol ipsec --proto esp -j ACCEPT" >> /etc/firewall.user
-# fi
+sed -i '/^.*--pol ipsec.*/d' /etc/firewall.user
+ if [ -x /etc/init.d/ipsecvpn ]; then
+ echo "iptables -D FORWARD  -m policy --dir in --pol ipsec --proto esp -j ACCEPT" >> /etc/firewall.user
+ echo "iptables -D FORWARD  -m policy --dir out --pol ipsec --proto esp -j ACCEPT" >> /etc/firewall.user
+ echo "iptables -D INPUT -m policy --dir in --pol ipsec --proto esp -j ACCEPT" >> /etc/firewall.user
+ echo "iptables -D OUTPUT -m policy --dir out --pol ipsec --proto esp -j ACCEPT" >> /etc/firewall.user
+
+ echo "iptables -I FORWARD  -m policy --dir in --pol ipsec --proto esp -j ACCEPT" >> /etc/firewall.user
+ echo "iptables -I FORWARD  -m policy --dir out --pol ipsec --proto esp -j ACCEPT" >> /etc/firewall.user
+ echo "iptables -I INPUT -m policy --dir in --pol ipsec --proto esp -j ACCEPT" >> /etc/firewall.user
+ echo "iptables -I OUTPUT -m policy --dir out --pol ipsec --proto esp -j ACCEPT" >> /etc/firewall.user
+fi
 
 # Temporary add scripts for aliddns fix
 if [ -r /etc/init.d/aliddns ]; then

@@ -9,6 +9,7 @@ NAME=homelede-autoconfig
 DOCKER_CONFIG="[ -x /etc/init.d/dockerd ] && /etc/init.d/dockerd restart"
 CGROUP_MEMORY_CONGIF="echo 1 > /sys/fs/cgroup/memory/memory.use_hierarchy"
 SMARTDNS_CONFIG="0 */6 * * * [ -x /etc/init.d/smartdns ] && /etc/init.d/smartdns restart > /dev/null 2>&1 &"
+DNSMASQ_CHN_LIST_CONF="0 0 * * * [ -x /etc/init.d/dnsmasq-china-list ] && /etc/dnsmasq-china-list/update.sh > /dev/null 2>&1 &"
 start()
 {
 # Schedule auto reboot for smartdns to bypass secondary dns stop working issue
@@ -16,6 +17,13 @@ sed -i '/^.*smartdns.*/d' /etc/crontabs/root >/dev/null 2>&1
 if [ -x /etc/init.d/smartdns ]; then
 echo "$SMARTDNS_CONFIG" >>/etc/crontabs/root
 echo Added smartdns auto restart script.
+fi
+
+# Schedule auto update for dnsmasq-china-list
+sed -i '/^.*dnsmasq-china-list.*/d' /etc/crontabs/root >/dev/null 2>&1
+if [ -x /etc/init.d/dnsmasq-china-list ]; then
+echo "$DNSMASQ_CHN_LIST_CONF" >>/etc/crontabs/root
+echo Added dnsmasq-china-list auto update script.
 fi
 
 # Force dockerd to restart to bypass docker does not create iptable rules issue

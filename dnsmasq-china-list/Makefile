@@ -45,6 +45,7 @@ define Package/$(PKG_NAME)/install
 	$(INSTALL_BIN) files/etc/dnsmasq-china-list/flush.sh $(1)/etc/dnsmasq-china-list
 	$(INSTALL_BIN) files/etc/dnsmasq-china-list/refreshConf.sh $(1)/etc/dnsmasq-china-list
 	$(INSTALL_BIN) files/etc/dnsmasq-china-list/enable.sh $(1)/etc/dnsmasq-china-list
+	$(INSTALL_BIN) files/etc/dnsmasq-china-list/update.sh $(1)/etc/dnsmasq-china-list
 	$(INSTALL_CONF) files/etc/dnsmasq-china-list/conflist.sh $(1)/etc/dnsmasq-china-list
 	$(INSTALL_CONF) files/etc/dnsmasq-china-list/dnslist.sh $(1)/etc/dnsmasq-china-list
 	$(INSTALL_DATA) files/etc/dnsmasq-china-list/template/accelerated-domains.china.conf $(1)/etc/dnsmasq-china-list/template

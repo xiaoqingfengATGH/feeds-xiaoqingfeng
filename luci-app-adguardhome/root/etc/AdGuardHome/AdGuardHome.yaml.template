@@ -39,9 +39,9 @@ dns:
   - 127.0.0.1
   disallowed_clients: []
   blocked_hosts: []
-  cache_size: 0
-  cache_ttl_min: 0
-  cache_ttl_max: 0
+  cache_size: 256
+  cache_ttl_min: 1
+  cache_ttl_max: 10
   bogus_nxdomain: []
   aaaa_disabled: true
   enable_dnssec: false
@@ -74,7 +74,7 @@ filters:
   url: https://adguardteam.github.io/AdGuardSDNSFilter/Filters/filter.txt
   name: AdGuard Simplified Domain Names filter
   id: 1
-- enabled: true
+- enabled: false
   url: https://cdn.jsdelivr.net/gh/privacy-protection-tools/anti-AD/anti-ad-easylist.txt
   name: anti-AD(Adblock+neohosts+yhosts+cjxlist+adhlist)
   id: 1577113202
@@ -121,6 +121,9 @@ user_rules:
 - '@@||tongdun.net^'
 - '@@||taobao.com^'
 - '@@ii.gdt.qq.com^$important'
+- '@@||toutiao.com^'
+- '@@||alipay.com^'
+- '@@||bilibili.com^'
 dhcp:
   enabled: false
   interface_name: ""

@@ -62,27 +62,27 @@ start_service() {
 }
 
 ip4tables_remove_nat() {
-	iptables -t nat -D OUTPUT ! -d 127.0.0.0/8 -m addrtype --dst-type LOCAL -j DOCKER
-	iptables -t nat -D PREROUTING -m addrtype --dst-type LOCAL -j DOCKER
+	iptables -t nat -D OUTPUT ! -d 127.0.0.0/8 -m addrtype --dst-type LOCAL -j DOCKER 2>&1 > /dev/null
+	iptables -t nat -D PREROUTING -m addrtype --dst-type LOCAL -j DOCKER 2>&1 > /dev/null
 
-	iptables -t nat -F DOCKER
-	iptables -t nat -X DOCKER
+	iptables -t nat -F DOCKER 2>&1 > /dev/null
+	iptables -t nat -X DOCKER 2>&1 > /dev/null
 }
 
 ip4tables_remove_filter() {
-	iptables -t filter -D FORWARD -j DOCKER-USER
-	iptables -t filter -D FORWARD -j DOCKER-ISOLATION-STAGE-1
-	iptables -t filter -D FORWARD -o docker0 -j DOCKER
+	iptables -t filter -D FORWARD -j DOCKER-USER 2>&1 > /dev/null
+	iptables -t filter -D FORWARD -j DOCKER-ISOLATION-STAGE-1 2>&1 > /dev/null
+	iptables -t filter -D FORWARD -o docker0 -j DOCKER 2>&1 > /dev/null
 
-	iptables -t filter -F DOCKER
-	iptables -t filter -F DOCKER-ISOLATION-STAGE-1
-	iptables -t filter -F DOCKER-ISOLATION-STAGE-2
-	iptables -t filter -F DOCKER-USER
+	iptables -t filter -F DOCKER 2>&1 > /dev/null
+	iptables -t filter -F DOCKER-ISOLATION-STAGE-1 2>&1 > /dev/null
+	iptables -t filter -F DOCKER-ISOLATION-STAGE-2 2>&1 > /dev/null
+	iptables -t filter -F DOCKER-USER 2>&1 > /dev/null
 
-	iptables -t filter -X DOCKER
-	iptables -t filter -X DOCKER-ISOLATION-STAGE-1
-	iptables -t filter -X DOCKER-ISOLATION-STAGE-2
-	iptables -t filter -X DOCKER-USER
+	iptables -t filter -X DOCKER 2>&1 > /dev/null
+	iptables -t filter -X DOCKER-ISOLATION-STAGE-1 2>&1 > /dev/null
+	iptables -t filter -X DOCKER-ISOLATION-STAGE-2 2>&1 > /dev/null
+	iptables -t filter -X DOCKER-USER 2>&1 > /dev/null
 }
 
 ip4tables_remove() {

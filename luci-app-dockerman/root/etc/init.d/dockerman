@@ -11,6 +11,7 @@ init_dockerman_chain(){
 	#iptables -F DOCKER-MAN >/dev/null 2>&1
 	#iptables -D DOCKER-USER -j DOCKER-MAN >/dev/null 2>&1
 	#iptables -I DOCKER-USER -j DOCKER-MAN >/dev/null 2>&1
+	echo dockerman chain init finished.
 }
 
 add_allowed_interface(){

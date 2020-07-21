@@ -46,8 +46,6 @@ process_config() {
 start_service() {
 	local nofile=$(cat /proc/sys/fs/nr_open)
 
-	[ ! -d /tmp/dockerd ] && mkdir -p /tmp/dockerd
-
 	process_config
 
 	procd_open_instance
@@ -59,6 +57,15 @@ start_service() {
 	fi
 	procd_set_param limits nofile="${nofile} ${nofile}"
 	procd_close_instance
+}
+
+reload_service() {
+	process_config
+	procd_send_signal dockerd
+}
+
+service_triggers() {
+	procd_add_reload_trigger 'dockerd'
 }
 
 ip4tables_remove_nat() {

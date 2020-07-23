@@ -46,6 +46,8 @@ process_config() {
 start_service() {
 	local nofile=$(cat /proc/sys/fs/nr_open)
 
+	[ ! -d /tmp/dockerd ] && mkdir -p /tmp/dockerd
+
 	process_config
 
 	procd_open_instance

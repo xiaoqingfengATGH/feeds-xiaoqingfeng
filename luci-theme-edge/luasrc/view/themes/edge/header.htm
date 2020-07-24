@@ -216,8 +216,8 @@
 	<meta name="msapplication-TileImage" content="<%=media%>/logo.png" />
 	<link rel="icon" href="<%=media%>/logo.png" sizes="144x144">
 	<link rel="apple-touch-icon-precomposed" href="<%=media%>/logo.png" sizes="144x144">
+			<link rel="stylesheet" href="<%=media%>/waves.css">
 		<link rel="stylesheet" href="<%=media%>/cascade.css">
-	<link rel="stylesheet" href="<%=media%>/waves.css">
 	<link rel="shortcut icon" href="<%=media%>/favicon.ico">
 	<% if node and node.css then %>
 	<link rel="stylesheet" href="<%=resource%>/<%=node.css%>">
@@ -254,6 +254,7 @@
 		</div>
 			
 		<div class="main-right">
+			<hr/>
 						<div id="indicators" class="pull-right">
 							<% render_changes() %>
 							<span data-indicator="poll-status" id="xhr_poll_status" style="display:none"

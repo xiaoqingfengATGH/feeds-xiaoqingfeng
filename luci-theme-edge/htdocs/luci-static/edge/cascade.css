@@ -388,6 +388,7 @@ body {
   margin: 0;
   padding: 0;
 background-color: #fff;
+overflow-x: hidden;
 }
 select:first-child {
   padding: 0.36rem 0.8rem;
@@ -404,8 +405,6 @@ select,
 input,
 .cbi-button,
 .cbi-dropdown {
-
-  margin: 0.25rem 0.1rem 0;
   color:#4d5156;
       border: none;
     border-bottom: 1px solid #9e9e9e;
@@ -617,7 +616,6 @@ p{
   position: relative;
   z-index: 50;
   margin-top: 2rem;
-  overflow:hidden;
 }
 .pull-right {
   float: right;
@@ -1120,7 +1118,6 @@ tr > th,
 .tr.table-titles > .th,
 .tr.cbi-section-table-titles > .th {
   border-top: 0 !important;
-  background-color: #f6f9fc;
   padding: 1.1em 1rem;
   line-height: 1.3rem;
 }
@@ -1145,6 +1142,7 @@ tr > th,
 .cbi-section-table-row > .cbi-value-field .cbi-input-text,
 .cbi-section-table-row > .cbi-value-field .cbi-input-password {
   width: 100%;
+  min-width:0 !important;
 }
 .cbi-section-table-row > .cbi-value-field [data-dynlist] > input,
 .cbi-section-table-row > .cbi-value-field input.cbi-input-password {
@@ -1153,32 +1151,29 @@ tr > th,
 .cbi-section-table-row .td {
   text-align: center !important;
 }
+
 table > tbody > tr,
-div > .table > .tr { 
-  background-color: #e5effd;
+div > .table > .tr {
+	 background-color: #fff;
   transition: background-color .25s
-  
 }
-table > tbody > tr:hover,
-div > .table > .tr:hover {
+table > tbody > tr:nth-of-type(4n+2),
+div > .table > .tr:nth-of-type(4n+2) {
+background-color: #e5effd;
+}
+table > tbody > tr:nth-of-type(4n+2):hover,
+div > .table > .tr:nth-of-type(4n+2):hover {
   background-color: #d9e9ff;
 }
-table > tbody > tr:nth-of-type(2n),
-div > .table > .tr:nth-of-type(2n) {
- background-color: #fff;
+table > tbody > tr:nth-of-type(4n),
+div > .table > .tr:nth-of-type(4n) {
+  background-color: rgba(223, 56, 18, 0.04);
 }
-table > tbody > tr:nth-of-type(2n):hover,
-div > .table > .tr:nth-of-type(2n):hover {
- 
-}
-table > tbody > tr:nth-of-type(3n),
-div > .table > .tr:nth-of-type(3n) {
-  background-color: rgba(223, 56, 18, 0.05);
-}
-table > tbody > tr:nth-of-type(3n):hover,
-div > .table > .tr:nth-of-type(3n):hover {
+table > tbody > tr:nth-of-type(4n):hover,
+div > .table > .tr:nth-of-type(4n):hover {
   background-color: rgba(223, 56, 18, 0.09);
 }
+
 /* fix multiple table */
 table table,
 .table .table,
@@ -1209,10 +1204,9 @@ td > table > tbody > tr > td,
   vertical-align: middle;
   text-decoration: none;
   text-transform: uppercase;
-  color: rgba(0, 0, 0, 0.87);
+  color: #fff;
   border: 0;
   border-radius: 0.2rem;
-  background-color: #f0f0f0;
   background-image: none;
   -webkit-appearance: none;
   -ms-touch-action: manipulation;
@@ -1234,9 +1228,6 @@ td > table > tbody > tr > td,
 .cbi-button:not(select) {
   -webkit-appearance: none !important;
 }
-.cbi-button + .cbi-button {
-  margin-left: 0.6rem;
-}
 .btn:hover,
 .btn:focus,
 .btn:active,
@@ -1252,6 +1243,8 @@ td > table > tbody > tr > td,
   text-decoration: none;
   outline: 0;
 }
+button:hover,
+.waves-input-wrapper:hover,
 .btn:hover,
 .btn:focus,
 .cbi-button:hover,
@@ -1291,10 +1284,8 @@ td > table > tbody > tr > td,
 .cbi-button[name="zero"],
 .cbi-button[name="restart"],
 .cbi-button[onclick="hide_empty(this)"] {
-  font-weight: bold;
   color: #fff;
-  border: thin solid #8898aa;
-  background-color: #8898aa;
+   background-color: #A3AFBD !important;
 }
 /* dark blue */
 .btn.primary,
@@ -1311,7 +1302,7 @@ td > table > tbody > tr > td,
   font-weight: normal;
   color: #fff;
 	border:none;
-  background-color: #23bd70;
+  background-color: #23bd70 !important;
 }
 /* light blue */
 .cbi-page-actions .cbi-button-apply,
@@ -1326,7 +1317,7 @@ td > table > tbody > tr > td,
 .cbi-button[onclick="addKey(event)"] {
   font-weight: normal;
   color: #fff;
-  background-color: #5A8DEE;
+  background-color: #5A8DEE !important;
 }
 /* red */
 .btn.danger,
@@ -1334,6 +1325,7 @@ td > table > tbody > tr > td,
 .cbi-button-remove,
 .cbi-button-reset,
 .cbi-button-negative,
+.btn[onclick="handleOpkg(event)"],
 .cbi-button[value="Stop"],
 .cbi-button[value="Kill"],
 .cbi-button[onclick="reboot(this)"],
@@ -1341,7 +1333,7 @@ td > table > tbody > tr > td,
   font-weight: normal;
   color: #fff;
   border: none;
-  background-color: #fdb75a;
+  background-color: #fdb75a !important;
 }
 /* yellow */
 .btn[value="Dismiss"],
@@ -1354,7 +1346,7 @@ td > table > tbody > tr > td,
   font-weight: normal;
   color: #fff;
   border: none;
-  background-color:#fdb75a;
+  background-color:#00CFDD !important;
 }
 /* green */
 .cbi-button-success,
@@ -1364,8 +1356,7 @@ td > table > tbody > tr > td,
 .cbi-button[value="Save mtdblock"] {
   font-weight: normal;
   color: #fff;
-  border: thin solid #4cae4c;
-  background-color: #5cb85c;
+  background-color: #5cb85c !important;
 }
 .cbi-page-actions .cbi-button-link:first-child {
   float: left;
@@ -1486,7 +1477,6 @@ ul.tabs,.tabmenu .tabs,#tabmenu .tabs,ul.cbi-tabmenu{
 .cbi-value-description {
   font-size: small;
   padding: 0.4rem 0;
-  opacity: 0.6;
   line-height: inherit !important;
 }
 
@@ -1811,14 +1801,18 @@ ul.tabs,.tabmenu .tabs,#tabmenu .tabs,ul.cbi-tabmenu{
   width: auto;
 }
 /* progressbar */
-.cbi-progressbar {
+.cbi-progressbar,#memtotal>div,#membuff>div,#conns>div {
   position: relative;
-  min-width: 170px;
+  width: 100% !important;
   height: 20px;
   margin: 6px 0;
-  border: thin solid #999;
+  border:none !important;
   border-radius: 0.2rem;
     box-shadow: 0 2px 2px 0 rgba(0,0,0,0.14), 0 3px 1px -2px rgba(0,0,0,0.12), 0 1px 5px 0 rgba(0,0,0,0.2);
+}
+
+#memtotal>div small,#membuff>div small,#conns>div small{
+	line-height:20px !important;
 }
 @keyframes progress-bar-stripes {
   from {
@@ -1829,14 +1823,21 @@ ul.tabs,.tabmenu .tabs,#tabmenu .tabs,ul.cbi-tabmenu{
   }
 }
 
-.cbi-progressbar > div {
+.cbi-progressbar > div,#memtotal>div>div,#membuff>div>div,#conns>div>div {
   width: 0;
-  height: 100%;
+  height: 100% !important;
   transition: width 0.25s ease-in;
-  background-color: #5A8DEE;
+  background-color: #5A8DEE !important;
   background-image: linear-gradient(45deg,rgba(255,255,255,.15) 25%,transparent 25%,transparent 50%,rgba(255,255,255,.15) 50%,rgba(255,255,255,.15) 75%,transparent 75%,transparent);
 	background-size: auto auto;
 	animation: progress-bar-stripes 1s linear infinite;
+}
+
+#membuff>div>div{
+	background-color: #FDAC41 !important;
+}
+#conns>div>div{
+	background-color: #23bd70 !important;
 }
 .cbi-progressbar::after {
   font-family: monospace;
@@ -2070,7 +2071,7 @@ textarea {
   font-size: small;
   line-height: 1.25;
   width: 100%;
-  min-height: 15rem;
+  min-height: 25rem;
   padding: 1rem;
   resize: none;
   color: #eee;
@@ -2373,6 +2374,7 @@ input[name="nslookup"] {
 .node-main-login .main .main-right {
   width: 100%;
   text-align:center;
+overflow: hidden;
 }
 .node-main-login .main .main-right header {
   background: none !important;
@@ -2404,7 +2406,6 @@ input[name="nslookup"] {
   background-color: transparent !important;
   text-align: center;
   display:inline-block;
-  position:relative;
   z-index:999;
 }
 .node-main-login .main .main-right #maincontent .container {
@@ -3231,13 +3232,20 @@ input[type="checkbox"]:checked {
   }
 }
 
-.cbi-button,.btn{
-webkit-box-shadow: 0 2px 2px 0 rgba(0,0,0,0.14), 0 3px 1px -2px rgba(0,0,0,0.12), 0 1px 5px 0 rgba(0,0,0,0.2);
-    box-shadow: 0 2px 2px 0 rgba(0,0,0,0.14), 0 3px 1px -2px rgba(0,0,0,0.12), 0 1px 5px 0 rgba(0,0,0,0.2);
-	border-radius: 2px;
-	top:0;
-	transition:all .20s linear;
+.waves-input-wrapper{
+	background-color:#475F7B;
 }
+.waves-input-wrapper{
+	background-color:#475F7B;
+}
+
+.cbi-button,.btn{
+	 background-color: #00CFDD;
+	}
+
+.cbi-button.reconnect{
+background-color: #00CFDD !important;
+}	
 
 .cpu .cbi-progressbar > div{
 	background-color: #5A8DEE !important;
@@ -3556,14 +3564,29 @@ height: 2.2rem;
 input[type=button],input[type=submit],input[type=reset]{
 	height:auto !important;
 }
-  .btn,button,
-  .cbi-button,input[type=button],input[type=submit],input[type=reset] {
+.btn,button,
+  .cbi-button,input[type=button],input[type=submit],input[type=reset],.waves-input-wrapper {
+	  height:auto !important;
     padding: 0.6rem 1.6rem;
+	      line-height: 1rem;
+		  webkit-box-shadow: 0 2px 2px 0 rgba(0,0,0,0.14), 0 3px 1px -2px rgba(0,0,0,0.12), 0 1px 5px 0 rgba(0,0,0,0.2);
+    box-shadow: 0 2px 2px 0 rgba(0,0,0,0.14), 0 3px 1px -2px rgba(0,0,0,0.12), 0 1px 5px 0 rgba(0,0,0,0.2);
+	border-radius: 2px;
+	transition:all .20s linear;
+	  top:0;
+ margin-left: 0.5rem;
+	  margin-top:0.5rem;
   }
+.btn:first-child,button:first-child,
+  .cbi-button:first-child,input[type=button]:first-child,input[type=submit]:first-child,input[type=reset]:first-child,.waves-input-wrapper:first-child {
+	  margin-left:0;
+}
 i.waves-input-wrapper{
 	padding: 0 !important;
 }
-
+i input{
+	margin:0 !important
+}
 .controls > * > .btn{
 	flex-basis: auto !important;
 }
@@ -3571,7 +3594,7 @@ h2,.cbi-map-descr{
 	padding-left:2rem;
 }
 .cbi-map >.cbi-section .cbi-section-table,.cbi-map >.cbi-section .cbi-tabmenu,.cbi-map >.cbi-section .table{
-	margin-left: -1.95rem;
+	margin-left: -1.95rem !important;
 	width:105.5% !important;
 }
 
@@ -3594,6 +3617,7 @@ h2,.cbi-map-descr{
 }
 .node-status-overview table tr td:first-child{
 	padding-left:3rem !important;
+	vertical-align: middle !important;
 }
 ul.errors li{
 margin-bottom: 1rem;	
@@ -3607,3 +3631,39 @@ padding:0 2rem;
  .cbi-value>i{
 	 margin-left:2rem;
  }
+.cbi-section-table-row > .cbi-value-field .cbi-input-select {
+    min-width: 5rem !important;
+}
+#cbi-passwall .status .red, #cbi-passwall .status .green {
+	font-size: 0.83rem !important;
+    line-height: 2rem;
+}
+.waves-input-wrapper .waves-button-input{
+	line-height: 1rem;
+}
+.cbi-dropdown.waves-effect{
+	display: inline-flex;
+}
+cbi-button.cbi-button-neutral{
+	padding: 0.1rem 0.4rem;
+}
+#cbi-AdGuardHome-AdGuardHome .waves-input-wrapper>input{
+	color:#fff !important;
+}
+input[type=password]+.cbi-button.cbi-button-neutral{	
+	padding: 0.1rem 0.4rem;
+	color:#fff !important;
+}
+.main-right>hr{
+    height: 6px;
+    background-color: rgba(255, 0, 27, 0.95);
+    background: linear-gradient(90deg,#e75239 0%,#e75239 12.5%,#ff961c 12.5%,#ff961c 25%,#ffcc27 25%,#ffcc27 37.5%,#fce62f 37.5%,#fce62f 50%,#cde35b 50%,#cde35b 62.5%,#82cc33 62.5%,#82cc33 75%,#41bece 75%,#41bece 87.5%,#049cdb 87.5%,#049cdb 100%);
+	background-position: 50% 0;
+     box-shadow: 0 1px 2px rgba(0,0,0,.0625) inset;
+    margin: 0 0 10px;
+    border: none;
+    opacity: 0.9;
+}
+div[id^="cbi-unblockmusic"] .cbi-button{
+	top:-1.2rem;
+}

@@ -8,10 +8,42 @@
 
 include $(TOPDIR)/rules.mk
 
-PKG_NAME:=AdGuardHome
-PROJECT_NAME:=AdGuardHome
-PKG_VERSION:=v0.102.0
-PKG_RELEASE:=1
+PKG_NAME:=adguardhome
+PKG_VERSION:=v0.103.2
+PKG_RELEASE:=0
+
+STRIP:=true
+
+ifeq ($(ARCH),i386)
+	PKG_ARCH:=86
+endif
+
+ifeq ($(ARCH),x86_64)
+	PKG_ARCH:=amd64
+endif
+
+ifeq ($(ARCH),mipsel)
+	PKG_ARCH:=mipsle
+endif
+
+ifeq ($(ARCH),mips)
+	PKG_ARCH:=mipsle
+endif
+
+ifeq ($(ARCH),arm)
+ifeq ($(BOARD),bcm53xx)
+	PKG_ARCH:=armv5
+else ifeq ($(BOARD),kirkwood)
+	PKG_ARCH:=armv5
+else
+	PKG_ARCH:=armv7
+endif
+endif
+
+PKG_SOURCE:=AdGuardHome_linux_$(PKG_ARCH).tar.gz
+PKG_SOURCE_URL:=https://static.adguard.com/adguardhome/release/
+PKG_BUILD_DIR:=$(BUILD_DIR)/AdGuardHome_linux_$(PKG_ARCH)
+PKG_HASH:=skip
 
 include $(INCLUDE_DIR)/package.mk
 
@@ -27,60 +59,12 @@ define Package/$(PKG_NAME)/description
 Network-wide ads & trackers blocking DNS server
 endef
 
-STRIP:=true
-
-ifeq ($(ARCH),i386)
-	PKG_ARCH_ADGUARDHOME:=386
-endif
-
-ifeq ($(ARCH),x86_64)
-	PKG_ARCH_ADGUARDHOME:=amd64
-endif
-
-ifeq ($(ARCH),mipsel)
-	PKG_ARCH_ADGUARDHOME:=mipsle
-endif
-
-ifeq ($(ARCH),mips)
-	PKG_ARCH_ADGUARDHOME:=mips
-endif
-
-ifeq ($(ARCH),arm)
-	PKG_ARCH_ADGUARDHOME:=arm
-endif
-
-ifeq ($(ARCH),arm64)
-	PKG_ARCH_ADGUARDHOME:=arm64
-endif
-
-ifeq ($(ARCH),aarch64)
-	PKG_ARCH_ADGUARDHOME:=arm64
-endif
-
-TAR_NAME:=AdGuardHome_linux_$(PKG_ARCH_ADGUARDHOME)
-
-PKG_SOURCE:=$(TAR_NAME).tar.gz
-
-PKG_SOURCE_URL:=https://github.com/AdguardTeam/AdGuardHome/releases/download/$(PKG_VERSION)/
-
-UNTAR_DIR:=$(BUILD_DIR)/$(PKG_NAME)-$(PKG_VERSION)/$(PKG_NAME)-extract/$(PKG_ARCH_ADGUARDHOME)
-
-PKG_HASH:=skip
-
-define Build/Prepare
-	mkdir -vp $(UNTAR_DIR)
-	tar -zxvf $(DL_DIR)/$(PKG_SOURCE) -C $(UNTAR_DIR)
-endef
-
-define Build/Configure
-endef
-
 define Build/Compile
 endef
 
 define Package/$(PKG_NAME)/install
 	$(INSTALL_DIR) $(1)/usr/bin/AdGuardHome
-	$(INSTALL_BIN) $(UNTAR_DIR)/*/$(PROJECT_NAME) $(1)/usr/bin/AdGuardHome/$(PKG_NAME)
+	$(INSTALL_BIN) $(BUILD_DIR)/AdGuardHome/AdGuardHome $(1)/usr/bin/AdGuardHome/AdGuardHome
 endef
 
 $(eval $(call BuildPackage,$(PKG_NAME)))

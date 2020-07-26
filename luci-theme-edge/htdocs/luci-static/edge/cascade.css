@@ -1483,7 +1483,7 @@ ul.tabs,.tabmenu .tabs,#tabmenu .tabs,ul.cbi-tabmenu{
 .cbi-value-title {
   display: table-cell;
   float: left;
-  width: 23rem;
+  width: 15rem;
   padding-right: 2rem;
   text-align: right;
   word-wrap: break-word;
@@ -2980,7 +2980,7 @@ input[type="checkbox"]:checked {
     text-align: left;
   }
   .cbi-value-title {
-    width: 12rem;
+    width: 10rem;
     padding-right: 1rem;
   }
   .cbi-value-field .cbi-dropdown,

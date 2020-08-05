@@ -1,0 +1,191 @@
+#!/bin/bash /etc/rc.common
+
+START=99
+
+RUNLOG_DIR=/tmp/hr
+
+PROCESSED_REDIRECT=0
+
+setup() {
+	config_get enabled $1 enabled
+
+	config_get id $1 id
+	config_get proto $1 proto
+	config_get src_ip $1 src_ip
+	config_get src_dport $1 src_dport
+	config_get dest_ip $1 dest_ip
+	config_get dest_port $1 dest_port
+	config_get name $1 name
+
+	terminateRedirect $id
+	
+	[ "$enabled" != "1" ] && return 0
+
+	PROCESSED_REDIRECT=1
+	
+	case "$proto" in
+		"tcp4")
+			local src_addresstype="TCP4-LISTEN"
+			local dest_addresstype="TCP4"
+			addIPv4TCPRule $src_dport
+		;;
+		"tcp6") 
+			local src_addresstype="TCP6-LISTEN"
+			local dest_addresstype="TCP6"
+			addIPv6TCPRule $src_dport
+		;;
+		"upd4")
+			local src_addresstype="UDP4-LISTEN"
+			local dest_addresstype="UDP4"
+			addIPv4UDPRule $src_dport
+		;;
+		"udp6")
+			local src_addresstype="UDP6-LISTEN"
+			local dest_addresstype="UDP6"
+			addIPv6UDPRule $src_dport
+		;;
+	esac
+
+	#echo "nohup socat -lf $RUNLOG_DIR/$id.log $src_addresstype:$src_dport,bind=$src_ip,fork $dest_addresstype:$dest_ip:$dest_port > $RUNLOG_DIR/$id.log 2>&1 &"
+	nohup socat -lf $RUNLOG_DIR/$id.log $src_addresstype:$src_dport,bind=$src_ip,fork $dest_addresstype:$dest_ip:$dest_port > $RUNLOG_DIR/$id.log 2>&1 &
+	echo "[HomeRedirect] Port redirect from $proto $src_ip:$src_dport==>$dest_addresstype:$dest_ip:$dest_port started."
+}
+
+# param $1 is port
+showTcpPortState() {
+	local process=$(netstat -ltnp | awk -F ' ' '{if(NR>2) print $1"/"$4"/"$7}' | grep :$1)
+	if [ -n "$process" ]; then
+		echo $process
+	else
+		echo 'TCP Port $1 is Free.'
+	fi
+}
+# param $1 is port
+showUdpPortState() {
+	local process=$(netstat -lunp | awk -F ' ' '{if(NR>2) print $1"/"$4"/"$6}'|grep :$1)
+	if [ -n "$process" ]; then
+		echo $process
+	else
+		echo 'UDP Port $1 is Free.'
+	fi
+}
+
+isRedirectRunning() {
+	local runningPID=$(ps | grep socat | grep $RUNLOG_DIR/$1 | sed '/grep/d' | awk -F ' ' '{print $1}')
+	if [ -n "$runningPID" ]; then
+		return 1
+	else
+		return 0
+	fi
+}
+
+# param $1 is redirect id
+terminateRedirect() {
+	isRedirectRunning $1
+	[ "$?" = "1" ] && {
+		local runningPID=$(ps | grep socat | grep $RUNLOG_DIR/$1 | sed '/grep/d' | awk -F ' ' '{print $1}')
+		kill $runningPID
+	}
+}
+
+terminateAll() {
+	local runningPIDs=$(ps | grep socat | grep $RUNLOG_DIR | sed '/grep/d' | awk -F ' ' '{print $1}')
+	[ -n "$runningPIDs" ] && {
+		kill $runningPIDs
+		echo "Redirect process : "
+		echo $runningPIDs
+		echo "stopped."
+	}
+}
+
+start() {
+	local vt_enabled=$(uci -q get homeredirect.@global[0].enabled)
+	if [ "$vt_enabled" = 0 ]; then
+		terminateAll
+		clearAllfwRules "withFWRestart"
+		return 1
+	fi
+	
+	rm -rf $RUNLOG_DIR
+	mkdir -p $RUNLOG_DIR
+	
+	config_load homeredirect
+	clearAllfwRules
+	PROCESSED_REDIRECT=0
+	config_foreach setup redirect
+	[ "$PROCESSED_REDIRECT" == "1" ] && {
+		uci commit firewall >/dev/null 2>&1
+		/etc/init.d/firewall restart >/dev/null 2>&1
+	}
+	echo 'HomeRedirect started.'
+}
+
+stop() {
+	terminateAll
+	clearAllfwRules "withFWRestart"
+	echo 'HomeRedirect stopped.'
+}
+
+#############################################################################################################
+clearAllfwRules() {
+	fwRC=$(cat /etc/config/firewall | grep rule | wc -l)
+	fwMI=$(expr $fwRC - 1)
+	change=0
+	for((i=$fwRC;i>=0;i=i-1))
+	do
+		ruleName=$(uci -q get firewall.@rule[$i].name)
+		if [ -n ${ruleName} ] && [ "${ruleName:0:3}" == "HR_" ]; then
+			uci delete firewall.@rule[$i]
+			change=1
+		fi
+	done
+	
+	[ "$change" == "1" ] && {
+		uci commit firewall >/dev/null 2>&1
+		[  "withFWRestart" == "$1" ] && /etc/init.d/firewall restart >/dev/null 2>&1
+	}
+}
+
+# param $1 is port on router
+addIPv4TCPRule() {
+	uci -q add firewall rule >/dev/null 2>&1
+	uci set firewall.@rule[-1].src=wan
+	uci set firewall.@rule[-1].proto=tcp
+	uci set firewall.@rule[-1].dest_port=$1 
+	uci set firewall.@rule[-1].target=ACCEPT
+	uci set firewall.@rule[-1].family=ipv4
+	uci set firewall.@rule[-1].name=HR_T4_$1
+}
+
+# param $1 is port on router
+addIPv4UDPRule() {
+	uci -q add firewall rule >/dev/null 2>&1
+	uci set firewall.@rule[-1].src=wan
+	uci set firewall.@rule[-1].proto=udp
+	uci set firewall.@rule[-1].dest_port=$1 
+	uci set firewall.@rule[-1].target=ACCEPT
+	uci set firewall.@rule[-1].family=ipv4
+	uci set firewall.@rule[-1].name=HR_U4_$1
+}
+
+# param $1 is port on router
+addIPv6TCPRule() {
+	uci -q add firewall rule >/dev/null 2>&1
+	uci set firewall.@rule[-1].src=wan
+	uci set firewall.@rule[-1].proto=tcp
+	uci set firewall.@rule[-1].dest_port=$1 
+	uci set firewall.@rule[-1].target=ACCEPT
+	uci set firewall.@rule[-1].family=ipv6
+	uci set firewall.@rule[-1].name=HR_T6_$1
+}
+
+# param $1 is port on router
+addIPv6UDPRule() {
+	uci -q add firewall rule >/dev/null 2>&1
+	uci set firewall.@rule[-1].src=wan
+	uci set firewall.@rule[-1].proto=udp
+	uci set firewall.@rule[-1].dest_port=$1 
+	uci set firewall.@rule[-1].target=ACCEPT
+	uci set firewall.@rule[-1].family=ipv6
+	uci set firewall.@rule[-1].name=HR_U6_$1
+}

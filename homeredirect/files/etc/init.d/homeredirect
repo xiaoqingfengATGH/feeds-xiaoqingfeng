@@ -6,10 +6,21 @@ RUNLOG_DIR=/tmp/hr
 
 PROCESSED_REDIRECT=0
 
+setupDefaultSrcIP() {
+	if [ "$src_ip" = "" ]; then
+		if [ "$1" = "ipv4" ]; then
+			src_ip="0.0.0.0"
+		else
+			src_ip="[::]"
+		fi
+	fi
+}
+
 setup() {
+
 	config_get enabled $1 enabled
 
-	config_get id $1 id
+	id=$1
 	config_get proto $1 proto
 	config_get src_ip $1 src_ip
 	config_get src_dport $1 src_dport
@@ -22,26 +33,31 @@ setup() {
 	[ "$enabled" != "1" ] && return 0
 
 	PROCESSED_REDIRECT=1
+
 	
 	case "$proto" in
 		"tcp4")
 			local src_addresstype="TCP4-LISTEN"
 			local dest_addresstype="TCP4"
+			setupDefaultSrcIP "ipv4"
 			addIPv4TCPRule $src_dport
 		;;
 		"tcp6") 
 			local src_addresstype="TCP6-LISTEN"
 			local dest_addresstype="TCP6"
+			setupDefaultSrcIP "ipv6"
 			addIPv6TCPRule $src_dport
 		;;
 		"upd4")
 			local src_addresstype="UDP4-LISTEN"
 			local dest_addresstype="UDP4"
+			setupDefaultSrcIP "ipv4"
 			addIPv4UDPRule $src_dport
 		;;
 		"udp6")
 			local src_addresstype="UDP6-LISTEN"
 			local dest_addresstype="UDP6"
+			setupDefaultSrcIP "ipv6"
 			addIPv6UDPRule $src_dport
 		;;
 	esac

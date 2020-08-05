@@ -2,7 +2,6 @@ config global
 	option enabledd '1'
 	
 config redirect
-	option id '1'
 	option proto 'tcp4'
 	option src_ip '0.0.0.0'
 	option src_dport '60609'
@@ -12,7 +11,6 @@ config redirect
 	option enabled '0'
 	
 config redirect
-	option id '2'
 	option proto 'tcp6'
 	option src_ip '[::]'
 	option src_dport '60608'
@@ -22,7 +20,6 @@ config redirect
 	option enabled '0'
 	
 config redirect
-	option id '3'
 	option proto 'upd4'
 	option src_ip '0.0.0.0'
 	option src_dport '64511'
@@ -32,7 +29,6 @@ config redirect
 	option enabled '0'
 
 config redirect
-	option id '4'
 	option proto 'udp6'
 	option src_ip '[::]'
 	option src_dport '64500'

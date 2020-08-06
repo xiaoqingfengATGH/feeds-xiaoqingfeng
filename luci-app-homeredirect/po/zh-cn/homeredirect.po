@@ -30,3 +30,15 @@ msgstr "路由器IP"
 
 msgid "Status"
 msgstr "状态"
+
+msgid "Master switch"
+msgstr "总开关"
+
+msgid "Disabled"
+msgstr "未启用"
+
+msgid "Not running"
+msgstr "未运行"
+
+msgid "Running"
+msgstr "运行中"

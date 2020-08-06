@@ -2,12 +2,12 @@ local s = require "luci.sys"
 local m, s, o
 mp = Map("homeredirect", translate("Home Redirect - Port forwarding utility"))
 mp.description = translate("HomeRedirect is a customized port forwarding utility for HomeLede. It supports TCP / UDP protocol, IPv4 and IPv6.")
-mp.template = "homeredirect/index"
+mp:section(SimpleSection).template  = "homeredirect/index"
 
 s = mp:section(TypedSection, "global")
 s.anonymous = true
 
-enabled = s:option(Flag, "enabled", translate("Enable"))
+enabled = s:option(Flag, "enabled", translate("Master switch"))
 enabled.default = 0
 enabled.rmempty = false
 
@@ -21,7 +21,6 @@ enabled = s:option(Flag, "enabled", translate("Enabled"))
 enabled.rmempty = false
 
 name = s:option(Value, "name", translate("Name"))
-name.datatype = "port"
 name.optional = false
 name.rmempty = false
 

@@ -41,7 +41,7 @@ define Package/$(PKG_NAME)/conffiles
 endef
 
 define Package/$(PKG_NAME)/install
-	$(INSTALL_DIR) $(1)/etc/init.d
+	$(INSTALL_DIR) $(1)/etc/init.d $(1)/etc/config
 	$(INSTALL_BIN) files/etc/init.d/homeredirect $(1)/etc/init.d
 	$(INSTALL_CONF) files/etc/config/homeredirect $(1)/etc/config
 endef

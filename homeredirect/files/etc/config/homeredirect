@@ -1,5 +1,5 @@
 config global
-	option enabledd '1'
+	option enabled '1'
 	
 config redirect
 	option proto 'tcp4'
@@ -12,15 +12,15 @@ config redirect
 	
 config redirect
 	option proto 'tcp6'
-	option src_ip '[::]'
+	option src_ip '::'
 	option src_dport '60608'
-	option dest_ip '[fd5b:64cf:4ff4::1c4]'
+	option dest_ip 'fd5b:64cf:4ff4::1c4'
 	option dest_port '3389'
 	option name 'TCP_REDIRECT_IPV6'
 	option enabled '0'
 	
 config redirect
-	option proto 'upd4'
+	option proto 'udp4'
 	option src_ip '0.0.0.0'
 	option src_dport '64511'
 	option dest_ip '192.168.1.100'
@@ -30,9 +30,9 @@ config redirect
 
 config redirect
 	option proto 'udp6'
-	option src_ip '[::]'
+	option src_ip '::'
 	option src_dport '64500'
-	option dest_ip '[fd5b:64cf:4ff4::1c4]'
+	option dest_ip 'fd5b:64cf:4ff4::1c4'
 	option dest_port '4500'
 	option name 'UDP_REDIRECT_IPV6'
 	option enabled '0'

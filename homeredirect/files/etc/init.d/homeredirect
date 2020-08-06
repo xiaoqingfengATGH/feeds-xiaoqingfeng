@@ -11,7 +11,7 @@ setupDefaultSrcIP() {
 		if [ "$1" = "ipv4" ]; then
 			src_ip="0.0.0.0"
 		else
-			src_ip="[::]"
+			src_ip="::"
 		fi
 	fi
 }
@@ -47,6 +47,8 @@ setup() {
 			local dest_addresstype="TCP6"
 			setupDefaultSrcIP "ipv6"
 			addIPv6TCPRule $src_dport
+			src_ip="[$src_ip]"
+			dest_ip="[$dest_ip]"
 		;;
 		"upd4")
 			local src_addresstype="UDP4-LISTEN"
@@ -59,6 +61,8 @@ setup() {
 			local dest_addresstype="UDP6"
 			setupDefaultSrcIP "ipv6"
 			addIPv6UDPRule $src_dport
+			src_ip="[$src_ip]"
+			dest_ip="[$dest_ip]"
 		;;
 	esac
 
@@ -100,6 +104,7 @@ terminateRedirect() {
 	isRedirectRunning $1
 	[ "$?" = "1" ] && {
 		local runningPID=$(ps | grep socat | grep $RUNLOG_DIR/$1 | sed '/grep/d' | awk -F ' ' '{print $1}')
+		#echo "Going to kill process $runningPID"
 		kill $runningPID
 	}
 }

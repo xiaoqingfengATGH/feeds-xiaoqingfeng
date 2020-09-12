@@ -33,7 +33,15 @@ config smartdns
 config server
 	option enabled '1'
 	option type 'udp'
-	option name 'DNSPOD#1'
+	option name 'CN-ISP #1'
+	option ip '202.96.69.38'
+	option server_group 'mainland'
+	option blacklist_ip '0'
+
+config server
+	option enabled '1'
+	option type 'udp'
+	option name 'CN-DNSPOD #1'
 	option ip '119.29.29.29'
 	option server_group 'mainland'
 	option blacklist_ip '0'
@@ -41,7 +49,7 @@ config server
 config server
 	option enabled '1'
 	option type 'udp'
-	option name 'ALI#1'
+	option name 'CN-ALI #1'
 	option ip '223.5.5.5'
 	option server_group 'mainland'
 	option blacklist_ip '0'
@@ -49,7 +57,7 @@ config server
 config server
 	option enabled '1'
 	option type 'udp'
-	option name '114DNS #1'
+	option name 'CN-114DNS #1'
 	option ip '114.114.114.114'
 	option server_group 'mainland'
 	option blacklist_ip '0'
@@ -57,22 +65,48 @@ config server
 config server
 	option enabled '1'
 	option type 'udp'
-	option name 'BAIDU'
+	option name 'CN-BAIDU'
 	option ip '180.76.76.76'
 	option server_group 'mainland'
 	option blacklist_ip '0'
 
 config server
-	option enabled '1'
+	option enabled '0'
+	option name 'CN-ADV ALI DOH'
+	option server_group 'mainland'
+	option blacklist_ip '0'
+	option type 'https'
+	option ip 'https://223.5.5.5/dns-query'
+	
+config server
+	option enabled '0'
+	option name 'CN-ADV DNSPOD DOH'
+	option server_group 'mainland'
+	option blacklist_ip '0'
+	option type 'https'
+	option ip 'https://doh.pub/dns-query'
+
+config server
+	option enabled '0'
 	option type 'udp'
-	option name 'LN_UNICOM #1'
-	option ip '202.96.69.38'
+	option name 'CN-ADV USTC #1'
+	option ip '202.141.178.13'
+	option port '5353'
 	option server_group 'mainland'
 	option blacklist_ip '0'
 
 config server
-	option enabled '1'
-	option name 'Google DNS #1'
+	option enabled '0'
+	option type 'udp'
+	option name 'CN-ADV USTC #2'
+	option ip '202.141.162.123'
+	option port '5353'
+	option server_group 'mainland'
+	option blacklist_ip '0'
+
+config server
+	option enabled '0'
+	option name 'OS-Google DNS #1'
 	option server_group 'overseas'
 	option blacklist_ip '0'
 	option type 'https'
@@ -80,8 +114,8 @@ config server
 	option addition_arg '-exclude-default-group'
 
 config server
-	option enabled '1'
-	option name 'CloudFlare #1'
+	option enabled '0'
+	option name 'OS-CloudFlare #1'
 	option type 'https'
 	option server_group 'overseas'
 	option blacklist_ip '0'
@@ -89,8 +123,8 @@ config server
 	option addition_arg '-exclude-default-group'
 
 config server
-	option enabled '1'
-	option name 'Quad9 #1'
+	option enabled '0'
+	option name 'OS-Quad9 #1'
 	option type 'https'
 	option ip 'https://dns.quad9.net/dns-query'
 	option server_group 'overseas'
@@ -99,7 +133,7 @@ config server
 
 config server
 	option enabled '0'
-	option name 'Google DNS #1 TLS'
+	option name 'OS-Google DNS #1 TLS'
 	option port '853'
 	option type 'tls'
 	option server_group 'overseas'
@@ -109,19 +143,10 @@ config server
 
 config server
 	option enabled '0'
-	option name 'Quad9 #2 TLS'
+	option name 'OS-Quad9 #2 TLS'
 	option ip '149.112.112.112'
 	option port '853'
 	option type 'tls'
-	option server_group 'overseas'
-	option blacklist_ip '0'
-	option addition_arg '-exclude-default-group'
-
-config server
-	option enabled '0'
-	option type 'udp'
-	option name 'OpenDNS #1'
-	option ip '208.67.222.222'
 	option server_group 'overseas'
 	option blacklist_ip '0'
 	option addition_arg '-exclude-default-group'

@@ -6,8 +6,8 @@ include $(TOPDIR)/rules.mk
 
 PKG_NAME:=dnsmasq-china-list
 PKG_VERSION:=1.0
-PKG_RELEASE:=6
-PKG_DATE:=20200708
+PKG_RELEASE:=7
+PKG_DATE:=20200921
 PKG_BUILD_DIR:=$(BUILD_DIR)/$(PKG_NAME)
 
 PKG_MAINTAINER:=xiaoqingfeng <xiaoqingfengatgm@gmail.com>

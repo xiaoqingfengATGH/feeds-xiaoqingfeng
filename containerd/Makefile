@@ -20,7 +20,7 @@ PKG_INSTALL:=1
 GO_PKG:=github.com/containerd/containerd
 
 include $(INCLUDE_DIR)/package.mk
-include ../../lang/golang/golang-package.mk
+include $(TOPDIR)/feeds/packages/lang/golang/golang-package.mk
 
 define Package/containerd/config
 config CONTAINERD_SECCOMP

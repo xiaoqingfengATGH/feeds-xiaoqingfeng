@@ -2,7 +2,7 @@ include $(TOPDIR)/rules.mk
 
 PKG_NAME:=runc
 PKG_VERSION:=1.0.0-rc10
-PKG_RELEASE:=1
+PKG_RELEASE:=2
 PKG_LICENSE:=Apache-2.0
 PKG_LICENSE_FILES:=LICENSE
 
@@ -15,6 +15,7 @@ PKG_MAINTAINER:=Gerard Ryan <G.M0N3Y.2503@gmail.com>
 
 PKG_BUILD_DEPENDS:=golang/host
 PKG_BUILD_PARALLEL:=1
+PKG_INSTALL:=1
 PKG_USE_MIPS16:=0
 
 GO_PKG:=github.com/opencontainers/runc
@@ -39,7 +40,7 @@ define Package/runc
   CATEGORY:=Utilities
   TITLE:=runc container runtime
   URL:=https://www.opencontainers.org/
-  DEPENDS:=$(GO_ARCH_DEPENDS) @HAS_FPU @(aarch64||arm||x86_64) +RUNC_SECCOMP:libseccomp
+  DEPENDS:=$(GO_ARCH_DEPENDS) @(aarch64||arm||x86_64) +RUNC_SECCOMP:libseccomp
   MENU:=1
 endef
 
@@ -49,9 +50,8 @@ endef
 
 GO_PKG_INSTALL_ALL:=1
 MAKE_PATH:=$(GO_PKG_WORK_DIR_NAME)/build/src/$(GO_PKG)
-MAKE_VARS += $(call GoPackage/Environment)
-MAKE_FLAGS += \
-	COMMIT=$(PKG_SOURCE_VERSION)
+MAKE_VARS += $(GO_PKG_VARS)
+MAKE_FLAGS += COMMIT=$(PKG_SOURCE_VERSION)
 
 ifeq ($(ARCH),mips)
 MAKE_FLAGS += EXTRA_FLAGS='-buildmode=default'
@@ -63,16 +63,8 @@ else
 MAKE_FLAGS += BUILDTAGS=''
 endif
 
-define Build/Compile
-	$(call Build/Compile/Default)
-endef
-
-# Avoid installing binaries
-define Build/InstallDev
-	$(call Build/Compile/Default,clean)
-	rm -f $(STAMP_BUILT)
-	$(call GoPackage/Build/InstallDev,$(1))
-endef
+# Reset golang-package.mk overrides so we can use the Makefile
+Build/Compile=$(call Build/Compile/Default)
 
 define Package/runc/install
 	$(INSTALL_DIR) $(1)/usr/sbin/

@@ -1,14 +1,14 @@
 include $(TOPDIR)/rules.mk
 
 PKG_NAME:=https-dns-proxy
-PKG_VERSION:=2020-04-09
+PKG_VERSION:=2020-09-25
 PKG_RELEASE=1-xiaoqingfengMod
 
 PKG_SOURCE_PROTO:=git
 PKG_SOURCE_URL:=https://github.com/aarond10/https_dns_proxy
-PKG_SOURCE_DATE:=2020-04-09
-PKG_SOURCE_VERSION:=40647ce94c62a47e9d53efae8018fb3142e277b9
-PKG_MIRROR_HASH:=4a8052b8bd482a17b769bcd4ee2620368f8c91955c5e976088be8d2ab002dde6
+PKG_MIRROR_HASH:=fa8c1f5a72728a13d888365c74f167f81b8aaaf3a0eba43e220043d2307a7c6b
+PKG_SOURCE_DATE:=2020-09-25
+PKG_SOURCE_VERSION:=2d9285e2b94bce21c588c8160f8fac660806987a
 PKG_MAINTAINER:=Stan Grishin <stangri@melmac.net>
 PKG_LICENSE:=MIT
 PKG_LICENSE_FILES:=LICENSE
@@ -29,7 +29,7 @@ endef
 define Package/https-dns-proxy/install
 	$(INSTALL_DIR) $(1)/usr/sbin $(1)/etc/init.d ${1}/etc/config
 	$(INSTALL_BIN) $(PKG_BUILD_DIR)/https_dns_proxy $(1)/usr/sbin/https-dns-proxy
-	$(INSTALL_BIN) ./files/https-dns-proxy.init $(1)/etc/init.d/https-dns-proxy
+	#$(INSTALL_BIN) ./files/https-dns-proxy.init $(1)/etc/init.d/https-dns-proxy
 	$(INSTALL_CONF) ./files/https-dns-proxy.config $(1)/etc/config/https-dns-proxy
 endef
 

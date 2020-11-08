@@ -140,9 +140,18 @@ lb_strategy = 'p2'
 # log_level = 2
 
 
-## log file for the application
+## Log file for the application, as an alternative to sending logs to
+## the standard system logging service (syslog/Windows event log).
+##
+## This file is different from other log files, and will not be
+## automatically rotated by the application.
 
 # log_file = 'dnscrypt-proxy.log'
+
+
+## When using a log file, only keep logs from the most recent launch.
+
+# log_file_latest = true
 
 
 ## Use the system logger (syslog on Unix, Event Log on Windows)
@@ -455,7 +464,7 @@ cache_neg_max_ttl = 600
 
   ## Path to the file of blocking rules (absolute, or relative to the same directory as the config file)
 
-  blacklist_file = 'blacklist.txt'
+  # blacklist_file = 'blacklist.txt'
 
 
   ## Optional path to a file logging blocked queries
@@ -524,7 +533,6 @@ cache_neg_max_ttl = 600
   # log_format = 'tsv'
 
 
-
 ##########################################
 #        Time access restrictions        #
 ##########################################
@@ -584,7 +592,7 @@ cache_neg_max_ttl = 600
   ## An example of a remote source from https://github.com/DNSCrypt/dnscrypt-resolvers
 
   # [sources.'public-resolvers']
-  # urls = ['https://raw.githubusercontent.com/DNSCrypt/dnscrypt-resolvers/master/v2/public-resolvers.md', 'https://download.dnscrypt.info/resolvers-list/v2/public-resolvers.md']
+  # urls = ['https://raw.githubusercontent.com/DNSCrypt/dnscrypt-resolvers/master/v3/public-resolvers.md', 'https://download.dnscrypt.info/resolvers-list/v3/public-resolvers.md']
   # cache_file = 'public-resolvers.md'
   # minisign_key = 'RWQf6LRCGA9i53mlYecO4IzT51TGPpvWucNSCh1CBM0QTaLn73Y7GFO3'
   # prefix = ''
@@ -592,7 +600,7 @@ cache_neg_max_ttl = 600
   ## Anonymized DNS relays
 
   # [sources.'relays']
-  # urls = ['https://raw.githubusercontent.com/DNSCrypt/dnscrypt-resolvers/master/v2/relays.md', 'https://download.dnscrypt.info/resolvers-list/v2/relays.md']
+  # urls = ['https://raw.githubusercontent.com/DNSCrypt/dnscrypt-resolvers/master/v3/relays.md', 'https://download.dnscrypt.info/resolvers-list/v3/relays.md']
   # cache_file = 'relays.md'
   # minisign_key = 'RWQf6LRCGA9i53mlYecO4IzT51TGPpvWucNSCh1CBM0QTaLn73Y7GFO3'
   # refresh_delay = 72
@@ -613,9 +621,7 @@ cache_neg_max_ttl = 600
   #  urls = ['https://raw.githubusercontent.com/DNSCrypt/dnscrypt-resolvers/master/v2/parental-control.md', 'https://download.dnscrypt.info/resolvers-list/v2/parental-control.md']
   #  cache_file = 'parental-control.md'
   #  minisign_key = 'RWQf6LRCGA9i53mlYecO4IzT51TGPpvWucNSCh1CBM0QTaLn73Y7GFO3'
-
-
-
+  
 #########################################
 #        Servers with known bugs        #
 #########################################
@@ -636,20 +642,22 @@ fragments_blocked = ['cisco', 'cisco-ipv6', 'cisco-familyshield', 'cisco-familys
 
 
 
+#################################################################
+#        Certificate-based client authentication for DoH        #
+#################################################################
 
-################################
-#   TLS Client Authentication  #
-################################
-
+# Use a X509 certificate to authenticate yourself when connecting to DoH servers.
 # This is only useful if you are operating your own, private DoH server(s).
-# (for DNSCrypt, see the `query_meta` feature instead)
+# 'creds' maps servers to certificates, and supports multiple entries.
+# If you are not using the standard root CA, an optional "root_ca"
+# property set to the path to a root CRT file can be added to a server entry.
 
-[tls_client_auth]
+[doh_client_x509_auth]
 
+#
 # creds = [
 #    { server_name='myserver', client_cert='client.crt', client_key='client.key' }
 # ]
-
 
 
 ################################
@@ -686,21 +694,57 @@ fragments_blocked = ['cisco', 'cisco-ipv6', 'cisco-familyshield', 'cisco-familys
 # ]
 
 
-# skip resolvers incompatible with anonymization instead of using them directly
+# Skip resolvers incompatible with anonymization instead of using them directly
 
 skip_incompatible = false
 
 
 
+###############################
+#            DNS64            #
+###############################
+
+## DNS64 is a mechanism for synthesizing AAAA records from A records.
+## It is used with an IPv6/IPv4 translator to enable client-server
+## communication between an IPv6-only client and an IPv4-only server,
+## without requiring any changes to either the IPv6 or the IPv4 node,
+## for the class of applications that work through NATs.
+##
+## There are two options to synthesize such records:
+## Option 1: Using a set of static IPv6 prefixes;
+## Option 2: By discovering the IPv6 prefix from DNS64-enabled resolver.
+##
+## If both options are configured - only static prefixes are used.
+## (Ref. RFC6147, RFC6052, RFC7050)
+##
+## Do not enable unless you know what DNS64 is and why you need it, or else
+## you won't be able to connect to anything at all.
+
+[dns64]
+
+## (Option 1) Static prefix(es) as Pref64::/n CIDRs.
+# prefix = ["64:ff9b::/96"]
+
+## (Option 2) DNS64-enabled resolver(s) to discover Pref64::/n CIDRs.
+## These resolvers are used to query for Well-Known IPv4-only Name (WKN) "ipv4only.arpa." to discover only.
+## Set with your ISP's resolvers in case of custom prefixes (other than Well-Known Prefix 64:ff9b::/96).
+## IMPORTANT: Default resolvers listed below support Well-Known Prefix 64:ff9b::/96 only.
+# resolver = ["[2606:4700:4700::64]:53", "[2001:4860:4860::64]:53"]
+
+
+
+########################################
+#            Static entries            #
+########################################
 
 ## Optional, local, static list of additional servers
 ## Mostly useful for testing your own servers.
 
 [static]
-  [static.'quad101']
-  # DNSSEC-aware public resolver by the Taiwan Network Information Center (TWNIC)
-  # https://101.101.101.101/index_en.html
-  stamp = 'sdns://AgcAAAAAAAAAACAoPxWWFWiOuUdTdn7SvYpzbNqr_iDmmJrktihy4wca5gxkbnMudHduaWMudHcKL2Rucy1xdWVyeQ'
+
+  [static.'dnslify-doh']
+  # Non-logging DoH server in Amsterdam, Frankfurt, London, New York, Silicon Valley and Singapore. https://www.dnslify.com/
+  stamp = 'sdns://AgcAAAAAAAAADDE4NS4yMzUuODEuMSA-GhoPbFPz6XpJLVcIS1uYBwWe4FerFQWHb9g_2j24OA9kb2guZG5zbGlmeS5jb20KL2Rucy1xdWVyeQ'
 
   [static.'quad9-doh-ip4-nofilter-pri']
   # Quad9 (anycast) no-dnssec/no-log/no-filter 9.9.9.10
@@ -717,3 +761,11 @@ skip_incompatible = false
   [static.'google']
   # Google DNS (anycast)
   stamp = 'sdns://AgUAAAAAAAAABzguOC44LjigHvYkz_9ea9O63fP92_3qVlRn43cpncfuZnUWbzAMwbkgdoAkR6AZkxo_AEMExT_cbBssN43Evo9zs5_ZyWnftEUKZG5zLmdvb2dsZQovZG5zLXF1ZXJ5'
+  
+  [static.'nextdns']
+  # Next DNS
+  stamp = 'sdns://AgcAAAAAAAAACjQ1LjkwLjI4LjAgPhoaD2xT8-l6SS1XCEtbmAcFnuBXqxUFh2_YP9o9uDgOZG5zLm5leHRkbnMuaW8PL2Ruc2NyeXB0LXByb3h5'
+  
+  [static.'meganerd']
+  # meganerd of Netherlands
+  stamp = 'sdns://AQcAAAAAAAAADjEzNi4yNDQuOTcuMTE0IPyq3HBOXuNgu6FO4pU71Si6CTV6kPD85NA6AThr_6tiGDIuZG5zY3J5cHQtY2VydC5tZWdhbmVyZA'

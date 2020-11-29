@@ -1,14 +1,12 @@
 include $(TOPDIR)/rules.mk
 
 PKG_NAME:=chinadns-ng
-PKG_VERSION:=2020.4.10
-PKG_RELEASE:=4-xiaoqingfengMod
+PKG_VERSION:=1.0-beta.23
+PKG_RELEASE:=1-xiaoqingfengMod
 
 PKG_SOURCE_PROTO:=git
 PKG_SOURCE_URL:=https://github.com/zfl9/chinadns-ng.git
-PKG_MIRROR_HASH:=d6450e0731602fa24d437912a4dd4b6d74000237e8ccf334a175c96285accb86
-PKG_SOURCE_VERSION:=90e9f263fa6b4954d52dfa2f36948968269bc73b
-
+PKG_SOURCE_VERSION:=748a043dd7fb7ec71efbb7306f9dd21db5ce560f
 PKG_SOURCE:=$(PKG_NAME)-$(PKG_VERSION)-$(PKG_SOURCE_VERSION).tar.gz
 PKG_SOURCE_SUBDIR:=$(PKG_NAME)-$(PKG_VERSION)-$(PKG_SOURCE_VERSION)
 PKG_BUILD_DIR:=$(BUILD_DIR)/$(PKG_NAME)/$(PKG_SOURCE_SUBDIR)
@@ -25,13 +23,13 @@ include $(INCLUDE_DIR)/package.mk
 define Package/chinadns-ng
 	SECTION:=net
 	CATEGORY:=Network
-	TITLE:=ChinaDNS next generation, refactoring with epoll and ipset
+	TITLE:=ChinaDNS Next Generation, refactoring with epoll and ipset
 	URL:=https://github.com/zfl9/chinadns-ng
 	DEPENDS:=+ipset
 endef
 
 define Package/chinadns-ng/description
-ChinaDNS next generation, refactoring with epoll and ipset.
+ChinaDNS Next Generation, refactoring with epoll and ipset.
 endef
 
 define Package/chinadns-ng/conffiles

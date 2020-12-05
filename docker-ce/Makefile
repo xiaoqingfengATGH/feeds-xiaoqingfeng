@@ -2,7 +2,7 @@ include $(TOPDIR)/rules.mk
 
 PKG_NAME:=docker-ce
 PKG_VERSION:=19.03.13
-PKG_RELEASE:=1
+PKG_RELEASE:=5
 PKG_LICENSE:=Apache-2.0
 PKG_LICENSE_FILES:=components/cli/LICENSE components/engine/LICENSE
 
@@ -77,8 +77,7 @@ define Build/Configure
 	mkdir -p $(GO_PKG_BUILD_DIR)/bin \
 			 $(GO_PKG_BUILD_DIR)/src \
 			 $(GO_PKG_BUILD_DIR)/src/$(GO_PKG)/ \
-			 $(GO_PKG_CACHE_DIR) \
-			 $(GO_PKG_TMP_DIR)
+			 $(GO_BUILD_CACHE_DIR)
 	$(LN) $(PKG_BUILD_DIR)/cli $(GO_PKG_BUILD_DIR)/src/$(GO_PKG)/cli
 	$(LN) $(PKG_BUILD_DIR)/engine $(GO_PKG_BUILD_DIR)/src/$(GO_PKG)/docker
 endef

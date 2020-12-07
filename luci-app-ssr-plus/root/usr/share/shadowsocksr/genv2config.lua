@@ -5,17 +5,7 @@ local proto = arg[2]
 local local_port = arg[3] or "0"
 local socks_port = arg[4] or "0"
 local server = ucursor:get_all("shadowsocksr", server_section)
-local outbound_security = "none"
-
-if (server.xtls == '1')
-then
-	outbound_security = "xtls"
-elseif (server.tls == '1')
-then
-	outbound_security = "tls"
-end
-
-local vless = {
+local Xray = {
 log = {
 -- error = "/var/ssrplus.log",
 loglevel = "warning"
@@ -46,7 +36,7 @@ inboundDetour = (proto == "tcp" and socks_port ~= "0") and {
 } or nil,
 -- 传出连接
 outbound = {
-	protocol = "vless",
+	protocol = (server.type == "v2ray") and "vmess" or "vless",
 	settings = {
 		vnext = {
 			{
@@ -55,28 +45,30 @@ outbound = {
 				users = {
 					{
 						id = server.vmess_id,
+						alterId = (server.type == "v2ray") and tonumber(server.alter_id) or nil,
+						security = (server.type == "v2ray") and server.security or nil,
+						encryption = (server.type == "vless") and server.vless_encryption or nil,
 						flow = (server.xtls == '1') and (server.vless_flow and server.vless_flow or "xtls-rprx-origin") or nil,
-						encryption = server.vless_encryption
 					}
 				}
 			}
 		}
 	},
-	-- 底层传输配置
+-- 底层传输配置
 	streamSettings = {
 		network = server.transport,
-		security = outbound_security,
-		tlsSettings = (outbound_security == "tls") and {allowInsecure = (server.insecure ~= "0") and true or false,serverName=server.tls_host,} or nil,
-		xtlsSettings = (outbound_security == "xtls") and {allowInsecure = (server.insecure ~= "0") and true or false,serverName=server.tls_host,} or nil,
-		tcpSettings = (server.transport == "tcp") and {
+		security = (server.tls == '1') and ((server.xtls == '1') and "xtls" or "tls") or "none",
+		tlsSettings = (server.tls == '1' and server.xtls == '0') and {allowInsecure = (server.insecure ~= "0") and true or nil,serverName=server.tls_host,} or nil,
+		xtlsSettings = (server.xtls == '1') and {allowInsecure = (server.insecure ~= "0") and true or nil,serverName=server.tls_host,} or nil,
+		tcpSettings = (server.transport == "tcp" and server.tcp_guise == "http") and {
 			header = {
 				type = server.tcp_guise,
 				request = {
-					path = server.http_path or {"/"},
+					path = {server.http_path} or {"/"},
 					headers = {
-						Host = server.http_host or {}
+						Host = {server.http_host} or {}
 					}
-				} or {}
+				}
 			}
 		} or nil,
 		kcpSettings = (server.transport == "kcp") and {
@@ -99,8 +91,8 @@ outbound = {
 			} or nil,
 		} or nil,
 		httpSettings = (server.transport == "h2") and {
-			path = server.h2_path,
-			host = server.h2_host,
+			path = server.h2_path or "",
+			host = {server.h2_host} or nil
 		} or nil,
 		quicSettings = (server.transport == "quic") and {
 			security = server.quic_security,
@@ -110,18 +102,10 @@ outbound = {
 			}
 		} or nil
 	},
-	mux = {
+	mux = (server.xtls ~= "1") and {
 		enabled = (server.mux == "1") and true or false,
 		concurrency = tonumber(server.concurrency)
-	}
-},
--- 额外传出连接
-outboundDetour = {
-		{
-			protocol = "freedom",
-			tag = "direct",
-			settings = { keep = "" }
-		}
-	}
+	} or nil
+} or nil
 }
-print(json.stringify(vless, 1))
+print(json.stringify(Xray,1))

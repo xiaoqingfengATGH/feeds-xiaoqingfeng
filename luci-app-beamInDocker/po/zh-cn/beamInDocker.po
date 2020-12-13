@@ -1,8 +1,8 @@
 msgid "Beam(Docker)"
-msgstr "小手电(Docker)"
+msgstr "Beam(Docker)"
 
 msgid "An internet access accelerator utility"
-msgstr "网络加速器"
+msgstr "Beam网络加速器Docker版。"
 
 msgid "Detecting..."
 msgstr "正在检测..."
@@ -18,45 +18,6 @@ msgstr "Beam docker 镜像下载器"
 
 msgid "Current Condition"
 msgstr "当前状态"
-
-msgid "General settings"
-msgstr "基本设置"
-
-msgid "VPN Client IP"
-msgstr "VPN客户端地址段"
-
-msgid "VPN Client reserved started IP addresses with the same subnet mask"
-msgstr "分配给VPN客户端获取IP的起始地址，例如 192.168.100.10/24"
-
-msgid "useLanDHCP"
-msgstr "VPN客户端使用家庭内网IP"
-
-msgid "lanDHCPServer"
-msgstr "家庭内网DHCP服务器地址"
-
-msgid "VPN Client DNS"
-msgstr "VPN客户端DNS服务器"
-
-msgid "DNS using in VPN tunnel."
-msgstr "指定VPN客户端的DNS地址。"
-
-msgid "Secret Pre-Shared Key"
-msgstr "PSK密钥"
-
-msgid "is_nat"
-msgstr "NAT转发"
-
-msgid "Interface"
-msgstr "接口"
-
-msgid "Specify interface forwarding traffic."
-msgstr "指定接口转发流量。"
-
-msgid "Disable from startup"
-msgstr "禁止开机启动"
-
-msgid "Enable on startup"
-msgstr "允许开机启动"
 
 msgid "NOT RUNNING"
 msgstr "未运行"
@@ -78,3 +39,9 @@ msgstr "启动中"
 
 msgid "Downloading"
 msgstr "正在下载"
+
+msgid "Work with PSW"
+msgstr "自动配置PSW"
+
+msgid "Add beam to PSW node list and set it to default tcp proxy. Please confirm beam is running before operation. After the operation is completed, your browser will jump to the home page of PSW."
+msgstr "将Beam添加到PSW节点列表，并设置为默认TCP出口。请确认Beam可以正常工作后，再进行这个操作。自动配置需要一点时间，点击后请耐心等待，完毕后会自动跳转到PSW首页。"

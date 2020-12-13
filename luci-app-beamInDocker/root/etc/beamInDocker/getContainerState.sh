@@ -3,7 +3,7 @@
 . /etc/beamInDocker/dockerControl.sh
 
 isImageExist
-[ $? -eq 1 ] && {
+[ $? -eq 0 ] && {
 	echo 1
 	exit 1
 }

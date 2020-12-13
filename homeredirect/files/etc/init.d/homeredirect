@@ -1,4 +1,4 @@
-#!/bin/bash /etc/rc.common
+#!/bin/sh /etc/rc.common
 
 START=99
 
@@ -123,7 +123,7 @@ start() {
 	local vt_enabled=$(uci -q get homeredirect.@global[0].enabled)
 	if [ "$vt_enabled" = 0 ]; then
 		terminateAll
-		clearAllfwRules "withFWRestart"
+		/etc/homeredirect/clearAllfwRules.sh "withFWRestart"
 		return 1
 	fi
 	
@@ -131,7 +131,7 @@ start() {
 	mkdir -p $RUNLOG_DIR
 	
 	config_load homeredirect
-	clearAllfwRules
+	/etc/homeredirect/clearAllfwRules.sh
 	PROCESSED_REDIRECT=0
 	config_foreach setup redirect
 	[ "$PROCESSED_REDIRECT" == "1" ] && {
@@ -143,29 +143,11 @@ start() {
 
 stop() {
 	terminateAll
-	clearAllfwRules "withFWRestart"
+	/etc/homeredirect/clearAllfwRules.sh "withFWRestart"
 	echo 'HomeRedirect stopped.'
 }
 
 #############################################################################################################
-clearAllfwRules() {
-	fwRC=$(cat /etc/config/firewall | grep rule | wc -l)
-	fwMI=$(expr $fwRC - 1)
-	change=0
-	for((i=$fwRC;i>=0;i=i-1))
-	do
-		ruleName=$(uci -q get firewall.@rule[$i].name)
-		if [ -n ${ruleName} ] && [ "${ruleName:0:3}" == "HR_" ]; then
-			uci delete firewall.@rule[$i]
-			change=1
-		fi
-	done
-	
-	[ "$change" == "1" ] && {
-		uci commit firewall >/dev/null 2>&1
-		[  "withFWRestart" == "$1" ] && /etc/init.d/firewall restart >/dev/null 2>&1
-	}
-}
 
 # param $1 is port on router
 addIPv4TCPRule() {

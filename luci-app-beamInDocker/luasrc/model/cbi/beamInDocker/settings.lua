@@ -26,11 +26,12 @@ function o.write(a, b)
     luci.sys.call("/etc/init.d/" .. appname .. " stop && /usr/share/" .. appname .. "/iptables.sh flush_ipset && /etc/init.d/" .. appname .. " restart")
 end
 ]]
+--[[
 guiport = s:option(Value, "guiport", translate("GUI Port"))
 guiport.datatype = "port"
 guiport.optional = false
 guiport.rmempty = false
-
+]]
 o = s:option(Button, "psw_plugin", translate("Work with PSW"), translate("Add beam to PSW node list and set it to default tcp proxy. Please confirm beam is running before operation. After the operation is completed, your browser will jump to the home page of PSW."))
 o.inputstyle = "apply"
 function o.write(a, b)

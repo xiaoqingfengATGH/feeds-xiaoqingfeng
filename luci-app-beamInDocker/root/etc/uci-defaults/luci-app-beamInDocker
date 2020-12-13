@@ -11,7 +11,4 @@ EOF
 chmod +x /etc/beamInDocker/*.sh
 chmod +x /etc/init.d/beamInDocker
 rm -rf /tmp/luci-*cache
-[ -f /etc/beamInDocker/preLoad.7z ] && {
-	7z x -so /etc/beamInDocker/preLoad.7z |docker load
-}
 exit 0

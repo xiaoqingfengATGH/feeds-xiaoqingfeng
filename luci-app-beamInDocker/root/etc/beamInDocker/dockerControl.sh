@@ -66,7 +66,13 @@ function removeNetwork()
 function startContainer()
 {
 	isImageExist
-	[ $? -eq 0 ] && return 1
+	[ $? -eq 0 ] && {
+		[ -f /etc/beamInDocker/preLoad.7z ] && {
+			7z x -so /etc/beamInDocker/preLoad.7z |docker load
+		} || {
+			return 1
+		}
+	}
 	isContainerRunning
 	[ $? -eq 1 ] && return 2
 	isContainerExist

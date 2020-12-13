@@ -1,6 +1,6 @@
 #!/bin/sh /etc/rc.common
 
-START=99
+START=95
 
 . /etc/beamInDocker/dockerControl.sh
 

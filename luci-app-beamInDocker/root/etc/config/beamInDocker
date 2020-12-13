@@ -1,0 +1,9 @@
+
+config service 'beam'
+	option version '0.1.19'
+	option imageid '580a976cd4ac'
+	option imageurl 'https://raw.githubusercontent.com/xiaoqingfengATGH/lantern/master/beam/beam.7z'
+	option imagepkgmd5 '07ab8b7b2b49c8516c7205ea1011d818'
+	option guiport '18080'
+	option enabled '1'
+

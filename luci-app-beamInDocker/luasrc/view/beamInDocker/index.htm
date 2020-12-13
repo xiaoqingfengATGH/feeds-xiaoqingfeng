@@ -1,0 +1,25 @@
+<% include("cbi/map") %>
+<script type="text/javascript">//<![CDATA[
+	XHR.poll(2, '<%=luci.dispatcher.build_url("admin", "vpn", "beamInDocker", "status")%>', null,
+		function(x, result)
+		{
+			var status = document.getElementsByClassName('beam_status')[0];
+			status.setAttribute("style","font-weight:bold;");
+			status.setAttribute("color",result.status==0 ? "green":"red");
+			switch(result.status) {
+			 case 1:
+				status.innerHTML = '<%=translate("Beam docker image not found")%>'
+				break;
+			 case 2:
+				status.innerHTML = '<%=translate("NOT RUNNING")%>'
+				break;
+			 case 3:
+				status.innerHTML = '<%=translate("NOT RUNNING")%>'
+				break;
+			 default:
+				status.innerHTML = '<%=translate("RUNNING")%>'
+			}
+		}
+	)
+//]]>
+</script>

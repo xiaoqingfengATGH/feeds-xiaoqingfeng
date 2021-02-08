@@ -1,43 +1,24 @@
 include $(TOPDIR)/rules.mk
 
 PKG_NAME:=luci-app-chinadns-ng
-PKG_VERSION:=1.0
-PKG_RELEASE:=3-xiaoqingfengMod
+PKG_VERSION:=1.1
+PKG_RELEASE:=7-xiaoqingfengMod
 
-LUCI_TITLE:=LuCI for chinadns-ng
-LUCI_DESCRIPTION:=Provides Luci for chinadnsng
-LUCI_DEPENDS:=+chinadns-ng
+LUCI_TITLE:=LuCI support for chinadns-ng
+LUCI_DESCRIPTION:=LuCI Support for chinadns-ng.
+LUCI_DEPENDS:=+chinadns-ng +wget
 LUCI_PKGARCH:=all
 
-include $(INCLUDE_DIR)/package.mk
+include $(TOPDIR)/feeds/luci/luci.mk
 
-define Package/$(PKG_NAME)
-	SECTION:=luci
-	CATEGORY:=LuCI
-	SUBMENU:=3. Applications
-	TITLE:=LuCI support for chinadns-ng
-	description:=Provides Luci for chinadnsng
-	LUCI_DEPENDS:=+chinadns-ng
+define Package/chinadns-ng/conffiles
+/etc/config/chinadns-ng
+/etc/chinadns-ng/chnroute.txt
+/etc/chinadns-ng/chnroute6.txt
+/etc/chinadns-ng/gfwlist.txt
+/etc/chinadns-ng/chinalist.txt
+/etc/chinadns-ng/whitelist.txt
+/etc/chinadns-ng/blacklist.txt
 endef
 
-define Build/Prepare
-	$(foreach po,$(wildcard ${CURDIR}/luasrc/i18n/*.po), \
-		po2lmo $(po) ${CURDIR}/luasrc/i18n/$(patsubst %.po,%.lmo,$(notdir $(po)));)
-endef
-
-define Build/Configure
-endef
-
-define Build/Compile
-endef
-
-define Package/$(PKG_NAME)/install
-	$(INSTALL_DIR) $(1)/usr/lib/lua/luci/i18n
-	$(INSTALL_DATA) ${CURDIR}/luasrc/i18n/*.lmo $(1)/usr/lib/lua/luci/i18n/
-	$(INSTALL_DIR) $(1)/usr/lib/lua/luci/model/cbi
-	$(INSTALL_DATA) luasrc/model/cbi/chinadns-ng.lua $(1)/usr/lib/lua/luci/model/cbi/chinadns-ng.lua
-	$(INSTALL_DIR) $(1)/usr/lib/lua/luci/controller
-	$(INSTALL_DATA) luasrc/controller/chinadns-ng.lua $(1)/usr/lib/lua/luci/controller/chinadns-ng.lua
-endef
-
-$(eval $(call BuildPackage,$(PKG_NAME)))
+# call BuildPackage - OpenWrt buildroot signature

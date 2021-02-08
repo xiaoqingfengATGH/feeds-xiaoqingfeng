@@ -2,7 +2,7 @@
 	edge is a clean HTML5 theme for LuCI. It is based on luci-theme-material edge Template
 
 	luci-theme-edge
-	Copyright 2019 Jerrykuku <jerrykuku@qq.com>
+	Copyright 2020 GaryPang <garyp@qq.com>
 
 	Have a bug? Please create an issue here on GitHub!
 	https://github.com/jerrykuku/luci-theme-edge/issues 
@@ -41,15 +41,6 @@
 
 	local c = tree
 	local i, r
-	
-	function glob(...)
-		local iter, code, msg = fs.glob(...)
-		if iter then
-			return nutil.consume(iter)
-		else
-			return nil, code, msg
-		end
-	end
 	
 	-- tag all nodes leading to this page
 	for i, r in ipairs(request) do
@@ -153,7 +144,7 @@
 				else
 					local title = pcdata(striptags(translate(nnode.title)))
                                         local en_title = pcdata(striptags(nnode.title))
-					write('<li  class="slide"><a  class="logout" data-title="%s" href="%s">%s</a></li>' %{
+					write('<li  class="slide"><a  class="Logout" data-title="%s" href="%s">%s</a></li>' %{
 						en_title,
 						nodeurl(category, r, nnode.query),
 						title
@@ -189,8 +180,6 @@
 	end
 	
 	math.randomseed(os.time())
-	local bgTable = glob("/www/luci-static/argon/img/*")
-	local  bgcount = table.getn(bgTable) 
 -%>
 <!DOCTYPE html>
 <html lang="<%=luci.i18n.context.lang%>">

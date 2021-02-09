@@ -11,6 +11,8 @@ START=17
 USE_PROCD=1
 #PROCD_DEBUG=1
 
+CRON_FILE=/etc/crontabs/root
+
 append_param() {
 	local section="$1"
 	local option="$2"
@@ -43,6 +45,22 @@ append_param_if_neq() {
 	[ -n "$_loctmp" ] || return 0
 	[ "$_loctmp" != "$compare" ] || return 0
 	procd_append_param command "$switch" "$_loctmp"
+}
+
+add_cron() {
+	local enable
+	local auto_update
+	config_get_bool enable $1 enable
+	config_get_bool auto_update $1 auto_update
+	touch $CRON_FILE
+	sed -i '/chinadns-ng_update/d' $CRON_FILE
+	([ "$enable" = 1 ] && [ "$auto_update" = 1 ]) && echo "0 3 * * 6 /usr/share/chinadns-ng/chinadns-ng_update.sh >>/tmp/chinadns-ng_update.log 2>&1" >>$CRON_FILE
+	crontab $CRON_FILE
+}
+
+del_cron() {
+	sed -i '/chinadns-ng_update/d' $CRON_FILE
+	/etc/init.d/cron restart
 }
 
 get_cpu_cores() {
@@ -152,13 +170,24 @@ start_chinadns_ng() {
 	done
 }
 
+service_triggers() {
+	procd_add_reload_trigger "chinadns-ng"
+}
+
 start_service() {
 	config_load chinadns-ng
 	config_foreach create_chnroute_ipset chinadns-ng
+	config_foreach add_cron chinadns-ng
 	config_foreach start_chinadns_ng chinadns-ng
 }
 
 stop_service() {
 	config_load chinadns-ng
 	config_foreach destroy_chnroute_ipset chinadns-ng
+	del_cron
+}
+
+reload_service() {
+	stop
+	start
 }

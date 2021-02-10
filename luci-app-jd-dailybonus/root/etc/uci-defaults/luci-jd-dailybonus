@@ -8,4 +8,5 @@ uci -q batch <<-EOF >/dev/null
 EOF
 
 rm -f /tmp/luci-indexcache
+chmod +x /etc/init.d/jd-dailybonus
 exit 0

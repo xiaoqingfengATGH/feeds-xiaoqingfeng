@@ -6,6 +6,11 @@ RUNLOG_DIR=/tmp/hr
 
 PROCESSED_REDIRECT=0
 
+log()
+{
+	logger -t homeredirect $1
+}
+
 setupDefaultSrcIP() {
 	if [ "$src_ip" = "" ]; then
 		if [ "$1" = "ipv4" ]; then
@@ -68,7 +73,7 @@ setup() {
 
 	#echo "nohup socat -lf $RUNLOG_DIR/$id.log $src_addresstype:$src_dport,bind=$src_ip,fork $dest_addresstype:$dest_ip:$dest_port > $RUNLOG_DIR/$id.log 2>&1 &"
 	nohup socat -lf $RUNLOG_DIR/$id.log $src_addresstype:$src_dport,bind=$src_ip,fork $dest_addresstype:$dest_ip:$dest_port > $RUNLOG_DIR/$id.log 2>&1 &
-	echo "[HomeRedirect] Port redirect from $proto $src_ip:$src_dport==>$dest_addresstype:$dest_ip:$dest_port started."
+	log "[HomeRedirect] Port redirect from $proto $src_ip:$src_dport==>$dest_addresstype:$dest_ip:$dest_port started."
 }
 
 # param $1 is port
@@ -113,9 +118,7 @@ terminateAll() {
 	local runningPIDs=$(ps | grep socat | grep $RUNLOG_DIR | sed '/grep/d' | awk -F ' ' '{print $1}')
 	[ -n "$runningPIDs" ] && {
 		kill $runningPIDs
-		echo "Redirect process : "
-		echo $runningPIDs
-		echo "stopped."
+		log "Redirect process : $runningPIDs stopped."
 	}
 }
 
@@ -138,13 +141,13 @@ start() {
 		uci commit firewall >/dev/null 2>&1
 		/etc/init.d/firewall restart >/dev/null 2>&1
 	}
-	echo 'HomeRedirect started.'
+	log 'HomeRedirect started.'
 }
 
 stop() {
 	terminateAll
 	/etc/homeredirect/clearAllfwRules.sh "withFWRestart"
-	echo 'HomeRedirect stopped.'
+	log 'HomeRedirect stopped.'
 }
 
 #############################################################################################################

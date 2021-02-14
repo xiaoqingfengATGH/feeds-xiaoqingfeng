@@ -6,9 +6,9 @@
 include $(TOPDIR)/rules.mk
 
 PKG_NAME:=HomeRedirect
-PKG_VERSION:=1.1
+PKG_VERSION:=1.2
 PKG_RELEASE:=1
-PKG_DATE:=20201213
+PKG_DATE:=20210214
 
 PKG_MAINTAINER:=xiaoqingfeng <xiaoqingfengatgm@gmail.com>
 PKG_LICENSE:=GPL-3.0-or-later
@@ -41,8 +41,9 @@ define Package/$(PKG_NAME)/conffiles
 endef
 
 define Package/$(PKG_NAME)/install
-	$(INSTALL_DIR) $(1)/etc/init.d $(1)/etc/config
-	$(INSTALL_DIR) $(1)/etc/init.d $(1)/etc/homeredirect
+	$(INSTALL_DIR) $(1)/etc/init.d
+	$(INSTALL_DIR) $(1)/etc/config
+	$(INSTALL_DIR) $(1)/etc/homeredirect
 	$(INSTALL_BIN) files/etc/init.d/homeredirect $(1)/etc/init.d
 	$(INSTALL_BIN) files/etc/homeredirect/clearAllfwRules.sh $(1)/etc/homeredirect
 	$(INSTALL_CONF) files/etc/config/homeredirect $(1)/etc/config

@@ -13,7 +13,7 @@ config chinadns-ng
 	option repeat_times '3'
 	option chnlist_first '0'
 	option fair_mode '0'
-	option reuse_port '1'
+	option reuse_port '0'
 	option noip_as_chnip '0'
 	option auto_update '0'
 

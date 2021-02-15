@@ -18,7 +18,6 @@ setupDefaultSrcIP() {
 		else
 			src_ip="::"
 		fi
-		echo "$1===|$src_ip|"
 	fi
 }
 
@@ -149,44 +148,56 @@ stop() {
 
 # param $1 is port on router
 addIPv4TCPRule() {
-	uci -q add firewall rule >/dev/null 2>&1
-	uci set firewall.@rule[-1].src=wan
-	uci set firewall.@rule[-1].proto=tcp
-	uci set firewall.@rule[-1].dest_port=$1 
-	uci set firewall.@rule[-1].target=ACCEPT
-	uci set firewall.@rule[-1].family=ipv4
-	uci set firewall.@rule[-1].name=HR_T4_$1
+uci -q batch <<-EOF >/dev/null
+	add firewall rule
+	rename firewall.@rule[-1]="HR_T4_$1"
+	set firewall.@rule[-1].name=HR_T4_$1
+	set firewall.@rule[-1].src=wan
+	set firewall.@rule[-1].proto=tcp
+	set firewall.@rule[-1].dest_port=$1 
+	set firewall.@rule[-1].target=ACCEPT
+	set firewall.@rule[-1].family=ipv4
+EOF
 }
 
 # param $1 is port on router
 addIPv4UDPRule() {
-	uci -q add firewall rule >/dev/null 2>&1
-	uci set firewall.@rule[-1].src=wan
-	uci set firewall.@rule[-1].proto=udp
-	uci set firewall.@rule[-1].dest_port=$1 
-	uci set firewall.@rule[-1].target=ACCEPT
-	uci set firewall.@rule[-1].family=ipv4
-	uci set firewall.@rule[-1].name=HR_U4_$1
+uci -q batch <<-EOF >/dev/null
+	add firewall rule
+	rename firewall.@rule[-1]="HR_U4_$1"
+	set firewall.@rule[-1].name=HR_U4_$1
+	set firewall.@rule[-1].src=wan
+	set firewall.@rule[-1].proto=udp
+	set firewall.@rule[-1].dest_port=$1 
+	set firewall.@rule[-1].target=ACCEPT
+	set firewall.@rule[-1].family=ipv4
+EOF
 }
 
 # param $1 is port on router
 addIPv6TCPRule() {
-	uci -q add firewall rule >/dev/null 2>&1
-	uci set firewall.@rule[-1].src=wan
-	uci set firewall.@rule[-1].proto=tcp
-	uci set firewall.@rule[-1].dest_port=$1 
-	uci set firewall.@rule[-1].target=ACCEPT
-	uci set firewall.@rule[-1].family=ipv6
-	uci set firewall.@rule[-1].name=HR_T6_$1
+uci -q batch <<-EOF >/dev/null
+	add firewall rule
+	rename firewall.@rule[-1]="HR_T6_$1"
+	set firewall.@rule[-1].name=HR_T6_$1
+	set firewall.@rule[-1].src=wan
+	set firewall.@rule[-1].proto=tcp
+	set firewall.@rule[-1].dest_port=$1 
+	set firewall.@rule[-1].target=ACCEPT
+	set firewall.@rule[-1].family=ipv6
+EOF
 }
 
 # param $1 is port on router
 addIPv6UDPRule() {
-	uci -q add firewall rule >/dev/null 2>&1
-	uci set firewall.@rule[-1].src=wan
-	uci set firewall.@rule[-1].proto=udp
-	uci set firewall.@rule[-1].dest_port=$1 
-	uci set firewall.@rule[-1].target=ACCEPT
-	uci set firewall.@rule[-1].family=ipv6
-	uci set firewall.@rule[-1].name=HR_U6_$1
+uci -q batch <<-EOF >/dev/null
+	add firewall rule
+	rename firewall.@rule[-1]="HR_U6_$1"
+	set firewall.@rule[-1].name=HR_U6_$1
+	set firewall.@rule[-1].src=wan
+	set firewall.@rule[-1].proto=udp
+	set firewall.@rule[-1].dest_port=$1 
+	set firewall.@rule[-1].target=ACCEPT
+	set firewall.@rule[-1].family=ipv6
+EOF
 }

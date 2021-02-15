@@ -12,12 +12,13 @@ log()
 }
 
 setupDefaultSrcIP() {
-	if [ "$src_ip" = "" ]; then
+	if [ -z $src_ip ];then
 		if [ "$1" = "ipv4" ]; then
 			src_ip="0.0.0.0"
 		else
 			src_ip="::"
 		fi
+		echo "$1===|$src_ip|"
 	fi
 }
 
@@ -39,37 +40,31 @@ setup() {
 
 	PROCESSED_REDIRECT=1
 
-	
-	case "$proto" in
-		"tcp4")
-			local src_addresstype="TCP4-LISTEN"
-			local dest_addresstype="TCP4"
-			setupDefaultSrcIP "ipv4"
-			addIPv4TCPRule $src_dport
-		;;
-		"tcp6") 
-			local src_addresstype="TCP6-LISTEN"
-			local dest_addresstype="TCP6"
-			setupDefaultSrcIP "ipv6"
-			addIPv6TCPRule $src_dport
-			src_ip="[$src_ip]"
-			dest_ip="[$dest_ip]"
-		;;
-		"upd4")
-			local src_addresstype="UDP4-LISTEN"
-			local dest_addresstype="UDP4"
-			setupDefaultSrcIP "ipv4"
-			addIPv4UDPRule $src_dport
-		;;
-		"udp6")
-			local src_addresstype="UDP6-LISTEN"
-			local dest_addresstype="UDP6"
-			setupDefaultSrcIP "ipv6"
-			addIPv6UDPRule $src_dport
-			src_ip="[$src_ip]"
-			dest_ip="[$dest_ip]"
-		;;
-	esac
+	if [ "$proto" = "tcp4" ]; then
+		src_addresstype="TCP4-LISTEN"
+		dest_addresstype="TCP4"
+		setupDefaultSrcIP "ipv4"
+		addIPv4TCPRule $src_dport
+	elif [ "$proto" = "tcp6" ]; then
+		src_addresstype="TCP6-LISTEN"
+		dest_addresstype="TCP6"
+		setupDefaultSrcIP "ipv6"
+		addIPv6TCPRule $src_dport
+		src_ip="[$src_ip]"
+		dest_ip="[$dest_ip]"
+	elif [ "$proto" = "udp4" ]; then
+		src_addresstype="UDP4-LISTEN"
+		dest_addresstype="UDP4"
+		setupDefaultSrcIP "ipv4"
+		addIPv4UDPRule $src_dport
+	elif [ "$proto" = "udp6" ]; then
+		src_addresstype="UDP6-LISTEN"
+		dest_addresstype="UDP6"
+		setupDefaultSrcIP "ipv6"
+		addIPv6UDPRule $src_dport
+		src_ip="[$src_ip]"
+		dest_ip="[$dest_ip]"
+	fi
 
 	#echo "nohup socat -lf $RUNLOG_DIR/$id.log $src_addresstype:$src_dport,bind=$src_ip,fork $dest_addresstype:$dest_ip:$dest_port > $RUNLOG_DIR/$id.log 2>&1 &"
 	nohup socat -lf $RUNLOG_DIR/$id.log $src_addresstype:$src_dport,bind=$src_ip,fork $dest_addresstype:$dest_ip:$dest_port > $RUNLOG_DIR/$id.log 2>&1 &

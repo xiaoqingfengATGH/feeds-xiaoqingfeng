@@ -18,6 +18,6 @@ EOF
 /etc/init.d/softethervpnbridge disable && /etc/init.d/softethervpnbridge stop
 /etc/init.d/softethervpnclient disable && /etc/init.d/softethervpnclient stop
 /etc/init.d/softethervpnserver disable && /etc/init.d/softethervpnserver stop
-
+chmod +x /etc/init.d/softethervpn
 rm -rf /tmp/luci-*cache
 exit 0

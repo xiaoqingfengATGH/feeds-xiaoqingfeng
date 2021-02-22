@@ -9,15 +9,15 @@ uci -q batch <<-EOF >/dev/null
 EOF
 
 uci -q batch <<-EOF >/dev/null
-	delete ucitrack.@softethervpn[-1]
-	add ucitrack softethervpn
-	set ucitrack.@softethervpn[-1].init=softethervpn
+	delete ucitrack.@homeconnect[-1]
+	add ucitrack homeconnect
+	set ucitrack.@homeconnect[-1].init=homeconnect
 	commit ucitrack
 EOF
 
 /etc/init.d/softethervpnbridge disable && /etc/init.d/softethervpnbridge stop
 /etc/init.d/softethervpnclient disable && /etc/init.d/softethervpnclient stop
 /etc/init.d/softethervpnserver disable && /etc/init.d/softethervpnserver stop
-chmod +x /etc/init.d/softethervpn
+chmod +x /etc/init.d/homeconnect
 rm -rf /tmp/luci-*cache
 exit 0

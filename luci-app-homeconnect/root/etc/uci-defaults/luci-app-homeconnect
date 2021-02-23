@@ -1,12 +1,12 @@
 #!/bin/sh
 
-uci -q batch <<-EOF >/dev/null
-	delete firewall.softethervpn
-	set firewall.softethervpn=include
-	set firewall.softethervpn.type=script
-	set firewall.softethervpn.path=/var/etc/softethervpn.include
-	set firewall.softethervpn.reload=1
-EOF
+#uci -q batch <<-EOF >/dev/null
+#	delete firewall.softethervpn
+#	set firewall.softethervpn=include
+#	set firewall.softethervpn.type=script
+#	set firewall.softethervpn.path=/var/etc/softethervpn.include
+#	set firewall.softethervpn.reload=1
+#EOF
 
 uci -q batch <<-EOF >/dev/null
 	delete ucitrack.@homeconnect[-1]
@@ -19,5 +19,6 @@ EOF
 /etc/init.d/softethervpnclient disable && /etc/init.d/softethervpnclient stop
 /etc/init.d/softethervpnserver disable && /etc/init.d/softethervpnserver stop
 chmod +x /etc/init.d/homeconnect
+chmod +x /usr/share/homeconnect/clearAllfwRules.sh
 rm -rf /tmp/luci-*cache
 exit 0

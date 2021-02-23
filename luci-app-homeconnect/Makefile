@@ -8,7 +8,7 @@ include $(TOPDIR)/rules.mk
 LUCI_TITLE:=HomeConnect VPN Server
 LUCI_DEPENDS:=+node +zlib +libpthread +librt +libreadline +libncurses +libiconv-full +kmod-tun +libopenssl +softethervpn5-bridge +softethervpn5-client +softethervpn5-server
 LUCI_PKGARCH:=all
-PKG_VERSION:=1.0
+PKG_VERSION:=1.1
 #PKG_RELEASE:=12-20200513
 
 include $(TOPDIR)/feeds/luci/luci.mk

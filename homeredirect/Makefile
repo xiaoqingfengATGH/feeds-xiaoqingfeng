@@ -6,9 +6,9 @@
 include $(TOPDIR)/rules.mk
 
 PKG_NAME:=HomeRedirect
-PKG_VERSION:=1.3
+PKG_VERSION:=1.4
 PKG_RELEASE:=1
-PKG_DATE:=20210215
+PKG_DATE:=20210226
 
 PKG_MAINTAINER:=xiaoqingfeng <xiaoqingfengatgm@gmail.com>
 PKG_LICENSE:=GPL-3.0-or-later
@@ -45,8 +45,9 @@ define Package/$(PKG_NAME)/install
 	$(INSTALL_DIR) $(1)/etc/config
 	$(INSTALL_DIR) $(1)/etc/homeredirect
 	$(INSTALL_BIN) files/etc/init.d/homeredirect $(1)/etc/init.d
-	$(INSTALL_BIN) files/etc/homeredirect/clearAllfwRules.sh $(1)/etc/homeredirect
 	$(INSTALL_CONF) files/etc/config/homeredirect $(1)/etc/config
+	$(INSTALL_DATA) files/etc/homeredirect/firewall.include $(1)/etc/homeredirect/
+	$(INSTALL_DATA) files/etc/homeredirect/script.sh $(1)/etc/homeredirect/
 endef
 
 define Package/$(PKG_NAME)/postinst
@@ -56,6 +57,14 @@ endef
 
 define Package/$(PKG_NAME)/prerm
 #!/bin/sh
+/etc/init.d/homeredirect stop
+uci -q batch <<-EOF >/dev/null
+	delete ucitrack.@homeredirect[-1]
+	commit ucitrack
+EOF
+uci -q batch <<-EOF >/dev/null
+	delete firewall.homeredirect
+EOF
 exit 0
 endef
 

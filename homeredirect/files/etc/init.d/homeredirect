@@ -43,24 +43,20 @@ setup() {
 		src_addresstype="TCP4-LISTEN"
 		dest_addresstype="TCP4"
 		setupDefaultSrcIP "ipv4"
-		addIPv4TCPRule $src_dport
 	elif [ "$proto" = "tcp6" ]; then
 		src_addresstype="TCP6-LISTEN"
 		dest_addresstype="TCP6"
 		setupDefaultSrcIP "ipv6"
-		addIPv6TCPRule $src_dport
 		src_ip="[$src_ip]"
 		dest_ip="[$dest_ip]"
 	elif [ "$proto" = "udp4" ]; then
 		src_addresstype="UDP4-LISTEN"
 		dest_addresstype="UDP4"
 		setupDefaultSrcIP "ipv4"
-		addIPv4UDPRule $src_dport
 	elif [ "$proto" = "udp6" ]; then
 		src_addresstype="UDP6-LISTEN"
 		dest_addresstype="UDP6"
 		setupDefaultSrcIP "ipv6"
-		addIPv6UDPRule $src_dport
 		src_ip="[$src_ip]"
 		dest_ip="[$dest_ip]"
 	fi
@@ -120,7 +116,7 @@ start() {
 	local vt_enabled=$(uci -q get homeredirect.@global[0].enabled)
 	if [ "$vt_enabled" = 0 ]; then
 		terminateAll
-		/etc/homeredirect/clearAllfwRules.sh "withFWRestart"
+		fw3 reload
 		return 1
 	fi
 	
@@ -128,76 +124,17 @@ start() {
 	mkdir -p $RUNLOG_DIR
 	
 	config_load homeredirect
-	/etc/homeredirect/clearAllfwRules.sh
+	
 	PROCESSED_REDIRECT=0
 	config_foreach setup redirect
 	[ "$PROCESSED_REDIRECT" == "1" ] && {
-		uci commit firewall >/dev/null 2>&1
-		/etc/init.d/firewall restart >/dev/null 2>&1
+		fw3 reload
 	}
 	log 'HomeRedirect started.'
 }
 
 stop() {
 	terminateAll
-	/etc/homeredirect/clearAllfwRules.sh "withFWRestart"
+	fw3 reload
 	log 'HomeRedirect stopped.'
-}
-
-#############################################################################################################
-
-# param $1 is port on router
-addIPv4TCPRule() {
-uci -q batch <<-EOF >/dev/null
-	add firewall rule
-	rename firewall.@rule[-1]="HR_T4_$1"
-	set firewall.@rule[-1].name=HR_T4_$1
-	set firewall.@rule[-1].src=wan
-	set firewall.@rule[-1].proto=tcp
-	set firewall.@rule[-1].dest_port=$1 
-	set firewall.@rule[-1].target=ACCEPT
-	set firewall.@rule[-1].family=ipv4
-EOF
-}
-
-# param $1 is port on router
-addIPv4UDPRule() {
-uci -q batch <<-EOF >/dev/null
-	add firewall rule
-	rename firewall.@rule[-1]="HR_U4_$1"
-	set firewall.@rule[-1].name=HR_U4_$1
-	set firewall.@rule[-1].src=wan
-	set firewall.@rule[-1].proto=udp
-	set firewall.@rule[-1].dest_port=$1 
-	set firewall.@rule[-1].target=ACCEPT
-	set firewall.@rule[-1].family=ipv4
-EOF
-}
-
-# param $1 is port on router
-addIPv6TCPRule() {
-uci -q batch <<-EOF >/dev/null
-	add firewall rule
-	rename firewall.@rule[-1]="HR_T6_$1"
-	set firewall.@rule[-1].name=HR_T6_$1
-	set firewall.@rule[-1].src=wan
-	set firewall.@rule[-1].proto=tcp
-	set firewall.@rule[-1].dest_port=$1 
-	set firewall.@rule[-1].target=ACCEPT
-	set firewall.@rule[-1].family=ipv6
-EOF
-}
-
-# param $1 is port on router
-addIPv6UDPRule() {
-uci -q batch <<-EOF >/dev/null
-	add firewall rule
-	rename firewall.@rule[-1]="HR_U6_$1"
-	set firewall.@rule[-1].name=HR_U6_$1
-	set firewall.@rule[-1].src=wan
-	set firewall.@rule[-1].proto=udp
-	set firewall.@rule[-1].dest_port=$1 
-	set firewall.@rule[-1].target=ACCEPT
-	set firewall.@rule[-1].family=ipv6
-EOF
 }

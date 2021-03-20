@@ -45,7 +45,7 @@ function setToTcpDefaultAndRestart()
 {
 	isNodeExist
 	[ $? -eq 1 ] && {
-		uci set passwall.@global[0].tcp_node1='beamInDocker'
+		uci set passwall.@global[0].tcp_node='beamInDocker'
 		uci commit passwall
 		/etc/init.d/passwall restart
 	}

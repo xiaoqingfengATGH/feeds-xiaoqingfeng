@@ -13,6 +13,7 @@ DOCKER_NET_NAME=beam-net
 DOCKER_NET_ADDRESS=172.31.255.0/24
 DOCKER_NET_GATEWAY=172.31.255.1
 BEAM_IP=172.31.255.254
+BEAM_DNS=1.1.1.1
 
 function isImageExist()
 {
@@ -81,7 +82,7 @@ function startContainer()
 		if [ $? -eq 0 ]; then
 			createNetwork
 		fi
-		docker run -d --name $DOCKER_CONTAINER_NAME --network=$DOCKER_NET_NAME --ip $BEAM_IP --dns $DOCKER_NET_GATEWAY -p $BEAM_GUI_PORT:8080/tcp $DOCKER_IMAGE_ID
+		docker run -d --name $DOCKER_CONTAINER_NAME --network=$DOCKER_NET_NAME --ip $BEAM_IP --dns $BEAM_DNS -p $BEAM_GUI_PORT:8080/tcp $DOCKER_IMAGE_ID
 		return $?
 	} || {
 		getContainerId

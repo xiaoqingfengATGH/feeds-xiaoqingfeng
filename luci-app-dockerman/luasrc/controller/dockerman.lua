@@ -38,6 +38,10 @@ function index()
   entry({"admin","docker","container_stats"},call("action_get_container_stats")).leaf=true
   entry({"admin","docker","container_get_archive"},call("download_archive")).leaf=true
   entry({"admin","docker","container_put_archive"},call("upload_archive")).leaf=true
+  entry({"admin","docker","container_list_file"},call("list_file")).leaf=true
+  entry({"admin","docker","container_remove_file"},call("remove_file")).leaf=true
+  entry({"admin","docker","container_rename_file"},call("rename_file")).leaf=true
+  entry({"admin","docker","container_export"},call("export_container")).leaf=true
   entry({"admin","docker","images_save"},call("save_images")).leaf=true
   entry({"admin","docker","images_load"},call("load_images")).leaf=true
   entry({"admin","docker","images_import"},call("import_images")).leaf=true
@@ -45,6 +49,102 @@ function index()
   entry({"admin","docker","images_tag"},call("tag_image")).leaf=true
   entry({"admin","docker","images_untag"},call("untag_image")).leaf=true
   entry({"admin","docker","confirm"},call("action_confirm")).leaf=true
+end
+
+function scandir(id, directory)
+  local cmd_docker = luci.util.exec("which docker"):match("^.+docker") or nil
+  if not cmd_docker or cmd_docker:match("^%s+$") then return end
+  local i, t, popen = 0, {}, io.popen
+  local uci = (require "luci.model.uci").cursor()
+  local remote = uci:get("dockerd", "dockerman", "remote_endpoint")
+  local socket_path = (remote == "false" or not remote) and  uci:get("dockerd", "dockerman", "socket_path") or nil
+  local host = (remote == "true") and uci:get("dockerd", "dockerman", "remote_host") or nil
+  local port = (remote == "true") and uci:get("dockerd", "dockerman", "remote_port") or nil
+  if remote and host and port then
+    hosts = host .. ':'.. port
+  elseif socket_path then
+    hosts = "unix://" .. socket_path
+  else
+    return
+  end
+  local pfile = popen(cmd_docker .. ' -H "'.. hosts ..'" exec ' ..id .." ls -lh \""..directory.."\" | egrep -v '^total'")
+  for fileinfo in pfile:lines() do
+      i = i + 1
+      t[i] = fileinfo
+  end
+  pfile:close()
+  return t
+end
+
+function list_response(id, path, success)
+  luci.http.prepare_content("application/json")
+  local result
+  if success then
+      local rv = scandir(id, path)
+      result = {
+          ec = 0,
+          data = rv
+      }
+  else
+      result = {
+          ec = 1
+      }
+  end
+  luci.http.write_json(result)
+end
+
+function list_file(id)
+  local path = luci.http.formvalue("path")
+  list_response(id, path, true)
+end
+
+function rename_file(id)
+  local filepath = luci.http.formvalue("filepath")
+  local newpath = luci.http.formvalue("newpath")
+  local cmd_docker = luci.util.exec("which docker"):match("^.+docker") or nil
+  if not cmd_docker or cmd_docker:match("^%s+$") then return end
+  local uci = (require "luci.model.uci").cursor()
+  local remote = uci:get("dockerd", "dockerman", "remote_endpoint")
+  local socket_path = (remote == "false" or not remote) and  uci:get("dockerd", "dockerman", "socket_path") or nil
+  local host = (remote == "true") and uci:get("dockerd", "dockerman", "remote_host") or nil
+  local port = (remote == "true") and uci:get("dockerd", "dockerman", "remote_port") or nil
+  if remote and host and port then
+    hosts = host .. ':'.. port
+  elseif socket_path then
+    hosts = "unix://" .. socket_path
+  else
+    return
+  end
+  local success = os.execute(cmd_docker .. ' -H "'.. hosts ..'" exec '.. id ..' mv "'..filepath..'" "'..newpath..'"')
+  list_response(nixio.fs.dirname(filepath), success)
+end
+
+function remove_file(id)
+  local path = luci.http.formvalue("path")
+  local isdir = luci.http.formvalue("isdir")
+  local cmd_docker = luci.util.exec("which docker"):match("^.+docker") or nil
+  if not cmd_docker or cmd_docker:match("^%s+$") then return end 
+  local uci = (require "luci.model.uci").cursor()
+  local remote = uci:get("dockerd", "dockerman", "remote_endpoint")
+  local socket_path = (remote == "false" or not remote) and  uci:get("dockerd", "dockerman", "socket_path") or nil
+  local host = (remote == "true") and uci:get("dockerd", "dockerman", "remote_host") or nil
+  local port = (remote == "true") and uci:get("dockerd", "dockerman", "remote_port") or nil
+  if remote and host and port then
+    hosts = host .. ':'.. port
+  elseif socket_path then
+    hosts = "unix://" .. socket_path
+  else
+    return
+  end
+  path = path:gsub("<>", "/")
+  path = path:gsub(" ", "\ ")
+  local success
+  if isdir then
+      success = os.execute(cmd_docker .. ' -H "'.. hosts ..'" exec '.. id ..' rm -r "'..path..'"')
+  else
+      success = os.remove(path)
+  end
+  list_response(nixio.fs.dirname(path), success)
 end
 
 function action_events()
@@ -172,9 +272,7 @@ function action_confirm()
   luci.http.write_json({info = data})
 end
 
-function download_archive()
-  local id = luci.http.formvalue("id")
-  local path = luci.http.formvalue("path")
+function export_container(id)
   local dk = docker.new()
   local first
 
@@ -183,6 +281,34 @@ function download_archive()
       if not first then
         first = true
         luci.http.header('Content-Disposition', 'inline; filename="archive.tar"')
+        luci.http.header('Content-Type', 'application\/x-tar')
+      end
+      luci.ltn12.pump.all(chunk, luci.http.write)
+    else
+      if not first then
+        first = true
+        luci.http.prepare_content("text/plain")
+      end
+      luci.ltn12.pump.all(chunk, luci.http.write)
+    end
+  end
+
+  local res = dk.containers:export({id = id}, cb)
+end
+
+function download_archive()
+  local id = luci.http.formvalue("id")
+  local path = luci.http.formvalue("path")
+  local filename = luci.http.formvalue("filename") or "archive"
+
+  local dk = docker.new()
+  local first
+
+  local cb = function(res, chunk)
+    if res.code == 200 then
+      if not first then
+        first = true
+        luci.http.header('Content-Disposition', 'inline; filename="'.. filename .. '.tar"')
         luci.http.header('Content-Type', 'application\/x-tar')
       end
       luci.ltn12.pump.all(chunk, luci.http.write)

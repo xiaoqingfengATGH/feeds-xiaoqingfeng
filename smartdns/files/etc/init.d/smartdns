@@ -356,6 +356,9 @@ load_service()
 	config_foreach load_server "server"
 
 	{
+		echo "cache-persist yes"
+		echo "cache-file /tmp/smartdns.cache"
+	
 		echo "conf-file $ADDRESS_CONF"
 		echo "conf-file $BLACKLIST_IP_CONF"
 		echo "conf-file $CUSTOM_CONF"

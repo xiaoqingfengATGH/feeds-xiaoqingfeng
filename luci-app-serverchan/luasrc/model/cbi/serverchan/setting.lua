@@ -27,6 +27,29 @@ s.anonymous = true
 a=s:taboption("basic", Flag,"serverchan_enable",translate("启用"))
 a.rmempty = true
 
+<<<<<<< HEAD
+a=s:taboption("basic", Flag,"lite_enable",translate("精简模式"))
+a.default=0
+a.rmempty = true
+
+a= s:taboption("basic", Flag, "content_current_device", "精简当前设备列表")
+a.default = 0
+a.rmempty = true
+a:depends({lite_enable="1"})
+
+a= s:taboption("basic", Flag, "content_nowtime", "精简当前时间")
+a.default = 0
+a.rmempty = true
+a:depends({lite_enable="1"})
+
+a= s:taboption("basic", Flag, "content_content", "只推送标题")
+a.default = 0
+a.rmempty = true
+a:depends({lite_enable="1"})
+
+a=s:taboption("basic", Value,"sckey",translate('微信推送/新旧共用'), translate("").."旧版调用代码<a href='http://sc.ftqq.com' target='_blank'>点击这里</a><br>新版代码获取<a href='https://sct.ftqq.com/' target='_blank'>点击这里</a><br>")
+a.rmempty = true
+=======
 a = s:taboption("basic", MultiValue, "lite_enable", translate("精简模式"))
 a:value("device", translate("精简当前设备列表"))
 a:value("nowtime", translate("精简当前时间"))
@@ -34,6 +57,7 @@ a:value("content", translate("只推送标题"))
 a.widget = "checkbox"
 a.default = nil
 a.optional = true
+>>>>>>> branch 'master' of https://github.com/tty228/luci-app-serverchan.git
 
 a=s:taboption("basic", ListValue,"jsonpath",translate("推送模式"))
 a.default="/usr/bin/serverchan/api/serverchan.json"
@@ -174,6 +198,10 @@ for _, iface in ipairs(ifaces) do
 end
 a.description = translate("<br/>一般选择 wan 接口，多拨环境请自行选择")
 
+<<<<<<< HEAD
+a= s:taboption("content", DynamicList, "ipv4_URL", "URL 地址")
+a.rmempty = true
+=======
 a=s:taboption("content", TextValue, "ipv4_list", translate("ipv4 api列表"))
 a.optional = false
 a.rows = 8
@@ -185,7 +213,13 @@ a.write = function(self, section, value)
     fs.writefile("/usr/bin/serverchan/api/ipv4.list", value:gsub("\r\n", "\n"))
 end
 a.description = translate("<br/>会因服务器稳定性、连接频繁等原因导致获取失败<br/>如接口可以正常获取 IP，不推荐使用<br/>从以上列表中随机地址访问")
+>>>>>>> branch 'master' of https://github.com/tty228/luci-app-serverchan.git
 a:depends({serverchan_ipv4="2"})
+<<<<<<< HEAD
+a.description = translate("<br/>会因服务器稳定性、连接频繁等原因导致获取失败<br/>从以上列表中随机一个地址，留空使用默认地址")
+
+=======
+>>>>>>> branch 'master' of https://github.com/tty228/luci-app-serverchan.git
 
 a=s:taboption("content", ListValue,"serverchan_ipv6",translate("ipv6 变动通知"))
 a.rmempty = true
@@ -210,6 +244,10 @@ for _, iface in ipairs(ifaces) do
 end
 a.description = translate("<br/>一般选择 wan 接口，多拨环境请自行选择")
 
+<<<<<<< HEAD
+a= s:taboption("content", DynamicList, "ipv6_URL", "URL 地址")
+a.rmempty = true
+=======
 a=s:taboption("content", TextValue, "ipv6_list", translate("ipv6 api列表"))
 a.optional = false
 a.rows = 8
@@ -221,7 +259,13 @@ a.write = function(self, section, value)
     fs.writefile("/usr/bin/serverchan/api/ipv6.list", value:gsub("\r\n", "\n"))
 end
 a.description = translate("<br/>会因服务器稳定性、连接频繁等原因导致获取失败<br/>如接口可以正常获取 IP，不推荐使用<br/>从以上列表中随机地址访问")
+>>>>>>> branch 'master' of https://github.com/tty228/luci-app-serverchan.git
 a:depends({serverchan_ipv6="2"})
+<<<<<<< HEAD
+a.description = translate("<br/>会因服务器稳定性、连接频繁等原因导致获取失败<br/>从以上列表中随机一个地址，留空使用默认地址")
+=======
+
+>>>>>>> branch 'master' of https://github.com/tty228/luci-app-serverchan.git
 
 a=s:taboption("content", Flag,"serverchan_up",translate("设备上线通知"))
 a.default=1

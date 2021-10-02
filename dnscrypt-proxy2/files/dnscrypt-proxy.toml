@@ -869,9 +869,10 @@ skip_incompatible = false
   # Public | Non-filtering | Non-logging | DNSSEC aware | Hosted in Singapore | Operated by @herver (Github) | https://moulticast.net/dnscrypt/
   stamp = 'sdns://AQcAAAAAAAAADTUxLjc5LjE1OC4xODMgL4fe2yQRI0ljCMe05zhSmeKGYz-izKVjyE040Ovq-gUdMi5kbnNjcnlwdC1jZXJ0Lm1vdWx0aWNhc3Qtc2c' 
   
-  [static.'quad9-dnscrypt-ip4-nofilter-pri']
+  [static.'quad9-dnscrypt-ip4-nofilter-pri-1']
   # Quad9 (anycast) no-dnssec/no-log/no-filter 9.9.9.10 - 149.112.112.10
   stamp = 'sdns://AQYAAAAAAAAADTkuOS45LjEwOjg0NDMgZ8hHuMh1jNEgJFVDvnVnRt803x2EwAuMRwNo34Idhj4ZMi5kbnNjcnlwdC1jZXJ0LnF1YWQ5Lm5ldA' 
+  [static.'quad9-dnscrypt-ip4-nofilter-pri-2']
   stamp = 'sdns://AQYAAAAAAAAAEzE0OS4xMTIuMTEyLjEwOjg0NDMgZ8hHuMh1jNEgJFVDvnVnRt803x2EwAuMRwNo34Idhj4ZMi5kbnNjcnlwdC1jZXJ0LnF1YWQ5Lm5ldA'
   
   [static.'quad101']

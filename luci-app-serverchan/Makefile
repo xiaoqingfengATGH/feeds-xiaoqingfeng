@@ -1,11 +1,7 @@
 include $(TOPDIR)/rules.mk
 
 PKG_NAME:=luci-app-serverchan
-<<<<<<< HEAD
-PKG_VERSION:=1.86
-=======
 PKG_VERSION:=2.01.4
->>>>>>> branch 'master' of https://github.com/tty228/luci-app-serverchan.git
 PKG_RELEASE:=9
 
 PKG_MAINTAINER:=tty228 <tty228@yeah.net>

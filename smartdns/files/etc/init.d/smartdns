@@ -279,8 +279,6 @@ load_service()
 		conf_append "bind" ":$port"
 	fi
 
-	conf_append "speed-check-mode tcp:443,tcp:80"
-
 	[ "$tcp_server" = "1" ] && {
 		if [ "$ipv6_server" = "1" ]; then
 			conf_append "bind-tcp" "[::]:$port"

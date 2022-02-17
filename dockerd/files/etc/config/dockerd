@@ -1,12 +1,14 @@
 # The following settings require a restart of docker to take full effect, A reload will only have partial or no effect:
+# log_driver
 # bip
 # blocked_interfaces
 # extra_iptables_args
 # device
 
 config globals 'globals'
-	option alt_config_file '/etc/docker/daemon.json'
+#	option alt_config_file '/etc/docker/daemon.json'
 	option data_root '/opt/docker/'
+#	option log_driver 'local'
 	option log_level 'warn'
 	option iptables '1'
 #	list hosts 'unix:///var/run/docker.sock'

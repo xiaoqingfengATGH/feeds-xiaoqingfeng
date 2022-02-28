@@ -54,7 +54,7 @@ add_cron() {
 	config_get_bool auto_update $1 auto_update
 	touch $CRON_FILE
 	sed -i '/chinadns-ng_update/d' $CRON_FILE
-	([ "$enable" = 1 ] && [ "$auto_update" = 1 ]) && echo "0 3 * * 6 /usr/bin/chinadns-ng_update.sh >>/tmp/chinadns-ng_update.log 2>&1" >>$CRON_FILE
+	([ "$enable" = 1 ] && [ "$auto_update" = 1 ]) && echo "0 3 * * 6 /usr/bin/chinadns-ng-update-list.sh >> /tmp/chinadns-ng_update.log 2>&1" >>$CRON_FILE
 	crontab $CRON_FILE
 }
 

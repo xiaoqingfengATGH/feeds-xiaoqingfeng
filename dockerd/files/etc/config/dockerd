@@ -6,7 +6,7 @@
 # device
 
 config globals 'globals'
-#	option alt_config_file '/etc/docker/daemon.json'
+	option alt_config_file '/etc/docker/daemon.json'
 	option data_root '/opt/docker/'
 #	option log_driver 'local'
 	option log_level 'warn'

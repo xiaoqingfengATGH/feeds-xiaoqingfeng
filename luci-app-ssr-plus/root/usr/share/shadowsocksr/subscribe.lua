@@ -207,6 +207,10 @@ local function processData(szType, content)
 		else
 			result.tls = "0"
 		end
+		-- https://www.v2fly.org/config/protocols/vmess.html#vmess-md5-认证信息-淘汰机制
+		if info.aid and (tonumber(info.aid) > 0) then
+			result.server = nil
+		end
 	elseif szType == "ss" then
 		local idx_sp = 0
 		local alias = ""
@@ -440,7 +444,7 @@ local function check_filer(result)
 
 		-- 检查是否存在过滤关键词
 		for i, v in pairs(filter_word) do
-			if tostring(result.alias):find(v) then
+			if tostring(result.alias):find(v, nil, true) then
 				filter_result = true
 			end
 		end
@@ -448,7 +452,7 @@ local function check_filer(result)
 		-- 检查是否打开了保留关键词检查，并且进行过滤
 		if check_save == true then
 			for i, v in pairs(save_word) do
-				if tostring(result.alias):find(v) then
+				if tostring(result.alias):find(v, nil, true) then
 					save_result = false
 				end
 			end

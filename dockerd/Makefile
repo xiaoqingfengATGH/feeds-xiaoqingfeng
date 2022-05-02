@@ -35,7 +35,7 @@ define Package/dockerd
   URL:=https://www.docker.com/
   DEPENDS:=$(GO_ARCH_DEPENDS) +btrfs-progs +ca-certificates +containerd +libdevmapper +libnetwork +tini \
            +KERNEL_SECCOMP:libseccomp +iptables-mod-extra +kmod-br-netfilter +kmod-ikconfig +kmod-nf-conntrack-netlink +kmod-nf-ipvs \
-           +kmod-nf-nat +kmod-veth
+           +kmod-nf-nat +kmod-veth +iptables-legacy +iptables-mod-nat-extra
   USERID:=docker:docker
   MENU:=1
 endef
@@ -51,6 +51,7 @@ endef
 GO_PKG_BUILD_VARS += GO111MODULE=auto
 TAR_OPTIONS:=--strip-components 1 $(TAR_OPTIONS)
 TAR_CMD=$(HOST_TAR) -C $(1) $(TAR_OPTIONS)
+TARGET_LDFLAGS += $(if $(CONFIG_USE_GLIBC),-lc -lgcc_eh)
 
 # $(1) = path to dependent package 'Makefile'
 # $(2) = relevant dependency '.installer' file
@@ -126,14 +127,14 @@ define Package/dockerd/install
 
 	$(INSTALL_DIR) $(1)/etc/config
 	$(INSTALL_CONF) ./files/etc/config/dockerd $(1)/etc/config/dockerd
-	
-	$(INSTALL_DIR) $(1)/etc/docker
-	$(INSTALL_CONF) ./files/daemon.json $(1)/etc/docker/daemon.json
-	
+
 	# Must be after systcl 11-br-netfilter.conf from kmod-br-netfilter
 	$(INSTALL_DIR) $(1)/etc/sysctl.d
 	$(INSTALL_DATA) ./files/etc/sysctl.d/sysctl-br-netfilter-ip.conf \
 		$(1)/etc/sysctl.d/12-br-netfilter-ip.conf
+		
+	$(INSTALL_DIR) $(1)/etc/docker
+	$(INSTALL_CONF) ./files/daemon.json $(1)/etc/docker/daemon.json
 endef
 
 define Package/dockerd/postinst

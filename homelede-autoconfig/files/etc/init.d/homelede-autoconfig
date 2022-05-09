@@ -63,6 +63,15 @@ if [ -d /www/luci-static/infinityfreedom ]; then
 		cp /etc/brand /www/luci-static/infinityfreedom/images/brand.png >/dev/null 2>&1
 	fi
 fi
+
+if [ ! -f /etc/config/homeledeInit ]; then
+	uci delete dhcp.@dnsmasq[0].resolvfile
+	uci set dhcp.@dnsmasq[0].noresolv='1'
+	uci commit dhcp
+	touch /etc/config/homeledeInit
+	echo $(date +"%Y-%m-%d %H:%M:%S") > /etc/config/homeledeInit
+fi
+
 }
 
 reload()

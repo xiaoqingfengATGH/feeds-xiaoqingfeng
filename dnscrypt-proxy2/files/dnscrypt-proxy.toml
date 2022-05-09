@@ -857,25 +857,21 @@ skip_incompatible = false
   # Cloudflare DNS (anycast) - aka 1.1.1.1 / 1.0.0.1
   stamp = 'sdns://AgcAAAAAAAAABzEuMC4wLjEAEmRucy5jbG91ZGZsYXJlLmNvbQovZG5zLXF1ZXJ5'
 
-  [static.'nextdns.doh']
-  # NextDNS is a cloud-based private DNS service that gives you full control over what is allowed and what is blocked on the Internet. DNSSEC, Anycast, Non-logging, NoFilters https://www.nextdns.io/
-  stamp = 'sdns://AgcAAAAAAAAACjQ1LjkwLjI4LjCgPhoaD2xT8-l6SS1XCEtbmAcFnuBXqxUFh2_YP9o9uDggMob_ZaZfrzIIXuoTiMNzi6fjeHPJBszjxKKLTMKliYgOZG5zLm5leHRkbnMuaW8PL2Ruc2NyeXB0LXByb3h5'
-  
-  [static.'meganerd.DNSCrypt']
-  # meganerd of Netherlands
-  stamp = 'sdns://AQcAAAAAAAAADjEzNi4yNDQuOTcuMTE0IPyq3HBOXuNgu6FO4pU71Si6CTV6kPD85NA6AThr_6tiGDIuZG5zY3J5cHQtY2VydC5tZWdhbmVyZA'
-  
-  [static.'moulticast-sg-ipv4']
-  # Public | Non-filtering | Non-logging | DNSSEC aware | Hosted in Singapore | Operated by @herver (Github) | https://moulticast.net/dnscrypt/
-  stamp = 'sdns://AQcAAAAAAAAADTUxLjc5LjE1OC4xODMgL4fe2yQRI0ljCMe05zhSmeKGYz-izKVjyE040Ovq-gUdMi5kbnNjcnlwdC1jZXJ0Lm1vdWx0aWNhc3Qtc2c' 
-  
-  [static.'quad9-dnscrypt-ip4-nofilter-pri-1']
+  [static.'jp.tiar.app-doh']
+  stamp = 'sdns://AgcAAAAAAAAADTE3Mi4xMDQuOTMuODCgzBBg05yDKbYrb7x9DW35MJhpuYHn5jktXNj6QI9NgOYgRE69Z7uD-IB7OSHpOKyReLiCvVCq2xEjHwRM9fCN984LanAudGlhci5hcHAKL2Rucy1xdWVyeQ'
+
+  #[static.'moulticast-sg-ipv4']
+  # Dnscrypt Public | Non-filtering | Non-logging | DNSSEC aware | Hosted in Singapore | Operated by @herver (Github) | https://moulticast.net/dnscrypt/
+  #stamp = 'sdns://AQcAAAAAAAAADTUxLjc5LjE1OC4xODMgL4fe2yQRI0ljCMe05zhSmeKGYz-izKVjyE040Ovq-gUdMi5kbnNjcnlwdC1jZXJ0Lm1vdWx0aWNhc3Qtc2c'
+
+  [static.'quad9-doh-ip4-port443-nofilter-ecs-pri']
+  # Quad9 (anycast) no-dnssec/no-log/no-filter/ecs 9.9.9.12 - 149.112.112.12
+  stamp = 'sdns://AgYAAAAAAAAADjE0OS4xMTIuMTEyLjEyICoV9dastufAkBreTrvHQ7LM1IkDK0bhZC8Gk2gwASWKE2RuczEyLnF1YWQ5Lm5ldDo0NDMKL2Rucy1xdWVyeQ'
+
+  [static.'quad9-doh-ip4-port443-nofilter-pri']
   # Quad9 (anycast) no-dnssec/no-log/no-filter 9.9.9.10 - 149.112.112.10
-  stamp = 'sdns://AQYAAAAAAAAADTkuOS45LjEwOjg0NDMgZ8hHuMh1jNEgJFVDvnVnRt803x2EwAuMRwNo34Idhj4ZMi5kbnNjcnlwdC1jZXJ0LnF1YWQ5Lm5ldA' 
-  [static.'quad9-dnscrypt-ip4-nofilter-pri-2']
-  stamp = 'sdns://AQYAAAAAAAAAEzE0OS4xMTIuMTEyLjEwOjg0NDMgZ8hHuMh1jNEgJFVDvnVnRt803x2EwAuMRwNo34Idhj4ZMi5kbnNjcnlwdC1jZXJ0LnF1YWQ5Lm5ldA'
+  stamp = 'sdns://AgYAAAAAAAAADjE0OS4xMTIuMTEyLjEwICoV9dastufAkBreTrvHQ7LM1IkDK0bhZC8Gk2gwASWKE2RuczEwLnF1YWQ5Lm5ldDo0NDMKL2Rucy1xdWVyeQ'
   
   [static.'quad101']
-  # DNSSEC-aware public resolver by the Taiwan Network Information Center (TWNIC)
-  # https://101.101.101.101/index_en.html
+  # doh DNSSEC-aware public resolver by the Taiwan Network Information Center (TWNIC) https://101.101.101.101/index_en.html
   stamp = 'sdns://AgcAAAAAAAAAACC2vD25TAYM7EnyCH8Xw1-0g5OccnTsGH9vQUUH0njRtAxkbnMudHduaWMudHcKL2Rucy1xdWVyeQ' 

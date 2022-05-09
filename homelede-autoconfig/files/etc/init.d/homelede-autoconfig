@@ -65,9 +65,10 @@ if [ -d /www/luci-static/infinityfreedom ]; then
 fi
 
 if [ ! -f /etc/config/homeledeInit ]; then
-	uci delete dhcp.@dnsmasq[0].resolvfile
-	uci set dhcp.@dnsmasq[0].noresolv='1'
-	uci commit dhcp
+	ForceNoSolve="uci delete dhcp.@dnsmasq[0].resolvfile\n"
+	ForceNoSolve="${ForceNoSolve}uci set dhcp.@dnsmasq[0].noresolv='1'\n"
+	ForceNoSolve="${ForceNoSolve}uci commit dhcp"
+	sed -i '/exit 0/i '"$ForceNoSolve" /etc/rc.local
 	touch /etc/config/homeledeInit
 	echo $(date +"%Y-%m-%d %H:%M:%S") > /etc/config/homeledeInit
 fi

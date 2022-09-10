@@ -9,12 +9,14 @@ require "nixio"
 require "luci.util"
 require "luci.sys"
 require "luci.jsonc"
+require "luci.model.ipkg"
 -- these global functions are accessed all the time by the event handler
 -- so caching them is worth the effort
 local tinsert = table.insert
 local ssub, slen, schar, sbyte, sformat, sgsub = string.sub, string.len, string.char, string.byte, string.format, string.gsub
 local jsonParse, jsonStringify = luci.jsonc.parse, luci.jsonc.stringify
 local b64decode = nixio.bin.b64decode
+local URL = require "url"
 local cache = {}
 local nodeResult = setmetatable({}, {__index = cache}) -- update result
 local name = 'shadowsocksr'
@@ -25,18 +27,27 @@ local switch = ucic:get_first(name, 'server_subscribe', 'switch', '1')
 local subscribe_url = ucic:get_first(name, 'server_subscribe', 'subscribe_url', {})
 local filter_words = ucic:get_first(name, 'server_subscribe', 'filter_words', '过期时间/剩余流量')
 local save_words = ucic:get_first(name, 'server_subscribe', 'save_words', '')
+local packet_encoding = luci.model.ipkg.installed("sagernet-core") and ucic:get_first(name, 'global', 'default_packet_encoding', 'xudp') or nil
 local v2_ss = luci.sys.exec('type -t -p ss-redir sslocal') ~= "" and "ss" or "v2ray"
+local v2_ssr = luci.sys.exec('type -t -p ssr-redir') ~= "" and "ssr" or "v2ray"
 local v2_tj = luci.sys.exec('type -t -p trojan') ~= "" and "trojan" or "v2ray"
 local log = function(...)
 	print(os.date("%Y-%m-%d %H:%M:%S ") .. table.concat({...}, " "))
 end
 local encrypt_methods_ss = {
+	-- plain
+	"none",
+	"plain",
 	-- aead
 	"aes-128-gcm",
 	"aes-192-gcm",
 	"aes-256-gcm",
 	"chacha20-ietf-poly1305",
-	"xchacha20-ietf-poly1305"
+	"xchacha20-ietf-poly1305",
+	-- aead 2022
+	"2022-blake3-aes-128-gcm",
+	"2022-blake3-aes-256-gcm",
+	"2022-blake3-chacha20-poly1305"
 	--[[ stream
 	"table",
 	"rc4",
@@ -138,6 +149,8 @@ local function processData(szType, content)
 	if szType == 'ssr' then
 		local dat = split(content, "/%?")
 		local hostInfo = split(dat[1], ':')
+		result.type = v2_ssr
+		result.v2ray_protocol = (v2_ssr == "v2ray") and "shadowsocksr" or nil
 		result.server = hostInfo[1]
 		result.server_port = hostInfo[2]
 		result.protocol = hostInfo[3]
@@ -165,6 +178,7 @@ local function processData(szType, content)
 		result.transport = info.net
 		result.vmess_id = info.id
 		result.alias = info.ps
+		result.packet_encoding = packet_encoding
 		-- result.mux = 1
 		-- result.concurrency = 8
 		if info.net == 'ws' then
@@ -237,6 +251,8 @@ local function processData(szType, content)
 		local password = userinfo:sub(userinfo:find(":") + 1, #userinfo)
 		result.alias = UrlDecode(alias)
 		result.type = v2_ss
+		result.v2ray_protocol = (v2_ss == "v2ray") and "shadowsocks" or nil
+		result.encrypt_method_ss = method
 		result.password = password
 		result.server = host[1]
 		if host[2]:find("/%?") then
@@ -267,33 +283,27 @@ local function processData(szType, content)
 		if not checkTabValue(encrypt_methods_ss)[method] then
 			-- 1202 年了还不支持 SS AEAD 的屑机场
 			result.server = nil
-		elseif v2_ss == "v2ray" then
-			result.v2ray_protocol = "shadowsocks"
-			result.encrypt_method_v2ray_ss = method
-		else
-			result.encrypt_method_ss = method
 		end
 	elseif szType == "sip008" then
 		result.type = v2_ss
+		result.v2ray_protocol = (v2_ss == "v2ray") and "shadowsocks" or nil
 		result.server = content.server
 		result.server_port = content.server_port
 		result.password = content.password
+		result.encrypt_method_ss = content.method
 		result.plugin = content.plugin
 		result.plugin_opts = content.plugin_opts
 		result.alias = content.remarks
 		if not checkTabValue(encrypt_methods_ss)[content.method] then
 			result.server = nil
-		elseif v2_ss == "v2ray" then
-			result.v2ray_protocol = "shadowsocks"
-			result.encrypt_method_v2ray_ss = content.method
-		else
-			result.encrypt_method_ss = content.method
 		end
 	elseif szType == "ssd" then
 		result.type = v2_ss
+		result.v2ray_protocol = (v2_ss == "v2ray") and "shadowsocks" or nil
 		result.server = content.server
 		result.server_port = content.port
 		result.password = content.password
+		result.encrypt_method_ss = content.method
 		result.plugin_opts = content.plugin_options
 		result.alias = "[" .. content.airport .. "] " .. content.remarks
 		if content.plugin == "simple-obfs" then
@@ -303,11 +313,6 @@ local function processData(szType, content)
 		end
 		if not checkTabValue(encrypt_methods_ss)[content.encryption] then
 			result.server = nil
-		elseif v2_ss == "v2ray" then
-			result.v2ray_protocol = "shadowsocks"
-			result.encrypt_method_v2ray_ss = content.method
-		else
-			result.encrypt_method_ss = content.method
 		end
 	elseif szType == "trojan" then
 		local idx_sp = 0
@@ -345,74 +350,51 @@ local function processData(szType, content)
 		end
 		result.password = password
 	elseif szType == "vless" then
-		local idx_sp = 0
-		local alias = ""
-		if content:find("#") then
-			idx_sp = content:find("#")
-			alias = content:sub(idx_sp + 1, -1)
-		end
-		local info = content:sub(1, idx_sp - 1)
-		local hostInfo = split(info, "@")
-		local host = split(hostInfo[2], ":")
-		local uuid = hostInfo[1]
-		if host[2]:find("?") then
-			local query = split(host[2], "?")
-			local params = {}
-			for _, v in pairs(split(UrlDecode(query[2]), '&')) do
-				local t = split(v, '=')
-				params[t[1]] = t[2]
+		local url = URL.parse("http://" .. content)
+		local params = url.query
+
+		result.alias = url.fragment and UrlDecode(url.fragment) or nil
+		result.type = "v2ray"
+		result.v2ray_protocol = "vless"
+		result.server = url.host
+		result.server_port = url.port
+		result.vmess_id = url.user
+		result.vless_encryption = params.encryption or "none"
+		result.transport = params.type or "tcp"
+		result.packet_encoding = packet_encoding
+		result.tls = (params.security == "tls") and "1" or "0"
+		result.tls_host = params.sni
+		result.xtls = params.security == "xtls" and "1" or nil
+		result.vless_flow = params.flow
+		if result.transport == "ws" then
+			result.ws_host = (result.tls ~= "1") and (params.host and UrlDecode(params.host)) or nil
+			result.ws_path = params.path and UrlDecode(params.path) or "/"
+		elseif result.transport == "http" then
+			result.transport = "h2"
+			result.h2_host = params.host and UrlDecode(params.host) or nil
+			result.h2_path = params.path and UrlDecode(params.path) or nil
+		elseif result.transport == "kcp" then
+			result.kcp_guise = params.headerType or "none"
+			result.seed = params.seed
+			result.mtu = 1350
+			result.tti = 50
+			result.uplink_capacity = 5
+			result.downlink_capacity = 20
+			result.read_buffer_size = 2
+			result.write_buffer_size = 2
+		elseif result.transport == "quic" then
+			result.quic_guise = params.headerType or "none"
+			result.quic_security = params.quicSecurity or "none"
+			result.quic_key = params.key
+		elseif result.transport == "grpc" then
+			result.serviceName = params.serviceName
+			result.grpc_mode = params.mode or "gun"
+		elseif result.transport == "tcp" then
+			result.tcp_guise = params.headerType or "none"
+			if result.tcp_guise == "http" then
+				result.tcp_host = params.host and UrlDecode(params.host) or nil
+				result.tcp_path = params.path and UrlDecode(params.path) or nil
 			end
-			result.alias = UrlDecode(alias)
-			result.type = 'v2ray'
-			result.v2ray_protocol = 'vless'
-			result.server = host[1]
-			result.server_port = query[1]
-			result.vmess_id = uuid
-			result.vless_encryption = params.encryption or "none"
-			result.transport = params.type and (params.type == 'http' and 'h2' or params.type) or "tcp"
-			if not params.type or params.type == "tcp" then
-				if params.security == "xtls" then
-					result.xtls = "1"
-					result.tls_host = params.sni
-					result.vless_flow = params.flow
-				else
-					result.xtls = "0"
-				end
-			end
-			if params.type == 'ws' then
-				result.ws_host = params.host
-				result.ws_path = params.path or "/"
-			end
-			if params.type == 'http' then
-				result.h2_host = params.host
-				result.h2_path = params.path or "/"
-			end
-			if params.type == 'kcp' then
-				result.kcp_guise = params.headerType or "none"
-				result.mtu = 1350
-				result.tti = 50
-				result.uplink_capacity = 5
-				result.downlink_capacity = 20
-				result.read_buffer_size = 2
-				result.write_buffer_size = 2
-				result.seed = params.seed
-			end
-			if params.type == 'quic' then
-				result.quic_guise = params.headerType or "none"
-				result.quic_key = params.key
-				result.quic_security = params.quicSecurity or "none"
-			end
-			if params.type == 'grpc' then
-				result.serviceName = params.serviceName
-			end
-			if params.security == "tls" then
-				result.tls = "1"
-				result.tls_host = params.sni
-			else
-				result.tls = "0"
-			end
-		else
-			result.server_port = host[2]
 		end
 	end
 	if not result.alias then
@@ -434,7 +416,7 @@ local function processData(szType, content)
 end
 -- wget
 local function wget(url)
-	local stdout = luci.sys.exec('uclient-fetch -q --user-agent="Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/44.0.2403.157 Safari/537.36" --no-check-certificate -O- "' .. url .. '"')
+	local stdout = luci.sys.exec('wget -q --user-agent="Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/44.0.2403.157 Safari/537.36" --no-check-certificate -O- "' .. url .. '"')
 	return trim(stdout)
 end
 

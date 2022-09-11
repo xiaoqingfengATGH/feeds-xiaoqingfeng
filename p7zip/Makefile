@@ -2,22 +2,26 @@
 #
 # Copyright (C) 2017- Darcy Hu <hot123tea123@gmail.com>
 #
+#               2022 - Eric Yu <xiaoqingfengatgm@gmail.com>
+#
 # This is free software, licensed under the GNU General Public License v2.
 # See /LICENSE for more information.
-#
+# 
+# Eirc Yu's note @ 2022.9.11 : 
+#  Adjust the code writing to be compatible with GCC 17+ 
 
 include $(TOPDIR)/rules.mk
 
 PKG_NAME:=p7zip
 PKG_VERSION:=16.02
-PKG_RELEASE:=1
+PKG_RELEASE:=1-xiaoqingfengMod
 
-http://sourceforge.net/projects/p7zip/files/p7zip/$(PKG_VERSION)/p7zip_$(PKG_VERSION)_src_all.tar.bz2/download
+# http://sourceforge.net/projects/p7zip/files/p7zip/$(PKG_VERSION)/p7zip_$(PKG_VERSION)_src_all.tar.bz2/download
 
-PKG_SOURCE:=$(PKG_NAME)_$(PKG_VERSION)_src_all.tar.bz2
+#PKG_SOURCE:=$(PKG_NAME)_$(PKG_VERSION)_src_all.tar.bz2
 PKG_BUILD_DIR:=$(BUILD_DIR)/$(PKG_NAME)_$(PKG_VERSION)
-PKG_SOURCE_URL:=@SF/$(PKG_NAME)/$(PKG_NAME)/$(PKG_VERSION)
-PKG_MD5SUM:=a0128d661cfe7cc8c121e73519c54fbf
+# PKG_SOURCE_URL:=@SF/$(PKG_NAME)/$(PKG_NAME)/$(PKG_VERSION)
+# PKG_MD5SUM:=a0128d661cfe7cc8c121e73519c54fbf
 
 include $(INCLUDE_DIR)/package.mk
 

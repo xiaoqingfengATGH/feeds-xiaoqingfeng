@@ -1,3 +1,6 @@
+# Eric's note @ 2022.09.11：
+Some code writing methods have been adjusted so that they can be compiled under GCC 17
+
 # Introduction
 Makefile to create package p7zip for [LEDE](https://lede-project.org)/[OpenWrt](https://openwrt.org/).
 Only `7z` is available, if you need `7za` or `7zr`, you might freedly modify the `MAKE_FLAGS` and the install section in file `Makefile`, don't foget to create`files/7za` or `files/7zr` using `files/7z` as template.

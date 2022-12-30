@@ -124,6 +124,12 @@ local flows = {
 	"xtls-rprx-splice-udp443"
 }
 
+local tls_flows = {
+	-- tls
+	"xtls-rprx-vision",
+	"xtls-rprx-vision-udp443"
+}
+
 m = Map("shadowsocksr", translate("Edit ShadowSocksR Server"))
 m.redirect = luci.dispatcher.build_url("admin/services/shadowsocksr/servers")
 if m.uci:get("shadowsocksr", sid) ~= "servers" then
@@ -160,6 +166,9 @@ end
 if is_finded("hysteria") then
 	o:value("hysteria", translate("Hysteria"))
 end
+if is_finded("tuic-client") then
+	o:value("tuic", translate("TUIC"))
+end
 if is_finded("ipt2socks") then
 	o:value("socks5", translate("Socks5"))
 end
@@ -187,6 +196,8 @@ o:value("trojan", translate("Trojan"))
 o:value("shadowsocks", translate("Shadowsocks"))
 if is_installed("sagernet-core") then
 	o:value("shadowsocksr", translate("ShadowsocksR"))
+end
+if is_finded("xray") then
 	o:value("wireguard", translate("WireGuard"))
 end
 o:value("socks", translate("Socks"))
@@ -202,6 +213,7 @@ o:depends("type", "v2ray")
 o:depends("type", "trojan")
 o:depends("type", "naiveproxy")
 o:depends("type", "hysteria")
+o:depends("type", "tuic")
 o:depends("type", "socks5")
 
 o = s:option(Value, "server_port", translate("Server Port"))
@@ -213,6 +225,7 @@ o:depends("type", "v2ray")
 o:depends("type", "trojan")
 o:depends("type", "naiveproxy")
 o:depends("type", "hysteria")
+o:depends("type", "tuic")
 o:depends("type", "socks5")
 
 o = s:option(Flag, "auth_enable", translate("Enable Authentication"))
@@ -236,6 +249,7 @@ o:depends("type", "ssr")
 o:depends("type", "ss")
 o:depends("type", "trojan")
 o:depends("type", "naiveproxy")
+o:depends("type", "tuic")
 o:depends({type = "socks5", auth_enable = true})
 o:depends({type = "v2ray", v2ray_protocol = "http", auth_enable = true})
 o:depends({type = "v2ray", v2ray_protocol = "socks", socks_ver = "5", auth_enable = true})
@@ -354,6 +368,44 @@ o = s:option(Flag, "disable_mtu_discovery", translate("Disable Path MTU discover
 o:depends("type", "hysteria")
 o.rmempty = true
 
+-- [[ TUIC ]]
+o = s:option(ListValue, "udp_relay_mode", translate("UDP relay mode"))
+o:depends("type", "tuic")
+o:value("native", translate("native"))
+o:value("quic", translate("QUIC"))
+o.default = "native"
+o.rmempty = true
+
+o = s:option(ListValue, "congestion_controller", translate("Congestion control algorithm"))
+o:depends("type", "tuic")
+o:value("bbr", translate("BBR"))
+o:value("cubic", translate("CUBIC"))
+o:value("new_reno", translate("New Reno"))
+o.default = "cubic"
+o.rmempty = true
+
+o = s:option(Value, "heartbeat_interval", translate("Heartbeat interval"))
+o:depends("type", "tuic")
+o.datatype = "uinteger"
+o.default = "10000"
+o.rmempty = true
+
+o = s:option(Flag, "disable_sni", translate("Disable SNI"))
+o:depends("type", "tuic")
+o.default = 0
+o.rmempty = true
+
+o = s:option(Flag, "reduce_rtt", translate("Enable 0-RTT QUIC handshake"))
+o:depends("type", "tuic")
+o.default = 0
+o.rmempty = true
+
+o = s:option(Value, "max_udp_relay_packet_size", translate("Max UDP relay packet size"))
+o:depends("type", "tuic")
+o.datatype = "uinteger"
+o.default = "1500"
+o.rmempty = true
+
 -- VmessId
 o = s:option(Value, "vmess_id", translate("Vmess/VLESS ID (UUID)"))
 o.rmempty = true
@@ -431,16 +483,20 @@ o:depends("transport", "ws")
 o.rmempty = true
 
 if is_finded("v2ray") then
+	-- 启用WS前置数据
+	o = s:option(Flag, "ws_ed_enable", translate("Enable early data"))
+	o:depends("transport", "ws")
+
 	-- WS前置数据
 	o = s:option(Value, "ws_ed", translate("Max Early Data"))
-	o:depends("transport", "ws")
+	o:depends("ws_ed_enable", true)
 	o.datatype = "uinteger"
 	o.default = 2048
 	o.rmempty = true
 
 	-- WS前置数据标头
 	o = s:option(Value, "ws_ed_header", translate("Early Data Header Name"))
-	o:depends("transport", "ws")
+	o:depends("ws_ed_enable", true)
 	o.default = "Sec-WebSocket-Protocol"
 	o.rmempty = true
 end
@@ -594,6 +650,7 @@ o.rmempty = true
 
 -- [[ WireGuard 部分 ]]--
 o = s:option(DynamicList, "local_addresses", translate("Local addresses"))
+o.datatype = "cidr"
 o:depends({type = "v2ray", v2ray_protocol = "wireguard"})
 o.rmempty = true
 
@@ -632,16 +689,23 @@ if is_finded("xray") then
 	o:depends({type = "v2ray", v2ray_protocol = "vless", transport = "kcp", tls = false})
 	o:depends({type = "v2ray", v2ray_protocol = "trojan", transport = "tcp", tls = false})
 	o:depends({type = "v2ray", v2ray_protocol = "trojan", transport = "kcp", tls = false})
-end
 
--- Flow
-o = s:option(Value, "vless_flow", translate("Flow"))
-for _, v in ipairs(flows) do
-	o:value(v, translate(v))
+	-- Flow
+	o = s:option(Value, "vless_flow", translate("Flow"))
+	for _, v in ipairs(flows) do
+		o:value(v, translate(v))
+	end
+	o.rmempty = true
+	o.default = "xtls-rprx-splice"
+	o:depends("xtls", true)
+
+	o = s:option(Value, "tls_flow", translate("Flow"))
+	for _, v in ipairs(tls_flows) do
+		o:value(v, translate(v))
+	end
+	o.rmempty = true
+	o:depends({type = "v2ray", v2ray_protocol = "vless", transport = "tcp", tls = true})
 end
-o.rmempty = true
-o.default = "xtls-rprx-splice"
-o:depends("xtls", true)
 
 -- [[ TLS部分 ]] --
 o = s:option(Flag, "tls_sessionTicket", translate("Session Ticket"))
@@ -657,6 +721,7 @@ if is_finded("xray") then
 	o:value("safari", translate("safari"))
 	o:value("randomized", translate("randomized"))
 	o:depends({type = "v2ray", tls = true})
+	o:depends({type = "v2ray", xtls = true})
 	o.default = "disable"
 end
 
@@ -665,6 +730,12 @@ o.datatype = "hostname"
 o:depends("tls", true)
 o:depends("xtls", true)
 o:depends("type", "hysteria")
+o.rmempty = true
+
+o = s:option(DynamicList, "tls_alpn", translate("TLS ALPN"))
+o:depends("tls", true)
+o:depends("xtls", true)
+o:depends("type", "tuic")
 o.rmempty = true
 
 o = s:option(Value, "quic_tls_alpn", translate("QUIC TLS ALPN"))
@@ -700,6 +771,7 @@ o:depends("type", "naiveproxy")
 o = s:option(Flag, "certificate", translate("Self-signed Certificate"))
 o.rmempty = true
 o.default = "0"
+o:depends("type", "tuic")
 o:depends({type = "hysteria", insecure = false})
 o:depends({type = "trojan", tls = true, insecure = false})
 o:depends({type = "v2ray", v2ray_protocol = "vmess", tls = true, insecure = false})
@@ -754,6 +826,7 @@ o.default = "0"
 o:depends("type", "ssr")
 o:depends("type", "ss")
 o:depends("type", "trojan")
+o:depends("type", "hysteria")
 
 if is_installed("sagernet-core") then
 	o = s:option(ListValue, "packet_encoding", translate("Packet Encoding"))

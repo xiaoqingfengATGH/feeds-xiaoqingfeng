@@ -1,17 +1,15 @@
 #!/bin/sh /etc/rc.common
 #
-# Copyright (C) 2019-2021 pexcn <i@pexcn.me>
+# Copyright (C) 2019-2022 pexcn <i@pexcn.me>
 #
 # This is free software, licensed under the GNU General Public License v3.
 # See /LICENSE for more information.
 #
 
-START=17
+START=99
 
 USE_PROCD=1
 #PROCD_DEBUG=1
-
-CRON_FILE=/etc/crontabs/root
 
 append_param() {
 	local section="$1"
@@ -47,24 +45,8 @@ append_param_if_neq() {
 	procd_append_param command "$switch" "$_loctmp"
 }
 
-add_cron() {
-	local enable
-	local auto_update
-	config_get_bool enable $1 enable
-	config_get_bool auto_update $1 auto_update
-	touch $CRON_FILE
-	sed -i '/chinadns-ng_update/d' $CRON_FILE
-	([ "$enable" = 1 ] && [ "$auto_update" = 1 ]) && echo "0 3 * * 6 /usr/bin/chinadns-ng-update-list.sh >> /tmp/chinadns-ng_update.log 2>&1" >>$CRON_FILE
-	crontab $CRON_FILE
-}
-
-del_cron() {
-	sed -i '/chinadns-ng_update/d' $CRON_FILE
-	/etc/init.d/cron restart
-}
-
 get_cpu_cores() {
-	grep -c ^processor /proc/cpuinfo
+	grep -c "^processor" /proc/cpuinfo
 }
 
 is_exist_ipset() {
@@ -144,12 +126,13 @@ start_chinadns_ng() {
 	config_get_bool reuse_port $1 reuse_port
 	[ "$reuse_port" = 1 ] || instances=1
 
-	for i in $(seq 1 $instances)
-	do
+	for i in $(seq 1 $instances); do
 		procd_open_instance
 		procd_set_param respawn
+		procd_set_param stdout 1
 		procd_set_param stderr 1
 		procd_set_param nice -5
+		procd_set_param file /etc/config/chinadns-ng
 		procd_set_param limits nofile="1048576 1048576"
 		procd_set_param command /usr/bin/chinadns-ng
 		append_param $1 bind_addr "-b"
@@ -167,28 +150,18 @@ start_chinadns_ng() {
 		append_bool $1 fair_mode "-f"
 		append_bool $1 reuse_port "-r"
 		append_bool $1 noip_as_chnip "-n"
+		append_bool $1 verbose "-v"
 		procd_close_instance
 	done
-}
-
-service_triggers() {
-	procd_add_reload_trigger "chinadns-ng"
 }
 
 start_service() {
 	config_load chinadns-ng
 	config_foreach create_chnroute_ipset chinadns-ng
-	config_foreach add_cron chinadns-ng
 	config_foreach start_chinadns_ng chinadns-ng
 }
 
 stop_service() {
 	config_load chinadns-ng
 	config_foreach destroy_chnroute_ipset chinadns-ng
-	del_cron
-}
-
-reload_service() {
-	stop
-	start
 }

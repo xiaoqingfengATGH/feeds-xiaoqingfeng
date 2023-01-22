@@ -254,5 +254,6 @@ stop()
 		stopOverseasDns
 	fi
 	
+	saveProcessExpectedStates 0 0 0 0
 	sed -i '/^.*dnsBundleCron.sh.*/d' /etc/crontabs/root >/dev/null 2>&1
 }

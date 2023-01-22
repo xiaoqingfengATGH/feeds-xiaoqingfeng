@@ -20,6 +20,7 @@ shuntResolutionEnabled.default = 1
 shuntResolutionEnabled.rmempty = false
 
 s = mp:section(TypedSection, "adBlock", translate("Ad block configuration"))
+s.anonymous = true
 ---- Port
 o = s:option(Value, "webUIPort", translate("UI Port"), 
     translate("AdGuardHome Configuration UI Port."))
@@ -27,9 +28,6 @@ o.placeholder = 3000
 o.default     = 3000
 o.datatype    = "port"
 o.rempty      = false
-
-o = s:option(DummyValue, "rs", translate("Status"))
-o.default = "检测中..."
 
 local apply=luci.http.formvalue("cbi.apply")
 if apply then

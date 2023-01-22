@@ -8,15 +8,25 @@ source /etc/homeledeDnsBundle/domesticDnsCtl.sh
 source /etc/homeledeDnsBundle/overseasDnsCtl.sh
 
 adBlockCurrentState=$(statusAdBlock)
-[ "${adBlockCurrentState}" == "0" ] &&  adBlockCurrentState="已停止" || adBlockCurrentState="运行中"
+[ "${adBlockCurrentState}" == "0" ] &&  adBlockCurrentState="stopped" || adBlockCurrentState="running"
 shuntDnsCurrentState=$(statusShuntDns)
-[ "${shuntDnsCurrentState}" == "0" ] &&  shuntDnsCurrentState="已停止" || shuntDnsCurrentState="运行中"
+[ "${shuntDnsCurrentState}" == "0" ] &&  shuntDnsCurrentState="stopped" || shuntDnsCurrentState="running"
 domesticDnsCurrentState=$(statusDomesticDns)
-[ "${domesticDnsCurrentState}" == "0" ] &&  domesticDnsCurrentState="已停止" || domesticDnsCurrentState="运行中"
+[ "${domesticDnsCurrentState}" == "0" ] &&  domesticDnsCurrentState="stopped" || domesticDnsCurrentState="running"
 overseasDnsCurrentState=$(statusOverseasDns)
-[ "${overseasDnsCurrentState}" == "0" ] &&  overseasDnsCurrentState="已停止" || overseasDnsCurrentState="运行中"
+[ "${overseasDnsCurrentState}" == "0" ] &&  overseasDnsCurrentState="stopped" || overseasDnsCurrentState="running"
 dnsmasqCurrentState=$(statusDnsmasq)
-[ "${dnsmasqCurrentState}" == "0" ] &&  dnsmasqCurrentState="已停止" || dnsmasqCurrentState="运行中"
+[ "${dnsmasqCurrentState}" == "0" ] &&  dnsmasqCurrentState="stopped" || dnsmasqCurrentState="running"
+
+CONFIGURATION=homeledeDnsBundle
+
+adBlockEnabled=$(getUciConfig ${CONFIGURATION} global "adBlock" 0)
+shuntResolutionEnabled=$(getUciConfig ${CONFIGURATION} global "shuntResolution" 0)
+
+[ "${adBlockCurrentState}" == "stopped" ] && [ "${adBlockEnabled}" == "0" ] && adBlockCurrentState="disabled"
+[ "${shuntDnsCurrentState}" == "stopped" ] && [ "${shuntResolutionEnabled}" == "0" ] && shuntDnsCurrentState="disabled"
+[ "${domesticDnsCurrentState}" == "stopped" ] && [ "${shuntResolutionEnabled}" == "0" ] && domesticDnsCurrentState="disabled"
+[ "${overseasDnsCurrentState}" == "stopped" ] && [ "${shuntResolutionEnabled}" == "0" ] && overseasDnsCurrentState="disabled"
 
 (
 cat <<EOF
@@ -25,7 +35,8 @@ cat <<EOF
 	"dnsmasq": "${dnsmasqCurrentState}",
 	"shunt": "${shuntDnsCurrentState}",
 	"domesticDns": "${domesticDnsCurrentState}",
-	"overseasDns": "${overseasDnsCurrentState}"
+	"overseasDns": "${overseasDnsCurrentState}",
+	"solution": "${adBlockEnabled}${shuntResolutionEnabled}"
 }
 EOF
 )

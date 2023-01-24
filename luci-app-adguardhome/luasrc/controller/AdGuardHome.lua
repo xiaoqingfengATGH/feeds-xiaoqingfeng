@@ -1,9 +1,9 @@
 module("luci.controller.AdGuardHome",package.seeall)
 function index()
-if not nixio.fs.access("/etc/config/AdGuardHome")then
-return
-end
-	entry({"admin","dns","AdGuardHome"},cbi("AdGuardHome"),_("AdGuard Home"),30).dependent=true
+	if not nixio.fs.access("/etc/config/AdGuardHome")then
+		return
+	end
+	-- entry({"admin","dns","AdGuardHome"},cbi("AdGuardHome"),_("AdGuard Home"),30).dependent=true
     entry({"admin","dns","AdGuardHome","status"},call("act_status")).leaf=true
 end 
 

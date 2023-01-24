@@ -7,15 +7,18 @@ mp:section(SimpleSection).template  = "homeledeDnsBundle/index"
 s = mp:section(TypedSection, "global")
 s.anonymous = true
 
-enabled = s:option(Flag, "enabled", translate("Master switch"))
+enabled = s:option(Flag, "enabled", translate("Master switch"),
+    translate("Controls whether the Homelede DNS suite is enabled."))
 enabled.default = 0
 enabled.rmempty = false
 
-adBlockEnabled = s:option(Flag, "adBlock", translate("AdBlock switch"))
+adBlockEnabled = s:option(Flag, "adBlock", translate("AdBlock switch"),
+    translate("Control whether the advertising filtering component is enabled."))
 adBlockEnabled.default = 1
 adBlockEnabled.rmempty = false
 
-shuntResolutionEnabled = s:option(Flag, "shuntResolution", translate("ShuntResolution switch"))
+shuntResolutionEnabled = s:option(Flag, "shuntResolution", translate("ShuntResolution switch"),
+    translate("Control whether to open DNS resolution for domestic and overseas diversion."))
 shuntResolutionEnabled.default = 1
 shuntResolutionEnabled.rmempty = false
 

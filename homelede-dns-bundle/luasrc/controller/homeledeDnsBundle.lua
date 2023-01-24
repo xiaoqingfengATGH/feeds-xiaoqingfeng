@@ -2,7 +2,6 @@
 -- feed site : https://github.com/xiaoqingfengATGH/feeds-xiaoqingfeng
 module("luci.controller.homeledeDnsBundle", package.seeall)
 local appname = "homeledeDnsBundle"
-local RUNLOG_DIR = "/tmp/hr"
 local ucic = luci.model.uci.cursor()
 local http = require "luci.http"
 
@@ -15,7 +14,7 @@ function index()
         nixio.fs.access("/etc/config/homeledeDnsBundle_show") then
             entry({"admin", "dns", "homeledeDnsBundle"},
 			alias("admin", "dns", "homeledeDnsBundle", "settings"),
-			_("Homelede Dns Control Panel"), 10).dependent = true
+			_("Dns Control Panel"), 10).dependent = true
     end
 	
     entry({"admin", "dns", "homeledeDnsBundle", "settings"},

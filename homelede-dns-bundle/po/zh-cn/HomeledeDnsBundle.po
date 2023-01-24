@@ -1,44 +1,36 @@
-msgid "Home Redirect"
-msgstr "端口转发"
+msgid "Dns Control Panel"
+msgstr "DNS控制面板"
 
-msgid "HomeRedirect is a customized port forwarding utility for HomeLede. It supports TCP / UDP protocol, IPv4 and IPv6."
-msgstr "HomeRedirect是一款为HomeLede定制的端口转发工具，可以将路由上端口访问转发至任意位置，支持TCP/UDP协议，IPv4和IPv6。"
+msgid "Homelede DNS Control Panel"
+msgstr "Homelede DNS 统一控制台"
 
-msgid "Home Redirect - Port forwarding utility"
-msgstr "Home Redirect 端口转发"
+msgid "Provide centralized control for Homelede diversion resolution DNS solution"
+msgstr "为Homelede内置的DNS套件提供统一状态监测及控制。"
 
-msgid "Redirect Configuration"
-msgstr "转发设置"
+msgid "AdBlock switch"
+msgstr "广告过滤开关"
 
-msgid "Transport Protocol"
-msgstr "传输协议"
+msgid "ShuntResolution switch"
+msgstr "海内外分流解析开关"
 
-msgid "Source Port"
-msgstr "路由器端口"
+msgid "Ad block configuration"
+msgstr "广告过滤基本配置"
 
-msgid "Destination Address"
-msgstr "转发目标地址"
+msgid "UI Port"
+msgstr "UI控制台端口"
 
-msgid "Destination Port"
-msgstr "转发目标端口"
+msgid "AdGuardHome Configuration UI Port."
+msgstr "设置 AdGuardHome UI 控制台端口"
 
-msgid "Name"
-msgstr "名称"
+msgid "Control whether the advertising filtering component is enabled."
+msgstr "控制是否开启广告过滤组件(AdGuardHome)。如禁用，将关闭AdGuardHome（UI控制台将无法打开）。"
 
-msgid "Source IP"
-msgstr "路由器IP"
-
-msgid "Status"
-msgstr "状态"
+msgid "Control whether to open DNS resolution for domestic and overseas diversion."
+msgstr "控制是否开启海内外分流解析（包含分流，国内、海外组解析）"
 
 msgid "Master switch"
 msgstr "总开关"
 
-msgid "Disabled"
-msgstr "未启用"
+msdid "Controls whether the Homelede DNS suite is enabled."
+msgstr "控制是否开启 Homelede DNS 套件（套件禁用后，如开启PSW且DNS模式为海内外分流解析时，国内，海外组DNS仍旧会运行，保证系统正常工作。）"
 
-msgid "Not running"
-msgstr "未运行"
-
-msgid "Running"
-msgstr "运行中"

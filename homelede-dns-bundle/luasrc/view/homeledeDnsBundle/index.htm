@@ -46,10 +46,8 @@ return new Za.prototype.init(a,b,c,d,e)}m.Tween=Za,Za.prototype={constructor:Za,
 	background-image: url(/luci-static/resources/homeledeDnsBundle/jinyong.png);
 }
 </style>
-<fieldset class="cbi-section" id="cbi-homeledeDnsBundle-chart">
-</fieldset>
 <fieldset class="cbi-section" id="cbi-homeledeDnsBundle-status">
-	<div style="width: 16rem;text-align:right">DNS组件状态</div>
+	<div style="text-align:right;padding:0px" class="cbi-value-title">DNS组件状态</div>
 	<div style="width: 4rem;text-align:left">：</div>
 	<div>广告拦截</div><div id="adBlock" class="status disabled"></div><div>&nbsp;|&nbsp;&nbsp;</div>
 	<div>系统DNS</div><div id="dnsmasq" class="status disabled"></div><div>&nbsp;|&nbsp;&nbsp;</div>
@@ -57,8 +55,12 @@ return new Za.prototype.init(a,b,c,d,e)}m.Tween=Za,Za.prototype={constructor:Za,
 	<div>国内DNS解析</div><div id="domesticDns" class="status disabled"></div><div>&nbsp;|&nbsp;&nbsp;</div>
 	<div>海外DNS解析</div><div id="overseasDns" class="status disabled"></div>
 </fieldset>
+<fieldset class="cbi-section" id="cbi-homeledeDnsBundle-chart">
+</fieldset>
 <div id="homeledeDnsBundleTemplate" style="display:none">
-	<div style="float: right;position: absolute;left: 40rem;top: 0.6rem;">
+	<div style="display: table-cell;width:2rem">
+	</div>
+	<div style="display: table-cell">
 		<input id="AdGuardHomeUIButton" class="btn cbi-button cbi-button-selectAll" type="button" value="打开 AdGuardHome UI控制台" onclick="openAdGuardHomeUIWin()" size="0">
 		&nbsp;&nbsp;&nbsp;&nbsp;默认用户名: root&nbsp;&nbsp;&nbsp;&nbsp;默认密码: password 
 	</div>

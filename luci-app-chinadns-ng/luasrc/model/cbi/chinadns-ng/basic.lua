@@ -6,6 +6,12 @@ m = Map("chinadns-ng", translate("ChinaDNS-NG"),
 	.. [[<a href="https://github.com/zfl9/chinadns-ng" target="_blank">]]
 	.. translate("github project")
 	.. [[</a>]]
+	.. &nbsp;&nbsp;
+	.. 本组件在Homelede DNS 套件中负责海内外分流解析，请在
+	.. [[<a href="/cgi-bin/luci/admin/dns/homeledeDnsBundle">]]
+	.. DNS控制面板
+	.. [[</a>]]
+	.. 中控制启停。
 )
 
 m:section(SimpleSection).template  = "chinadns-ng/status"
@@ -13,8 +19,10 @@ m:section(SimpleSection).template  = "chinadns-ng/status"
 s = m:section(TypedSection, "chinadns-ng", translate("General Setting"))
 s.anonymous   = true
 
+--[[
 o = s:option(Flag, "enable", translate("Enable"))
 o.rmempty     = false
+--]]
 
 o = s:option(Flag, "fair_mode",
 	translate("Enable the Fair_Mode"),

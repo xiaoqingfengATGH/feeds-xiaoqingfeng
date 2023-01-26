@@ -34,8 +34,8 @@ endef
 define Package/luci-app-adguardhome/install
 	$(INSTALL_DIR) $(1)/usr/lib/lua/luci $(1)/etc/AdGuardHome
 	cp -pR ./luasrc/* $(1)/usr/lib/lua/luci
-	$(INSTALL_DIR) $(1)/etc/init.d
-	$(INSTALL_BIN) ./root/etc/init.d/AdGuardHome $(1)/etc/init.d/
+	#$(INSTALL_DIR) $(1)/etc/init.d
+	#$(INSTALL_BIN) ./root/etc/init.d/AdGuardHome $(1)/etc/init.d/
 	$(INSTALL_BIN) ./root/etc/AdGuardHome/initConfig.sh $(1)/etc/AdGuardHome/
 	$(INSTALL_BIN) ./root/etc/AdGuardHome/startAdGuardHome.sh $(1)/etc/AdGuardHome/
 	$(INSTALL_DATA) ./root/etc/AdGuardHome/AdGuardHome.yaml.template $(1)/etc/AdGuardHome/

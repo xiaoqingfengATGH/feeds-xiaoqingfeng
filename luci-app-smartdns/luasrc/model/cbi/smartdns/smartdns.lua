@@ -22,6 +22,12 @@ require ("nixio.fs")
 m = Map("smartdns")
 m.title	= translate("SmartDNS Server")
 m.description = translate("SmartDNS is a local high-performance DNS server, supports finding fastest IP, supports ad filtering, and supports avoiding DNS poisoning.")
+    .. &nbsp;&nbsp;
+	.. 本组件在Homelede DNS 套件中负责国内DNS解析，请在
+	.. [[<a href="/cgi-bin/luci/admin/dns/homeledeDnsBundle">]]
+	.. DNS控制面板
+	.. [[</a>]]
+	.. 中控制启停。
 
 m:section(SimpleSection).template  = "smartdns/smartdns_status"
 
@@ -33,11 +39,12 @@ s:tab("settings", translate("General Settings"))
 s:tab("seconddns", translate("Second Server Settings"))
 s:tab("custom", translate("Custom Settings"))
 
----- Eanble
+---- Enable
+--[[
 o = s:taboption("settings", Flag, "enabled", translate("Enable"), translate("Enable or disable smartdns server"))
 o.default     = o.disabled
 o.rempty      = false
-
+--]]
 ---- server name
 o = s:taboption("settings", Value, "server_name", translate("Server Name"), translate("Smartdns server name"))
 o.default     = "smartdns"

@@ -2,16 +2,15 @@ local m, s, o
 
 
 m = Map("chinadns-ng", translate("ChinaDNS-NG"),
-	translate("ChinaDNS-NG is a tool for resolving DNS poisoning. You can find how it works and usage here:")
+	"本组件在Homelede DNS 套件中负责海内外分流解析，请在"
+	.. [[<a href="/cgi-bin/luci/admin/dns/homeledeDnsBundle">]]
+	.. "DNS控制面板"
+	.. [[</a>]]
+	.. "中控制启停。<br/>"
+	.. translate("ChinaDNS-NG is a tool for resolving DNS poisoning. You can find how it works and usage here:")
 	.. [[<a href="https://github.com/zfl9/chinadns-ng" target="_blank">]]
 	.. translate("github project")
 	.. [[</a>]]
-	.. &nbsp;&nbsp;
-	.. 本组件在Homelede DNS 套件中负责海内外分流解析，请在
-	.. [[<a href="/cgi-bin/luci/admin/dns/homeledeDnsBundle">]]
-	.. DNS控制面板
-	.. [[</a>]]
-	.. 中控制启停。
 )
 
 m:section(SimpleSection).template  = "chinadns-ng/status"

@@ -21,13 +21,12 @@ require ("nixio.fs")
 
 m = Map("smartdns")
 m.title	= translate("SmartDNS Server")
-m.description = translate("SmartDNS is a local high-performance DNS server, supports finding fastest IP, supports ad filtering, and supports avoiding DNS poisoning.")
-    .. &nbsp;&nbsp;
-	.. 本组件在Homelede DNS 套件中负责国内DNS解析，请在
+m.description = "本组件在Homelede DNS 套件中负责海内外分流解析，请在"
 	.. [[<a href="/cgi-bin/luci/admin/dns/homeledeDnsBundle">]]
-	.. DNS控制面板
+	.. "DNS控制面板"
 	.. [[</a>]]
-	.. 中控制启停。
+	.. "中控制启停。<br/>"
+	.. translate("SmartDNS is a local high-performance DNS server, supports finding fastest IP, supports ad filtering, and supports avoiding DNS poisoning.")
 
 m:section(SimpleSection).template  = "smartdns/smartdns_status"
 

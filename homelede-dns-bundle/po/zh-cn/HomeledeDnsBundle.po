@@ -31,6 +31,6 @@ msgstr "控制是否开启海内外分流解析（包含分流，国内、海外
 msgid "Master switch"
 msgstr "总开关"
 
-msdid "Controls whether the Homelede DNS suite is enabled."
+msgid "Controls whether the Homelede DNS suite is enabled."
 msgstr "控制是否开启 Homelede DNS 套件（套件禁用后，如开启PSW且DNS模式为海内外分流解析时，国内，海外组DNS仍旧会运行，保证系统正常工作。）"
 

@@ -1,0 +1,160 @@
+include: []
+log:
+    file: /var/log/mosdns.log
+    level: info
+plugins:
+    - args:
+        files:
+            - /var/mosdns/direct_domain.txt
+      tag: direct_domain
+      type: domain_set
+    - args:
+        files:
+            - /var/mosdns/proxy_domain.txt
+      tag: proxy_domain
+      type: domain_set
+    - args:
+        concurrent: 1
+        upstreams:
+            - addr: 119.29.29.29
+            - addr: 223.5.5.5
+      tag: reslove_direct
+      type: forward
+    - args:
+        concurrent: 1
+        upstreams:
+            - addr: https://1.0.0.1/dns-query
+              bootstrap: 119.29.29.29
+              enable_pipeline: true
+              idle_timeout: 30
+              insecure_skip_verify: false
+            - addr: https://9.9.9.12/dns-query
+              bootstrap: 119.29.29.29
+              enable_pipeline: true
+              idle_timeout: 30
+              insecure_skip_verify: false
+      tag: reslove_proxy
+      type: forward
+    - args:
+        files:
+            - /etc/mosdns/rule/ddnslist.txt
+      tag: ddnslist
+      type: domain_set
+    - args:
+        files:
+            - /etc/mosdns/rule/hosts.txt
+      tag: hosts
+      type: hosts
+    - args:
+        files:
+            - /etc/mosdns/rule/local-ptr.txt
+      tag: local_ptr
+      type: domain_set
+    - args:
+        files:
+            - /etc/mosdns/rule/blocklist.txt
+      tag: blocklist
+      type: domain_set
+    - args:
+        files:
+            - /var/mosdns/geoip_cn.txt
+      tag: direct_ip
+      type: ip_set
+    - args:
+        lazy_cache_ttl: 86400
+        size: 8000
+      tag: lazy_cache
+      type: cache
+    - args:
+        - exec: prefer_ipv4
+        - exec: $reslove_proxy
+      tag: seq_query_from_proxy
+      type: sequence
+    - args:
+        - exec: ttl 0-0
+      tag: modify_ttl
+      type: sequence
+    - args:
+        - exec: ttl 5-5
+      tag: modify_ddns_ttl
+      type: sequence
+    - args:
+        - exec: $modify_ddns_ttl
+          matches: qname $ddnslist
+        - exec: $modify_ttl
+          matches: '!qname $ddnslist'
+        - exec: accept
+          matches: has_resp
+      tag: seq_has_resp
+      type: sequence
+    - args:
+        - exec: $reslove_direct
+        - exec: drop_resp
+          matches: '!resp_ip $direct_ip'
+      tag: seq_query_direct_ip
+      type: sequence
+    - args:
+        always_standby: true
+        primary: seq_query_direct_ip
+        secondary: seq_query_from_proxy
+        threshold: 500
+      tag: fallback
+      type: fallback
+    - args:
+        - exec: $reslove_direct
+          matches: qname $ddnslist
+      tag: seq_query_is_ddns_domain
+      type: sequence
+    - args:
+        - exec: $reslove_direct
+          matches: qname $direct_domain
+        - exec: ipset passwall2_global_whitelist,inet,24 passwall2_global_whitelist6,inet6,64
+          matches: has_resp
+      tag: seq_is_direct_domain
+      type: sequence
+    - args:
+        - exec: $seq_query_from_proxy
+          matches: qname $proxy_domain
+      tag: seq_is_proxy_domain
+      type: sequence
+    - args:
+        - exec: reject 3
+          matches: qname $blocklist
+        - exec: reject 3
+          matches:
+            - qtype 12
+            - qname $local_ptr
+        - exec: reject 3
+          matches: qtype 65
+      tag: query_is_reject_domain
+      type: sequence
+    - args:
+        - exec: $hosts
+        - exec: jump seq_has_resp
+        - exec: $lazy_cache
+          matches:
+            - '!qname $ddnslist'
+            - '!qname $blocklist'
+            - '!qname $local_ptr'
+        - exec: jump seq_has_resp
+        - exec: $seq_query_is_ddns_domain
+        - exec: jump seq_has_resp
+        - exec: $seq_is_direct_domain
+        - exec: jump seq_has_resp
+        - exec: $query_is_reject_domain
+        - exec: jump seq_has_resp
+        - exec: $seq_is_proxy_domain
+        - exec: jump seq_has_resp
+        - exec: $fallback
+      tag: main_sequence
+      type: sequence
+    - args:
+        entry: main_sequence
+        listen: :5053
+      tag: udp_server1
+      type: udp_server
+    - args:
+        entry: main_sequence
+        listen: 127.0.0.1:15353
+      tag: udp_server2
+      type: udp_server

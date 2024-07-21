@@ -7,11 +7,11 @@ include $(TOPDIR)/rules.mk
 PKG_NAME:=homelede-autoconfig
 PKG_VERSION:=1.0
 PKG_RELEASE:=1
-PKG_DATE:=20200401
+PKG_DATE:=20240721
 PKG_BUILD_DIR:=$(BUILD_DIR)/$(PKG_NAME)
 
-PKG_MAINTAINER:=xiaoqingfeng <xiaoqingfengatgm@gmail.com>
-PKG_LICENSE:=GPL-3.0-or-later
+PKG_MAINTAINER:=eric <xiaoqingfengatgm@gmail.com>
+PKG_LICENSE:=APACHE2.0
 PKG_LICENSE_FILES:=LICENSE
 
 include $(INCLUDE_DIR)/package.mk
@@ -35,6 +35,7 @@ endef
 define Package/$(PKG_NAME)/install
 	$(INSTALL_DIR) $(1)/etc/init.d
 	$(INSTALL_BIN) files/etc/init.d/homelede-autoconfig $(1)/etc/init.d
+	$(INSTALL_BIN) files/usr/bin/homeledeCore $(1)/usr/bin
 	$(INSTALL_DATA) files/etc/brand $(1)/etc
 endef
 

@@ -1,0 +1,50 @@
+#!/bin/sh /etc/rc.common
+
+START=50
+STOP=99
+
+# Include functions from /lib/functions.sh
+. /lib/functions.sh
+
+reload_service()
+{
+	stop
+    sleep 1
+    start
+}
+
+start() {
+	echo EnterStart
+	local enabled
+	config_get_bool enabled config enabled 1
+	echo enabled=$enabled
+	
+	local adGuardPID="$(ps -ef | grep AdGuardHome.yaml | grep -v "grep" | head -n 1|awk '{print $1}')"
+	echo adGuardPID=$adGuardPID
+	if [ -z "$adGuardPID" ]; then
+		[ "$enabled" -eq 0 ] && return 1
+		echo "AdGuardHome process is not running. Now start it."
+		nohup /etc/AdGuardHome/startAdGuardHome.sh > /dev/null 2>&1 &
+	else
+		[ "$enabled" -eq 0 ] && {
+			echo "AdGuardHome process PID is $adGuardPID."
+			kill $adGuardPID
+		}
+	fi
+    
+    echo AdGuardHome START
+}
+
+stop()
+{
+	echo EnterStop
+	local adGuardPID="$(ps -ef | grep AdGuardHome.yaml | grep -v "grep" | head -n 1|awk '{print $1}')"
+	echo adGuardPID=$adGuardPID
+	if [ -z "$adGuardPID" ]; then
+		echo "AdGuardHome process is not running."
+	else
+		echo "AdGuardHome process PID is $adGuardPID."
+		kill $adGuardPID
+	fi
+    echo AdGuardHome STOP
+}

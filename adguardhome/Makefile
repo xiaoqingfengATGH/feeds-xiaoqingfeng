@@ -80,6 +80,14 @@ endef
 define Package/$(PKG_NAME)/install
 	$(INSTALL_DIR) $(1)/usr/bin/AdGuardHome
 	$(INSTALL_BIN) $(UNTAR_DIR)/*/$(PROJECT_NAME) $(1)/usr/bin/AdGuardHome/$(PKG_NAME)
+
+	$(INSTALL_DIR) $(1)/etc/AdGuardHome
+	$(CP) -r etc/AdGuardHome/* $(1)/etc/AdGuardHome
+	$(INSTALL_BIN) etc/AdGuardHome/initConfig.sh $(1)/etc/AdGuardHome
+	$(INSTALL_BIN) etc/AdGuardHome/startAdGuardHome.sh $(1)/etc/AdGuardHome
+	$(INSTALL_DATA) etc/config/AdGuardHome $(1)/etc/config
+	$(INSTALL_BIN) etc/init.d/AdGuardHome $(1)/etc/init.d
+	$(INSTALL_BIN) etc/uci-defaults/AdGuardHome $(1)/etc/uci-defaults
 endef
 
 $(eval $(call BuildPackage,$(PKG_NAME)))

@@ -35,6 +35,7 @@ endef
 define Package/$(PKG_NAME)/install
 	$(INSTALL_DIR) $(1)/etc/init.d
 	$(INSTALL_BIN) files/etc/init.d/homelede-autoconfig $(1)/etc/init.d
+	$(INSTALL_DIR) $(1)/usr/bin
 	$(INSTALL_BIN) files/usr/bin/homeledeCore $(1)/usr/bin
 	$(INSTALL_DATA) files/etc/brand $(1)/etc
 endef

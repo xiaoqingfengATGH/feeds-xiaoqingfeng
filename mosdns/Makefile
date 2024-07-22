@@ -5,8 +5,8 @@
 include $(TOPDIR)/rules.mk
 
 PKG_NAME:=mosdns
-PKG_VERSION:=5.3.1-xiaoqingfengMod
-PKG_RELEASE:=1
+PKG_VERSION:=5.3.1
+PKG_RELEASE:=1-xiaoqingfengMod
 
 PKG_SOURCE:=$(PKG_NAME)-$(PKG_VERSION).tar.gz
 PKG_SOURCE_URL:=https://codeload.github.com/IrineSistiana/mosdns/tar.gz/v$(PKG_VERSION)?
@@ -37,10 +37,10 @@ endef
 
 define Package/mosdns/install
 	$(call GoPackage/Package/Install/Bin,$(1))
-  $(INSTALL_DIR) $(1)/etc/init.d
-  $(INSTALL_DIR) $(1)/etc/mosdns
+	$(INSTALL_DIR) $(1)/etc/init.d
+	$(INSTALL_DIR) $(1)/etc/mosdns
 	$(INSTALL_BIN) etc/init.d/mosdns $(1)/etc/init.d
-  $(CP) -r etc/mosdns/* $(1)/etc/mosdns
+	$(CP) -r etc/mosdns/* $(1)/etc/mosdns
 endef
 
 $(eval $(call GoBinPackage,mosdns))

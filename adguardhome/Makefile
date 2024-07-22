@@ -85,6 +85,9 @@ define Package/$(PKG_NAME)/install
 	$(CP) -r etc/AdGuardHome/* $(1)/etc/AdGuardHome
 	$(INSTALL_BIN) etc/AdGuardHome/initConfig.sh $(1)/etc/AdGuardHome
 	$(INSTALL_BIN) etc/AdGuardHome/startAdGuardHome.sh $(1)/etc/AdGuardHome
+	$(INSTALL_DIR) $(1)/etc/config
+	$(INSTALL_DIR) $(1)/etc/init.d
+	$(INSTALL_DIR) $(1)/etc/uci-defaults
 	$(INSTALL_DATA) etc/config/AdGuardHome $(1)/etc/config
 	$(INSTALL_BIN) etc/init.d/AdGuardHome $(1)/etc/init.d
 	$(INSTALL_BIN) etc/uci-defaults/AdGuardHome $(1)/etc/uci-defaults

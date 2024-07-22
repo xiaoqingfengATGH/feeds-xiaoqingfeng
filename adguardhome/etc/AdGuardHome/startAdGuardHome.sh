@@ -5,7 +5,7 @@ IP_INCONFIG=$ROUTER_IP
 
 if [ -f "/etc/AdGuardHome/AdGuardHome.yaml" ];
 then
-IP_IN_CONFIG=$(cat /etc/AdGuardHome/AdGuardHome.yaml | grep "bind_host:" | sed -n 1p | cut -d ' ' -f 2)
+IP_IN_CONFIG=$(cat /etc/AdGuardHome/AdGuardHome.yaml | grep "address:" | awk '{print $2}' | awk -F':' '{print $1}')
 fi
 
 if [ ! -f "/etc/AdGuardHome/AdGuardHome.yaml" ];

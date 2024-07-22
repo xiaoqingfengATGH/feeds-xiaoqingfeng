@@ -1,6 +1,6 @@
 #!/bin/sh
 
-ROUTER_IP=$(ifconfig br-lan | grep 'inet addr' | sed 's/^.*addr://g' | cut -d ' ' -f 1)
+ROUTER_IP=$(uci show network | grep network.lan.ipaddr|cut -d "'" -f 2)
 IP_INCONFIG=$ROUTER_IP
 
 if [ -f "/etc/AdGuardHome/AdGuardHome.yaml" ];

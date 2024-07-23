@@ -1,4 +1,7 @@
 # HomeLede Feed - xiaoqingfeng - 说明
+![visits since 2024.07.23](https://views.whatilearened.today/views/github/xiaoqingfengATGH/deplives.svg)
+
+
 本Feed中包含内容：
 + 由HomeLede团队原创的软件包
 + 第三方软件包，由HomeLede团队定制后的版本
@@ -8,13 +11,10 @@
 + 端口转发工具——HomeRedirect（原创）。可以在有Docker环境下支持NAT环回。
 + 家庭VPN接入——HomeConnect（原创）。基于L2TP over IPSec协议，本协议目前被最广泛支持的终端直接支持，Windows、mac、ios、Android都可以在不安装额外软件情况下，直接使用本VPN方案。
 + dnsmasq加速程序——dnsmasq-china-list（原创）。引入Github上同名项目中的代码实现国内域名访问加速。支持自动更新。
-+ 去广告套件。采用DNS去广告方案，使用AdGuardHome，chinadns-ng，smart-dns，dnscrypt-proxy组成三级去广告套件。实现去广告+抗污染+优化访问速度。
++ DNS方案，使用AdGuardHome，mosdns实现去广告+抗污染+优化访问速度。
   + AdGuardHome作为家庭网络路由的主DNS，通过挂载Anti-AD等等脚本实现广告过滤，可实现国内外主流视频网站去播放前广告，网页去广告等功能。
-  + chinadns-ng作为AdGuardHome的上游DNS，解决DNS污染，实现国内域名国内解析，国外域名（受干扰域名）国外解析。
-  + smartdns作为chinadns-ng的国内上游DNS，维护国内组DNS服务器，对同一个域名解析，通过对多个DNS返回结果进行测速，保证返回最快响应IP。
-  + dnscrypt-proxys作为chinadns-ng的可信上游DNS，维护海外组DNS服务器。
-
-  AdGuardHome监听路由127.0.0.1:7913，上游指向 chinadns-ng 127.0.0.1:5053，chinadns-ng 国内DNS指向 smartdns 主DNS 0.0.0.0:6053，chinadns-ng 可信DNS指向 dnscrypt-proxy 0.0.0.0:7053。
+  + dnsmasq作为AdGuardHome上游，完成host解析，以及兼容多种其他插件功能
+  + mosdns作为dnsmasq的上游DNS，解决DNS污染，实现国内域名国内解析，国外域名（受干扰域名）国外解析。
   
   去广告使用说明：https://www.cnblogs.com/zlAurora/p/12433266.html
   

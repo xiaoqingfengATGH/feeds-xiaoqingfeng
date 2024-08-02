@@ -46,6 +46,9 @@ start_service() {
 	  mkdir -p "$CONF_PATH"
 	  echo "Directory created: $CONF_PATH"
 	  cp /etc/mosdns/* ${CONF_PATH}/
+	  if [ -e "/usr/bin/homeledeCore" ] && [ -x "/usr/bin/homeledeCore" ] && [ -d "/usr/share/v2ray" ]; then
+		/usr/bin/homeledeCore mosdnsDefaultConfGenerate -g /usr/share/v2ray -o /var/mosdns
+	  fi
 	fi
 	
     procd_open_instance mosdns

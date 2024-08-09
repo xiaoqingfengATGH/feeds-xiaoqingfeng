@@ -5,9 +5,9 @@
 include $(TOPDIR)/rules.mk
 
 PKG_NAME:=homelede-autoconfig
-PKG_VERSION:=1.1
+PKG_VERSION:=20240809
 PKG_RELEASE:=1
-PKG_DATE:=20240730
+PKG_DATE:=20240809
 PKG_BUILD_DIR:=$(BUILD_DIR)/$(PKG_NAME)
 
 PKG_MAINTAINER:=eric <xiaoqingfengatgm@gmail.com>

@@ -222,8 +222,8 @@ msgstr "配置已完成，开关控制进程正在「%s」模式下运行。"
 msgid "Open Status Page"
 msgstr "打开状态页"
 
-msgid "Verify the remote switch from the router, then enable the daemon and go to the status page."
-msgstr "从路由器验证Cloudflare侧隧道开关，然后启用守护并进入状态页。"
+msgid "This step verifies all settings and starts the intranet-exposure tunnel. Click \"Verify\" to continue."
+msgstr "本步骤将验证所有配置，启动内网穿透隧道。点击“验证”继续。"
 
 msgid "Verify"
 msgstr "验证"

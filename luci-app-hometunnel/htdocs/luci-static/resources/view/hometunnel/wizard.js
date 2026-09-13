@@ -784,7 +784,7 @@ return view.extend({
 			return;
 		}
 		body.appendChild(E('p', {},
-				_('Verify the remote switch from the router, then enable the daemon and go to the status page.')));
+				_('This step verifies all settings and starts the intranet-exposure tunnel. Click "Verify" to continue.')));
 
 		var btn = E('button', { 'class': 'btn cbi-button cbi-button-apply important' }, _('Verify'));
 		var out = E('pre', { 'style': 'max-height:150px;overflow:auto;font-size:12px' }, '');

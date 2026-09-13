@@ -120,36 +120,42 @@ return view.extend({
 				return E('span', { 'class': ok ? 'label success' : 'label' }, text || (ok ? _('running') : _('stopped')));
 			};
 
-			var table = E('table', { 'class': 'table', 'id': 'ht-status-table' }, [
+			var rows = [
 				E('tr', { 'class': 'tr' }, [
+					E('td', { 'class': 'td left', 'width': '30%' }, E('strong', {}, _('Tunnel Mode'))),
+					E('td', { 'class': 'td left' }, mode === 'ondemand' ? _('on-demand (remote switch)') : _('always-on'))
+				])
+				];
+
+				if (mode === 'ondemand') {
+				rows.push(E('tr', { 'class': 'tr' }, [
+					E('td', { 'class': 'td left', 'width': '30%' }, E('strong', {}, _('Remote switch state'))),
+					E('td', { 'class': 'td left', 'id': 'ht-ctl-state' }, this.fmtCtlState(ctlJson))
+				]));
+				}
+
+				rows.push(E('tr', { 'class': 'tr' }, [
 					E('td', { 'class': 'td left', 'width': '30%' }, E('strong', {}, _('Tunnel service'))),
 					E('td', { 'class': 'td left' }, label(tunnelRunning))
-				]),
-				E('tr', { 'class': 'tr' }, [
+				]));
+
+				if (mode === 'ondemand') {
+				rows.push(E('tr', { 'class': 'tr' }, [
+					E('td', { 'class': 'td left', 'width': '30%' }, E('strong', {}, _('Switch daemon'))),
+					E('td', { 'class': 'td left', 'id': 'ht-ctl-svc' }, label(ctlRunning))
+				]));
+				}
+
+				rows.push(E('tr', { 'class': 'tr' }, [
 					E('td', { 'class': 'td left', 'width': '30%' }, E('strong', {}, _('Tunnel on Cloudflare'))),
 					E('td', { 'class': 'td left', 'id': 'ht-cf-state' }, E('span', { 'class': cfState === 'exists' ? 'label success' : 'label' },
 						cfState === 'exists' ? _('ok')
 						: cfState === 'missing' ? _('deleted on Cloudflare')
 						: cfState === 'auth-failed' ? _('certificate rejected')
 						: cfState ? cfState : _('unknown')))
-				]),
-				E('tr', { 'class': 'tr' }, [
-					E('td', { 'class': 'td left', 'width': '30%' }, E('strong', {}, _('Tunnel Mode'))),
-					E('td', { 'class': 'td left' }, mode === 'ondemand' ? _('on-demand (remote switch)') : _('always-on'))
-				])
-			]);
-
-			if (mode === 'ondemand') {
-				table.appendChild(E('tr', { 'class': 'tr' }, [
-					E('td', { 'class': 'td left', 'width': '30%' }, E('strong', {}, _('Switch daemon'))),
-					E('td', { 'class': 'td left', 'id': 'ht-ctl-svc' }, label(ctlRunning))
 				]));
-				table.appendChild(E('tr', { 'class': 'tr' }, [
-					E('td', { 'class': 'td left', 'width': '30%' }, E('strong', {}, _('Remote switch state'))),
-					E('td', { 'class': 'td left', 'id': 'ht-ctl-state' }, this.fmtCtlState(ctlJson))
-				]));
-			}
 
+				var table = E('table', { 'class': 'table', 'id': 'ht-status-table' }, rows);
 			container.appendChild(E('div', { 'class': 'cbi-section' }, [table]));
 
 			/* ---- on-demand: 开/关 + 书签 ---- */

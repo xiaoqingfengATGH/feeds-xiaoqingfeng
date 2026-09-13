@@ -496,7 +496,7 @@ msgstr ""
 msgid "HomeTunnel — Settings"
 msgstr ""
 
-msgid "Mode and daemon parameters. Max TTL and auto-renew take effect on the switch service after it is redeployed."
+msgid "Mode and daemon parameters."
 msgstr ""
 
 msgid "General"

@@ -498,8 +498,8 @@ msgstr "已复制 ✓"
 msgid "HomeTunnel — Settings"
 msgstr "HomeTunnel — 设置"
 
-msgid "Mode and daemon parameters. Max TTL and auto-renew take effect on the switch service after it is redeployed."
-msgstr "模式与开关参数。最大 TTL 与自动续期修改后，需重新部署开关服务才能生效。"
+msgid "Mode and daemon parameters."
+msgstr "模式与开关参数。"
 
 msgid "General"
 msgstr "基本设置"

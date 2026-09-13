@@ -906,6 +906,8 @@ cmd_route_and_regen() {
 		cmd_route || rc=1
 	fi
 	cmd_regen || rc=1
+	# TTL 漂移检测（改 max/renew 后自动重部署 Worker；详见 cmd_ttl_sync 注释）
+	ttl_sync_check || true
 	return "$rc"
 }
 
@@ -1025,6 +1027,68 @@ cmd_deploy() {
 	# 4) 验证（healthz 轮询，证书签发需几秒）
 	verify_worker_http
 	msg "OK: deployed and verified"
+
+	# 5) TTL 快照：记录本次烤进 Worker 的 TTL 三元组
+	#    （ttl_sync_worker 据此检测 UCI 改动 → 自动重部署，无需用户感知）
+	write_ttl_snapshot
+}
+
+# ---- TTL 配置同步（自动重部署）----
+# Worker 代码里 MAX_MIN/REFRESH_MIN 是编译期常量，改 UCI 不会自动生效。
+# 本机制: 部署成功即写快照；uci reload 触发的 route-and-regen 末尾比对，
+# 漂移且 oauth 可用 → 后台 job 重传 Worker（幂等）。OAuth 失效只记日志，
+# 快照不更新，下次保存自动重试。
+TTL_SNAPSHOT="$ETC/worker-ttl.snapshot"
+
+ttl_snapshot_line() {
+	# 单行三元组: default max renew（get_ 带默认值，与 upload_worker 的 sed 一致）
+	echo "$(get_ default_ttl 45) $(get_ max_ttl 240) $(get_ renew_ttl 45)"
+}
+
+write_ttl_snapshot() {
+	ttl_snapshot_line > "$TTL_SNAPSHOT"
+}
+
+# 独立 job 体（route-and-regen 末尾调用；直接 cmd_deploy，不等待 oauth 流程）
+cmd_ttl_sync() {
+	local tok rc
+	# oauth 无效 → 静默放弃（subshell 包裹防 die 穿透；重新授权后下次保存自动补同步）
+	tok=$(oauth_valid_token) || tok=""
+	if [ -z "$tok" ]; then
+		msg "ttl-sync: no valid oauth token, skip (re-authorize to sync)"
+		logger -t hometunnel "ttl-sync: no valid oauth token, skip"
+		return 0
+	fi
+	msg "ttl-sync: redeploying worker with new TTL values"
+	# subshell: cmd_deploy 内部 die 不穿透（失败要走到下面的失败日志分支）
+	( cmd_deploy )
+	rc=$?
+	if [ $rc -eq 0 ]; then
+		logger -t hometunnel "ttl-sync: worker redeployed with new TTL values"
+	else
+		logger -t hometunnel "ttl-sync: redeploy FAILED (rc=$rc), will retry on next config change"
+	fi
+	return $rc
+}
+
+# 漂移检测（reload 链调用）：快照存在且与当前 UCI 不一致 → 起 worker-sync job
+ttl_sync_check() {
+	# 快照缺失（从未部署/重装）→ 不动作，避免意外部署
+	[ -f "$TTL_SNAPSHOT" ] || return 0
+	local cur snap
+	cur=$(ttl_snapshot_line)
+	snap=$(cat "$TTL_SNAPSHOT")
+	[ "$cur" = "$snap" ] && return 0
+	# 防抖：oauth-deploy / worker-sync 任一在跑则跳过（本轮改动下轮再试）
+	local j
+	for j in oauth-deploy worker-sync; do
+		if [ -f "$RUNDIR/$j.pid" ] && kill -0 "$(cat "$RUNDIR/$j.pid" 2>/dev/null)" 2>/dev/null; then
+			logger -t hometunnel "ttl-sync: '$j' job already running, skip check"
+			return 0
+		fi
+	done
+	logger -t hometunnel "ttl-sync: TTL values changed (snapshot='$snap' uci='$cur'), scheduling worker redeploy"
+	job_start worker-sync "$0" ttl-sync
 }
 
 # 用 token 按域名查 zone_id（精确匹配 zone name）
@@ -1152,6 +1216,7 @@ case "${1:-}" in
 	zones)      cmd_zones ;;
 	unbind)     shift; cmd_unbind "$@" ;;
 	route-and-regen) cmd_route_and_regen ;;
+	ttl-sync)     cmd_ttl_sync ;;
 	probe)      cmd_probe ;;
 	apply-mode) cmd_apply_mode ;;
 	mark)       shift; cmd_mark "$@" ;;
@@ -1188,6 +1253,7 @@ usage: hometunnel.sh <command>
   oauth-status          poll OAuth device flow state
   oauth-clear           clear saved OAuth credentials
   deploy [takeover]     deploy control-plane Worker via API (needs oauth)
+  ttl-sync              redeploy worker after TTL values change (auto, job)
   deploy-check          pre-check switch domain conflicts (wizard step 7)
   oauth-deploy          wait for oauth + deploy (wizard one-shot job)
 EOF

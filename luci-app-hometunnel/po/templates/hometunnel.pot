@@ -148,12 +148,6 @@ msgstr ""
 msgid "Saved! Loading next step…"
 msgstr ""
 
-msgid "Authorize the switch service deployment (a Cloudflare Worker)."
-msgstr ""
-
-msgid "Scan the QR code with your phone, or open the link, then tap Allow — that is the only manual step."
-msgstr ""
-
 msgid "Start Authorization"
 msgstr ""
 
@@ -801,4 +795,7 @@ msgid "This removes the tunnel, DNS records and the switch service from Cloudfla
 msgstr ""
 
 msgid "Creating the intranet-exposure tunnel needs a one-time authorization in Cloudflare. Click \"Start Login\" to generate an authorization link. It opens Cloudflare: pick any domain there (it does not have to be the one you plan to expose through the tunnel), then click \"Authorize\" in the dialog that follows. When done, come back to the HomeTunnel wizard page."
+msgstr ""
+
+msgid "The service that starts and stops the intranet-exposure tunnel (a Cloudflare Worker) is about to be deployed. Click \"Start Authorization\" to generate an authorization link; it opens Cloudflare. When done, come back to the HomeTunnel wizard page. See the notes below for details."
 msgstr ""

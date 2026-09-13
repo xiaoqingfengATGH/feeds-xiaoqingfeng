@@ -537,8 +537,7 @@ return view.extend({
 	/* ---- 步骤 4: 授权开关服务（OAuth 设备流，一次扫码）---- */
 	step4: function (body) {
 		body.appendChild(E('p', {}, [
-			_('Authorize the switch service deployment (a Cloudflare Worker).'), ' ',
-			_('Scan the QR code with your phone, or open the link, then tap Allow — that is the only manual step.')
+			_('The service that starts and stops the intranet-exposure tunnel (a Cloudflare Worker) is about to be deployed. Click "Start Authorization" to generate an authorization link; it opens Cloudflare. When done, come back to the HomeTunnel wizard page. See the notes below for details.')
 		]));
 		this.appendOauthFlow(body);
 	},

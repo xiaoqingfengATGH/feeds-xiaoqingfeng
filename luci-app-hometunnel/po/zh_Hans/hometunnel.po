@@ -150,12 +150,6 @@ msgstr "重新获取"
 msgid "Saved! Loading next step…"
 msgstr "已保存！正在进入下一步…"
 
-msgid "Authorize the switch service deployment (a Cloudflare Worker)."
-msgstr "授权部署开关服务（Cloudflare Worker）。"
-
-msgid "Scan the QR code with your phone, or open the link, then tap Allow — that is the only manual step."
-msgstr "用手机扫描二维码或打开链接，点一下“允许”即可——这是唯一需要动手的一步。"
-
 msgid "Start Authorization"
 msgstr "开始授权"
 
@@ -814,3 +808,6 @@ msgstr "这将从 Cloudflare 删除隧道、DNS 记录和开关服务。授权�
 
 msgid "Creating the intranet-exposure tunnel needs a one-time authorization in Cloudflare. Click \"Start Login\" to generate an authorization link. It opens Cloudflare: pick any domain there (it does not have to be the one you plan to expose through the tunnel), then click \"Authorize\" in the dialog that follows. When done, come back to the HomeTunnel wizard page."
 msgstr "创建内网穿透隧道，需要你在Cloudflare中授权。点击“开始授权”，将生成一个授权链接。点击后会打开Cloudflare，随意选择一个域名（不必是计划开放隧道的域名），随后的弹窗中点击“授权”，完毕后重新回到Hometunnel配置向导页面。"
+
+msgid "The service that starts and stops the intranet-exposure tunnel (a Cloudflare Worker) is about to be deployed. Click \"Start Authorization\" to generate an authorization link; it opens Cloudflare. When done, come back to the HomeTunnel wizard page. See the notes below for details."
+msgstr "即将部署内网穿透隧道启停控制服务（基于Cloudflare Worker），点击“开始授权”后，会生成授权链接，点击后会跳转Cloudflare，完毕后请回到Hometunnel配置向导页面。具体参考页面下方说明。"

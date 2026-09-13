@@ -156,8 +156,8 @@ msgstr "重新获取"
 msgid "Saved! Loading next step…"
 msgstr "已保存！正在进入下一步…"
 
-msgid "Authorize the router to deploy the switch service (a Cloudflare Worker) on your behalf."
-msgstr "授权路由器代表你部署开关服务（Cloudflare Worker）。"
+msgid "Authorize the switch service deployment (a Cloudflare Worker)."
+msgstr "授权部署开关服务（Cloudflare Worker）。"
 
 msgid "Scan the QR code with your phone, or open the link, then tap Allow — that is the only manual step."
 msgstr "用手机扫描二维码或打开链接，点一下“允许”即可——这是唯一需要动手的一步。"

@@ -154,7 +154,7 @@ msgstr ""
 msgid "Saved! Loading next step…"
 msgstr ""
 
-msgid "Authorize the router to deploy the switch service (a Cloudflare Worker) on your behalf."
+msgid "Authorize the switch service deployment (a Cloudflare Worker)."
 msgstr ""
 
 msgid "Scan the QR code with your phone, or open the link, then tap Allow — that is the only manual step."

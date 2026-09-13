@@ -490,7 +490,7 @@ return view.extend({
 	/* ---- 步骤 4: 授权开关服务（OAuth 设备流，一次扫码）---- */
 	step4: function (body) {
 		body.appendChild(E('p', {}, [
-			_('Authorize the router to deploy the switch service (a Cloudflare Worker) on your behalf.'), ' ',
+			_('Authorize the switch service deployment (a Cloudflare Worker).'), ' ',
 			_('Scan the QR code with your phone, or open the link, then tap Allow — that is the only manual step.')
 		]));
 		this.appendOauthFlow(body);

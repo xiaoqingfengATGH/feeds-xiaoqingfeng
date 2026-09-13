@@ -771,3 +771,21 @@ msgstr ""
 
 msgid "active"
 msgstr ""
+
+msgid "usable"
+msgstr ""
+
+msgid "not fully active"
+msgstr ""
+
+msgid "The domain is fully served by Cloudflare (nameservers switched to Cloudflare, DNS resolution active)."
+msgstr ""
+
+msgid "The domain was just added to Cloudflare, but its nameservers have not been switched over yet; Cloudflare has not taken it over."
+msgstr ""
+
+msgid "Only domains marked as usable can be selected."
+msgstr ""
+
+msgid "pending"
+msgstr ""

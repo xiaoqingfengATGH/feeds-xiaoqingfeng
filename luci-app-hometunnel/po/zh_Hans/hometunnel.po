@@ -782,4 +782,22 @@ msgid "Usage Guide"
 msgstr "使用说明"
 
 msgid "active"
-msgstr "正常"
+msgstr "可用"
+
+msgid "usable"
+msgstr "可用"
+
+msgid "not fully active"
+msgstr "未完全生效"
+
+msgid "The domain is fully served by Cloudflare (nameservers switched to Cloudflare, DNS resolution active)."
+msgstr "：域名已在 Cloudflare 正常运行（NS 已切到 Cloudflare、DNS 解析生效）"
+
+msgid "The domain was just added to Cloudflare, but its nameservers have not been switched over yet; Cloudflare has not taken it over."
+msgstr "：域名刚添加到Cloudflare，但域名 NS未完成切换，Cloudflare 尚未完成接管"
+
+msgid "Only domains marked as usable can be selected."
+msgstr "只有状态为可用的域名才能被选择。"
+
+msgid "pending"
+msgstr "未完全生效"

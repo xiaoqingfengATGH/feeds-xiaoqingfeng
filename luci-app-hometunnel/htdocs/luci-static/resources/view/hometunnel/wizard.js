@@ -465,8 +465,10 @@ return view.extend({
 					var lines = text.trim().split('\n').filter(Boolean);
 					lines.forEach(function (l) {
 						var parts = l.trim().split(/\s+/);
-						sel.appendChild(E('option', { 'value': parts[0] },
-							parts[0] + (parts[1] === 'active' ? ' (' + _('active') + ')' : (parts[1] ? ' (' + parts[1] + ')' : ''))));
+						sel.appendChild(E('option', { 'value': parts[0], 'disabled': (parts[1] !== 'active') ? '' : null },
+							parts[0] + (parts[1] === 'active' ? ' (' + _('active') + ')'
+							: (parts[1] === 'pending' ? ' (' + _('pending') + ')'
+							: (parts[1] ? ' (' + parts[1] + ')' : '')))));
 					});
 					if (lines.length > 0) {
 						sel.style.display = '';
@@ -484,7 +486,8 @@ return view.extend({
 		applyBtn.addEventListener('click', function (ev) {
 			ev.preventDefault();
 			var d = sel.value;
-			if (!d) return;
+			var opt = sel.options[sel.selectedIndex];
+			if (!d || (opt && opt.disabled)) return;
 			applyBtn.disabled = true;
 			fs.exec(HT, ['set', 'domain', d]).then(function (res) {
 				if (res.code === 0) {
@@ -500,6 +503,15 @@ return view.extend({
 		body.appendChild(E('div', { 'style': 'margin:10px 0' }, [loadBtn]));
 		body.appendChild(E('div', { 'style': 'margin:6px 0' }, [sel, ' ', applyBtn]));
 		sel.style.display = 'none';
+		body.appendChild(E('div', { 'class': 'cbi-section-descr', 'style': 'line-height:1.7;margin-top:4px' }, [
+			E('div', {}, [
+				E('strong', {}, _('usable')), ' ', _('The domain is fully served by Cloudflare (nameservers switched to Cloudflare, DNS resolution active).')
+			]),
+			E('div', {}, [
+				E('strong', {}, _('not fully active')), ' ', _('The domain was just added to Cloudflare, but its nameservers have not been switched over yet; Cloudflare has not taken it over.')
+			]),
+			E('div', { 'style': 'margin-top:4px' }, _('Only domains marked as usable can be selected.'))
+		]));
 		body.appendChild(out);
 	},
 

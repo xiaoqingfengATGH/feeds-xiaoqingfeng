@@ -755,7 +755,7 @@ return view.extend({
 						fs.exec(HT, ['mark', 'worker-deployed']);
 						/* 首次部署顺带发布已有规则的 DNS CNAME（原向导⑥职责并入，
 						   后台执行不阻塞推进；规则页保存也会增量发布） */
-						fs.exec(HT, ['job', 'route', HT, 'route']);
+						fs.exec(HT, ['job', 'route-regen', HT, 'route-and-regen']);
 						fs.exec(HT, ['mark', 'dns-routed']);
 						outEl.appendChild(E('div', { 'class': 'alert-message success' }, _('Deployed! Publishing DNS records…')));
 						window.setTimeout(function () { location.reload(); }, 1500);

@@ -14,7 +14,7 @@ return view.extend({
 		var m, s, o;
 
 		m = new form.Map('hometunnel', _('HomeTunnel — Settings'),
-			_('Mode and daemon parameters. TTL-family values are baked into the Worker deployment bundle — after changing them, regenerate and redeploy the bundle.'));
+			_('Mode and daemon parameters. Max TTL and auto-renew take effect on the switch service after it is redeployed.'));
 
 		s = m.section(form.NamedSection, 'global', 'hometunnel', _('General'));
 

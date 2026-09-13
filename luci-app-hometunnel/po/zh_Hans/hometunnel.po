@@ -748,8 +748,8 @@ msgstr "使用方法"
 msgid "Open the"
 msgstr "打开"
 
-msgid "page and follow the wizard: authorize with OAuth in the Cloudflare web page (only the necessary permissions are requested — the app never gets full control of your account), pick your domain, and deploy the switch service."
-msgstr "页，按向导操作：在 Cloudflare 网页完成 OAuth 授权（仅申请必要权限，不会获得整个账号的控制权）、选择域名、部署开关服务。"
+msgid "page and follow the wizard: authorize with OAuth in the Cloudflare web page, pick your domain, and deploy the switch service. Only the necessary permissions are requested — mainly: reading your account and domain list, deploying the switch service (a Worker) with its route, and managing DNS records for the chosen domain. The app never gets full control of your account."
+msgstr "页，按向导操作：在 Cloudflare 网页完成 OAuth 授权、选择域名、部署开关服务。仅申请必要权限——主要有：读取账号与域名列表、部署开关服务（Worker）及其路由、管理所选域名的 DNS 记录。不会获得整个账号的控制权。"
 
 msgid "Go to"
 msgstr "进入"

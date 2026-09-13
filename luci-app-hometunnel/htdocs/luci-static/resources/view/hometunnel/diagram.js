@@ -205,7 +205,7 @@ function placeholderSvg() {
 		+ '</g>'
 		+ '<rect x="330" y="250" width="400" height="120" rx="12" fill="#fff" stroke="#f59e0b" stroke-width="2"/>'
 		+ '<text x="530" y="296" text-anchor="middle" font-size="16" font-weight="700" fill="#b45309">' + esc(_('Wizard incomplete - topology pending')) + '</text>'
-		+ '<text x="530" y="326" text-anchor="middle" font-size="12.5" fill="#92400e">' + esc(_('Finish the 7-step wizard to see your live topology here.')) + '</text>'
+		+ '<text x="530" y="326" text-anchor="middle" font-size="12.5" fill="#92400e">' + esc(_('Finish the wizard to see your live topology here.')) + '</text>'
 		+ '</svg>';
 }
 

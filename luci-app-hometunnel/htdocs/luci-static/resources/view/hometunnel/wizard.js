@@ -398,7 +398,7 @@ return view.extend({
 			if (state === 'missing' || state === 'auth-failed') {
 				warn.style.display = '';
 				warn.appendChild(E('div', {}, state === 'missing'
-					? _('The tunnel was deleted on Cloudflare. Clicking Create below will recreate it automatically (new tunnel id, DNS routes re-published in step ⑥).')
+					? _('The tunnel was deleted on Cloudflare. Clicking Create below will recreate it automatically (new tunnel ID; DNS routes are republished later in the wizard).')
 					: _('Cloudflare rejected the saved certificate. Re-run step ① first.')));
 			}
 		});

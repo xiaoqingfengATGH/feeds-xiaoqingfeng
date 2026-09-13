@@ -124,7 +124,7 @@ msgstr ""
 msgid "This step creates an intranet-exposure tunnel. Give it a name and click \"Create Tunnel\"."
 msgstr ""
 
-msgid "The tunnel was deleted on Cloudflare. Clicking Create below will recreate it automatically (new tunnel id, DNS routes re-published in step ⑥)."
+msgid "The tunnel was deleted on Cloudflare. Clicking Create below will recreate it automatically (new tunnel ID; DNS routes are republished later in the wizard)."
 msgstr ""
 
 msgid "Cloudflare rejected the saved certificate. Re-run step ① first."
@@ -452,7 +452,7 @@ msgstr ""
 msgid "Wizard incomplete - topology pending"
 msgstr ""
 
-msgid "Finish the 7-step wizard to see your live topology here."
+msgid "Finish the wizard to see your live topology here."
 msgstr ""
 
 msgid "Live topology generated from your configuration."

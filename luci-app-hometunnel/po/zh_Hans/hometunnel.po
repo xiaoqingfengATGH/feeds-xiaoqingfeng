@@ -126,8 +126,8 @@ msgstr "修复问题（如路由器 DNS）后刷新本页重试。"
 msgid "This step creates an intranet-exposure tunnel. Give it a name and click \"Create Tunnel\"."
 msgstr "① 本步骤将创建一个内网穿透隧道，请指定隧道名称，然后点击“创建隧道”按钮"
 
-msgid "The tunnel was deleted on Cloudflare. Clicking Create below will recreate it automatically (new tunnel id, DNS routes re-published in step ⑥)."
-msgstr "隧道在 Cloudflare 侧被删除了。点击下方“创建”会自动重建（新隧道 ID，DNS 路由会在步骤⑥重新发布）。"
+msgid "The tunnel was deleted on Cloudflare. Clicking Create below will recreate it automatically (new tunnel ID; DNS routes are republished later in the wizard)."
+msgstr "隧道在 Cloudflare 侧被删除了。点击下方“创建”会自动重建（新隧道 ID，DNS 路由会在向导后续步骤中重新发布）。"
 
 msgid "Cloudflare rejected the saved certificate. Re-run step ① first."
 msgstr "Cloudflare 拒绝了已保存的证书。请先重新执行第 ① 步。"
@@ -454,8 +454,8 @@ msgstr "还有 %d 条"
 msgid "Wizard incomplete - topology pending"
 msgstr "向导未完成 · 拓扑待生成"
 
-msgid "Finish the 7-step wizard to see your live topology here."
-msgstr "完成 7 步向导后，这里将展示你的实时隧道拓扑。"
+msgid "Finish the wizard to see your live topology here."
+msgstr "完成向导后，这里将展示你的实时隧道拓扑。"
 
 msgid "Live topology generated from your configuration."
 msgstr "由你的配置实时生成的拓扑图。"

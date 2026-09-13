@@ -612,3 +612,9 @@ msgstr ""
 
 msgid "reachable after setup completes"
 msgstr ""
+
+msgid "Tunnel is on. Valid for %d minute(s), until %s."
+msgstr ""
+
+msgid "Tunnel is off."
+msgstr ""

@@ -618,3 +618,9 @@ msgstr "已停用 — 未发布"
 
 msgid "reachable after setup completes"
 msgstr "接入完成后可访问"
+
+msgid "Tunnel is on. Valid for %d minute(s), until %s."
+msgstr "隧道已开启。有效期 %d 分钟，至 %s。"
+
+msgid "Tunnel is off."
+msgstr "隧道已关闭。"

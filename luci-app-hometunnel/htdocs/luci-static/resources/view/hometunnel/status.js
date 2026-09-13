@@ -159,12 +159,35 @@ return view.extend({
 
 				var resultDiv = E('div', { 'id': 'ht-action-result', 'style': 'margin-top:8px' });
 
+				/* Worker 返回 JSON → 人类可读 */
+				var fmtResult = function (action, res) {
+					var raw = (res.stdout || res.stderr || '').trim();
+					var data = null;
+					try { data = JSON.parse(raw); } catch (e) { /* not JSON */ }
+					if (!data) return raw || _('done');
+
+					if (action === 'on') {
+						if (data.state === 'on' && data.expires_at) {
+							var expDate = new Date(data.expires_at);
+							var remainMin = Math.max(0, Math.round((expDate - Date.now()) / 60000));
+							return _('Tunnel is on. Valid for %d minute(s), until %s.')
+								.format(remainMin, expDate.toLocaleString());
+						}
+						return raw;
+					}
+					if (action === 'off') {
+						if (data.state === 'off') return _('Tunnel is off.');
+						return raw;
+					}
+					return raw;
+				};
+
 				var doAction = function (action, ev) {
 					ev.preventDefault();
 					ev.target.disabled = true;
 					resultDiv.textContent = _('Please wait…');
 					fs.exec('/usr/share/hometunnel/hometunnel.sh', ['ctl', action]).then(function (res) {
-						resultDiv.textContent = (res.stdout || res.stderr || '').trim() || _('done');
+						resultDiv.textContent = fmtResult(action, res);
 						ev.target.disabled = false;
 					}).catch(function () {
 						resultDiv.textContent = _('failed');

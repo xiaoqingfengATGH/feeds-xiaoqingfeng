@@ -446,7 +446,7 @@ return view.extend({
 	step3: function (body) {
 		var self = this;
 		body.appendChild(E('p', {},
-			_('Pick the domain for the intranet-exposure tunnel (fetched automatically from your Cloudflare account; make sure the domain is already set up on Cloudflare).')));
+			_('Pick the domain for the intranet-exposure tunnel (fetched automatically from your Cloudflare account; make sure the domain is already set up on Cloudflare), then click "Fetch Domains" to continue.')));
 
 		var sel = E('select', { 'class': 'cbi-input-select' });
 		var loadBtn = E('button', { 'class': 'btn cbi-button cbi-button-apply important' }, _('Fetch Domains'));
@@ -504,6 +504,7 @@ return view.extend({
 		body.appendChild(E('div', { 'style': 'margin:6px 0' }, [sel, ' ', applyBtn]));
 		sel.style.display = 'none';
 		body.appendChild(E('div', { 'class': 'cbi-section-descr', 'style': 'line-height:1.7;margin-top:4px' }, [
+			E('div', { 'style': 'margin-bottom:4px' }, E('strong', {}, _('Domain status legend:'))),
 			E('div', {}, [
 				E('strong', {}, _('usable')), ' ', _('The domain is fully served by Cloudflare (nameservers switched to Cloudflare, DNS resolution active).')
 			]),

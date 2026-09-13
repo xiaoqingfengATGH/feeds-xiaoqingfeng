@@ -136,7 +136,7 @@ msgstr ""
 msgid "Created! Loading next step…"
 msgstr ""
 
-msgid "Pick the domain for the intranet-exposure tunnel (fetched automatically from your Cloudflare account; make sure the domain is already set up on Cloudflare)."
+msgid "Pick the domain for the intranet-exposure tunnel (fetched automatically from your Cloudflare account; make sure the domain is already set up on Cloudflare), then click \"Fetch Domains\" to continue."
 msgstr ""
 
 msgid "Fetch Domains"
@@ -788,4 +788,7 @@ msgid "Only domains marked as usable can be selected."
 msgstr ""
 
 msgid "pending"
+msgstr ""
+
+msgid "Domain status legend:"
 msgstr ""

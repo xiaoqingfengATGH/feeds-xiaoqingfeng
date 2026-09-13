@@ -138,8 +138,8 @@ msgstr "创建隧道"
 msgid "Created! Loading next step…"
 msgstr "创建成功！正在进入下一步…"
 
-msgid "Pick the domain for the intranet-exposure tunnel (fetched automatically from your Cloudflare account; make sure the domain is already set up on Cloudflare)."
-msgstr "选择内网穿透隧道所用的域名（自动从你的 Cloudflare 账户获取，请确认你已经在Cloudflare上配置好了域名）。"
+msgid "Pick the domain for the intranet-exposure tunnel (fetched automatically from your Cloudflare account; make sure the domain is already set up on Cloudflare), then click \"Fetch Domains\" to continue."
+msgstr "选择内网穿透隧道所用的域名（自动从你的 Cloudflare 账户获取，请确认你已经在Cloudflare上配置好了域名），请点击“获取域名列表”继续。"
 
 msgid "Fetch Domains"
 msgstr "获取域名列表"
@@ -801,3 +801,6 @@ msgstr "只有状态为可用的域名才能被选择。"
 
 msgid "pending"
 msgstr "未完全生效"
+
+msgid "Domain status legend:"
+msgstr "域名状态说明："

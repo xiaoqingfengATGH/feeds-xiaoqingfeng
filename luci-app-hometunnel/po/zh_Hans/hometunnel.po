@@ -216,9 +216,6 @@ msgstr "开关域名 %s 已有一条 %s 类型的 DNS 记录。"
 msgid "Pick a different subdomain above and retry, or delete that record in the Cloudflare dashboard (DNS app) first."
 msgstr "请在上方换一个子域名再试，或先到 Cloudflare 控制台（DNS 应用）删除那条记录。"
 
-msgid "Prefer a computer? The classic bundle is still available: run %s on the router and follow the README inside."
-msgstr "想用电脑？经典 bundle 方式仍可用：在路由器上运行 %s 并按其中 README 操作。"
-
 msgid "Deployed! Publishing DNS records…"
 msgstr "部署完成！正在发布 DNS 记录…"
 

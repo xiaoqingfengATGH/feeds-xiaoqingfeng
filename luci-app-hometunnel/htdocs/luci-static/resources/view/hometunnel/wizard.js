@@ -746,10 +746,7 @@ return view.extend({
 		body.appendChild(warn);
 		body.appendChild(out);
 
-		body.appendChild(E('p', { 'class': 'cbi-section-descr' }, [
-			_('Prefer a computer? The classic bundle is still available: run %s on the router and follow the README inside.').format('hometunnel.sh bundle')
-		]));
-	},
+			},
 	watchDeploy: function (outEl, btn) {
 		return jobPoll('oauth-deploy').then(function (st) {
 			return jobOut('oauth-deploy').then(function (text) {

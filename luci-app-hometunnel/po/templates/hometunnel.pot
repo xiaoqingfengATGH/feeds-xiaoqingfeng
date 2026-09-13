@@ -214,9 +214,6 @@ msgstr ""
 msgid "Pick a different subdomain above and retry, or delete that record in the Cloudflare dashboard (DNS app) first."
 msgstr ""
 
-msgid "Prefer a computer? The classic bundle is still available: run %s on the router and follow the README inside."
-msgstr ""
-
 msgid "Deployed! Publishing DNS records…"
 msgstr ""
 

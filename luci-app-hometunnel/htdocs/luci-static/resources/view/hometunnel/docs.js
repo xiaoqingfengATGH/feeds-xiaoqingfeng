@@ -66,7 +66,7 @@ return view.extend({
 
 			h(_('How to use')),
 			E('ol', { 'style': 'padding-left:20px;margin:0 0 12px 0' }, [
-				li([_('Open the'), ' ', E('a', { 'href': L.url('admin', 'services', 'hometunnel', 'wizard') }, _('Access')), ' ', _('page and follow the wizard: authorize with OAuth in the Cloudflare web page, pick your domain, and deploy the switch service. Only the necessary permissions are requested — mainly: reading your account and domain list, deploying the switch service (a Worker) with its route, and managing DNS records for the chosen domain. The app never gets full control of your account.')]),
+				li([_('Open the'), ' ', E('a', { 'href': L.url('admin', 'services', 'hometunnel', 'wizard') }, _('Access')), ' ', _('page and follow the wizard: authorize with OAuth in the Cloudflare web page (creates subdomains, deploys the switch service [Worker] and configures its routes), pick your domain, and deploy the switch service.')]),
 				li([_('Go to'), ' ', E('a', { 'href': L.url('admin', 'services', 'hometunnel', 'ingress') }, _('Ingress Rules')), ' ', _('and add what you want to expose — e.g. subdomain nas pointing at http://192.168.1.10:5000. DNS records are published automatically.')]),
 				li([_('Save the ON / OFF bookmarks from the'), ' ', E('a', { 'href': L.url('admin', 'services', 'hometunnel', 'status') }, _('Status')), ' ', _('page to your phone. Open the ON link from any network to start the tunnel (default 45 minutes, auto-renewed while traffic flows), and the OFF link to close it immediately.')]),
 				li([_('Visit https://nas.example.com from outside — your NAS is there.')])

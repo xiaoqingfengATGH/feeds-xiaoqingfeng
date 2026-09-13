@@ -736,7 +736,7 @@ msgstr ""
 msgid "Open the"
 msgstr ""
 
-msgid "page and follow the wizard: authorize with OAuth in the Cloudflare web page, pick your domain, and deploy the switch service. Only the necessary permissions are requested — mainly: reading your account and domain list, deploying the switch service (a Worker) with its route, and managing DNS records for the chosen domain. The app never gets full control of your account."
+msgid "page and follow the wizard: authorize with OAuth in the Cloudflare web page (creates subdomains, deploys the switch service [Worker] and configures its routes), pick your domain, and deploy the switch service."
 msgstr ""
 
 msgid "Go to"

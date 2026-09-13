@@ -40,7 +40,7 @@ msgid "Switch service"
 msgstr "开关服务"
 
 msgid "Mode"
-msgstr "模式"
+msgstr "内网穿透隧道运行模式"
 
 msgid "Checking online status…"
 msgstr "正在检查在线状态…"
@@ -226,19 +226,19 @@ msgid "Deploy failed — check output above"
 msgstr "部署失败——请检查上方输出"
 
 msgid "Setup is complete. The switch daemon is running in %s mode."
-msgstr "配置已完成，开关守护正在「%s」模式下运行。"
+msgstr "配置已完成，开关控制进程正在「%s」模式下运行。"
 
 msgid "Open Status Page"
 msgstr "打开状态页"
 
 msgid "Verify the remote switch from the router, then enable the daemon and go to the status page."
-msgstr "从路由器验证外网开关，然后启用守护并进入状态页。"
+msgstr "从路由器验证Cloudflare侧隧道开关，然后启用守护并进入状态页。"
 
 msgid "Verify"
 msgstr "验证"
 
 msgid "All checks passed. Daemon enabled. Opening status page…"
-msgstr "全部通过。开关守护已启用。正在打开状态页…"
+msgstr "全部通过。开关控制进程已启用。正在打开状态页…"
 
 msgid "Mode: %s — change it later in Settings."
 msgstr "模式：%s——之后可在「设置」中更改。"
@@ -247,7 +247,7 @@ msgid "HomeLede intranet exposure via a free Cloudflare Tunnel."
 msgstr "HomeLede 基于 Cloudflare Tunnel 的全免费内网穿透。"
 
 msgid "HomeTunnel"
-msgstr "HomeTunnel"
+msgstr "内网穿透（HomeTunnel）"
 
 msgid "Setup is not complete. Open Access to run setup."
 msgstr "设置尚未完成。请到「接入」页完成设置。"
@@ -268,10 +268,10 @@ msgid "stopped"
 msgstr "已停止"
 
 msgid "Tunnel service"
-msgstr "隧道服务"
+msgstr "内网穿透隧道进程"
 
 msgid "Tunnel on Cloudflare"
-msgstr "Cloudflare 侧隧道"
+msgstr "Cloudflare侧隧道状态"
 
 msgid "ok"
 msgstr "正常"
@@ -292,10 +292,10 @@ msgid "always-on"
 msgstr "始终开启"
 
 msgid "Switch daemon"
-msgstr "开关守护进程"
+msgstr "内网穿透隧道开关控制进程"
 
 msgid "Remote switch state"
-msgstr "外网开关状态"
+msgstr "Cloudflare侧隧道开关"
 
 msgid "Please wait…"
 msgstr "请稍候…"
@@ -313,10 +313,10 @@ msgid "Turn Off"
 msgstr "关闭隧道"
 
 msgid "Remote Switch"
-msgstr "外网开关"
+msgstr "Cloudflare侧隧道开关"
 
 msgid "Switch Bookmarks"
-msgstr "开关书签"
+msgstr "隧道开关书签"
 
 msgid "Save these as bookmarks on any device to open/close the tunnel from anywhere:"
 msgstr "保存为任意设备的浏览器书签，即可随时随地打开/关闭隧道："
@@ -328,7 +328,7 @@ msgid "Copy \"OFF\" link"
 msgstr "复制“关”链接"
 
 msgid "Recent switch daemon log"
-msgstr "开关守护日志"
+msgstr "开关控制进程日志"
 
 msgid "(empty)"
 msgstr "（空）"
@@ -400,7 +400,7 @@ msgid "Data traffic"
 msgstr "访问流量"
 
 msgid "Always-on mode · remote switch not used"
-msgstr "常开模式 · 未使用外网开关"
+msgstr "常开模式 · 未使用Cloudflare侧隧道开关"
 
 msgid "Bookmark"
 msgstr "书签"
@@ -409,19 +409,19 @@ msgid "Any device · no app needed"
 msgstr "任意设备 · 无需 App"
 
 msgid "Remote switch service"
-msgstr "外网开关服务"
+msgstr "Cloudflare侧隧道开关（Worker）"
 
 msgid "ON · %d min left"
 msgstr "ON · 剩余 %d 分钟"
 
 msgid "OpenWrt router"
-msgstr "OpenWrt 路由器"
+msgstr "Homelede 路由器"
 
 msgid "Polls commands every %ds"
 msgstr "每 %d 秒拉取开关指令"
 
 msgid "Tunnel process"
-msgstr "隧道进程"
+msgstr "内网穿透隧道进程"
 
 msgid "start / stop"
 msgstr "拉起 / 熄灭"
@@ -436,7 +436,7 @@ msgid "Browser"
 msgstr "浏览器"
 
 msgid "Any external device"
-msgstr "外网任意设备"
+msgstr "任意外网设备"
 
 msgid "Cloudflare edge network"
 msgstr "Cloudflare 边缘网络"
@@ -487,7 +487,7 @@ msgid "no hard cap"
 msgstr "无硬上限"
 
 msgid "Switch signaling"
-msgstr "开关信令"
+msgstr "隧道开关信令"
 
 msgid "Traffic (HTTPS)"
 msgstr "访问流量（HTTPS）"
@@ -505,7 +505,7 @@ msgid "General"
 msgstr "基本设置"
 
 msgid "Recommended. on-demand: tunnel closed by default, opened from outside via the remote switch. always-on: tunnel connected at boot."
-msgstr "推荐按需。按需：隧道默认关闭，通过外网开关从外部打开。常开：开机即连接。"
+msgstr "推荐按需。按需：隧道默认关闭，通过Cloudflare侧隧道开关从外部打开。常开：开机即连接。"
 
 msgid "Tunnel name"
 msgstr "隧道名称"
@@ -624,3 +624,9 @@ msgstr "隧道已开启。有效期 %d 分钟，至 %s。"
 
 msgid "Tunnel is off."
 msgstr "隧道已关闭。"
+
+msgid "Tunnel Mode"
+msgstr "内网穿透隧道运行模式"
+
+msgid "Switch controller"
+msgstr "开关控制进程"

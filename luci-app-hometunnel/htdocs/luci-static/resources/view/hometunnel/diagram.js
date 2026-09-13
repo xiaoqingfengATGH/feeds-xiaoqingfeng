@@ -122,7 +122,7 @@ function buildSvg(cfg, st) {
 		+ '<line x1="836" y1="108" x2="852" y2="80" stroke="#334155" stroke-width="2"/><circle cx="852" cy="78" r="4" fill="#334155"/>'
 		+ '<text x="765" y="136" text-anchor="middle" font-size="13.5" font-weight="700" fill="#334155">' + esc(_('OpenWrt router')) + '</text>'
 		+ '<rect x="682" y="152" width="166" height="60" rx="8" fill="#eff6ff" stroke="#93c5fd" stroke-width="1.5"/>'
-		+ '<text x="765" y="176" text-anchor="middle" font-size="12.5" font-weight="700" fill="#1d4ed8">' + esc(_('Switch daemon')) + '</text>'
+		+ '<text x="765" y="176" text-anchor="middle" font-size="12.5" font-weight="700" fill="#1d4ed8">' + esc(_('Switch controller')) + '</text>'
 		+ '<text x="765" y="196" text-anchor="middle" font-size="11" fill="#64748b">' + esc(_('Polls commands every %ds').format(cfg.pollIv)) + '</text>';
 
 	var cfStroke = active ? GREEN : '#cbd5e1',

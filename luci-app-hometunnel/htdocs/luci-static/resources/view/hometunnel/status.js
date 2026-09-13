@@ -134,7 +134,7 @@ return view.extend({
 						: cfState ? cfState : _('unknown')))
 				]),
 				E('tr', { 'class': 'tr' }, [
-					E('td', { 'class': 'td left', 'width': '30%' }, E('strong', {}, _('Mode'))),
+					E('td', { 'class': 'td left', 'width': '30%' }, E('strong', {}, _('Tunnel Mode'))),
 					E('td', { 'class': 'td left' }, mode === 'ondemand' ? _('on-demand (remote switch)') : _('always-on'))
 				])
 			]);

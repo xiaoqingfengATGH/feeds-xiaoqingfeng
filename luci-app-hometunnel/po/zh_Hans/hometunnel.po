@@ -183,12 +183,6 @@ msgstr "等待授权…"
 msgid "The code expired (5 minutes). Click Start Authorization again."
 msgstr "授权码已过期（5 分钟）。请重新点击“开始授权”。"
 
-msgid "Deploy the switch service (a Cloudflare Worker) to your subdomain of %s."
-msgstr "把开关服务（Cloudflare Worker）部署到你在 %s 下的子域名。"
-
-msgid "Fully automatic from the router, no computer or Node.js needed."
-msgstr "全程由路由器自动完成，无需电脑、无需 Node.js。"
-
 msgid "Full name: %s"
 msgstr "完整域名：%s"
 
@@ -801,3 +795,6 @@ msgstr "未完全生效"
 
 msgid "Domain status legend:"
 msgstr "域名状态说明："
+
+msgid "The switch service controls starting and stopping the intranet-exposure tunnel. It will create a subdomain under the current domain: enter the subdomain the switch service should use, then click \"Deploy Now\"."
+msgstr "开关服务是用于控制内网穿透隧道启停的服务，开关服务会在当前域名下创建一个子域名，请输入开关服务使用的子域名，随后点击“立即部署”"

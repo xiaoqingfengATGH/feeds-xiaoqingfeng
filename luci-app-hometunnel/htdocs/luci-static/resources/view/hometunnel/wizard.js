@@ -631,8 +631,7 @@ return view.extend({
 		var savedHost = uci.get('hometunnel', 'global', 'ctl_hostname') || 'ctl';
 		var ctlHost = savedHost + '.' + domain;
 		body.appendChild(E('p', {}, [
-			_('Deploy the switch service (a Cloudflare Worker) to your subdomain of %s.').format(domain), ' ',
-			_('Fully automatic from the router, no computer or Node.js needed.')
+			_('The switch service controls starting and stopping the intranet-exposure tunnel. It will create a subdomain under the current domain: enter the subdomain the switch service should use, then click "Deploy Now".')
 		]));
 
 		/* 子域名输入 + 完整域名实时预览（msgid 不带尾空格——LuCI 翻译查找会修剪，

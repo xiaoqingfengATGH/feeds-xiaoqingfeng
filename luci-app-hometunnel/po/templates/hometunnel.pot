@@ -181,12 +181,6 @@ msgstr ""
 msgid "The code expired (5 minutes). Click Start Authorization again."
 msgstr ""
 
-msgid "Deploy the switch service (a Cloudflare Worker) to your subdomain of %s."
-msgstr ""
-
-msgid "Fully automatic from the router, no computer or Node.js needed."
-msgstr ""
-
 msgid "Full name: %s"
 msgstr ""
 
@@ -788,4 +782,7 @@ msgid "pending"
 msgstr ""
 
 msgid "Domain status legend:"
+msgstr ""
+
+msgid "The switch service controls starting and stopping the intranet-exposure tunnel. It will create a subdomain under the current domain: enter the subdomain the switch service should use, then click \"Deploy Now\"."
 msgstr ""

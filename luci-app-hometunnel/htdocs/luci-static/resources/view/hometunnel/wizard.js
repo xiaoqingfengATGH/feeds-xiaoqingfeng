@@ -342,7 +342,7 @@ return view.extend({
 	/* ---- 步骤 1: cloudflared tunnel login ---- */
 	step1: function (body) {
 		body.appendChild(E('p', {}, [
-			_('Creating the intranet-exposure tunnel needs a one-time authorization in Cloudflare. Click "Start Login" to generate an authorization link. The tunnel needs a domain: open the link, pick the domain you want to expose through the tunnel in Cloudflare, then click "Authorize" in the dialog that follows.')
+			_('Creating the intranet-exposure tunnel needs a one-time authorization in Cloudflare. Click "Start Login" to generate an authorization link. It opens Cloudflare: pick any domain there (it does not have to be the one you plan to expose through the tunnel), then click "Authorize" in the dialog that follows. When done, come back to the HomeTunnel wizard page.')
 		]));
 
 		var urlBox = E('div', { 'class': 'cbi-value', 'style': 'word-break:break-all' }, _('waiting for auth URL…'));

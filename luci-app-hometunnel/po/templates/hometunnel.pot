@@ -7,7 +7,7 @@ msgstr ""
 msgid "Cloudflare is authorized (least-privilege OAuth, no full account control). Daily changes live in \"Ingress Rules\". Revoke only to start over."
 msgstr ""
 
-msgid "Free Cloudflare Tunnel setup. You need: a Cloudflare account and a domain hosted on Cloudflare (NS on Cloudflare)."
+msgid "Open a browser and log into your Cloudflare account. Then follow the steps below to set up the intranet-exposure tunnel."
 msgstr ""
 
 msgid "① Cloudflare Authorization"
@@ -121,7 +121,7 @@ msgstr ""
 msgid "Fix the issue (e.g. router DNS), reload this page and try again."
 msgstr ""
 
-msgid "Create the tunnel in your Cloudflare account (uses the authorization from step ①)."
+msgid "This step creates an intranet-exposure tunnel. Give it a name and click \"Create Tunnel\"."
 msgstr ""
 
 msgid "The tunnel was deleted on Cloudflare. Clicking Create below will recreate it automatically (new tunnel id, DNS routes re-published in step ⑥)."

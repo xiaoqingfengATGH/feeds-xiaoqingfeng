@@ -106,7 +106,7 @@ return view.extend({
 			}, [
 				E('span', { 'class': 'dripicons-information', 'style': 'font-size:16px;margin-right:8px;color:#348cd4' }),
 				this.bound ? _('Cloudflare is authorized (least-privilege OAuth, no full account control). Daily changes live in "Ingress Rules". Revoke only to start over.')
-					: _('Free Cloudflare Tunnel setup. You need: a Cloudflare account and a domain hosted on Cloudflare (NS on Cloudflare).')
+					: _('Open a browser and log into your Cloudflare account. Then follow the steps below to set up the intranet-exposure tunnel.')
 				])
 				]));
 
@@ -385,7 +385,7 @@ return view.extend({
 	/* ---- 步骤 2: tunnel create ---- */
 	step2: function (body) {
 		body.appendChild(E('p', {},
-			_('Create the tunnel on your Cloudflare account (uses the authorization from step ①).')));
+			_('This step creates an intranet-exposure tunnel. Give it a name and click \"Create Tunnel\".')));
 
 		var self = this;
 		var warn = E('div', { 'class': 'alert-message warning', 'style': 'display:none' });
@@ -404,23 +404,39 @@ return view.extend({
 		});
 
 		var name = uci.get('hometunnel', 'global', 'tunnel_name') || 'hometunnel';
-		body.appendChild(E('p', {}, E('code', {}, name)));
+		var nameInput = E('input', {
+			'type': 'text', 'class': 'cbi-input-text',
+			'style': 'width:220px', 'value': name,
+			'placeholder': 'hometunnel'
+		});
+		var nameRow = E('div', { 'style': 'margin:8px 0;display:flex;align-items:center;gap:8px' }, [
+			E('label', { 'style': 'flex:0 0 auto' }, _('Tunnel name')), nameInput
+		]);
+		body.appendChild(nameRow);
 
 		var btn = E('button', { 'class': 'btn cbi-button cbi-button-apply important' }, _('Create Tunnel'));
+		btn.disabled = !nameInput.value.trim();
+		nameInput.addEventListener('input', function () {
+			btn.disabled = !nameInput.value.trim();
+		});
 		var out = E('pre', { 'style': 'max-height:150px;overflow:auto;font-size:12px' }, '');
 		btn.addEventListener('click', function (ev) {
 			ev.preventDefault();
 			btn.disabled = true;
 			out.textContent = 'running…';
-			fs.exec(HT, ['create']).then(function (res) {
-				out.textContent = (res.stdout || '') + (res.stderr || '');
-				if (res.code === 0) {
-					out.appendChild(E('div', { 'class': 'alert-message success' }, _('Created! Loading next step…')));
-					window.setTimeout(function () { location.reload(); }, 1200);
-				} else {
-					btn.disabled = false;
-				}
-			});
+			uci.set('hometunnel', 'global', 'tunnel_name', nameInput.value.trim());
+			uci.save()
+				.then(function () { return fs.exec(HT, ['create']); })
+				.then(function (res) {
+					out.textContent = (res.stdout || '') + (res.stderr || '');
+					if (res.code === 0) {
+						out.appendChild(E('div', { 'class': 'alert-message success' }, _('Created! Loading next step…')));
+						window.setTimeout(function () { location.reload(); }, 1200);
+					} else {
+						btn.disabled = false;
+					}
+				})
+				.catch(function () { btn.disabled = false; });
 		});
 		body.appendChild(E('div', { 'style': 'margin:10px 0' }, [btn]));
 		body.appendChild(out);

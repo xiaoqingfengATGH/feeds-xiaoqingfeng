@@ -646,20 +646,20 @@ msgstr "—— 路由器主动向 Cloudflare 建立出站连接，NAT 后的家�
 msgid "No DDNS required"
 msgstr "无需 DDNS"
 
-msgid "— every ingress gets a stable hostname on your own domain; the address never changes when the home IP does."
-msgstr "—— 每条接入规则拥有自有域名下的固定主机名，家庭 IP 变化地址不变。"
+msgid "— every service opened to the public internet gets its own fixed hostname; Cloudflare detects the IP address automatically, so home IP changes are nothing to worry about."
+msgstr "——  每个开放到公网的内网服务都有各自的固定域名，IP地址由CloudFlare自动检测，无需担心家庭IP变化"
 
-msgid "No HTTPS certificate to manage"
-msgstr "无需管理 HTTPS 证书"
+msgid "Automatic encryption"
+msgstr "自动加密"
 
-msgid "— TLS is terminated at Cloudflare edge with certificates issued and renewed automatically; the router never holds a private key for the public hostname."
-msgstr "—— TLS 在 Cloudflare 边缘终结，证书自动签发与续期，路由器不持有公网域名的私钥。"
+msgid "— all inbound public traffic is automatically encrypted with HTTPS; Cloudflare issues and renews the certificates, no intervention needed."
+msgstr "—— 所有公网流入流量自动HTTPS加密，Cloudflare自动签发与续期证书，无需干预。"
 
-msgid "On-demand exposure"
-msgstr "按需暴露"
+msgid "On-demand access"
+msgstr "按需开放"
 
-msgid "— the tunnel stays closed by default and opens only when you need it, for a limited time, from anywhere — not a permanently open door."
-msgstr "—— 隧道默认关闭，仅在需要时从任意网络限时开启，而非一扇永久敞开的门。"
+msgid "— keeping intranet services exposed to the public internet for long is risky. The tunnel stays closed by default and opens only when needed, with a convenient on/off switch reachable from any network. Even if you forget to close it, the tunnel stops by itself after the agreed time."
+msgstr "—— 内网服务长时间开放到公网安全风险很大，本方案穿透隧道默认关闭，仅在需要时开启，提供任何网络可达的便捷开启与关闭方式。即使忘记关闭，隧道亦可在约定时间后自动停止。"
 
 msgid "Free of charge"
 msgstr "完全免费"
@@ -777,3 +777,6 @@ msgstr "开关密钥不写入路由器配置文件——只存在于 /etc/hometu
 
 msgid "Even while open, only the ingress rules you defined are reachable; everything else on the LAN stays invisible."
 msgstr "即使隧道开启，也只有你定义的接入规则可访问，局域网其余部分完全不可见。"
+
+msgid "Usage Guide"
+msgstr "使用说明"

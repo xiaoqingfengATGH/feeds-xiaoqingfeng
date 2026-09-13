@@ -51,7 +51,7 @@
 		}
 	},
 	"admin/services/hometunnel/docs": {
-		"title": "About",
+		"title": "Usage Guide",
 		"order": 50,
 		"action": {
 			"type": "view",

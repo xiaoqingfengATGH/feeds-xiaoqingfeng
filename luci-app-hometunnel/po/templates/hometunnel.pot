@@ -634,19 +634,19 @@ msgstr ""
 msgid "No DDNS required"
 msgstr ""
 
-msgid "— every ingress gets a stable hostname on your own domain; the address never changes when the home IP does."
+msgid "— every service opened to the public internet gets its own fixed hostname; Cloudflare detects the IP address automatically, so home IP changes are nothing to worry about."
 msgstr ""
 
-msgid "No HTTPS certificate to manage"
+msgid "Automatic encryption"
 msgstr ""
 
-msgid "— TLS is terminated at Cloudflare edge with certificates issued and renewed automatically; the router never holds a private key for the public hostname."
+msgid "— all inbound public traffic is automatically encrypted with HTTPS; Cloudflare issues and renews the certificates, no intervention needed."
 msgstr ""
 
-msgid "On-demand exposure"
+msgid "On-demand access"
 msgstr ""
 
-msgid "— the tunnel stays closed by default and opens only when you need it, for a limited time, from anywhere — not a permanently open door."
+msgid "— keeping intranet services exposed to the public internet for long is risky. The tunnel stays closed by default and opens only when needed, with a convenient on/off switch reachable from any network. Even if you forget to close it, the tunnel stops by itself after the agreed time."
 msgstr ""
 
 msgid "Free of charge"
@@ -764,4 +764,7 @@ msgid "The switch key never appears in the router config file — it lives only 
 msgstr ""
 
 msgid "Even while open, only the ingress rules you defined are reachable; everything else on the LAN stays invisible."
+msgstr ""
+
+msgid "Usage Guide"
 msgstr ""

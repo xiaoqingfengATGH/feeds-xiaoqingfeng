@@ -34,9 +34,9 @@ return view.extend({
 			h(_('Why HomeTunnel')),
 			E('ul', { 'style': 'padding-left:20px;margin:0 0 12px 0' }, [
 				li([E('strong', {}, _('No public IP required')), ' ', _('— the router establishes an outbound connection to Cloudflare; home broadband behind NAT (or with only an IPv6 prefix) works out of the box.')]),
-				li([E('strong', {}, _('No DDNS required')), ' ', _('— every ingress gets a stable hostname on your own domain; the address never changes when the home IP does.')]),
-				li([E('strong', {}, _('No HTTPS certificate to manage')), ' ', _('— TLS is terminated at Cloudflare edge with certificates issued and renewed automatically; the router never holds a private key for the public hostname.')]),
-				li([E('strong', {}, _('On-demand exposure')), ' ', _('— the tunnel stays closed by default and opens only when you need it, for a limited time, from anywhere — not a permanently open door.')]),
+				li([E('strong', {}, _('No DDNS required')), ' ', _('— every service opened to the public internet gets its own fixed hostname; Cloudflare detects the IP address automatically, so home IP changes are nothing to worry about.')]),
+				li([E('strong', {}, _('Automatic encryption')), ' ', _('— all inbound public traffic is automatically encrypted with HTTPS; Cloudflare issues and renews the certificates, no intervention needed.')]),
+				li([E('strong', {}, _('On-demand access')), ' ', _('— keeping intranet services exposed to the public internet for long is risky. The tunnel stays closed by default and opens only when needed, with a convenient on/off switch reachable from any network. Even if you forget to close it, the tunnel stops by itself after the agreed time.')]),
 				li([E('strong', {}, _('Free of charge')), ' ', _('— uses only Cloudflare free-tier features (Tunnel, Workers, DNS).')])
 			]),
 

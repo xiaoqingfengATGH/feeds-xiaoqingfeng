@@ -1,5 +1,5 @@
 /* SPDX-License-Identifier: Apache-2.0 */
-/* Copyright (C) 2026 xiaoqingfeng <xiaoqingfeng@yeah.net> */
+/* Copyright (C) 2026 xiaoqingfeng <xiaoqingfengatgm@gmail.com> */
 /* hometunnel diagram — 配置驱动的实时拓扑图（控制面/数据面双带） */
 
 'use strict';

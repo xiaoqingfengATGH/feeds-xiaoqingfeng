@@ -1,5 +1,5 @@
 /* SPDX-License-Identifier: Apache-2.0 */
-/* Copyright (C) 2026 xiaoqingfeng <xiaoqingfeng@yeah.net> */
+/* Copyright (C) 2026 xiaoqingfeng <xiaoqingfengatgm@gmail.com> */
 /* hometunnel wizard — 8 步断点向导（job 异步轮询） */
 
 'use strict';

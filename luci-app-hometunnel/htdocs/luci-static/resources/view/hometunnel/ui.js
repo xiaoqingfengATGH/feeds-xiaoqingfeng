@@ -1,5 +1,5 @@
 /* SPDX-License-Identifier: Apache-2.0 */
-/* Copyright (C) 2026 xiaoqingfeng <xiaoqingfeng@yeah.net> */
+/* Copyright (C) 2026 xiaoqingfeng <xiaoqingfengatgm@gmail.com> */
 /* hometunnel ui — 视图样式兼容层。
  *
  * 背景: 自定义主题（infinityfreedom-ng 等）不加载 LuCI 官方主题的 cascade.css,

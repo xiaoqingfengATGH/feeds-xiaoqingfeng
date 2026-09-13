@@ -1,6 +1,6 @@
 # SPDX-License-Identifier: Apache-2.0
 #
-# Copyright (C) 2026 xiaoqingfeng <xiaoqingfeng@yeah.net>
+# Copyright (C) 2026 xiaoqingfeng <xiaoqingfengatgm@gmail.com>
 #
 # hometunnel — HomeLede 定制的全免费 Cloudflare Tunnel 内网穿透
 # 灵感与控制面协议来源: https://github.com/AI-X-Space/llm-ondemand-tunnel (Apache-2.0)
@@ -11,7 +11,7 @@ PKG_NAME:=hometunnel
 PKG_VERSION:=1.0.0
 PKG_RELEASE:=1
 PKG_LICENSE:=Apache-2.0
-PKG_MAINTAINER:=xiaoqingfeng <xiaoqingfeng@yeah.net>
+PKG_MAINTAINER:=xiaoqingfeng <xiaoqingfengatgm@gmail.com>
 
 include $(INCLUDE_DIR)/package.mk
 

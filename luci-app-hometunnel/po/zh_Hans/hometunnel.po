@@ -528,8 +528,8 @@ msgstr "每次开启内网穿透后，隧道保持开启的时长。"
 msgid "Max TTL (min)"
 msgstr "最大 TTL（分钟）"
 
-msgid "Upper limit for a single open request. A longer duration requested via ?min=N is clamped to this."
-msgstr "单次开启允许申请的最大时长上限。通过 ?min=N 申请更长时间时，最多给到该值。"
+msgid "Upper limit for how long a single open keeps the tunnel on."
+msgstr "单次开启最长可保持的时长上限。"
 
 msgid "Auto-renew amount (min)"
 msgstr "自动续期幅度（分钟）"

@@ -526,7 +526,7 @@ msgstr ""
 msgid "Max TTL (min)"
 msgstr ""
 
-msgid "Upper limit for a single open request. A longer duration requested via ?min=N is clamped to this."
+msgid "Upper limit for how long a single open keeps the tunnel on."
 msgstr ""
 
 msgid "Auto-renew amount (min)"

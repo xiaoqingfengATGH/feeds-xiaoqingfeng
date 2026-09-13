@@ -129,7 +129,7 @@ return view.extend({
 
 				rows.push(E('tr', { 'class': 'tr' }, [
 					E('td', { 'class': 'td left', 'width': '30%' }, E('strong', {}, _('Tunnel service'))),
-					E('td', { 'class': 'td left' }, label(tunnelRunning))
+					E('td', { 'class': 'td left', 'id': 'ht-tunnel-svc' }, label(tunnelRunning))
 				]));
 
 				if (mode === 'ondemand') {
@@ -187,6 +187,8 @@ return view.extend({
 					resultDiv.textContent = _('Please wait…');
 					fs.exec('/usr/share/hometunnel/hometunnel.sh', ['ctl', action]).then(function (res) {
 						resultDiv.textContent = fmtResult(action, res);
+						/* 操作后主动补刷几次，尽快反映开关效果 */
+						[2000, 8000].forEach(function (d) { window.setTimeout(refreshDyn, d); });
 						ev.target.disabled = false;
 					}).catch(function () {
 						resultDiv.textContent = _('failed');
@@ -241,11 +243,13 @@ return view.extend({
 
 			this.refreshLog(logDiv);
 
-			/* 定时刷新（控制面状态 + 日志 + CF 状态），不整页重绘 */
+						/* 定时刷新（服务状态 + 控制面 + CF 状态 + 日志），不整页重绘 */
 			var self = this;
-			poll.add(function () {
+			var refreshDyn = function () {
 				return Promise.all([
 					getBackendStatus(),
+					getServiceRunning('hometunnel'),
+					getServiceRunning('hometunnel-ctl'),
 					fs.exec('/sbin/logread', ['-e', 'hometunnel']).catch(function () { return { stdout: '' }; })
 				]).then(function (res) {
 					var cj = parseCtlJson(res[0]);
@@ -264,10 +268,21 @@ return view.extend({
 							: cfs === 'auth-failed' ? _('certificate rejected')
 							: cfs ? cfs : _('unknown')));
 					}
-					var logText = (res[1].stdout || '').trim().split('\n');
+					var tsEl = document.getElementById('ht-tunnel-svc');
+					if (tsEl) {
+						tsEl.innerHTML = '';
+						tsEl.appendChild(label(res[1]));
+					}
+					var csEl = document.getElementById('ht-ctl-svc');
+					if (csEl) {
+						csEl.innerHTML = '';
+						csEl.appendChild(label(res[2]));
+					}
+					var logText = (res[3].stdout || '').trim().split('\n');
 					logDiv.textContent = logText.slice(-15).join('\n') || _('(empty)');
 				});
-			}, 10);
+			};
+			poll.add(refreshDyn, 10);
 
 			return container;
 		}, this));

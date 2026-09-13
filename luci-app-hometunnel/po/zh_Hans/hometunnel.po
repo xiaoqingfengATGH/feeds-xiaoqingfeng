@@ -138,14 +138,14 @@ msgstr "创建隧道"
 msgid "Created! Loading next step…"
 msgstr "创建成功！正在进入下一步…"
 
-msgid "Pick the domain for your tunnel hostnames (fetched automatically from your Cloudflare account)."
-msgstr "选择隧道主机名所用的域名（自动从你的 Cloudflare 账户获取）。"
+msgid "Pick the domain for the intranet-exposure tunnel (fetched automatically from your Cloudflare account; make sure the domain is already set up on Cloudflare)."
+msgstr "选择内网穿透隧道所用的域名（自动从你的 Cloudflare 账户获取，请确认你已经在Cloudflare上配置好了域名）。"
 
 msgid "Fetch Domains"
 msgstr "获取域名列表"
 
-msgid "Save Domain"
-msgstr "保存域名"
+msgid "Use Domain"
+msgstr "使用域名"
 
 msgid "loading…"
 msgstr "加载中…"
@@ -780,3 +780,6 @@ msgstr "即使隧道开启，也只有你定义的接入规则可访问，局域
 
 msgid "Usage Guide"
 msgstr "使用说明"
+
+msgid "active"
+msgstr "正常"

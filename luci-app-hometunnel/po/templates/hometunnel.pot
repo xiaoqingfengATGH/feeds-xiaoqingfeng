@@ -136,13 +136,13 @@ msgstr ""
 msgid "Created! Loading next step…"
 msgstr ""
 
-msgid "Pick the domain for your tunnel hostnames (fetched automatically from your Cloudflare account)."
+msgid "Pick the domain for the intranet-exposure tunnel (fetched automatically from your Cloudflare account; make sure the domain is already set up on Cloudflare)."
 msgstr ""
 
 msgid "Fetch Domains"
 msgstr ""
 
-msgid "Save Domain"
+msgid "Use Domain"
 msgstr ""
 
 msgid "loading…"
@@ -767,4 +767,7 @@ msgid "Even while open, only the ingress rules you defined are reachable; everyt
 msgstr ""
 
 msgid "Usage Guide"
+msgstr ""
+
+msgid "active"
 msgstr ""

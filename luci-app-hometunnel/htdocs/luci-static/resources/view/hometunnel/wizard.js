@@ -446,11 +446,11 @@ return view.extend({
 	step3: function (body) {
 		var self = this;
 		body.appendChild(E('p', {},
-			_('Pick the domain for your tunnel hostnames (fetched automatically from your Cloudflare account).')));
+			_('Pick the domain for the intranet-exposure tunnel (fetched automatically from your Cloudflare account; make sure the domain is already set up on Cloudflare).')));
 
 		var sel = E('select', { 'class': 'cbi-input-select' });
 		var loadBtn = E('button', { 'class': 'btn cbi-button cbi-button-apply important' }, _('Fetch Domains'));
-		var applyBtn = E('button', { 'class': 'btn cbi-button cbi-button-save important', 'style': 'display:none' }, _('Save Domain'));
+		var applyBtn = E('button', { 'class': 'btn cbi-button cbi-button-save important', 'style': 'display:none' }, _('Use Domain'));
 		var out = E('pre', { 'style': 'max-height:120px;overflow:auto;font-size:12px' }, '');
 
 		loadBtn.addEventListener('click', function (ev) {
@@ -466,7 +466,7 @@ return view.extend({
 					lines.forEach(function (l) {
 						var parts = l.trim().split(/\s+/);
 						sel.appendChild(E('option', { 'value': parts[0] },
-							parts[0] + (parts[1] ? ' (' + parts[1] + ')' : '')));
+							parts[0] + (parts[1] === 'active' ? ' (' + _('active') + ')' : (parts[1] ? ' (' + parts[1] + ')' : ''))));
 					});
 					if (lines.length > 0) {
 						sel.style.display = '';

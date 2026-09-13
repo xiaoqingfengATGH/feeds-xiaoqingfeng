@@ -621,3 +621,147 @@ msgstr ""
 
 msgid "Tunnel is off."
 msgstr ""
+
+msgid "Why HomeTunnel"
+msgstr ""
+
+msgid "No public IP required"
+msgstr ""
+
+msgid "— the router establishes an outbound connection to Cloudflare; home broadband behind NAT (or with only an IPv6 prefix) works out of the box."
+msgstr ""
+
+msgid "No DDNS required"
+msgstr ""
+
+msgid "— every ingress gets a stable hostname on your own domain; the address never changes when the home IP does."
+msgstr ""
+
+msgid "No HTTPS certificate to manage"
+msgstr ""
+
+msgid "— TLS is terminated at Cloudflare edge with certificates issued and renewed automatically; the router never holds a private key for the public hostname."
+msgstr ""
+
+msgid "On-demand exposure"
+msgstr ""
+
+msgid "— the tunnel stays closed by default and opens only when you need it, for a limited time, from anywhere — not a permanently open door."
+msgstr ""
+
+msgid "Free of charge"
+msgstr ""
+
+msgid "— uses only Cloudflare free-tier features (Tunnel, Workers, DNS)."
+msgstr ""
+
+msgid "Compared with frp / IPv6 tunneling"
+msgstr ""
+
+msgid "Aspect"
+msgstr ""
+
+msgid "frp / IPv6"
+msgstr ""
+
+msgid "Public IP"
+msgstr ""
+
+msgid "Not needed"
+msgstr ""
+
+msgid "frp needs a server with a public IP; IPv6 needs a public IPv6 on every network path"
+msgstr ""
+
+msgid "Extra server"
+msgstr ""
+
+msgid "None — Cloudflare edge is the entry point"
+msgstr ""
+
+msgid "frp needs a rented VPS running frps (paid, and you manage it)"
+msgstr ""
+
+msgid "HTTPS certificate"
+msgstr ""
+
+msgid "Edge-terminated, auto-issued and renewed"
+msgstr ""
+
+msgid "frps usually plain HTTP or self-signed; IPv6 needs its own certificate per service"
+msgstr ""
+
+msgid "Address stability"
+msgstr ""
+
+msgid "Stable hostnames on your own domain"
+msgstr ""
+
+msgid "frp: fixed only if you pay for the server IP; IPv6 prefix changes require DDNS anyway"
+msgstr ""
+
+msgid "Firewall / ISP"
+msgstr ""
+
+msgid "Outbound-only connection; no inbound port opening"
+msgstr ""
+
+msgid "frp server must open ports; IPv6 often firewalled or unavailable on mobile networks"
+msgstr ""
+
+msgid "Cost"
+msgstr ""
+
+msgid "Free"
+msgstr ""
+
+msgid "frp: VPS rental; IPv6: free but constrained"
+msgstr ""
+
+msgid "What you need"
+msgstr ""
+
+msgid "A Cloudflare account (free registration works)."
+msgstr ""
+
+msgid "A domain hosted on Cloudflare — the DNS of your domain is managed by Cloudflare (registrar anywhere)."
+msgstr ""
+
+msgid "A router running the Homelede firmware with the HomeTunnel app installed."
+msgstr ""
+
+msgid "How to use"
+msgstr ""
+
+msgid "Open the"
+msgstr ""
+
+msgid "page and follow the wizard: bind your Cloudflare account (scan the QR code to authorize), pick your domain, and deploy the switch service."
+msgstr ""
+
+msgid "Go to"
+msgstr ""
+
+msgid "and add what you want to expose — e.g. subdomain nas pointing at http://192.168.1.10:5000. DNS records are published automatically."
+msgstr ""
+
+msgid "Save the ON / OFF bookmarks from the"
+msgstr ""
+
+msgid "page to your phone. Open the ON link from any network to start the tunnel (default 45 minutes, auto-renewed while traffic flows), and the OFF link to close it immediately."
+msgstr ""
+
+msgid "Visit https://nas.example.com from outside — your NAS is there."
+msgstr ""
+
+msgid "Security model"
+msgstr ""
+
+msgid "The tunnel is closed by default. It opens only on an ON link (time-limited) and closes automatically when idle or when the hard cap is reached."
+msgstr ""
+
+msgid "The switch key never appears in the router config file — it lives only in /etc/hometunnel/ with 600 permissions."
+msgstr ""
+
+msgid "Even while open, only the ingress rules you defined are reachable; everything else on the LAN stays invisible."
+msgstr ""

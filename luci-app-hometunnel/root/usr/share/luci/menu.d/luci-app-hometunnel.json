@@ -49,5 +49,13 @@
 			"type": "view",
 			"path": "hometunnel/settings"
 		}
+	},
+	"admin/services/hometunnel/docs": {
+		"title": "About",
+		"order": 50,
+		"action": {
+			"type": "view",
+			"path": "hometunnel/docs"
+		}
 	}
 }

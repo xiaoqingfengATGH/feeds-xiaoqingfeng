@@ -633,3 +633,147 @@ msgstr "内网穿透隧道运行模式"
 
 msgid "Switch controller"
 msgstr "开关控制进程"
+
+msgid "Why HomeTunnel"
+msgstr "为什么选择 HomeTunnel"
+
+msgid "No public IP required"
+msgstr "无需公网 IP"
+
+msgid "— the router establishes an outbound connection to Cloudflare; home broadband behind NAT (or with only an IPv6 prefix) works out of the box."
+msgstr "—— 路由器主动向 Cloudflare 建立出站连接，NAT 后的家庭宽带（甚至只有 IPv6 前缀）开箱即用。"
+
+msgid "No DDNS required"
+msgstr "无需 DDNS"
+
+msgid "— every ingress gets a stable hostname on your own domain; the address never changes when the home IP does."
+msgstr "—— 每条接入规则拥有自有域名下的固定主机名，家庭 IP 变化地址不变。"
+
+msgid "No HTTPS certificate to manage"
+msgstr "无需管理 HTTPS 证书"
+
+msgid "— TLS is terminated at Cloudflare edge with certificates issued and renewed automatically; the router never holds a private key for the public hostname."
+msgstr "—— TLS 在 Cloudflare 边缘终结，证书自动签发与续期，路由器不持有公网域名的私钥。"
+
+msgid "On-demand exposure"
+msgstr "按需暴露"
+
+msgid "— the tunnel stays closed by default and opens only when you need it, for a limited time, from anywhere — not a permanently open door."
+msgstr "—— 隧道默认关闭，仅在需要时从任意网络限时开启，而非一扇永久敞开的门。"
+
+msgid "Free of charge"
+msgstr "完全免费"
+
+msgid "— uses only Cloudflare free-tier features (Tunnel, Workers, DNS)."
+msgstr "—— 仅使用 Cloudflare 免费套餐能力（Tunnel、Workers、DNS）。"
+
+msgid "Compared with frp / IPv6 tunneling"
+msgstr "对比 FRPS 与 IPv6 方案"
+
+msgid "Aspect"
+msgstr "对比维度"
+
+msgid "frp / IPv6"
+msgstr "FRPS / IPv6 方案"
+
+msgid "Public IP"
+msgstr "公网 IP"
+
+msgid "Not needed"
+msgstr "不需要"
+
+msgid "frp needs a server with a public IP; IPv6 needs a public IPv6 on every network path"
+msgstr "FRPS 需要一台有公网 IP 的服务器；IPv6 需要全链路公网 IPv6"
+
+msgid "Extra server"
+msgstr "额外服务器"
+
+msgid "None — Cloudflare edge is the entry point"
+msgstr "不需要 —— Cloudflare 边缘节点就是入口"
+
+msgid "frp needs a rented VPS running frps (paid, and you manage it)"
+msgstr "FRPS 需要租用 VPS 跑 frps（付费，且需自行运维）"
+
+msgid "HTTPS certificate"
+msgstr "HTTPS 证书"
+
+msgid "Edge-terminated, auto-issued and renewed"
+msgstr "边缘终结，自动签发续期"
+
+msgid "frps usually plain HTTP or self-signed; IPv6 needs its own certificate per service"
+msgstr "FRPS 常为明文 HTTP 或自签证书；IPv6 每个服务都要自行配证书"
+
+msgid "Address stability"
+msgstr "地址稳定性"
+
+msgid "Stable hostnames on your own domain"
+msgstr "自有域名下的固定主机名"
+
+msgid "frp: fixed only if you pay for the server IP; IPv6 prefix changes require DDNS anyway"
+msgstr "FRPS 固定地址依赖付费固定 IP；IPv6 前缀变化照样要 DDNS6"
+
+msgid "Firewall / ISP"
+msgstr "防火墙 / 运营商"
+
+msgid "Outbound-only connection; no inbound port opening"
+msgstr "纯出站连接，无需开放入站端口"
+
+msgid "frp server must open ports; IPv6 often firewalled or unavailable on mobile networks"
+msgstr "FRPS 服务器必须开放端口；IPv6 常被防火墙拦截，移动网络下经常不可用"
+
+msgid "Cost"
+msgstr "成本"
+
+msgid "Free"
+msgstr "免费"
+
+msgid "frp: VPS rental; IPv6: free but constrained"
+msgstr "FRPS 需 VPS 租金；IPv6 免费但受限"
+
+msgid "What you need"
+msgstr "使用前提"
+
+msgid "A Cloudflare account (free registration works)."
+msgstr "一个 Cloudflare 账号（免费注册即可）。"
+
+msgid "A domain hosted on Cloudflare — the DNS of your domain is managed by Cloudflare (registrar anywhere)."
+msgstr "一个托管到 Cloudflare 的域名——域名 DNS 交由 Cloudflare 管理（注册商不限）。"
+
+msgid "A router running the Homelede firmware with the HomeTunnel app installed."
+msgstr "一台刷有 Homelede 固件并安装了 HomeTunnel 应用的路由器。"
+
+msgid "How to use"
+msgstr "使用方法"
+
+msgid "Open the"
+msgstr "打开"
+
+msgid "page and follow the wizard: bind your Cloudflare account (scan the QR code to authorize), pick your domain, and deploy the switch service."
+msgstr "页，按向导操作：绑定 Cloudflare 账号（扫码授权）、选择域名、部署开关服务。"
+
+msgid "Go to"
+msgstr "进入"
+
+msgid "and add what you want to expose — e.g. subdomain nas pointing at http://192.168.1.10:5000. DNS records are published automatically."
+msgstr "页添加要暴露的服务——例如子域 nas 指向 http://192.168.1.10:5000，DNS 记录会自动发布。"
+
+msgid "Save the ON / OFF bookmarks from the"
+msgstr "把"
+
+msgid "page to your phone. Open the ON link from any network to start the tunnel (default 45 minutes, auto-renewed while traffic flows), and the OFF link to close it immediately."
+msgstr "页的 ON / OFF 书签保存到手机。在任意网络打开 ON 链接即开启隧道（默认 45 分钟，有流量自动续期），打开 OFF 链接立即关闭。"
+
+msgid "Visit https://nas.example.com from outside — your NAS is there."
+msgstr "在外网访问 https://nas.example.com —— 你的 NAS 就在那里。"
+
+msgid "Security model"
+msgstr "安全模型"
+
+msgid "The tunnel is closed by default. It opens only on an ON link (time-limited) and closes automatically when idle or when the hard cap is reached."
+msgstr "隧道默认关闭。只有 ON 链接能限时打开它，空闲或到达硬上限时自动关闭。"
+
+msgid "The switch key never appears in the router config file — it lives only in /etc/hometunnel/ with 600 permissions."
+msgstr "开关密钥不写入路由器配置文件——只存在于 /etc/hometunnel/，权限 600。"
+
+msgid "Even while open, only the ingress rules you defined are reachable; everything else on the LAN stays invisible."
+msgstr "即使隧道开启，也只有你定义的接入规则可访问，局域网其余部分完全不可见。"

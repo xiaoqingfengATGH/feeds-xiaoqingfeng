@@ -243,8 +243,8 @@ msgstr "全部通过。开关控制进程已启用。正在打开状态页…"
 msgid "Mode: %s — change it later in Settings."
 msgstr "模式：%s——之后可在「设置」中更改。"
 
-msgid "HomeLede intranet exposure via a free Cloudflare Tunnel."
-msgstr "HomeLede 基于 Cloudflare Tunnel 的全免费内网穿透。"
+msgid "HomeTunnel is the Homelede intranet-exposure solution built on Cloudflare Tunnel. It works with or without a public IP, and is secure and free."
+msgstr "HomeTunnel是Homelede提供的基于Cloudflare Tunnel的内网穿透方案。无论是否拥有独立公网IP均可使用，安全，免费。"
 
 msgid "HomeTunnel"
 msgstr "HomeTunnel"

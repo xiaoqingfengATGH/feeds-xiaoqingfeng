@@ -241,7 +241,7 @@ msgstr ""
 msgid "Mode: %s — change it later in Settings."
 msgstr ""
 
-msgid "HomeLede intranet exposure via a free Cloudflare Tunnel."
+msgid "HomeTunnel is the Homelede intranet-exposure solution built on Cloudflare Tunnel. It works with or without a public IP, and is secure and free."
 msgstr ""
 
 msgid "HomeTunnel"

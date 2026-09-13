@@ -76,7 +76,7 @@ return view.extend({
 
 			var descrChildren = [
 				E('span', { 'class': 'dripicons-cloud', 'style': 'font-size:16px;margin-right:8px;vertical-align:-2px;color:#348cd4' }),
-				_('HomeLede intranet exposure via a free Cloudflare Tunnel.')
+				_('HomeTunnel is the Homelede intranet-exposure solution built on Cloudflare Tunnel. It works with or without a public IP, and is secure and free.')
 			];
 			if (ctlUrl) {
 				descrChildren.push(E('span', { 'class': 'mx-1' }, '·'));

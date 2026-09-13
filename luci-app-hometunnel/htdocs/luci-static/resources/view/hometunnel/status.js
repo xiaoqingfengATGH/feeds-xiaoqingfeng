@@ -78,13 +78,6 @@ return view.extend({
 				E('span', { 'class': 'dripicons-cloud', 'style': 'font-size:16px;margin-right:8px;vertical-align:-2px;color:#348cd4' }),
 				_('HomeTunnel is the Homelede intranet-exposure solution built on Cloudflare Tunnel. It works with or without a public IP, and is secure and free.')
 			];
-			if (ctlUrl) {
-				descrChildren.push(E('span', { 'class': 'mx-1' }, '·'));
-				descrChildren.push(E('a', {
-					'href': ctlUrl, 'target': '_blank', 'rel': 'noopener',
-					'style': 'text-decoration:underline'
-				}, ctlUrl));
-			}
 
 			var container = htui.apply(E('div', {}, [
 				E('h2', {}, _('HomeTunnel')),

@@ -736,7 +736,7 @@ msgstr ""
 msgid "Open the"
 msgstr ""
 
-msgid "page and follow the wizard: bind your Cloudflare account (scan the QR code to authorize), pick your domain, and deploy the switch service."
+msgid "page and follow the wizard: authorize with OAuth in the Cloudflare web page (only the necessary permissions are requested — the app never gets full control of your account), pick your domain, and deploy the switch service."
 msgstr ""
 
 msgid "Go to"

@@ -488,6 +488,9 @@ msgstr ""
 msgid "Domain"
 msgstr ""
 
+msgid "Switch subdomain"
+msgstr ""
+
 msgid "Locked after authorization (falls back to editable after a router reinstall, when the Cloudflare authorization is lost). To re-choose, revoke it first."
 msgstr ""
 

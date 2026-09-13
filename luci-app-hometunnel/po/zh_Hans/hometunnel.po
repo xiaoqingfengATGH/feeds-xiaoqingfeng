@@ -490,6 +490,9 @@ msgstr "隧道名称"
 msgid "Domain"
 msgstr "域名"
 
+msgid "Switch subdomain"
+msgstr "开关服务子域名"
+
 msgid "Locked after authorization (falls back to editable after a router reinstall, when the Cloudflare authorization is lost). To re-choose, revoke it first."
 msgstr "授权后锁定（路由器重装后 Cloudflare 授权丢失时，会退回可编辑状态）。如需更换，请先取消授权。"
 

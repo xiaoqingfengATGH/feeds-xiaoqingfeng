@@ -156,7 +156,7 @@ return view.extend({
 				]));
 
 				var table = E('table', { 'class': 'table', 'id': 'ht-status-table' }, rows);
-			container.appendChild(E('div', { 'class': 'cbi-section' }, [table]));
+			container.appendChild(E('div', { 'class': 'cbi-section' }, [E('div', {}, table)]));
 
 			/* ---- on-demand: 开/关 + 书签 ---- */
 			if (mode === 'ondemand' && ctlUrl && ctlKey) {

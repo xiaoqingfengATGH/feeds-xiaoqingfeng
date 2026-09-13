@@ -10,7 +10,7 @@ msgid "The access wizard is complete. Adjust exposed intranet services in \"Ingr
 msgstr "接入向导配置已经完成。调整开放的内网服务请在「接入规则」页面完成即可。更换内网穿透隧道域名时，才需要“取消授权”进行重新设置"
 
 msgid "Open a browser and log into your Cloudflare account. Then follow the steps below to set up the intranet-exposure tunnel."
-msgstr "请打开浏览器，登录您的CloudFlare账号。然后按照下面步骤，完成内网穿透隧道设置。"
+msgstr "请打开浏览器，登录您的Cloudflare账号。然后按照下面步骤，完成内网穿透隧道设置。"
 
 msgid "① Cloudflare Authorization"
 msgstr "① Cloudflare 授权"
@@ -636,7 +636,7 @@ msgid "No DDNS required"
 msgstr "无需 DDNS"
 
 msgid "— every service opened to the public internet gets its own fixed hostname; Cloudflare detects the IP address automatically, so home IP changes are nothing to worry about."
-msgstr "——  每个开放到公网的内网服务都有各自的固定域名，IP地址由CloudFlare自动检测，无需担心家庭IP变化"
+msgstr "——  每个开放到公网的内网服务都有各自的固定域名，IP地址由Cloudflare自动检测，无需担心家庭IP变化"
 
 msgid "Automatic encryption"
 msgstr "自动加密"

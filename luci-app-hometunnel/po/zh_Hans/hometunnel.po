@@ -523,7 +523,7 @@ msgid "Default TTL (min)"
 msgstr "默认 TTL（分钟）"
 
 msgid "How long the tunnel stays open after \"on\". Append ?min=N to the \"on\" link to override, up to the max."
-msgstr "“开”后隧道保持打开的时长。在“开”链接后加 ?min=N 可临时指定，最大不超过上限。"
+msgstr "每次开启内网穿透后，隧道保持开启的时长。"
 
 msgid "Max TTL (min)"
 msgstr "最大 TTL（分钟）"

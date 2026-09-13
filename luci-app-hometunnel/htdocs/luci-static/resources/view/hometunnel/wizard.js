@@ -105,7 +105,7 @@ return view.extend({
 					+ 'color:inherit'
 			}, [
 				E('span', { 'class': 'dripicons-information', 'style': 'font-size:16px;margin-right:8px;color:#348cd4' }),
-				this.bound ? _('Cloudflare is authorized (least-privilege OAuth, no full account control). Daily changes live in "Ingress Rules". Revoke only to start over.')
+				this.bound ? _('The access wizard is complete. Adjust exposed intranet services in "Ingress Rules". Revoke only when you need to change the tunnel domain.')
 					: _('Open a browser and log into your Cloudflare account. Then follow the steps below to set up the intranet-exposure tunnel.')
 				])
 				]));
@@ -184,7 +184,7 @@ return view.extend({
 		var self = this;
 
 		body.appendChild(E('p', {},
-			_('Setup is locked. These settings only change if you revoke the authorization.')));
+			_('Access setup is locked. Revoke the authorization to reconfigure.')));
 
 		/* 已确定的配置（只读） */
 		var domain = uci.get('hometunnel', 'global', 'domain');

@@ -6,8 +6,8 @@ msgstr ""
 msgid "HomeTunnel Access"
 msgstr "HomeTunnel 接入"
 
-msgid "Cloudflare is authorized (least-privilege OAuth, no full account control). Daily changes live in \"Ingress Rules\". Revoke only to start over."
-msgstr "Cloudflare 已授权（OAuth 最小权限，不掌控整个账号）。日常改动请到「接入规则」页。需要重新设置时才取消授权。"
+msgid "The access wizard is complete. Adjust exposed intranet services in \"Ingress Rules\". Revoke only when you need to change the tunnel domain."
+msgstr "接入向导配置已经完成。调整开放的内网服务请在「接入规则」页面完成即可。更换内网穿透隧道域名时，才需要“取消授权”进行重新设置"
 
 msgid "Open a browser and log into your Cloudflare account. Then follow the steps below to set up the intranet-exposure tunnel."
 msgstr "请打开浏览器，登录您的CloudFlare账号。然后按照下面步骤，完成内网穿透隧道设置。"
@@ -30,8 +30,8 @@ msgstr "⑤ 部署开关服务"
 msgid "⑥ Verify & Finish"
 msgstr "⑥ 验证完成"
 
-msgid "Setup is locked. These settings only change if you revoke the authorization."
-msgstr "设置已锁定。只有取消授权后才会变更。"
+msgid "Access setup is locked. Revoke the authorization to reconfigure."
+msgstr "接入设置已锁定。取消授权才可以重新配置。"
 
 msgid "Authorized domain"
 msgstr "授权域名"

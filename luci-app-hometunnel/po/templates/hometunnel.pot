@@ -4,7 +4,7 @@ msgstr ""
 msgid "HomeTunnel Access"
 msgstr ""
 
-msgid "Cloudflare is authorized (least-privilege OAuth, no full account control). Daily changes live in \"Ingress Rules\". Revoke only to start over."
+msgid "The access wizard is complete. Adjust exposed intranet services in \"Ingress Rules\". Revoke only when you need to change the tunnel domain."
 msgstr ""
 
 msgid "Open a browser and log into your Cloudflare account. Then follow the steps below to set up the intranet-exposure tunnel."
@@ -28,7 +28,7 @@ msgstr ""
 msgid "⑥ Verify & Finish"
 msgstr ""
 
-msgid "Setup is locked. These settings only change if you revoke the authorization."
+msgid "Access setup is locked. Revoke the authorization to reconfigure."
 msgstr ""
 
 msgid "Authorized domain"

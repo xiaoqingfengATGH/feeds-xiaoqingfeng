@@ -4,7 +4,7 @@ msgstr ""
 msgid "HomeTunnel Access"
 msgstr ""
 
-msgid "Bound to your Cloudflare account. Daily changes live in \"Ingress Rules\". Unbind only to start over."
+msgid "Cloudflare is authorized (least-privilege OAuth, no full account control). Daily changes live in \"Ingress Rules\". Revoke only to start over."
 msgstr ""
 
 msgid "Free Cloudflare Tunnel setup. You need: a Cloudflare account and a domain hosted on Cloudflare (NS on Cloudflare)."
@@ -28,10 +28,10 @@ msgstr ""
 msgid "⑥ Verify & Finish"
 msgstr ""
 
-msgid "Setup is locked. These settings only change if you unbind."
+msgid "Setup is locked. These settings only change if you revoke the authorization."
 msgstr ""
 
-msgid "Bound domain"
+msgid "Authorized domain"
 msgstr ""
 
 msgid "Switch service"
@@ -55,10 +55,10 @@ msgstr ""
 msgid "Tunnel"
 msgstr ""
 
-msgid "deleted on Cloudflare — unbind to re-set up"
+msgid "deleted on Cloudflare — revoke the authorization to re-set up"
 msgstr ""
 
-msgid "Cloudflare rejected the saved certificate — unbind to re-set up"
+msgid "Cloudflare rejected the saved certificate — revoke the authorization to re-set up"
 msgstr ""
 
 msgid "domain taken over by another service"
@@ -88,16 +88,16 @@ msgstr ""
 msgid "Repair"
 msgstr ""
 
-msgid "Unbind"
+msgid "Revoke Authorization"
 msgstr ""
 
-msgid "Unbind deletes the tunnel, DNS records and the switch service from Cloudflare. Ingress rules are kept locally."
+msgid "Revoking removes the tunnel, DNS records and the switch service from Cloudflare. Ingress rules are kept locally."
 msgstr ""
 
-msgid "Unbound! Reloading…"
+msgid "Authorization revoked! Reloading…"
 msgstr ""
 
-msgid "Unbind failed — check output above"
+msgid "Revoke failed — check output above"
 msgstr ""
 
 msgid "The router runs %s and shows an authorization URL."
@@ -121,7 +121,7 @@ msgstr ""
 msgid "Fix the issue (e.g. router DNS), reload this page and try again."
 msgstr ""
 
-msgid "Create the tunnel on your Cloudflare account (uses the authorization from step ①)."
+msgid "Create the tunnel in your Cloudflare account (uses the authorization from step ①)."
 msgstr ""
 
 msgid "The tunnel was deleted on Cloudflare. Clicking Create below will recreate it automatically (new tunnel id, DNS routes re-published in step ⑥)."
@@ -196,10 +196,10 @@ msgstr ""
 msgid "Deploy Now"
 msgstr ""
 
-msgid "The switch domain %s is already bound to another service (Worker “%s”)."
+msgid "The switch domain %s is already taken by another service (Worker “%s”)."
 msgstr ""
 
-msgid "You can type a different subdomain above and retry, or take over the domain (this unbinds it from that service)."
+msgid "You can type a different subdomain above and retry, or take over the domain (this removes it from that service)."
 msgstr ""
 
 msgid "Take Over and Deploy"
@@ -253,10 +253,10 @@ msgstr ""
 msgid "Open Access"
 msgstr ""
 
-msgid "The tunnel was deleted on Cloudflare. Open Access — unbind will guide you through re-setup."
+msgid "The tunnel was deleted on Cloudflare. Open Access — revoking the authorization will guide you through re-setup."
 msgstr ""
 
-msgid "Cloudflare rejected the saved certificate. Open Access — unbind will guide you through re-setup."
+msgid "Cloudflare rejected the saved certificate. Open Access — revoking the authorization will guide you through re-setup."
 msgstr ""
 
 msgid "running"
@@ -511,7 +511,7 @@ msgstr ""
 msgid "Domain"
 msgstr ""
 
-msgid "Locked after binding (falls back to editable after a router reinstall, when the Cloudflare authorization is lost). To re-choose, unbind it first."
+msgid "Locked after authorization (falls back to editable after a router reinstall, when the Cloudflare authorization is lost). To re-choose, revoke it first."
 msgstr ""
 
 msgid "On-demand parameters"

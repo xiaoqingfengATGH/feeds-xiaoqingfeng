@@ -41,7 +41,7 @@ return view.extend({
 		o.readonly = true;
 
 		o = s.option(form.Value, 'ctl_hostname', _('Switch subdomain'),
-			_('Locked after binding (falls back to editable after a router reinstall, when the Cloudflare authorization is lost). To re-choose, unbind it first.'));
+			_('Locked after authorization (falls back to editable after a router reinstall, when the Cloudflare authorization is lost). To re-choose, revoke it first.'));
 		o.placeholder = 'ctl';
 		o.rmempty = false;
 		o.readonly = true;

@@ -105,7 +105,7 @@ return view.extend({
 					+ 'color:inherit'
 			}, [
 				E('span', { 'class': 'dripicons-information', 'style': 'font-size:16px;margin-right:8px;color:#348cd4' }),
-				this.bound ? _('Bound to your Cloudflare account. Daily changes live in "Ingress Rules". Unbind only to start over.')
+				this.bound ? _('Cloudflare is authorized (least-privilege OAuth, no full account control). Daily changes live in "Ingress Rules". Revoke only to start over.')
 					: _('Free Cloudflare Tunnel setup. You need: a Cloudflare account and a domain hosted on Cloudflare (NS on Cloudflare).')
 				])
 				]));
@@ -184,7 +184,7 @@ return view.extend({
 		var self = this;
 
 		body.appendChild(E('p', {},
-			_('Setup is locked. These settings only change if you unbind.')));
+			_('Setup is locked. These settings only change if you revoke the authorization.')));
 
 		/* 已确定的配置（只读） */
 		var domain = uci.get('hometunnel', 'global', 'domain');
@@ -193,7 +193,7 @@ return view.extend({
 
 		var tbl = E('table', { 'class': 'table' });
 		[
-			[_('Bound domain'), domain],
+			[_('Authorized domain'), domain],
 			[_('Tunnel switch domain'), ctlHost],
 			[_('Mode'), mode === 'ondemand' ? _('on-demand (remote switch)') : _('always-on')]
 		].forEach(function (row) {
@@ -229,8 +229,8 @@ return view.extend({
 				needOauth = true;
 			}
 			/* tunnel（被删 = 配置失效, 需解绑重设） */
-			if (st.tunnel === 'deleted') items.push([_('Tunnel'), _('deleted on Cloudflare — unbind to re-set up')]);
-			else if (st.tunnel === 'auth-failed') items.push([_('Tunnel'), _('Cloudflare rejected the saved certificate — unbind to re-set up')]);
+			if (st.tunnel === 'deleted') items.push([_('Tunnel'), _('deleted on Cloudflare — revoke the authorization to re-set up')]);
+			else if (st.tunnel === 'auth-failed') items.push([_('Tunnel'), _('Cloudflare rejected the saved certificate — revoke the authorization to re-set up')]);
 			/* worker */
 			if (st.worker === 'ok') items.push([_('Switch service'), null]);
 			else if (st.worker === 'foreign') items.push([_('Switch service'), _('domain taken over by another service')]);
@@ -287,9 +287,9 @@ return view.extend({
 		});
 
 		/* 解绑 */
-		var unbindBtn = E('button', { 'class': 'btn cbi-button cbi-button-remove important', 'style': 'margin-top:14px' }, _('Unbind'));
+		var unbindBtn = E('button', { 'class': 'btn cbi-button cbi-button-remove important', 'style': 'margin-top:14px' }, _('Revoke Authorization'));
 		body.appendChild(E('div', { 'style': 'margin:16px 0 8px 0' }, [
-			E('p', { 'class': 'cbi-section-descr' }, _('Unbind deletes the tunnel, DNS records and the switch service from Cloudflare. Ingress rules are kept locally.')),
+			E('p', { 'class': 'cbi-section-descr' }, _('Revoking removes the tunnel, DNS records and the switch service from Cloudflare. Ingress rules are kept locally.')),
 			unbindBtn
 		]));
 		var unbindOut = E('pre', { 'style': 'max-height:200px;overflow:auto;font-size:12px' }, '');
@@ -306,10 +306,10 @@ return view.extend({
 							unbindOut.textContent = text || '';
 							if (st.state === 'done') {
 								if (st.rc === 0) {
-									unbindOut.appendChild(E('div', { 'class': 'alert-message success' }, _('Unbound! Reloading…')));
+									unbindOut.appendChild(E('div', { 'class': 'alert-message success' }, _('Authorization revoked! Reloading…')));
 									window.setTimeout(function () { location.reload(); }, 1200);
 								} else {
-									unbindOut.appendChild(E('div', { 'class': 'alert-message error' }, _('Unbind failed — check output above')));
+									unbindOut.appendChild(E('div', { 'class': 'alert-message error' }, _('Revoke failed — check output above')));
 									unbindBtn.disabled = false;
 								}
 								return Promise.reject('done');
@@ -651,10 +651,10 @@ return view.extend({
 			warn.innerHTML = '';
 			warn.style.display = '';
 			warn.appendChild(E('div', {}, [
-				_('The switch domain %s is already bound to another service (Worker “%s”).').format(preview.textContent, st.by)
+				_('The switch domain %s is already taken by another service (Worker “%s”).').format(preview.textContent, st.by)
 			]));
 			warn.appendChild(E('div', { 'style': 'margin-top:6px' },
-				_('You can type a different subdomain above and retry, or take over the domain (this unbinds it from that service).')));
+				_('You can type a different subdomain above and retry, or take over the domain (this removes it from that service).')));
 			var yes = E('button', { 'class': 'btn cbi-button cbi-button-apply important', 'style': 'margin-top:8px' },
 				_('Take Over and Deploy'));
 			var no = E('button', { 'class': 'btn cbi-button', 'style': 'margin-top:8px;margin-left:8px' },

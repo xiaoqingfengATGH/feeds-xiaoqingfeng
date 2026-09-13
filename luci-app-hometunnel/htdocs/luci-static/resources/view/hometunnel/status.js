@@ -102,8 +102,8 @@ return view.extend({
 		if (cfState === 'missing' || cfState === 'auth-failed') {
 			container.appendChild(E('div', { 'class': 'alert-message warning' }, [
 				E('p', {}, cfState === 'missing'
-					? _('The tunnel was deleted on Cloudflare. Open Access — unbind will guide you through re-setup.')
-					: _('Cloudflare rejected the saved certificate. Open Access — unbind will guide you through re-setup.')),
+					? _('The tunnel was deleted on Cloudflare. Open Access — revoking the authorization will guide you through re-setup.')
+					: _('Cloudflare rejected the saved certificate. Open Access — revoking the authorization will guide you through re-setup.')),
 				E('a', { 'class': 'btn cbi-button cbi-button-apply important', 'href': L.url('admin', 'services', 'hometunnel', 'wizard') }, _('Open Access'))
 			]));
 		}

@@ -35,6 +35,54 @@ return view.extend({
 		o.datatype = 'and(minlength(1),hostname)';
 		o.rmempty = false;
 
+		/* 公网入口: 本行规则对外的完整访问路径（协议+域名+路径正则）。
+		   GridSection 行内单元格走 renderTextValue→textvalue()→E('td',…,value)，
+		   字符串一律转义（rawhtml 不在这条路径上）——返回 DOM 节点才能携带链接/样式。
+		   http/https 服务 = 可点击 https 链接; ssh/tcp 等显示主机名+协议徽标
+		   （需 cloudflared Access/WARP 客户端，浏览器打不开）; path 正则第二行展示;
+		   已停用规则半透明标注（入口未发布）。UCI 值一律经 textContent 赋值（天然转义）。 */
+		o = s.option(form.DummyValue, '_public_entry', _('Public entry'));
+		/* modal 编辑视图走 renderWidget→cfgvalue（纯文本）; 表格行内走 textvalue（DOM） */
+		o.cfgvalue = function (sid) {
+			var sub = uci.get('hometunnel', sid, 'subdomain');
+			if (!sub) return '';
+			var domain = uci.get('hometunnel', 'global', 'domain') || '';
+			var pregex = uci.get('hometunnel', sid, 'path') || '';
+			return (domain ? sub + '.' + domain : sub) + (pregex ? '  (path: ' + pregex + ')' : '');
+		};
+		o.textvalue = function (sid) {
+			var sub = uci.get('hometunnel', sid, 'subdomain');
+			if (!sub) return E('em', {}, '-');
+			var svc = uci.get('hometunnel', sid, 'service') || '';
+			var pregex = uci.get('hometunnel', sid, 'path') || '';
+			var off = uci.get('hometunnel', sid, 'enabled') === '0';
+			var domain = uci.get('hometunnel', 'global', 'domain') || '';
+			var wrap = E('div', {});
+			var main = off ? E('div', { 'style': 'opacity:.5' }) : wrap;
+			if (off) wrap.appendChild(main);
+			if (domain) {
+				var host = sub + '.' + domain;
+				if (/^https?:\/\//.test(svc))
+					main.appendChild(E('a', { 'href': 'https://' + host, 'target': '_blank', 'rel': 'noopener', 'style': 'word-break:break-all' }, host));
+				else {
+					var scheme = svc.split(':')[0] || 'tcp';
+					main.appendChild(E('span', { 'class': 'label', 'style': 'margin-right:6px;text-transform:uppercase' }, scheme));
+					var hn = E('span', { 'style': 'word-break:break-all' }, host);
+					hn.title = _('Non-HTTP service: connect with a cloudflared Access or WARP client using this hostname.');
+					main.appendChild(hn);
+				}
+			} else {
+				var em = E('span', {}, sub);
+				main.appendChild(em);
+				main.appendChild(E('div', { 'style': 'font-size:11px;opacity:.7' }, _('reachable after setup completes')));
+			}
+			if (pregex)
+				main.appendChild(E('div', { 'style': 'font-family:monospace;font-size:11px;opacity:.8;word-break:break-all' }, 'path: ' + pregex));
+			if (off)
+				main.appendChild(E('div', { 'style': 'font-size:11px' }, _('Disabled — not published')));
+			return wrap;
+		};
+
 		o = s.option(form.Value, 'service', _('Service URL'),
 			_('cloudflared service syntax, e.g. <code>http://192.168.1.10:5000</code>, <code>ssh://192.168.1.10:22</code>, <code>tcp://…</code>'));
 		o.placeholder = 'http://192.168.1.10:5000';

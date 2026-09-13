@@ -600,3 +600,15 @@ msgstr ""
 
 msgid "Tunnel switching is done via URL, no page involved. Save the switch bookmarks from the Status page to start or stop the tunnel from any device."
 msgstr ""
+
+msgid "Public entry"
+msgstr ""
+
+msgid "Non-HTTP service: connect with a cloudflared Access or WARP client using this hostname."
+msgstr ""
+
+msgid "Disabled — not published"
+msgstr ""
+
+msgid "reachable after setup completes"
+msgstr ""

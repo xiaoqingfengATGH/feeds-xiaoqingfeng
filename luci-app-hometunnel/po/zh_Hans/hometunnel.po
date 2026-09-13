@@ -607,3 +607,14 @@ msgstr "隧道启停控制域名"
 msgid "Tunnel switching is done via URL, no page involved. Save the switch bookmarks from the Status page to start or stop the tunnel from any device."
 msgstr "隧道启停通过 URL 完成，无需打开页面。请在状态页保存开关书签，即可在任意设备启动或停止隧道。"
 
+msgid "Public entry"
+msgstr "公网入口"
+
+msgid "Non-HTTP service: connect with a cloudflared Access or WARP client using this hostname."
+msgstr "非 HTTP 服务：需用 cloudflared Access 或 WARP 客户端连接此主机名。"
+
+msgid "Disabled — not published"
+msgstr "已停用 — 未发布"
+
+msgid "reachable after setup completes"
+msgstr "接入完成后可访问"

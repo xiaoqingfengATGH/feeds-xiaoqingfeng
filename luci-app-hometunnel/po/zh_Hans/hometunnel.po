@@ -186,8 +186,8 @@ msgstr "授权码已过期（5 分钟）。请重新点击“开始授权”。"
 msgid "Full name: %s"
 msgstr "完整域名：%s"
 
-msgid "Switch subdomain"
-msgstr "开关域名"
+msgid "Switch service subdomain"
+msgstr "开关服务子域名"
 
 msgid "Deploy Now"
 msgstr "立即部署"

@@ -645,7 +645,7 @@ return view.extend({
 			preview.textContent = _('Full name: %s').format((v || 'ctl') + '.' + domain);
 		});
 		body.appendChild(E('div', { 'style': 'margin:6px 0' }, [
-			E('label', { 'style': 'margin-right:6px' }, _('Switch subdomain')), input
+			E('label', { 'style': 'margin-right:6px' }, _('Switch service subdomain')), input
 		]));
 		body.appendChild(preview);
 

@@ -184,7 +184,7 @@ msgstr ""
 msgid "Full name: %s"
 msgstr ""
 
-msgid "Switch subdomain"
+msgid "Switch service subdomain"
 msgstr ""
 
 msgid "Deploy Now"

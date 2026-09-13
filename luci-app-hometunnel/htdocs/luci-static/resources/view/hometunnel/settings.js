@@ -54,7 +54,8 @@ return view.extend({
 		o.datatype = 'range(1,1440)';
 		o.rmempty = false;
 
-		o = s.option(form.Value, 'max_ttl', _('Max TTL (min)'));
+		o = s.option(form.Value, 'max_ttl', _('Max TTL (min)'),
+			_('Upper limit for a single open request. A longer duration requested via ?min=N is clamped to this.'));
 		o.placeholder = '240';
 		o.datatype = 'range(1,1440)';
 		o.rmempty = false;

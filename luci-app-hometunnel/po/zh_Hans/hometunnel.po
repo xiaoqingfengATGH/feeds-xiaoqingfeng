@@ -528,6 +528,9 @@ msgstr "每次开启内网穿透后，隧道保持开启的时长。"
 msgid "Max TTL (min)"
 msgstr "最大 TTL（分钟）"
 
+msgid "Upper limit for a single open request. A longer duration requested via ?min=N is clamped to this."
+msgstr "单次开启允许申请的最大时长上限。通过 ?min=N 申请更长时间时，最多给到该值。"
+
 msgid "Auto-renew amount (min)"
 msgstr "自动续期幅度（分钟）"
 
@@ -544,7 +547,7 @@ msgid "Hard cap (seconds)"
 msgstr "硬熔断（秒）"
 
 msgid "Local fuse: force-stop after this many seconds of continuous run; renewals do NOT extend it. 0 = unlimited (not recommended with auto-renew)."
-msgstr "本地熔断：连续运行超过该秒数强制停止，续期不会延长它。0 = 不限（开启自动续期时不建议）。"
+msgstr "按需模式一次开启时间上限，到时会强制中断，自动续期无法突破。负责在无法发送关闭指令/忘记关闭时，关闭内网穿透服务，避免内网服务长时间暴露在公网。可以设置为0，表示不限。如果你开启了自动续期，强烈不建议设置为0。"
 
 msgid "Poll interval (s)"
 msgstr "轮询间隔（秒）"

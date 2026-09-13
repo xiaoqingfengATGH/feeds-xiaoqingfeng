@@ -102,12 +102,6 @@ msgstr "已取消授权！正在刷新…"
 msgid "Revoke failed — check output above"
 msgstr "取消授权失败——请检查上方输出"
 
-msgid "The router runs %s and shows an authorization URL."
-msgstr "路由器将运行 %s 并显示一个授权链接。"
-
-msgid "Open it on any device, log into Cloudflare, pick your domain and authorize."
-msgstr "在任意设备打开它，登录 Cloudflare，选择你的域名并授权。"
-
 msgid "waiting for auth URL…"
 msgstr "等待授权 URL…"
 
@@ -817,3 +811,6 @@ msgstr "取消 Cloudflare 授权？"
 
 msgid "This removes the tunnel, DNS records and the switch service from Cloudflare. The authorization itself is kept. Continue?"
 msgstr "这将从 Cloudflare 删除隧道、DNS 记录和开关服务。授权本身会保留。确定继续吗？"
+
+msgid "Creating the intranet-exposure tunnel needs a one-time authorization in Cloudflare. Click \"Start Login\" to generate an authorization link. The tunnel needs a domain: open the link, pick the domain you want to expose through the tunnel in Cloudflare, then click \"Authorize\" in the dialog that follows."
+msgstr "创建内网穿透隧道，需要你在Cloudflare中授权。点击“开始授权”，将生成一个授权链接。隧道需要一个域名，点击这个链接，会打开Cloudflare，点击选择你想开放隧道的域名，随后的弹窗中点击“授权”。"

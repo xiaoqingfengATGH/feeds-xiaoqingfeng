@@ -247,7 +247,7 @@ msgid "HomeLede intranet exposure via a free Cloudflare Tunnel."
 msgstr "HomeLede 基于 Cloudflare Tunnel 的全免费内网穿透。"
 
 msgid "HomeTunnel"
-msgstr "内网穿透（HomeTunnel）"
+msgstr "HomeTunnel"
 
 msgid "Setup is not complete. Open Access to run setup."
 msgstr "设置尚未完成。请到「接入」页完成设置。"

@@ -811,3 +811,9 @@ msgstr "NAS、下载服务等，建议设置足够强度的密码，开启密码
 
 msgid "Unless you have solid network-security experience, keeping the tunnel always on is not recommended."
 msgstr "除非对网络安全防护有充足的经验，通常不建议保持隧道”始终开启“。"
+
+msgid "Revoke the Cloudflare authorization?"
+msgstr "取消 Cloudflare 授权？"
+
+msgid "This removes the tunnel, DNS records and the switch service from Cloudflare. The authorization itself is kept. Continue?"
+msgstr "这将从 Cloudflare 删除隧道、DNS 记录和开关服务。授权本身会保留。确定继续吗？"

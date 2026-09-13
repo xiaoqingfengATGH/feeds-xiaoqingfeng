@@ -7,6 +7,7 @@
 'require poll';
 'require rpc';
 'require uci';
+'require ui';
 'require view';
 'require view.hometunnel.ui as htui';
 
@@ -296,6 +297,24 @@ return view.extend({
 		body.appendChild(unbindOut);
 		unbindBtn.addEventListener('click', function (ev) {
 			ev.preventDefault();
+			/* 破坏性操作：先弹确认框，确认后才启动解绑 job */
+			ui.showModal(_('Revoke the Cloudflare authorization?'), [
+				E('p', {}, _('This removes the tunnel, DNS records and the switch service from Cloudflare. The authorization itself is kept. Continue?')),
+				E('div', { 'class': 'right' }, [
+					E('button', {
+						'class': 'btn cbi-button cbi-button-neutral',
+						'click': function () { ui.hideModal(); }
+					}, _('Cancel')),
+					' ',
+					E('button', {
+						'class': 'btn cbi-button cbi-button-remove important',
+						'click': function () { ui.hideModal(); startUnbind(); }
+					}, _('Revoke Authorization'))
+				])
+			]);
+		});
+
+		var startUnbind = function () {
 			unbindBtn.disabled = true;
 			unbindOut.textContent = 'unbinding…';
 			/* 解绑用后台 job（删除多个远端资源，耗时几十秒） */
@@ -318,7 +337,7 @@ return view.extend({
 					});
 				}, 2);
 			});
-		});
+		};
 	},
 	/* ---- 步骤 1: cloudflared tunnel login ---- */
 	step1: function (body) {

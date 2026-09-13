@@ -799,3 +799,9 @@ msgstr ""
 
 msgid "Unless you have solid network security experience, keeping the tunnel always on is not recommended."
 msgstr ""
+
+msgid "Revoke the Cloudflare authorization?"
+msgstr ""
+
+msgid "This removes the tunnel, DNS records and the switch service from Cloudflare. The authorization itself is kept. Continue?"
+msgstr ""

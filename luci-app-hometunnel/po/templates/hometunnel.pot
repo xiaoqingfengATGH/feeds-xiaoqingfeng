@@ -229,8 +229,6 @@ msgstr ""
 msgid "All checks passed. Daemon enabled. Opening status page…"
 msgstr ""
 
-msgid "Mode: %s — change it later in Settings."
-msgstr ""
 
 msgid "HomeTunnel is the Homelede intranet-exposure solution built on Cloudflare Tunnel. It works with or without a public IP, and is secure and free."
 msgstr ""
@@ -785,4 +783,19 @@ msgid "Domain status legend:"
 msgstr ""
 
 msgid "The switch service controls starting and stopping the intranet-exposure tunnel. It will create a subdomain under the current domain: enter the subdomain the switch service should use, then click \"Deploy Now\"."
+msgstr ""
+
+msgid "The tunnel will run in on-demand mode: it stays off until you switch it on remotely. If you want the tunnel always on, change it later in Settings."
+msgstr ""
+
+msgid "Security notice:"
+msgstr ""
+
+msgid "Intranet services such as the router admin UI or printer maintenance pages have very weak security protection; exposing them to the public internet is high risk and not recommended."
+msgstr ""
+
+msgid "For NAS, download services and the like, set a strong password, enable brute-force protection and check logs regularly to keep your data safe."
+msgstr ""
+
+msgid "Unless you have solid network security experience, keeping the tunnel always on is not recommended."
 msgstr ""

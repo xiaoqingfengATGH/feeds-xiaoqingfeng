@@ -231,8 +231,6 @@ msgstr "验证"
 msgid "All checks passed. Daemon enabled. Opening status page…"
 msgstr "全部通过。开关控制进程已启用。正在打开状态页…"
 
-msgid "Mode: %s — change it later in Settings."
-msgstr "模式：%s——之后可在「设置」中更改。"
 
 msgid "HomeTunnel is the Homelede intranet-exposure solution built on Cloudflare Tunnel. It works with or without a public IP, and is secure and free."
 msgstr "HomeTunnel是Homelede提供的基于Cloudflare Tunnel的内网穿透方案。无论是否拥有独立公网IP均可使用，安全，免费。"
@@ -798,3 +796,18 @@ msgstr "域名状态说明："
 
 msgid "The switch service controls starting and stopping the intranet-exposure tunnel. It will create a subdomain under the current domain: enter the subdomain the switch service should use, then click \"Deploy Now\"."
 msgstr "开关服务是用于控制内网穿透隧道启停的服务，开关服务会在当前域名下创建一个子域名，请输入开关服务使用的子域名，随后点击“立即部署”"
+
+msgid "The tunnel will run in on-demand mode: it stays off until you switch it on remotely. If you want the tunnel always on, change it later in Settings."
+msgstr "内网穿透隧道将以“按需启停”方式运行，如果你希望隧道一直启动，之后可以在“设置”页面修改。"
+
+msgid "Security notice:"
+msgstr "安全提示："
+
+msgid "Intranet services such as the router admin UI or printer maintenance pages have very weak security protection; exposing them to the public internet is high risk and not recommended."
+msgstr "内网服务，如路由器管理界面、打印机维护页面等在安全防护方面极为脆弱，开放在公网会有极大的安全风险，不建议开放。"
+
+msgid "For NAS, download services and the like, set a strong password, enable brute-force protection and check logs regularly to keep your data safe."
+msgstr "NAS、下载服务等，建议设置足够强度的密码，开启密码穷举阻断防护，及时查看日志，保障数据安全。"
+
+msgid "Unless you have solid network-security experience, keeping the tunnel always on is not recommended."
+msgstr "除非对网络安全防护有充足的经验，通常不建议保持隧道”始终开启“。"

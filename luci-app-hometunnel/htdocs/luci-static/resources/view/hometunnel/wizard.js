@@ -813,8 +813,17 @@ return view.extend({
 		body.appendChild(out);
 
 		body.appendChild(E('p', { 'class': 'cbi-section-descr' }, [
-			_('Mode: %s — change it later in Settings.').format(mode)
+			_('The tunnel will run in on-demand mode: it stays off until you switch it on remotely. If you want the tunnel always on, change it later in Settings.')
 		]));
+
+		var warnBox = E('div', { 'class': 'alert-message warning' });
+		warnBox.appendChild(E('div', { 'style': 'font-weight:bold;margin-bottom:4px' }, _('Security notice:')));
+		warnBox.appendChild(E('div', { 'style': 'line-height:1.7' }, [
+			_('Intranet services such as the router admin UI or printer maintenance pages have very weak security protection; exposing them to the public internet is high risk and not recommended.'), E('br'),
+			_('For NAS, download services and the like, set a strong password, enable brute-force protection and check logs regularly to keep your data safe.'), E('br'),
+			_('Unless you have solid network-security experience, keeping the tunnel always on is not recommended.')
+		]));
+		body.appendChild(warnBox);
 	},
 
 	handleSave: null,

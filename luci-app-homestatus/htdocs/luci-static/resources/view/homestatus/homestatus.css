@@ -1,0 +1,97 @@
+/* luci-app-homestatus: styles for the two overview blocks.
+ *
+ * Everything here is scoped under our own class names (hs-*) so nothing can
+ * leak into the theme or other blocks.  Colours come from the theme's own
+ * tokens where one exists, with a literal fallback for the two progress-bar
+ * threshold states (the theme defines no variable for those).
+ */
+
+.hs-muted { opacity: .65; }
+
+.hs-mono {
+	font-family: var(--ng-font-monospace, monospace);
+	font-size: .85em;
+}
+
+.hs-dim { opacity: .75; }
+
+/* ------------------------------------------------------------- disk card --- */
+
+.hs-disk-head {
+	display: flex;
+	justify-content: space-between;
+	align-items: baseline;
+	flex-wrap: wrap;
+	gap: .5rem;
+	margin-bottom: .6rem;
+}
+
+.hs-disk-name { font-weight: 600; }
+
+.hs-disk-sum { font-size: .85rem; }
+
+.hs-table { width: 100%; }
+
+.hs-mount {
+	font-family: var(--ng-font-monospace, monospace);
+	font-weight: 600;
+	word-break: break-all;
+}
+
+.hs-alias {
+	font-size: .78rem;
+	opacity: .6;
+	margin-top: .1rem;
+}
+
+.hs-dev {
+	font-size: .85rem;
+	opacity: .85;
+	white-space: nowrap;
+}
+
+.hs-bar { min-width: 170px; }
+
+.hs-pct {
+	text-align: right;
+	white-space: nowrap;
+	font-variant-numeric: tabular-nums;
+}
+
+.hs-pct.hs-warn { color: #e0a800; font-weight: 600; }
+.hs-pct.hs-crit { color: #dc3545; font-weight: 600; }
+
+.hs-avail {
+	text-align: right;
+	white-space: nowrap;
+	font-size: .85rem;
+}
+
+.hs-act { text-align: right; white-space: nowrap; }
+
+.hs-span { font-size: .85rem; }
+
+.hs-foot {
+	margin-top: .5rem;
+	font-size: .8rem;
+	display: flex;
+	gap: .6rem;
+	flex-wrap: wrap;
+}
+
+.hs-empty { padding: .5rem 0; }
+
+/* ------------------------------------------------------------- apps card --- */
+
+.hs-app { font-weight: 600; }
+
+.hs-apps .hs-detail {
+	font-family: var(--ng-font-monospace, monospace);
+	font-size: .8rem;
+}
+
+/* Row layout: keep the mount/name column from collapsing on narrow screens. */
+@media screen and (max-width: 700px) {
+	.hs-dev { white-space: normal; }
+	.hs-table .hs-bar { min-width: 120px; }
+}

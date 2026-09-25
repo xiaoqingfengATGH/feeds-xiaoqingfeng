@@ -1,0 +1,254 @@
+'use strict';
+'require form';
+'require uci';
+'require ui';
+'require view';
+'require view.homestatus.shared as hs';
+
+/*
+ * Settings page for luci-app-homestatus.
+ *
+ * Saving goes through the standard client-side `uci` class so the page gets
+ * Save & Apply, Revert and the unsaved-changes indicator for free.  The
+ * backend re-reads UCI on every call, so no service restart is needed for a
+ * change to take effect - the overview blocks pick it up on their next poll
+ * (they set disableCache).
+ *
+ * luci.homestatus.set_config() exists as the programmatic equivalent for
+ * scripting; this page does not need it.
+ */
+
+/* Section names are what the backend reports as each app's `id`, and they are
+ * also used to build /etc/init.d/<name> paths indirectly, so keep them
+ * conservative. */
+var ID_RE = /^[A-Za-z0-9][A-Za-z0-9_.-]*$/;
+
+function importServices(map) {
+	hs.services().then(function(r) {
+		var list = (r && r.services) || [];
+
+		if (!list.length) {
+			ui.addNotification(null, E('p', {}, [ _('没有找到可添加的服务') ]), 'warning');
+			return;
+		}
+
+		var boxes = list.map(function(s, i) {
+			var cb = E('input', {
+				'type': 'checkbox',
+				'id': 'hs-imp-%d'.format(i),
+				'disabled': s.monitored ? true : null
+			});
+
+			return E('div', { 'style': 'padding:.15rem 0' }, [
+				E('label', { 'style': 'display:flex;gap:.5rem;align-items:baseline' }, [
+					cb,
+					E('span', { 'style': 'min-width:14rem' }, [ s.name ]),
+					E('span', { 'class': 'hs-muted', 'style': 'font-size:.85em' }, [
+						s.monitored ? _('已监视')
+							: (s.running ? _('运行中 %s').format(s.pid != null ? 'pid ' + s.pid : '')
+							             : _('未运行'))
+					])
+				])
+			]);
+		});
+
+		ui.showModal(_('从已安装服务添加'), [
+			E('p', { 'class': 'hs-muted' }, [
+				_('这些服务都有 init 脚本。勾选后会用推测的探测方式加入监视列表，保存后可在表格里再调整。')
+			]),
+			E('div', { 'style': 'max-height:50vh;overflow:auto;margin:.5rem 0' }, boxes),
+			E('div', { 'class': 'right' }, [
+				E('button', { 'class': 'btn', 'click': ui.hideModal }, [ _('取消') ]),
+				' ',
+				E('button', {
+					'class': 'btn cbi-button cbi-button-action important',
+					'click': function() {
+						var added = 0;
+
+						list.forEach(function(s, i) {
+							var cb = document.getElementById('hs-imp-%d'.format(i));
+							if (cb == null || !cb.checked || s.monitored)
+								return;
+							if (!ID_RE.test(s.name))
+								return;
+							/* uci.add() accepts the section name as its third
+							 * argument; without it the section stays anonymous
+							 * (cfg0a1b2c) and the resulting config is
+							 * unreadable to `uci show`. The name may already
+							 * be taken by an unrelated section, so fall back
+							 * to a generated one. */
+							var sec;
+							if (uci.get('homestatus', s.name) == null)
+								sec = uci.add('homestatus', 'app', s.name);
+							else
+								sec = uci.add('homestatus', 'app');
+
+							uci.set('homestatus', sec, 'id', s.name);
+							uci.set('homestatus', sec, 'label', s.name);
+							uci.set('homestatus', sec, 'probe', s.probe_guess || 'exe');
+							uci.set('homestatus', sec, 'init', s.name);
+							/* present in every existing entry - keep rows uniform */
+							uci.set('homestatus', sec, 'enabled', '1');
+
+							if (s.probe_guess === 'cmd')
+								uci.set('homestatus', sec, 'match', s.name);
+
+							added++;
+						});
+
+						ui.hideModal();
+
+						if (added) {
+							/* Same in-place refresh the grid's own Add button
+							 * uses (renderSectionAdd -> map.save(null, true));
+							 * the user still has to press Save & Apply. */
+							ui.addNotification(null, E('p', {},
+								[ _('已添加 %d 项，请按「保存并应用」提交。').format(added) ]), 'info');
+							map.save(null, true);
+						}
+					}
+				}, [ _('添加') ])
+			])
+		]);
+	});
+}
+
+return view.extend({
+	load: function() {
+		return uci.load('homestatus');
+	},
+
+	render: function() {
+		var m, s, o;
+
+		m = new form.Map('homestatus', _('磁盘容量与应用监视'),
+			_('为「概览」页面增加磁盘容量与关键应用状态两个区块。两者都是纯展示，只有「重启」按钮会执行写操作。'));
+
+		/* ------------------------------------------------------------ 磁盘 --- */
+
+		s = m.section(form.NamedSection, 'global', 'global', _('磁盘容量监测'));
+		s.anonymous = true;
+		s.addremove = false;
+
+		o = s.option(form.Flag, 'enabled', _('启用'),
+			_('关闭后，「关键应用状态」区块显示为已关闭，磁盘区块仍正常显示。'));
+		o.default = '1';
+		o.rmempty = false;
+
+		o = s.option(form.Value, 'warn', _('黄色告警门限'),
+			_('使用率超过此百分比时，进度条与百分比转为黄色。'));
+		o.datatype = 'range(1,100)';
+		o.default = '80';
+		o.rmempty = false;
+
+		o = s.option(form.Value, 'crit', _('红色危险门限'),
+			_('使用率超过此百分比时转为红色。应大于黄色门限。只读固件镜像不参与染色。'));
+		o.datatype = 'range(1,100)';
+		o.default = '90';
+		o.rmempty = false;
+
+		/* ------------------------------------------------------ 应用监视 --- */
+
+		s = m.section(form.GridSection, 'app', _('关键应用状态监视'));
+		s.addremove = true;
+		s.sortable = true;
+		s.rowcolors = true;
+		s.modaltitle = _('编辑监视项');
+		s.nodescriptions = true;
+
+		o = s.option(form.Value, 'id', _('标识'));
+		o.rmempty = false;
+		o.modalonly = true;
+		o.validate = function(section_id, value) {
+			if (!ID_RE.test(value))
+				return _('只能包含字母、数字、下划线、点与连字符');
+			return true;
+		};
+
+		o = s.option(form.Value, 'label', _('显示名'));
+		o.rmempty = false;
+
+		o = s.option(form.Flag, 'enabled', _('启用'));
+		o.default = '1';
+		o.editable = true;
+
+		o = s.option(form.ListValue, 'probe', _('探测方式'));
+		o.value('exe', _('进程名（最可靠）'));
+		o.value('cmd', _('命令行子串'));
+		o.value('port', _('本地监听端口'));
+		o.value('path', _('运行时文件存在'));
+		o.default = 'exe';
+		o.rmempty = false;
+		/* The collapsed grid prints the raw config value ("port"), not the
+		 * ListValue label - override textvalue so the table shows the same
+		 * Chinese wording the dropdown does. (Stock CBI.FlagValue does the
+		 * same for its Yes/No.) */
+		o.textvalue = function(section_id) {
+			var val = this.cfgvalue(section_id) ?? this.default;
+			var idx = (this.keylist || []).indexOf(val);
+
+			return idx >= 0 ? this.vallist[idx] : val;
+		};
+
+		o = s.option(form.Value, 'init', _('init 脚本名'),
+			_('用于「重启」按钮，对应 /etc/init.d/<名称>。留空则用标识。'));
+		o.rmempty = true;
+
+		o = s.option(form.Value, 'match', _('匹配串'),
+			_('进程名探测：与 /proc/<pid>/cmdline 的 argv[0] 基名精确比较；命令行探测：整条命令行的子串。留空则用标识。'));
+		o.depends('probe', 'exe');
+		o.depends('probe', 'cmd');
+		o.rmempty = true;
+
+		o = s.option(form.Value, 'port', _('监听端口'),
+			_('探测 /proc/net/tcp 上是否存在该端口的 LISTEN。'));
+		o.depends('probe', 'port');
+		o.datatype = 'port';
+		o.rmempty = true;
+
+		o = s.option(form.Value, 'path', _('运行时文件'),
+			_('该文件存在即视为运行中，适合进程名不固定的服务。'));
+		o.depends('probe', 'path');
+		o.datatype = 'string';
+		o.rmempty = true;
+
+		o = s.option(form.Value, 'uci', _('开关对应的 UCI 选项'),
+			_('可选。填应用自己的总开关，例如 passwall2.@global[0].enabled，关闭时会显示为「已禁用」而不是「已停止」。'));
+		o.rmempty = true;
+
+		o = s.option(form.Value, 'note', _('备注'),
+			_('显示在名称下方的灰色小字。'));
+		o.rmempty = true;
+
+		o = s.option(form.Value, 'order', _('排序'));
+		o.datatype = 'integer';
+		o.rmempty = true;
+		o.modalonly = true;
+
+		/* ------------------------------------------------------ 从服务导入 --- */
+		/* Appended to the rendered map instead of being a form section:
+		 * Map.section() rejects anything that is not a strict subclass of
+		 * CBIAbstractSection (passing the exported AbstractSection itself
+		 * raises "Class must be a descendant of CBIAbstractSection"), and a
+		 * plain div is all this needs. */
+
+		return Promise.resolve(m.render()).then(function(node) {
+			node.appendChild(E('div', { 'class': 'cbi-section' }, [
+				E('h3', {}, [ _('从已安装服务添加') ]),
+				E('div', { 'class': 'cbi-section-descr' }, [
+					_('列出所有带 init 脚本的服务，勾选即可加入上面的监视列表。')
+				]),
+				E('div', { 'style': 'margin-top:.5rem' }, [
+					E('button', {
+						'class': 'btn cbi-button cbi-button-add',
+						'click': ui.createHandlerFn(this, function() {
+							importServices(m, this);
+						})
+					}, [ _('选择服务…') ])
+				])
+			]));
+
+			return node;
+		});
+	}
+});

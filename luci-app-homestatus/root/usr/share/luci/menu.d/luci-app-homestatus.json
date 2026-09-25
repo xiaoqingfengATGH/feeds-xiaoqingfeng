@@ -1,0 +1,14 @@
+{
+	"admin/status/homestatus": {
+		"title": "磁盘与应用监视",
+		"order": 8,
+		"action": {
+			"type": "view",
+			"path": "homestatus/settings"
+		},
+		"depends": {
+			"acl": [ "luci-app-homestatus" ],
+			"uci": { "homestatus": true }
+		}
+	}
+}

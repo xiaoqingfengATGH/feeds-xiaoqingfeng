@@ -1,0 +1,72 @@
+# HomeLede overview extensions: disk capacity + key application status
+# Managed by LuCI app luci-app-homestatus.
+
+config global 'global'
+	option enabled '1'
+	option warn '80'
+	option crit '90'
+
+# 磁盘监测默认只看真实存储：伪文件系统已在后端过滤（proc/sysfs/devpts/...）。
+# 根文件系统、overlay、各挂载点由 /proc/self/mountinfo + /sys/class/block 自动发现。
+
+# ---------------------------------------------------------------- 关键应用监视
+# probe 取值与实测依据（24.10.5 真机）：
+#   exe    /proc/<pid>/cmdline 的 argv[0] 基名 == match（最可靠，默认）
+#   cmd    match 出现在进程完整命令行中（子串匹配，等价于 pgrep -f）
+#   port   /proc/net/tcp 上存在 LISTEN，匹配本地端口
+#   path   运行时产物存在（进程名无常，但有确定的运行时目录/文件）
+#
+# 注意：本插件运行在 rpcd 进程内，**不能**调用 ubus 的 rc/service 对象
+# （会死锁直到超时），故一律直接读内核接口。
+
+config app 'passwall2'
+	option label 'PassWall2'
+	option probe 'port'
+	option init 'passwall2'
+	option port '1070'
+	option uci 'passwall2.@global[0].enabled'
+	option note '进程名随节点类型变化，以本地 socks 端口为准'
+
+config app 'hometunnelctl'
+	option label 'hometunnel 控制面'
+	option probe 'cmd'
+	option init 'hometunnel-ctl'
+	option match 'ctl-loop'
+	option note '数据面按需启动，控制面常驻'
+
+config app 'dnsmasq'
+	option label 'DNS / DHCP (dnsmasq)'
+	option probe 'exe'
+	option init 'dnsmasq'
+	option order '10'
+
+config app 'mwan3'
+	option label 'mwan3 多拨'
+	option probe 'cmd'
+	option init 'mwan3'
+	option match 'mwan3'
+	option order '20'
+
+config app 'nlbwmon'
+	option label 'nlbwmon 流量统计'
+	option probe 'exe'
+	option init 'nlbwmon'
+	option order '30'
+
+config app 'dockerd'
+	option label 'Docker'
+	option probe 'exe'
+	option init 'dockerd'
+	option order '40'
+
+config app 'vsftpd'
+	option label 'FTP (vsftpd)'
+	option probe 'exe'
+	option init 'vsftpd'
+	option order '50'
+
+config app 'wsdd2'
+	option label '局域网发现 (wsdd2)'
+	option probe 'exe'
+	option init 'wsdd2'
+	option order '60'

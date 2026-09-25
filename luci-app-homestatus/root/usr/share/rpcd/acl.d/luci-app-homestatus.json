@@ -1,0 +1,17 @@
+{
+	"luci-app-homestatus": {
+		"description": "Grant access to HomeLede overview extensions (disk capacity, app status)",
+		"read": {
+			"ubus": {
+				"luci.homestatus": [ "status", "services" ]
+			},
+			"uci": [ "homestatus" ]
+		},
+		"write": {
+			"ubus": {
+				"luci.homestatus": [ "restart_app", "set_config" ]
+			},
+			"uci": [ "homestatus" ]
+		}
+	}
+}

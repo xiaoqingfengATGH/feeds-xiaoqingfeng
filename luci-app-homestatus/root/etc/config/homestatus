@@ -6,8 +6,12 @@ config global 'global'
 	option crit '90'
 	# 「驾驶舱」页面区块开关。关掉后区块不再出现；show_apps 同时会跳过
 	# 后端探测（不再轮询被监视的服务），设置页里始终可见以便随时改回来。
+	# show_storage 只控制渲染：磁盘数据仍来自同一次 status() 调用，
+	# 且关掉后其空间告警也不再计入顶部状态摘要。
+	# 注意 warn/crit 是全局使用率阈值，磁盘与内存共用，不要绑到上面的开关。
 	option show_apps '1'
 	option show_wol '1'
+	option show_storage '1'
 
 # 磁盘监测默认只看真实存储：伪文件系统已在后端过滤（proc/sysfs/devpts/...）。
 # 根文件系统、overlay、各挂载点由 /proc/self/mountinfo + /sys/class/block 自动发现。

@@ -48,16 +48,17 @@ function now() {
 // corresponding block. They are read here rather than in the frontend alone so
 // every consumer (ngOverview and the stock status page) sees one source of
 // truth. Defaults are true: an absent config means "show everything".
+//
+// `show_apps` also gates the probe itself: with the card hidden nothing
+// consumes the results, and build_apps() spawns one process per monitored app.
 function read_config() {
-	const cfg = { enabled: true, warn: 80, crit: 90, show_apps: true, show_wol: true };
+	const cfg = { warn: 80, crit: 90, show_apps: true, show_wol: true };
 
 	try {
 		const ctx = cursor();
 		ctx.load(UCI_PKG);
 
 		ctx.foreach(UCI_PKG, 'global', (s) => {
-			if (s.enabled != null)
-				cfg.enabled = (s.enabled == '1' || s.enabled == 'true');
 			if (s.show_apps != null)
 				cfg.show_apps = (s.show_apps == '1' || s.show_apps == 'true');
 			if (s.show_wol != null)
@@ -798,6 +799,7 @@ function build_apps(cfg) {
 function status() {
 	let disks = [];
 	let apps = [];
+	const cfg = read_config();
 
 	try {
 		disks = build_disks();
@@ -806,18 +808,22 @@ function status() {
 		disks = [ { error: `${e}` } ];
 	}
 
-	try {
-		apps = build_apps(read_config());
-	}
-	catch (e) {
-		apps = [ { error: `${e}` } ];
+	// Nothing renders the app list while the card is switched off, and
+	// build_apps() costs one process spawn per monitored entry - skip it.
+	if (cfg.show_apps) {
+		try {
+			apps = build_apps(cfg);
+		}
+		catch (e) {
+			apps = [ { error: `${e}` } ];
+		}
 	}
 
 	return {
 		ts: now(),
 		backend: 'homestatus',
 		version: VERSION,
-		config: read_config(),
+		config: cfg,
 		disks: disks,
 		apps: apps
 	};

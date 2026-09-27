@@ -181,11 +181,6 @@ return view.extend({
 		s.anonymous = true;
 		s.addremove = false;
 
-		o = s.option(form.Flag, 'enabled', _('启用应用状态监视'),
-			_('关闭后，「关键应用状态」区块显示为已关闭，磁盘区块仍正常显示。'));
-		o.default = '1';
-		o.rmempty = false;
-
 		o = s.option(form.Value, 'warn', _('黄色告警门限'),
 			_('使用率超过此百分比时，进度条与百分比转为黄色。'));
 		o.datatype = 'range(1,100)';
@@ -199,11 +194,13 @@ return view.extend({
 		o.rmempty = false;
 
 		/* ------------------------------------------- 驾驶舱页面区块显隐 --- */
-		/* These only hide the block on the overview page. The settings
-		 * page always shows them so a hidden block can be brought back. */
+		/* These control the two optional blocks on the 驾驶舱 page. The
+		 * settings page always shows them so a hidden block can be
+		 * brought back. show_apps also gates the backend probe: with the
+		 * block hidden nothing polls the monitored services. */
 
 		o = s.option(form.Flag, 'show_apps', _('在驾驶舱显示「关键应用」'),
-			_('关闭后「驾驶舱」页面不再显示关键应用区块，监视配置本身保留。'));
+			_('关闭后「驾驶舱」页面不再显示关键应用区块，同时停止应用状态探测；监视配置本身保留。'));
 		o.default = '1';
 		o.rmempty = false;
 

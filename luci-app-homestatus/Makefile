@@ -14,10 +14,10 @@ PKG_LICENSE:=Apache-2.0
 PKG_MAINTAINER:=xiaoqingfeng <xiaoqingfengatgm@gmail.com>
 PKGARCH:=all
 
-LUCI_TITLE:=LuCI app for HomeLede overview extensions
-LUCI_DESCRIPTION:=Adds two configurable overview-page cards to HomeLede: disk capacity \
- (disk -> partition -> mount point tree) and key application status monitoring, with \
- per-app service restart.
+LUCI_TITLE:=LuCI app for HomeLede 驾驶舱 extensions
+LUCI_DESCRIPTION:=Backend and settings page for the HomeLede 驾驶舱 cards: disk capacity \
+ (disk -> partition -> mount point tree), key application status monitoring with per-app \
+ service restart, and network wake-on-LAN.
 LUCI_DEPENDS:=+rpcd-mod-ucode +ucode +ucode-mod-fs +ucode-mod-ubus
 
 define Package/$(PKG_NAME)/conffiles

@@ -3,17 +3,20 @@
 'require rpc';
 
 /*
- * Shared plumbing for the luci-app-homestatus overview blocks.
+ * Shared plumbing for the luci-app-homestatus pages.
  *
  * Note this returns a baseclass subclass, not a plain object: LuCI's module
  * loader rejects any factory whose result is not a Class instance
  * ("factory yields invalid constructor"), so a bare object literal would make
  * every dependent module fail to load.
  *
- * The overview page polls every include separately, so raw per-block calls to
- * luci.homestatus.status() would double the ubus traffic.  Both blocks go
- * through status() here, which memoises the reply for a short window: the two
- * blocks render within the same poll tick, so the second one hits the cache.
+ * History: this module was written for the two stock status-page include
+ * blocks, which each polled luci.homestatus.status() on their own tick -- hence
+ * the short-lived reply cache below, which let the second block reuse the first
+ * one's result. Those blocks were removed when the 驾驶舱 page took over their
+ * data in its own cards, so the settings page (the only remaining consumer,
+ * which needs nothing beyond services()) is now the sole user. The cache is kept
+ * because it is harmless and any future caller gets the same de-duplication.
  *
  * That cache lives in the *browser*, not in rpcd - a module-level cache inside
  * the rpcd plugin would survive across requests and freeze the first
@@ -46,8 +49,10 @@ var _at = 0;
 var WARN_COLOR = '#e0a800';
 var CRIT_COLOR = '#dc3545';
 
-/* Both overview blocks require this module, so loading the stylesheet here
- * guarantees it is present exactly once and before either block renders. */
+/* The stylesheet used to be loaded here on behalf of the two overview blocks.
+ * The settings page is the only consumer left, and it does not use the hs-*
+ * classes, so nothing loads it by default any more. Kept for the same reason as
+ * the cache above: cheap, and a future block gets styling for free. */
 if (typeof(document) != 'undefined' && document.querySelector('head') != null
     && document.querySelector('link[href*="homestatus.css"]') == null) {
 	document.querySelector('head').appendChild(E('link', {

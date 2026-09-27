@@ -5,7 +5,7 @@ config global 'global'
 	option enabled '1'
 	option warn '80'
 	option crit '90'
-	# 「概览」页面区块开关。关掉后区块不再出现（后端仍会返回数据，
+	# 「驾驶舱」页面区块开关。关掉后区块不再出现（后端仍会返回数据，
 	# 只是不再渲染），设置页里始终可见以便随时改回来。
 	option show_apps '1'
 	option show_wol '1'

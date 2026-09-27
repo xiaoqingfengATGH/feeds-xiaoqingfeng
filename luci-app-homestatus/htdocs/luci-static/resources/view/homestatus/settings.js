@@ -172,8 +172,8 @@ return view.extend({
 	render: function() {
 		var m, s, o;
 
-		m = new form.Map('homestatus', _('磁盘容量与应用监视'),
-			_('为「概览」页面增加磁盘容量、关键应用状态与网络唤醒三个区块。前两者是纯展示，只有「重启」按钮会执行写操作；唤醒会向目标主机发送魔术包。'));
+		m = new form.Map('homestatus', _('定制驾驶舱'),
+			_('为「驾驶舱」页面增加磁盘容量、关键应用状态与网络唤醒三个区块。前两者是纯展示，只有「重启」按钮会执行写操作；唤醒会向目标主机发送魔术包。'));
 
 		/* ------------------------------------------------------------ 磁盘 --- */
 
@@ -198,17 +198,17 @@ return view.extend({
 		o.default = '90';
 		o.rmempty = false;
 
-		/* ------------------------------------------- 概览页面区块显隐 --- */
+		/* ------------------------------------------- 驾驶舱页面区块显隐 --- */
 		/* These only hide the block on the overview page. The settings
 		 * page always shows them so a hidden block can be brought back. */
 
-		o = s.option(form.Flag, 'show_apps', _('在概览页显示「关键应用」'),
-			_('关闭后「概览」页面不再显示关键应用区块，监视配置本身保留。'));
+		o = s.option(form.Flag, 'show_apps', _('在驾驶舱显示「关键应用」'),
+			_('关闭后「驾驶舱」页面不再显示关键应用区块，监视配置本身保留。'));
 		o.default = '1';
 		o.rmempty = false;
 
-		o = s.option(form.Flag, 'show_wol', _('在概览页显示「网络唤醒」'),
-			_('关闭后「概览」页面不再显示网络唤醒区块，唤醒目标列表本身保留，仍可在「服务 → 网络唤醒」中管理。'));
+		o = s.option(form.Flag, 'show_wol', _('在驾驶舱显示「网络唤醒」'),
+			_('关闭后「驾驶舱」页面不再显示网络唤醒区块，唤醒目标列表本身保留，仍可在「服务 → 网络唤醒」中管理。'));
 		o.default = '1';
 		o.rmempty = false;
 
@@ -314,7 +314,7 @@ return view.extend({
 			_('配置可被远程唤醒的主机。与「服务 → 网络唤醒」是同一份配置，两边都可以编辑。'));
 
 		s = wolMap.section(form.GridSection, 'target', _('唤醒目标列表'),
-			_('名称与 MAC 为必填，MAC 支持冒号、连字符或纯十六进制写法。点击行内的「唤醒」直接发送魔术包；「概览」页面的唤醒卡片读取同一份配置。'));
+			_('名称与 MAC 为必填，MAC 支持冒号、连字符或纯十六进制写法。点击行内的「唤醒」直接发送魔术包；「驾驶舱」页面的唤醒卡片读取同一份配置。'));
 		s.anonymous = true;
 		s.addremove = true;
 		s.sortable = true;

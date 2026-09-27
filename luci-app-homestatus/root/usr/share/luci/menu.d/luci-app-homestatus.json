@@ -1,7 +1,7 @@
 {
-	"admin/status/homestatus": {
-		"title": "磁盘与应用监视",
-		"order": 8,
+	"admin/system/homestatus": {
+		"title": "定制驾驶舱",
+		"order": 25,
 		"action": {
 			"type": "view",
 			"path": "homestatus/settings"

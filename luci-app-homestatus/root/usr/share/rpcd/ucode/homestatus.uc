@@ -18,6 +18,9 @@
 //   services()           -> installed service candidates
 //   set_config(payload)  -> persist monitor config
 //   restart_app({id})    -> restart one monitored service
+//   wol_targets()        -> wake-on-LAN targets + neighbour-table presence
+//   wake({id|mac})       -> send one magic packet via etherwake
+//   set_wol_targets(p)   -> replace the target list (stored in /etc/config/luci-wol)
 
 'use strict';
 
@@ -41,8 +44,12 @@ function now() {
 }
 
 // ------------------------------------------------------------------ config ----
+// `show_apps` / `show_wol` control whether the overview page renders the
+// corresponding block. They are read here rather than in the frontend alone so
+// every consumer (ngOverview and the stock status page) sees one source of
+// truth. Defaults are true: an absent config means "show everything".
 function read_config() {
-	const cfg = { enabled: true, warn: 80, crit: 90 };
+	const cfg = { enabled: true, warn: 80, crit: 90, show_apps: true, show_wol: true };
 
 	try {
 		const ctx = cursor();
@@ -51,6 +58,10 @@ function read_config() {
 		ctx.foreach(UCI_PKG, 'global', (s) => {
 			if (s.enabled != null)
 				cfg.enabled = (s.enabled == '1' || s.enabled == 'true');
+			if (s.show_apps != null)
+				cfg.show_apps = (s.show_apps == '1' || s.show_apps == 'true');
+			if (s.show_wol != null)
+				cfg.show_wol = (s.show_wol == '1' || s.show_wol == 'true');
 			if (s.warn != null && !isnan(int(s.warn)))
 				cfg.warn = int(s.warn);
 			if (s.crit != null && !isnan(int(s.crit)))
@@ -890,6 +901,386 @@ function services() {
 	return out;
 }
 
+// -------------------------------------------------------------------- wol -----
+// Wake-on-LAN targets.
+//
+// Storage: the targets live in the stock `luci-wol` UCI package as `wol`
+// sections (/etc/config/luci-wol), i.e. the same data the official
+// luci-app-wol page edits. One source of truth: a target added on the overview
+// shows up under Services -> Wake on LAN and vice versa.
+//
+// Execution: while luci-app-wol ships a `luci.wol.exec` ubus method, this
+// plugin MUST NOT call it - like `rc list`, calling another ubus object from
+// inside rpcd deadlocks until the 30s timeout (see restart_service above).
+// /usr/bin/etherwake is invoked directly through popen instead.
+//
+// The binary is fixed to etherwake on purpose: luci.wol's own whitelist only
+// accepts etherwake and wakeonlan, and this build ships etherwake only
+// (CONFIG_PACKAGE_wakeonlan is off - it is a perl script pulling in perl).
+// etherwake additionally supports -i/-b, which wakeonlan does not.
+const WOL_PKG = 'luci-wol';
+const ETHERWAKE = '/usr/bin/etherwake';
+const ARP_FILE = '/proc/net/arp';
+
+// MAC as printed by `ip link` / uci: six hex octets, any case.
+const MAC_RE = /^[0-9a-fA-F]{2}(:[0-9a-fA-F]{2}){5}$/;
+
+// Interface names are kernel-validated; this is a shell-safety whitelist
+// because the value reaches a popen command line.
+const IFACE_RE = /^[A-Za-z0-9][A-Za-z0-9_.:-]{0,14}$/;
+
+function norm_mac(mac) {
+	if (mac == null)
+		return null;
+
+	/* Accept the separators people actually paste: `:` (unix/ip link),
+	 * `-` (Windows ipconfig / Get-NetAdapter) and `.` (Cisco). Normalise to
+	 * lower-case colon form, which is what etherwake and uci expect. */
+	const s = lc(trim(`${mac}`));
+
+	if (!match(s, /^[0-9a-f]{2}([-:.]?[0-9a-f]{2}){5}$/))
+		return null;
+
+	const bare = replace(replace(s, /[-:.]/g, ''), /^/, '');
+
+	if (length(bare) != 12)
+		return null;
+
+	const out = [];
+
+	for (let i = 0; i < 12; i += 2)
+		push(out, substr(bare, i, 2));
+
+	return join(':', out);
+}
+
+// /proc/net/arp: <ip> <hwtype> <flags> <mac> <mask> <device>
+// flags are bit 0x2 = ATF_COM (entry complete). Incomplete/stale probes are
+// listed with an all-zero MAC, which must not count as "present".
+function read_arp() {
+	const out = {};
+
+	let txt = null;
+
+	try {
+		txt = readfile(ARP_FILE);
+	}
+	catch (e) {
+		return out;
+	}
+
+	if (txt == null)
+		return out;
+
+	for (let line in split(trim(`${txt}`), '\n')) {
+		const f = split(trim(line), /[ \t]+/);
+
+		if (length(f) < 6)
+			continue;
+
+		const mac = norm_mac(f[3]);
+
+		if (mac == null || mac == '00:00:00:00:00:00')
+			continue;
+
+		// Several IPs may map to one MAC (multi-homed host) - keep the first.
+		if (out[mac] == null)
+			out[mac] = { ip: f[0], device: f[5], flags: f[2] };
+	}
+
+	return out;
+}
+
+// Read errors are surfaced rather than swallowed - a silent empty list is
+// indistinguishable from "no targets configured" in the UI.
+let WOL_CFG_ERR = null;
+
+function wol_targets_cfg() {
+	const list = [];
+
+	WOL_CFG_ERR = null;
+
+	try {
+		const c = cursor();
+		c.load(WOL_PKG);
+
+		/* The stock luci-app-wol page stores each target as `config target`,
+		 * while an older local draft of this app used `config wol`. Read
+		 * both so existing configs keep working and the official page stays
+		 * interoperable; writes always go out as `target`. */
+		for (let stype in [ 'target', 'wol' ]) {
+			c.foreach(WOL_PKG, stype, (s) => {
+				if (s.name == null && s.mac == null)
+					return;
+
+				const mac = norm_mac(s.mac);
+
+				/* ucode arrays have no methods - push(a, v) is the global form */
+				push(list, {
+					id: s['.name'],
+					name: s.name ?? mac ?? s['.name'],
+					mac: mac,
+					/* an unparseable mac is surfaced, not silently dropped -
+					 * it is the one thing that makes waking fail */
+					invalid_mac: mac == null ? (s.mac ?? null) : null,
+					iface: s.iface ?? null,
+					broadcast: s.broadcast == '1',
+					password: s.password ?? null
+				});
+			});
+		}
+	}
+	catch (e) {
+		WOL_CFG_ERR = `${e}`;
+	}
+
+	return list;
+}
+
+function build_wol_targets() {
+	const arp = read_arp();
+	const list = wol_targets_cfg();
+	const out = [];
+
+	for (let t in list) {
+		const seen = t.mac != null ? arp[t.mac] : null;
+
+		push(out, {
+			id: t.id,
+			name: t.name,
+			mac: t.mac,
+			invalid_mac: t.invalid_mac,
+			iface: t.iface,
+			broadcast: t.broadcast,
+			/* present in the neighbour table == the NIC is reachable, so a
+			 * magic packet can actually land */
+			online: t.mac != null && seen != null,
+			ip: seen?.ip ?? null,
+			via: seen?.device ?? null
+		});
+	}
+
+	return out;
+}
+
+// Pick the interface to inject the magic packet on.
+//
+// Order: explicit per-target override -> the device the target was last seen
+// on -> br-lan -> lan -> first non-loopback device in /proc/net/dev.
+function pick_iface(target, ctx) {
+	if (target?.iface != null && match(target.iface, IFACE_RE))
+		return target.iface;
+
+	if (target?.via != null && match(target.via, IFACE_RE))
+		return target.via;
+
+	const cand = [ 'br-lan', 'lan' ];
+
+	for (let c in cand)
+		if (ctx?.devs?.[c] === true)
+			return c;
+
+	return ctx?.firstDev ?? null;
+}
+
+function iface_present() {
+	const out = { devs: {}, firstDev: null };
+
+	let txt = null;
+
+	try {
+		txt = readfile('/proc/net/dev');
+	}
+	catch (e) {
+		return out;
+	}
+
+	if (txt == null)
+		return out;
+
+	for (let line in split(`${txt}`, '\n')) {
+		const m = match(line, /^\s*([^\s:]+):/);
+
+		if (m == null)
+			continue;
+
+		const dev = m[1];
+
+		if (dev == 'lo')
+			continue;
+
+		/* sit0/gre0/... sit at the tail; only real elements are useful as a
+		 * fallback, so anything with a non-ethernet prefix is skipped */
+		if (match(dev, /^(sit|gre|gretap|erspan|dummy|tun|tap)/))
+			continue;
+
+		out.devs[dev] = true;
+
+		if (out.firstDev == null)
+			out.firstDev = dev;
+	}
+
+	return out;
+}
+
+function wake_target(payload) {
+	const id = payload?.id ?? null;
+	const macIn = payload?.mac ?? null;
+
+	let target = null;
+
+	if (id != null) {
+		for (let t in build_wol_targets())
+			if (t.id == id) {
+				target = t;
+				break;
+			}
+
+		if (target == null)
+			return { ok: false, error: 'not-found', message: `${id} 不在唤醒列表中` };
+	}
+	else if (norm_mac(macIn) != null) {
+		target = { name: macIn, mac: norm_mac(macIn) };
+	}
+	else {
+		return { ok: false, error: 'no-target' };
+	}
+
+	if (target.mac == null)
+		return { ok: false, error: 'bad-mac', message: `MAC 地址无效：${target.invalid_mac ?? ''}` };
+
+	if (access(ETHERWAKE, 'x') !== true)
+		return { ok: false, error: 'no-etherwake', message: `${ETHERWAKE} 不存在` };
+
+	const iface = pick_iface(target, iface_present());
+
+	/* etherwake is a broadcast tool: without -i it picks the interface itself
+	 * and on a multi-nic x86 box it can pick the WAN side. Always state it. */
+	const args = [];
+
+	if (iface != null)
+		push(args, '-i', iface);
+
+	if (target.broadcast === true)
+		push(args, '-b');
+
+	/* etherwake wants the colon form here: `-p 00:22:44:66:88:aa` is
+	 * accepted and logged ("The Magic packet password is ..."), while a
+	 * bare hex string is rejected with "Unable to read the Wake-On-LAN
+	 * password". Pass it through unchanged after whitelisting, because the
+	 * value reaches the shell. */
+	if (target.password != null && match(`${target.password}`, /^[0-9a-fA-F:]{6,23}$/))
+		push(args, '-p', lc(`${target.password}`));
+
+	push(args, target.mac);
+
+	let out = '';
+	let rc = null;
+
+	try {
+		/* iface passed the IFACE_RE whitelist and the mac the MAC_RE one, so
+		 * no unvalidated string reaches the shell */
+		const fd = popen(`${ETHERWAKE} ${join(' ', args)} 2>&1`);
+		out = trim(fd.read('all') ?? '');
+		rc = fd.close();
+	}
+	catch (e) {
+		return { ok: false, error: 'exec-failed', message: `${e}` };
+	}
+
+	if (rc != 0)
+		return { ok: false, error: 'exit-code', code: rc, message: out || `etherwake 返回 ${rc}` };
+
+	return { ok: true, id: target.id ?? null, name: target.name, mac: target.mac, iface: iface, output: out };
+}
+
+// Replace the whole target list (so removals take effect), mirroring the way
+// set_config handles the app list.
+function set_wol_targets(payload) {
+	const listIn = payload?.targets ?? null;
+
+	if (listIn == null || type(listIn) != 'array')
+		return { ok: false, error: 'no-targets' };
+
+	const clean = [];
+	const rejected = [];
+
+	for (let t in listIn) {
+		if (t == null)
+			continue;
+
+		const mac = norm_mac(t.mac);
+		const name = trim(`${t.name ?? ''}`);
+
+		/* Report what was dropped instead of silently discarding it - the UI
+		 * echoes this back so a typo'd MAC never vanishes without a reason. */
+		if (mac == null) {
+			push(rejected, { name: name, mac: `${t.mac ?? ''}`, reason: 'bad-mac' });
+			continue;
+		}
+
+		if (name == '') {
+			push(rejected, { name: '', mac: mac, reason: 'no-name' });
+			continue;
+		}
+
+		push(clean, {
+			name: name,
+			mac: mac,
+			iface: t.iface ?? null,
+			broadcast: t.broadcast === true,
+			password: t.password ?? null
+		});
+	}
+
+	try {
+		const c = cursor();
+		c.load(WOL_PKG);
+
+		c.foreach(WOL_PKG, 'target', (s) => {
+			/* never touch the stock `defaults` section - it holds the
+			 * executable preference the official page writes */
+			if (s['.name'] != 'defaults')
+				c.delete(WOL_PKG, s['.name']);
+		});
+
+		c.foreach(WOL_PKG, 'wol', (s) => {
+			/* migrate any section written by an earlier revision of this
+			 * app to the stock `target` type */
+			if (s['.name'] != 'defaults')
+				c.delete(WOL_PKG, s['.name']);
+		});
+
+		for (let t in clean) {
+			/* `target` is what the stock luci-app-wol page reads, so keep
+			 * both pages looking at the same sections */
+			const sec = c.add(WOL_PKG, 'target');
+
+			c.set(WOL_PKG, sec, 'name', t.name);
+			/* store lower-case, like the official luci-app-wol page does */
+			c.set(WOL_PKG, sec, 'mac', t.mac);
+
+			if (t.iface != null && match(t.iface, IFACE_RE))
+				c.set(WOL_PKG, sec, 'iface', t.iface);
+
+			if (t.broadcast)
+				c.set(WOL_PKG, sec, 'broadcast', '1');
+
+			/* SecureOn password: colon form, which is what etherwake
+			 * accepts. Whitelisted because it reaches the shell. */
+			if (t.password != null && match(`${t.password}`, /^[0-9a-fA-F:]{6,23}$/))
+				c.set(WOL_PKG, sec, 'password', lc(`${t.password}`));
+		}
+
+		c.commit(WOL_PKG);
+	}
+	catch (e) {
+		return { ok: false, error: `${e}` };
+	}
+
+	return { ok: true, targets: build_wol_targets(), rejected: rejected };
+}
+
 // ------------------------------------------------------------------ methods ---
 // NOTE: rpcd's ucode loader rejects the whole plugin if a method is added to
 // this object *after* its literal is defined (e.g. `methods.foo = fn;` on a
@@ -1038,6 +1429,67 @@ const methods = {
 			const rv = restart_service(name);
 			rv.id = id;
 			return rv;
+		}
+	},
+
+	// Wake-on-LAN targets, merged with neighbour-table presence.
+	// Read-only; sleep/wake state comes from /proc/net/arp, not from a ping, so
+	// this stays cheap enough for the overview poll.
+	wol_targets: {
+		call: function() {
+			try {
+				const targets = build_wol_targets();
+
+				return {
+					ok: true,
+					targets: targets,
+					etherwake: access(ETHERWAKE, 'x') === true,
+					/* read_error is null on success; when set, `targets` is
+					 * empty because the config could not be read, NOT because
+					 * none are configured - the UI must say so. */
+					read_error: WOL_CFG_ERR
+				};
+			}
+			catch (e) {
+				return { ok: false, error: `${e}` };
+			}
+		}
+	},
+
+	// Send one magic packet. Accepts { id } for a configured target or { mac }
+	// for an ad-hoc wake.
+	wake: {
+		args: { payload: {} },
+		call: function(req) {
+			const p = req?.args?.payload ?? null;
+
+			if (p == null)
+				return { ok: false, error: 'no-payload' };
+
+			try {
+				return wake_target(p);
+			}
+			catch (e) {
+				return { ok: false, error: `${e}` };
+			}
+		}
+	},
+
+	// Replace the whole target list: { targets: [ { name, mac, iface?, broadcast? } ] }
+	set_wol_targets: {
+		args: { payload: {} },
+		call: function(req) {
+			const p = req?.args?.payload ?? null;
+
+			if (p == null)
+				return { ok: false, error: 'no-payload' };
+
+			try {
+				return set_wol_targets(p);
+			}
+			catch (e) {
+				return { ok: false, error: `${e}` };
+			}
 		}
 	}
 };

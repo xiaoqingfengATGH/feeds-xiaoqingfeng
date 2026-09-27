@@ -1,17 +1,17 @@
 {
 	"luci-app-homestatus": {
-		"description": "Grant access to HomeLede overview extensions (disk capacity, app status)",
+		"description": "Grant access to HomeLede overview extensions (disk capacity, app status, wake-on-LAN)",
 		"read": {
 			"ubus": {
-				"luci.homestatus": [ "status", "services" ]
+				"luci.homestatus": [ "status", "services", "wol_targets" ]
 			},
-			"uci": [ "homestatus" ]
+			"uci": [ "homestatus", "luci-wol" ]
 		},
 		"write": {
 			"ubus": {
-				"luci.homestatus": [ "restart_app", "set_config" ]
+				"luci.homestatus": [ "restart_app", "set_config", "wake", "set_wol_targets" ]
 			},
-			"uci": [ "homestatus" ]
+			"uci": [ "homestatus", "luci-wol" ]
 		}
 	}
 }

@@ -105,6 +105,15 @@ return baseclass.extend({
 		if (cfg.enabled === false)
 			return E('div', { 'class': 'hs-empty hs-muted' }, [ _('监视功能已关闭') ]);
 
+		/* Hidden on the overview page by the user's display toggle. The
+		 * ngOverview theme renders its own 关键应用 card and already
+		 * leaves this section out; returning an empty node keeps the
+		 * stock status page consistent with it. The marker class lets
+		 * the theme drop the whole wrapper (heading included) from its
+		 * classic-view drawer instead of leaving an empty card. */
+		if (cfg.show_apps === false)
+			return E('div', { 'class': 'hs-block-off' });
+
 		var apps = data.apps || [];
 		var rows = [];
 

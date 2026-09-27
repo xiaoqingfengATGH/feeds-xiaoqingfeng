@@ -173,7 +173,7 @@ return view.extend({
 		var m, s, o;
 
 		m = new form.Map('homestatus', _('定制驾驶舱'),
-			_('定制驾驶舱上显示的项目，包含：关键应用状态、网络唤醒和磁盘容量三个区域'));
+			_('定制驾驶舱上显示的项目，包含：关键应用状态、网络唤醒和存储三个区域'));
 
 		/* ------------------------------------------------------------ 磁盘 --- */
 
@@ -181,20 +181,20 @@ return view.extend({
 		s.anonymous = true;
 		s.addremove = false;
 
-		o = s.option(form.Value, 'warn', _('黄色告警门限'),
-			_('使用率超过此百分比时，进度条与百分比转为黄色。'));
+		o = s.option(form.Value, 'warn', _('使用率黄色告警门限'),
+			_('使用率超过此百分比时转为黄色。同时作用于磁盘容量与内存两项。'));
 		o.datatype = 'range(1,100)';
 		o.default = '80';
 		o.rmempty = false;
 
-		o = s.option(form.Value, 'crit', _('红色危险门限'),
-			_('使用率超过此百分比时转为红色。应大于黄色门限。只读固件镜像不参与染色。'));
+		o = s.option(form.Value, 'crit', _('使用率红色危险门限'),
+			_('使用率超过此百分比时转为红色。应大于黄色门限。同时作用于磁盘容量与内存两项；只读固件镜像不参与染色。'));
 		o.datatype = 'range(1,100)';
 		o.default = '90';
 		o.rmempty = false;
 
 		/* ------------------------------------------- 驾驶舱页面区块显隐 --- */
-		/* These control the two optional blocks on the 驾驶舱 page. The
+		/* These control the optional blocks on the 驾驶舱 page. The
 		 * settings page always shows them so a hidden block can be
 		 * brought back. show_apps also gates the backend probe: with the
 		 * block hidden nothing polls the monitored services. */
@@ -206,6 +206,11 @@ return view.extend({
 
 		o = s.option(form.Flag, 'show_wol', _('在驾驶舱显示「网络唤醒」'),
 			_('关闭后「驾驶舱」页面不再显示网络唤醒区块，唤醒目标列表本身保留，仍可在「服务 → 网络唤醒」中管理。'));
+		o.default = '1';
+		o.rmempty = false;
+
+		o = s.option(form.Flag, 'show_storage', _('在驾驶舱显示「存储」'),
+			_('关闭后「驾驶舱」页面不再显示存储区块，其空间告警也不再计入顶部状态摘要；磁盘数据本身不受影响。'));
 		o.default = '1';
 		o.rmempty = false;
 

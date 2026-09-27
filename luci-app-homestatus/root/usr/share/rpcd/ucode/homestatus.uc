@@ -44,15 +44,18 @@ function now() {
 }
 
 // ------------------------------------------------------------------ config ----
-// `show_apps` / `show_wol` control whether the overview page renders the
-// corresponding block. They are read here rather than in the frontend alone so
-// every consumer (ngOverview and the stock status page) sees one source of
-// truth. Defaults are true: an absent config means "show everything".
+// `show_apps` / `show_wol` / `show_storage` control whether the overview page
+// renders the corresponding block. They are read here rather than in the
+// frontend alone so every consumer (ngOverview and the stock status page) sees
+// one source of truth. Defaults are true: an absent config means "show
+// everything".
 //
 // `show_apps` also gates the probe itself: with the card hidden nothing
 // consumes the results, and build_apps() spawns one process per monitored app.
+// `show_storage` only gates rendering - the disk data comes from the same
+// status() call either way.
 function read_config() {
-	const cfg = { warn: 80, crit: 90, show_apps: true, show_wol: true };
+	const cfg = { warn: 80, crit: 90, show_apps: true, show_wol: true, show_storage: true };
 
 	try {
 		const ctx = cursor();
@@ -63,6 +66,8 @@ function read_config() {
 				cfg.show_apps = (s.show_apps == '1' || s.show_apps == 'true');
 			if (s.show_wol != null)
 				cfg.show_wol = (s.show_wol == '1' || s.show_wol == 'true');
+			if (s.show_storage != null)
+				cfg.show_storage = (s.show_storage == '1' || s.show_storage == 'true');
 			if (s.warn != null && !isnan(int(s.warn)))
 				cfg.warn = int(s.warn);
 			if (s.crit != null && !isnan(int(s.crit)))

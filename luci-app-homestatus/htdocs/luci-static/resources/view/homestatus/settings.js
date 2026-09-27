@@ -376,14 +376,17 @@ return view.extend({
 			return btns;
 		}, this);
 
+		/* The service importer feeds the 关键应用状态监视 table - it writes
+		 * `homestatus` app sections and refreshes map `m`. It therefore
+		 * belongs directly under that section, not after the WOL table:
+		 * m renders 显示与监测 + 关键应用状态监视, so appending this block
+		 * before wolNode lands it in the right place. */
 		return Promise.resolve(m.render()).then(function(node) {
 			return wolMap.render().then(function(wolNode) {
-				node.appendChild(wolNode);
-
 				node.appendChild(E('div', { 'class': 'cbi-section' }, [
 					E('h3', {}, [ _('从已安装服务添加') ]),
 					E('div', { 'class': 'cbi-section-descr' }, [
-						_('列出所有带 init 脚本的服务，勾选即可加入上面的监视列表。')
+						_('列出所有带 init 脚本的服务，勾选后加入上方的「关键应用状态监视」列表。')
 					]),
 					E('div', { 'style': 'margin-top:.5rem' }, [
 						E('button', {
@@ -394,6 +397,8 @@ return view.extend({
 						}, [ _('选择服务…') ])
 					])
 				]));
+
+				node.appendChild(wolNode);
 
 				return node;
 			});

@@ -2,7 +2,7 @@ local m, s, o
 local sys = require "luci.sys"
 
 mp = Map("homeredirect", translate("Home Redirect - Port forwarding utility"))
-mp.description = translate("HomeRedirect is a customized port forwarding utility for HomeLede. It supports TCP / UDP protocol, IPv4 and IPv6, cross-family v6-to-v4 forwarding, dynamic domain destinations and optional TLS listeners.")
+mp.description = translate("Port forwarding based on socat: cross-family v6-to-v4 forwarding, dynamic domain targets and optional TLS listeners.")
 mp:section(SimpleSection).template  = "homeredirect/index"
 
 s = mp:section(TypedSection, "global")
@@ -13,7 +13,7 @@ enabled.default = 0
 enabled.rmempty = false
 
 cert = s:option(Value, "cert", translate("TLS certificate"),
-	translate("PEM certificate for TLS listeners (e.g. /etc/acme/your.domain/fullchain.cer). Leave empty when no TLS rule is used."))
+	translate("PEM certificate path, e.g. /etc/acme/your.domain/fullchain.cer"))
 cert.optional = true
 cert.rmempty = true
 
@@ -27,6 +27,7 @@ s.addremove = true
 s.anonymous = true
 s.template = "cbi/tblsection"
 s.sortable = true
+s.description = translate("Typical scenarios: 1) CGNAT, only public IPv6 - forward a public v6 port to an internal IPv4 service (cross-family). 2) Moving target - use a domain name as destination, re-resolved on every connection. 3) TLS frontend - terminate TLS on the router, backend stays plain.")
 
 enabled = s:option(Flag, "enabled", translate("Enabled"))
 enabled.rmempty = false
@@ -35,8 +36,7 @@ name = s:option(Value, "name", translate("Name"))
 name.optional = false
 name.rmempty = false
 
-proto = s:option(ListValue, "proto", translate("Transport Protocol"),
-	translate("Cross-family modes (TCP/IPv6 to IPv4) work under CGNAT where the router only has a public IPv6 address. The destination side always accepts IPv4, IPv6 and domain names."))
+proto = s:option(ListValue, "proto", translate("Transport Protocol"))
 proto.default = "tcp6"
 proto:value("tcp4", "TCP/IPv4")
 proto:value("udp4", "UDP/IPv4")
@@ -50,8 +50,7 @@ src_dport.datatype = "port"
 src_dport.optional = false
 src_dport.rmempty = false
 
-dest_ip = s:option(Value, "dest_ip", translate("Destination Address"),
-	translate("IPv4 / IPv6 address or domain name. Domain names are re-resolved on every connection, so a changing target address keeps working."))
+dest_ip = s:option(Value, "dest_ip", translate("Destination Address"))
 dest_ip.optional = false
 dest_ip.rmempty = false
 
@@ -60,8 +59,7 @@ dest_port.datatype = "port"
 dest_port.optional = false
 dest_port.rmempty = false
 
-ipv6only = s:option(Flag, "ipv6only", translate("IPv6 only"),
-	translate("Refuse IPv4-mapped connections on IPv6 listeners (default on). Turn off to accept both families on one socket."))
+ipv6only = s:option(Flag, "ipv6only", translate("IPv6 only"))
 ipv6only.default = ipv6only.enabled
 ipv6only.rmempty = false
 

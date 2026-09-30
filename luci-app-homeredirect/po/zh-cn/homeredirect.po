@@ -42,3 +42,42 @@ msgstr "未运行"
 
 msgid "Running"
 msgstr "运行中"
+
+msgid "HomeRedirect is a customized port forwarding utility for HomeLede. It supports TCP / UDP protocol, IPv4 and IPv6, cross-family v6-to-v4 forwarding, dynamic domain destinations and optional TLS listeners."
+msgstr "HomeRedirect是一款为HomeLede定制的端口转发工具。支持TCP/UDP、IPv4/IPv6，以及CGNAT场景下公网IPv6到IPv4内网服务的跨族转发；目标地址支持域名（每次连接重新解析），监听端可选TLS。"
+
+msgid "Cross-family modes (TCP/IPv6 to IPv4) work under CGNAT where the router only has a public IPv6 address. The destination side always accepts IPv4, IPv6 and domain names."
+msgstr "跨族模式（TCP/IPv6 转发至 IPv4）适用于路由器只有公网IPv6的CGNAT环境。目标端始终支持IPv4、IPv6与域名。"
+
+msgid "IPv4 / IPv6 address or domain name. Domain names are re-resolved on every connection, so a changing target address keeps working."
+msgstr "IPv4/IPv6地址或域名。域名在每次新连接时重新解析，目标地址变化也能持续工作。"
+
+msgid "TLS certificate"
+msgstr "TLS证书"
+
+msgid "PEM certificate for TLS listeners (e.g. /etc/acme/your.domain/fullchain.cer). Leave empty when no TLS rule is used."
+msgstr "TLS监听的PEM证书（如 /etc/acme/你的域名/fullchain.cer）。不使用TLS规则时留空。"
+
+msgid "TLS private key"
+msgstr "TLS私钥"
+
+msgid "PEM private key matching the certificate above."
+msgstr "与上述证书配对的PEM私钥。"
+
+msgid "IPv6 only"
+msgstr "仅IPv6"
+
+msgid "Refuse IPv4-mapped connections on IPv6 listeners (default on). Turn off to accept both families on one socket."
+msgstr "IPv6监听默认拒绝IPv4映射连接（默认开启）。关闭后同一监听端口可同时接受两个协议族。"
+
+msgid "TCP/IPv6"
+msgstr "TCP/IPv6"
+
+msgid "UDP/IPv6"
+msgstr "UDP/IPv6"
+
+msgid "TLS/IPv4"
+msgstr "TLS/IPv4"
+
+msgid "TLS/IPv6"
+msgstr "TLS/IPv6"

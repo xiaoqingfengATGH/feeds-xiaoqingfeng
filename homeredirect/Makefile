@@ -6,9 +6,9 @@
 include $(TOPDIR)/rules.mk
 
 PKG_NAME:=HomeRedirect
-PKG_VERSION:=1.4
+PKG_VERSION:=2.0
 PKG_RELEASE:=1
-PKG_DATE:=20210226
+PKG_DATE:=20260930
 
 PKG_MAINTAINER:=xiaoqingfeng <xiaoqingfengatgm@gmail.com>
 PKG_LICENSE:=GPL-3.0-or-later
@@ -20,7 +20,7 @@ define Package/$(PKG_NAME)
   SECTION:=net
   CATEGORY:=Network
   TITLE:=Port forwarding utility for HomeLede.
-  DEPENDS:=+bash +coreutils-nohup +socat
+  DEPENDS:=+socat
   PKGARCH:=all
   URL:=https://github.com/xiaoqingfengATGH/feeds-xiaoqingfeng
 endef

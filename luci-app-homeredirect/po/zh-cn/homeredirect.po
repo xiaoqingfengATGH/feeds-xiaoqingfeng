@@ -4,8 +4,8 @@ msgstr "端口转发"
 msgid "Home Redirect - Port forwarding utility"
 msgstr "Home Redirect 端口转发"
 
-msgid "Port forwarding based on socat: cross-family v6-to-v4 forwarding, dynamic domain targets and optional TLS listeners."
-msgstr "基于 socat 的端口转发：支持跨族 v6→v4 转发、域名动态目标与可选 TLS 监听。"
+msgid "HomeLede port forwarding application - fills the gaps left by firewall port forwarding, mainly used for cross-family forwarding under CGNAT."
+msgstr "Homelede的端口转发应用，用于填补系统防火墙端口转发缺口，主要应用于CGNAT环境下跨协议栈转发。"
 
 msgid "Typical scenarios: 1) CGNAT, only public IPv6 - forward a public v6 port to an internal IPv4 service (cross-family). 2) Moving target - use a domain name as destination, re-resolved on every connection. 3) TLS frontend - terminate TLS on the router, backend stays plain."
 msgstr "典型场景：① CGNAT 仅有公网 IPv6——将公网 v6 端口转发至内网 IPv4 服务（跨族）；② 目标地址不固定——目标填域名，每次连接重新解析；③ TLS 前置——路由器终结 TLS，后端保持明文。"

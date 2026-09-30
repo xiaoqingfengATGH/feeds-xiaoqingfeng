@@ -2,7 +2,7 @@ local m, s, o
 local sys = require "luci.sys"
 
 mp = Map("homeredirect", translate("Home Redirect - Port forwarding utility"))
-mp.description = translate("Port forwarding based on socat: cross-family v6-to-v4 forwarding, dynamic domain targets and optional TLS listeners.")
+mp.description = translate("HomeLede port forwarding application - fills the gaps left by firewall port forwarding, mainly used for cross-family forwarding under CGNAT.")
 mp:section(SimpleSection).template  = "homeredirect/index"
 
 s = mp:section(TypedSection, "global")

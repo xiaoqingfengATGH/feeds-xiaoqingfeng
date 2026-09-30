@@ -1,5 +1,6 @@
 local m, s, o
 local sys = require "luci.sys"
+local fs = require "nixio.fs"
 
 mp = Map("homeredirect", translate("Home Redirect - Port forwarding utility"))
 mp.description = translate("HomeLede port forwarding application - fills the gaps left by firewall port forwarding, mainly used for cross-family forwarding under CGNAT.")
@@ -12,15 +13,57 @@ enabled = s:option(Flag, "enabled", translate("Master switch"))
 enabled.default = 0
 enabled.rmempty = false
 
+-- TLS certificate pair: configure both or neither; files must exist
 cert = s:option(Value, "cert", translate("TLS certificate"),
-	translate("PEM certificate path, e.g. /etc/acme/your.domain/fullchain.cer"))
+	translate("Required by TLS rules. PEM certificate path, e.g. /etc/acme/your.domain/fullchain.cer. Configure together with the private key."))
 cert.optional = true
 cert.rmempty = true
 
 key = s:option(Value, "key", translate("TLS private key"),
-	translate("PEM private key matching the certificate above."))
+	translate("PEM private key path matching the certificate above, e.g. /etc/acme/your.domain/your.domain.key. With a combined cert+key file, set both fields to the same path."))
 key.optional = true
 key.rmempty = true
+
+cert.validate = function(self, value, section)
+	if value and #value > 0 then
+		local kv = key:cfgvalue(section)
+		if not kv or #kv == 0 then
+			return nil, translate("Private key is missing - certificate and key must be configured as a pair")
+		end
+		if not fs.access(value) then
+			return nil, translate("Certificate file not found")
+		end
+	end
+	return value
+end
+
+key.validate = function(self, value, section)
+	if value and #value > 0 then
+		local cv = cert:cfgvalue(section)
+		if not cv or #cv == 0 then
+			return nil, translate("Certificate is missing - certificate and key must be configured as a pair")
+		end
+		if not fs.access(value) then
+			return nil, translate("Key file not found")
+		end
+	end
+	return value
+end
+
+o = s:option(DummyValue, "_tls_status", translate("TLS status"))
+o.rawhtml = true
+o.cfgvalue = function(self, section)
+	local c = cert:cfgvalue(section)
+	local k = key:cfgvalue(section)
+	if c and #c > 0 and k and #k > 0 then
+		if fs.access(c) and fs.access(k) then
+			return '<font color="green"><b>' .. translate("Ready") .. '</b></font>'
+		else
+			return '<font color="red"><b>' .. translate("File missing") .. '</b></font>'
+		end
+	end
+	return '<font color="gray">' .. translate("Not configured") .. '</font>'
+end
 
 s = mp:section(TypedSection, "redirect", translate("Redirect Configuration"))
 s.addremove = true

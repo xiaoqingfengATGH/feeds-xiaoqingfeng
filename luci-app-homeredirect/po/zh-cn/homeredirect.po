@@ -52,6 +52,36 @@ msgstr "PEM 证书路径，如 /etc/acme/你的域名/fullchain.cer"
 msgid "TLS private key"
 msgstr "TLS私钥"
 
+msgid "Required by TLS rules. PEM certificate path, e.g. /etc/acme/your.domain/fullchain.cer. Configure together with the private key."
+msgstr "TLS 规则必填。PEM 证书路径，如 /etc/acme/你的域名/fullchain.cer。须与私钥同时配置。"
+
+msgid "PEM private key path matching the certificate above, e.g. /etc/acme/your.domain/your.domain.key. With a combined cert+key file, set both fields to the same path."
+msgstr "与上方证书配对的 PEM 私钥路径，如 /etc/acme/你的域名/你的域名.key。若为证书私钥合一文件，两栏填同一路径即可。"
+
+msgid "TLS status"
+msgstr "TLS 状态"
+
+msgid "Private key is missing - certificate and key must be configured as a pair"
+msgstr "缺少私钥——证书与私钥必须成对配置"
+
+msgid "Certificate is missing - certificate and key must be configured as a pair"
+msgstr "缺少证书——证书与私钥必须成对配置"
+
+msgid "Certificate file not found"
+msgstr "证书文件不存在"
+
+msgid "Key file not found"
+msgstr "私钥文件不存在"
+
+msgid "Ready"
+msgstr "就绪"
+
+msgid "File missing"
+msgstr "文件缺失"
+
+msgid "Not configured"
+msgstr "未配置"
+
 msgid "IPv6 only"
 msgstr "仅IPv6"
 

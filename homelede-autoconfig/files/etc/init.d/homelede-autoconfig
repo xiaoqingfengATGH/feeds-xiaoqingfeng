@@ -36,7 +36,6 @@ UCIEOF
     # (lean: keep; br-lan binding survives the noresolv native-DNS stack)
     uci -q batch <<'UCIEOF'
 set dhcp.@dnsmasq[0].interface='br-lan'
-set dhcp.@dnsmasq[0].filter_aaaa='1'
 commit dhcp
 UCIEOF
 

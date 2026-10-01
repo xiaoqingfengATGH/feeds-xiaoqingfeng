@@ -1,82 +1,91 @@
 #!/bin/sh /etc/rc.common
 #
-# Copyright (C) 2018-2020 xiaoqingfeng(Richard) <xiaoqingfengatgm@gmail.com>.
+# Copyright (C) 2018-2026 xiaoqingfeng (xiaoqingfengatgm@gmail.com)
+#
+# HomeLede first-boot / boot-time automation.
+# Successor of the retired lean `zzz-default-settings` uci-defaults script:
+# only the items that carry value for HomeLede were carried over, each
+# gated so it never fights an admin's explicit configuration.
 #
 
 START=13
 NAME=homelede-autoconfig
 
-DOCKER_CONFIG="[ -x /etc/init.d/dockerd ] && /etc/init.d/dockerd restart"
-CGROUP_MEMORY_CONGIF="echo 1 > /sys/fs/cgroup/memory/memory.use_hierarchy"
-SMARTDNS_CONFIG="0 */6 * * * [ -x /etc/init.d/smartdns ] && /etc/init.d/smartdns restart > /dev/null 2>&1 &"
-DNSMASQ_CHN_LIST_CONF="0 0 * * * [ -x /etc/init.d/dnsmasq-china-list ] && /etc/dnsmasq-china-list/update.sh > /dev/null 2>&1 &"
+# Runs once on first boot only. Idempotent guards inside.
+firstboot()
+{
+    # --- timezone & NTP (lean: keep) ------------------------------------
+    uci -q batch <<'UCIEOF'
+set system.@system[0].timezone='CST-8'
+set system.@system[0].zonename='Asia/Shanghai'
+delete system.ntp.server
+add_list system.ntp.server='ntp1.aliyun.com'
+add_list system.ntp.server='ntp.tencent.com'
+add_list system.ntp.server='ntp.ntsc.ac.cn'
+add_list system.ntp.server='time.apple.com'
+UCIEOF
+    uci -q commit system
+
+    # --- opkg/apk mirror: tencent instead of downloads.openwrt.org -----
+    # (lean: keep - foreign default mirrors are unusable on CN networks)
+    for f in /etc/opkg/distfeeds.conf /etc/apk/repositories.d/distfeeds.list; do
+        [ -f "$f" ] && sed -i 's#downloads.openwrt.org#mirrors.tencent.com/lede#g' "$f"
+    done
+
+    # --- dnsmasq: serve LAN only ---------------------------------------
+    # (lean: keep; br-lan binding survives the noresolv native-DNS stack)
+    uci -q batch <<'UCIEOF'
+set dhcp.@dnsmasq[0].interface='br-lan'
+set dhcp.@dnsmasq[0].filter_aaaa='1'
+commit dhcp
+UCIEOF
+
+    # dnsmasq log to /dev/null unless admin configured something real
+    if ! grep -q '^log-facility' /etc/dnsmasq.conf 2>/dev/null; then
+        echo "log-facility=/dev/null" >> /etc/dnsmasq.conf
+    fi
+
+    # --- clean stale firewall/user leftovers (lean: keep) ---------------
+    sed -i '/REDIRECT --to-ports 53/d' /etc/firewall.user 2>/dev/null
+
+    # --- version identity (lean: keep, buildmark-coupled) ----------------
+    # /etc/buildmark is written at compile time by package/updateCompileMark.
+    if [ -r /etc/buildmark ]; then
+        HV=$(cat /etc/buildmark)
+        LV=$(grep -o "R[0-9]\{1,\}\.[0-9]\{1,\}\.[0-9]\{1,\}" /etc/openwrt_release | head -n 1)
+        sed -i '/DISTRIB_REVISION/d' /etc/openwrt_release
+        echo "DISTRIB_REVISION='$HV based on OpenWrt $LV'" >> /etc/openwrt_release
+        sed -i '/DISTRIB_DESCRIPTION/d' /etc/openwrt_release
+        echo "DISTRIB_DESCRIPTION='HomeLede '" >> /etc/openwrt_release
+        sed -i -e 's/^BUILD_ID=.*/BUILD_ID=""/' -e '/OPENWRT_RELEASE/d' /usr/lib/os-release
+        echo "OPENWRT_RELEASE=\"HomeLede $HV\"" >> /usr/lib/os-release
+    fi
+
+    touch /etc/config/homeledeInit
+}
+
+# Runs on every boot (cheap, idempotent).
+boot()
+{
+    # brand image for the infinityfreedom theme (existing behaviour)
+    if [ -d /www/luci-static/infinityfreedom ]; then
+        if [ ! -r /www/luci-static/infinityfreedom/images/brand.png ]; then
+            cp /etc/brand /www/luci-static/infinityfreedom/images/brand.png >/dev/null 2>&1
+        fi
+    fi
+    # LuCI menu cache refresh after the above file moves
+    rm -rf /tmp/luci-modulecache/ 2>/dev/null
+    rm -f /tmp/luci-indexcache 2>/dev/null
+}
+
 start()
 {
-# Schedule auto reboot for smartdns to bypass secondary dns stop working issue
-sed -i '/^.*smartdns.*/d' /etc/crontabs/root >/dev/null 2>&1
-if [ -x /etc/init.d/smartdns ]; then
-echo "$SMARTDNS_CONFIG" >>/etc/crontabs/root
-echo Added smartdns auto restart script.
-fi
-
-# Schedule auto update for dnsmasq-china-list
-sed -i '/^.*dnsmasq-china-list.*/d' /etc/crontabs/root >/dev/null 2>&1
-if [ -x /etc/init.d/dnsmasq-china-list ]; then
-echo "$DNSMASQ_CHN_LIST_CONF" >>/etc/crontabs/root
-echo Added dnsmasq-china-list auto update script.
-fi
-
-# Force dockerd to restart to bypass docker does not create iptable rules issue
-#sed -i '/^\[ -x \/etc\/init\.d\/dockerd.*/d' /etc/rc.local >/dev/null 2>&1
-if [ -x /etc/init.d/dockerd ]; then
-#sed -i '/exit 0/i '"$DOCKER_CONFIG" /etc/rc.local
-# set cgroup memory.use_hierarchy to avoid dockerd warning
-sed -i '/sys\/fs\/cgroup\/memory\/memory\.use_hierarchy/d' /etc/rc.local
-sed -i '/exit 0/i '"$CGROUP_MEMORY_CONGIF" /etc/rc.local
-echo Added docker restart script.
-fi
-
-# Add ipsec iptable rules to allow ipsec client access router
-sed -i '/^.*--pol ipsec.*/d' /etc/firewall.user
- if [ -x /etc/init.d/ipsecvpn ]; then
- echo "iptables -D FORWARD  -m policy --dir in --pol ipsec --proto esp -j ACCEPT" >> /etc/firewall.user
- echo "iptables -D FORWARD  -m policy --dir out --pol ipsec --proto esp -j ACCEPT" >> /etc/firewall.user
- echo "iptables -D INPUT -m policy --dir in --pol ipsec --proto esp -j ACCEPT" >> /etc/firewall.user
- echo "iptables -D OUTPUT -m policy --dir out --pol ipsec --proto esp -j ACCEPT" >> /etc/firewall.user
-
- echo "iptables -I FORWARD  -m policy --dir in --pol ipsec --proto esp -j ACCEPT" >> /etc/firewall.user
- echo "iptables -I FORWARD  -m policy --dir out --pol ipsec --proto esp -j ACCEPT" >> /etc/firewall.user
- echo "iptables -I INPUT -m policy --dir in --pol ipsec --proto esp -j ACCEPT" >> /etc/firewall.user
- echo "iptables -I OUTPUT -m policy --dir out --pol ipsec --proto esp -j ACCEPT" >> /etc/firewall.user
-fi
-
-# Temporary add scripts for aliddns fix
-if [ -r /etc/init.d/aliddns ]; then
-	if [ ! -x /etc/init.d/aliddns ]; then
-		chmod +x /etc/init.d/aliddns
-		chmod +x /usr/sbin/aliddns
-	fi
-fi
-
-if [ -d /www/luci-static/infinityfreedom ]; then
-	if [ ! -r /www/luci-static/infinityfreedom/images/brand.png ]; then
-		cp /etc/brand /www/luci-static/infinityfreedom/images/brand.png >/dev/null 2>&1
-	fi
-fi
-
-if [ ! -f /etc/config/homeledeInit ]; then
-	ForceNoSolve="uci delete dhcp.@dnsmasq[0].resolvfile\n"
-	ForceNoSolve="${ForceNoSolve}uci set dhcp.@dnsmasq[0].noresolv='1'\n"
-	ForceNoSolve="${ForceNoSolve}uci commit dhcp"
-	sed -i '/exit 0/i '"$ForceNoSolve" /etc/rc.local
-	touch /etc/config/homeledeInit
-	echo $(date +"%Y-%m-%d %H:%M:%S") > /etc/config/homeledeInit
-fi
-
+    [ -f /etc/config/homeledeInit ] || firstboot
+    boot
 }
 
 reload()
 {
-stop
-start
+    stop
+    start
 }

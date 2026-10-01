@@ -66,12 +66,6 @@ UCIEOF
 # Runs on every boot (cheap, idempotent).
 boot()
 {
-    # brand image for the infinityfreedom theme (existing behaviour)
-    if [ -d /www/luci-static/infinityfreedom ]; then
-        if [ ! -r /www/luci-static/infinityfreedom/images/brand.png ]; then
-            cp /etc/brand /www/luci-static/infinityfreedom/images/brand.png >/dev/null 2>&1
-        fi
-    fi
     # LuCI menu cache refresh after the above file moves
     rm -rf /tmp/luci-modulecache/ 2>/dev/null
     rm -f /tmp/luci-indexcache 2>/dev/null

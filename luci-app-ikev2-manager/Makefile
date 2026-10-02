@@ -6,7 +6,7 @@ LUCI_TITLE:=LuCI app to manage strongSwan IKEv2 EAP users + iOS/macOS profiles
 LUCI_DEPENDS:=+strongswan-swanctl +strongswan-mod-eap-mschapv2 +openssl-util
 LUCI_PKGARCH:=all
 PKG_VERSION:=1.0.0
-PKG_RELEASE:=2
+PKG_RELEASE:=3
 PKG_LICENSE:=MIT
 PKG_MAINTAINER:=psyduck
 include $(TOPDIR)/feeds/luci/luci.mk

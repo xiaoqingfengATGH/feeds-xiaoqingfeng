@@ -1,0 +1,120 @@
+msgid ""
+msgstr ""
+"Content-Type: text/plain; charset=UTF-8\n"
+
+msgid "%s failed: %s"
+msgstr "%s 失败：%s"
+
+msgid "Actions"
+msgstr "操作"
+
+msgid "Add user"
+msgstr "添加用户"
+
+msgid "Add"
+msgstr "添加"
+
+msgid "Added \"%s\"."
+msgstr "已添加“%s”。"
+
+msgid "Client profile settings"
+msgstr "客户端配置设置"
+
+msgid "Connected clients"
+msgstr "已连接客户端"
+
+msgid "Delete user \"%s\"? They will no longer be able to connect."
+msgstr "删除用户“%s”？该用户将无法再连接。"
+
+msgid "Delete"
+msgstr "删除"
+
+msgid "Download .mobileconfig"
+msgstr "下载 .mobileconfig"
+
+msgid "e.g. alice, iphone"
+msgstr "例如 alice、iphone"
+
+msgid "EAP accounts"
+msgstr "EAP 账户"
+
+msgid "Enter a username and password."
+msgstr "请输入用户名和密码。"
+
+msgid "Generate profile"
+msgstr "生成配置"
+
+msgid "IKEv2 VPN Users"
+msgstr "IKEv2 VPN 用户"
+
+msgid "Listening (500/4500)"
+msgstr "监听端口 (500/4500)"
+
+msgid "Manage EAP username/password accounts for the strongSwan IKEv2 server, and download ready-to-install iOS/macOS profiles. Requires the strongSwan IKEv2 server to be configured."
+msgstr "管理 strongSwan IKEv2 服务器的 EAP 用户名/密码账户，并下载可直接安装的 iOS/macOS 配置文件。需要先配置好 strongSwan IKEv2 服务器。"
+
+msgid "missing"
+msgstr "缺失"
+
+msgid "No users yet."
+msgstr "暂无用户。"
+
+msgid "no"
+msgstr "否"
+
+msgid "password"
+msgstr "密码"
+
+msgid "present"
+msgstr "就绪"
+
+msgid "Random"
+msgstr "随机"
+
+msgid "Remote IP"
+msgstr "远端 IP"
+
+msgid "running"
+msgstr "运行中"
+
+msgid "Save settings"
+msgstr "保存设置"
+
+msgid "Saved."
+msgstr "已保存。"
+
+msgid "Server address (DDNS/IP)"
+msgstr "服务器地址 (DDNS/IP)"
+
+msgid "Server certificate / CA"
+msgstr "服务器证书 / CA"
+
+msgid "Server status"
+msgstr "服务器状态"
+
+msgid "stopped"
+msgstr "已停止"
+
+msgid "strongSwan (charon)"
+msgstr "strongSwan (charon)"
+
+msgid "unknown error"
+msgstr "未知错误"
+
+msgid "Used when generating .mobileconfig profiles. Remote is your DDNS / public IP — never stored in the app source."
+msgstr "生成 .mobileconfig 配置文件时使用。Remote 即你的 DDNS / 公网 IP——不会存储在应用源码中。"
+
+msgid "User"
+msgstr "用户"
+
+msgid "Username"
+msgstr "用户名"
+
+msgid "VPN display name"
+msgstr "VPN 显示名称"
+
+msgid "VPN IP"
+msgstr "VPN IP"
+
+msgid "yes"
+msgstr "是"

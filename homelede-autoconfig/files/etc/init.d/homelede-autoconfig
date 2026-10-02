@@ -26,6 +26,10 @@ add_list system.ntp.server='time.apple.com'
 UCIEOF
     uci -q commit system
 
+    # --- hostname: HOMELEDE (brand identity; native default is 'LEDE') ---
+    uci -q set system.@system[0].hostname='HOMELEDE'
+    uci -q commit system
+
     # --- opkg/apk mirror: tencent instead of downloads.openwrt.org -----
     # (lean: keep - foreign default mirrors are unusable on CN networks)
     for f in /etc/opkg/distfeeds.conf /etc/apk/repositories.d/distfeeds.list; do

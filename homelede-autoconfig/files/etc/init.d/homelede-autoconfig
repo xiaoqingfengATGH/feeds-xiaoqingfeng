@@ -33,6 +33,18 @@ UCIEOF
     # so without this the first boot would still show 'LEDE'
     echo HOMELEDE > /proc/sys/kernel/hostname 2>/dev/null
 
+    # --- LuCI: default UI language Chinese (zh_cn; the uci key and the
+    #     base.zh-cn.lmo catalog both use this form - zh_Hans would not
+    #     load). English stays selectable in System>System, 'auto'
+    #     follows the browser Accept-Language) ---
+    uci -q set luci.main.lang='zh_cn'
+    uci -q commit luci
+
+    # --- root password: default 'homelede' (sha512crypt hash, precomputed
+    #     offline; 50-root-passwd only acts when a board ships credentials,
+    #     generic x86 boards never do) ---
+    sed -i 's|^root:[^:]*:|root:$6$homelede$Onx6Kp24hTLhSfU1mcZ.AFm6yGse.jYFADSD8tfqyGxXgzxNo2BpBdFUcrA55IdZsBpLJmhsLtC5fWop8laZo1:|' /etc/shadow
+
     # --- opkg/apk mirror: tencent instead of downloads.openwrt.org -----
     # (lean: keep - foreign default mirrors are unusable on CN networks)
     for f in /etc/opkg/distfeeds.conf /etc/apk/repositories.d/distfeeds.list; do

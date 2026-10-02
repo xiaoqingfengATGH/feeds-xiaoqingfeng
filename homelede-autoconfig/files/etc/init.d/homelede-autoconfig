@@ -29,6 +29,9 @@ UCIEOF
     # --- hostname: HOMELEDE (brand identity; native default is 'LEDE') ---
     uci -q set system.@system[0].hostname='HOMELEDE'
     uci -q commit system
+    # apply immediately: init.d/system runs at S10, before us at S13,
+    # so without this the first boot would still show 'LEDE'
+    echo HOMELEDE > /proc/sys/kernel/hostname 2>/dev/null
 
     # --- opkg/apk mirror: tencent instead of downloads.openwrt.org -----
     # (lean: keep - foreign default mirrors are unusable on CN networks)
@@ -67,18 +70,17 @@ UCIEOF
     touch /etc/config/homeledeInit
 }
 
-# Runs on every boot (cheap, idempotent).
-boot()
-{
-    # LuCI menu cache refresh after the above file moves
-    rm -rf /tmp/luci-modulecache/ 2>/dev/null
-    rm -f /tmp/luci-indexcache 2>/dev/null
-}
-
 start()
 {
     [ -f /etc/config/homeledeInit ] || firstboot
-    boot
+
+    # LuCI menu cache refresh after firstboot file moves.
+    # NOTE: no boot() override here — rc.common's default boot() dispatches
+    # to start(); an own boot() that does not call start() would break the
+    # whole firstboot-on-boot chain (verified on 247: hostname/timezone/
+    # mirrors all stayed native because boot() never reached start()).
+    rm -rf /tmp/luci-modulecache/ 2>/dev/null
+    rm -f /tmp/luci-indexcache 2>/dev/null
 }
 
 reload()

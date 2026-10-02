@@ -1,0 +1,7 @@
+{
+	"luci-app-ikev2-manager": {
+		"description": "Grant access to IKEv2 EAP user management",
+		"read": { "ubus": { "ikev2mgr": [ "status", "list_users", "get_settings", "mobileconfig" ] }, "uci": [ "ikev2mgr" ] },
+		"write": { "ubus": { "ikev2mgr": [ "add_user", "del_user", "set_settings" ] }, "uci": [ "ikev2mgr" ] }
+	}
+}

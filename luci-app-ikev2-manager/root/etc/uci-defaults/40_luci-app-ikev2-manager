@@ -1,0 +1,15 @@
+#!/bin/sh
+[ -f /etc/config/ikev2mgr ] || touch /etc/config/ikev2mgr
+uci -q get ikev2mgr.config >/dev/null 2>&1 || {
+	uci -q batch <<-UCI
+		set ikev2mgr.config=ikev2mgr
+		set ikev2mgr.config.vpn_name=Home IKEv2
+		set ikev2mgr.config.ike_enc=AES-256-GCM
+		set ikev2mgr.config.ike_int=SHA2-256
+		set ikev2mgr.config.ike_dh=19
+		commit ikev2mgr
+	UCI
+}
+rm -f /tmp/luci-indexcache
+/etc/init.d/rpcd reload 2>/dev/null
+exit 0

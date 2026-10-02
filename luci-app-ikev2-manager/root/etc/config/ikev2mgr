@@ -1,0 +1,8 @@
+
+config ikev2mgr 'config'
+	# 客户端连入地址(你的 DDNS 或公网 IP)—— 生成 .mobileconfig 用,请自己填
+	option remote ''
+	option vpn_name 'Home IKEv2'
+	option ike_enc 'AES-256-GCM'
+	option ike_int 'SHA2-256'
+	option ike_dh '19'

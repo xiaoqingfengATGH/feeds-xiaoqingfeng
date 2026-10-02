@@ -1,0 +1,8 @@
+{
+	"admin/vpn/ikev2": {
+		"title": "IKEv2 Users",
+		"order": 40,
+		"action": { "type": "view", "path": "ikev2/overview" },
+		"depends": { "acl": [ "luci-app-ikev2-manager" ] }
+	}
+}

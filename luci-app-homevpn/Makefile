@@ -17,7 +17,7 @@ LUCI_DEPENDS:=+strongswan-swanctl +strongswan-mod-eap-mschapv2 +strongswan-mod-g
 	+strongswan-mod-dhcp +strongswan-mod-farp +openssl-util +libopenssl-legacy
 LUCI_PKGARCH:=all
 PKG_VERSION:=2.0.0
-PKG_RELEASE:=2
+PKG_RELEASE:=3
 PKG_LICENSE:=MIT
 PKG_MAINTAINER:=xiaoqingfeng <xiaoqingfengatgm@gmail.com>
 

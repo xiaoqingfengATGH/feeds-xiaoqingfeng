@@ -3,6 +3,10 @@
 # Based on luci-app-ikev2-manager (C) naughtyGitCat, MIT.
 include $(TOPDIR)/rules.mk
 
+# jsmin strips the leading 'require ...'; pragma lines — LuCI's module loader
+# then can't inject view/rpc/ui/E globals and every button on the page dies.
+LUCI_MINIFY_JS:=0
+
 LUCI_TITLE:=Turnkey strongSwan IKEv2 VPN server (EAP users, certs, provisioning)
 LUCI_DESCRIPTION:=Provisions a router-local strongSwan IKEv2 EAP-MSCHAPv2 server on first boot: \
 	swanctl connection DHCP-pool client addressing + farp, self-signed PKI, \

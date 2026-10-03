@@ -123,10 +123,21 @@ sync_acme_certs() {
 }
 
 render_conf() {
-	local remote lan_net lan_addr
+	local remote lan_net lan_addr pool_start pool_end pool_net
 	remote="$(effective_remote)"
 	lan_addr="$(uci -q get network.lan.ipaddr)"
 	lan_net="$(ip route | awk -v a="$lan_addr" '$0 ~ a {print $1; exit}')"
+
+	# Static virtual-IP pool carved out of the LAN subnet, deliberately
+	# OUTSIDE the LAN's DHCP range (dnsmasq start=100 limit=150 => .100-.249;
+	# other DHCP servers on this LAN use the same convention) and away from
+	# the router's own static address. .50-.99 is free on a typical LAN.
+	# Derive from the router's OWN address (192.168.224.247 -> 192.168.224):
+	# prefix-octets of the router IP are always inside the LAN subnet, for
+	# any prefix length (and .0 network-address stripping breaks on !/24).
+	pool_net="${lan_addr%.*}"
+	pool_start="${pool_net}.50"
+	pool_end="${pool_net}.99"
 
 	mkdir -p "$SWANCTL_DIR/conf.d"
 	cat > "$CONN_FILE" <<EOF
@@ -142,7 +153,7 @@ connections {
         mobike = yes
         dpd_delay = 60s
         send_cert = always
-        pools = dhcp
+        pools = homevpn
         local {
             auth = pubkey
             id = $remote
@@ -163,10 +174,15 @@ connections {
         }
     }
 }
-# pools = dhcp (in the remote section) makes charon's dhcp plugin enroll each
-# client via dnsmasq on br-lan — clients get REAL LAN leases, and the plugin
-# relays DNS (DHCP option 6) from the lease. farp answers ARP for connected
-# clients, so LAN peers can initiate toward them. No pools{} section, no masq.
+# Static virtual-IP pool (.50-.99 of the LAN subnet): charon assigns IPs
+# itself — no dependency on any DHCP server (this router's dnsmasq does not
+# serve DHCP on br-lan; another DHCP server lives at .254). farp answers ARP
+# for connected clients, so LAN peers can reach them.
+pools {
+    homevpn {
+        addrs = $pool_start-$pool_end
+    }
+}
 EOF
 }
 

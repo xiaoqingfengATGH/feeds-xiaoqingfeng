@@ -40,8 +40,15 @@ effective_remote() {
 ca_file() { [ -s "$CA_ACME" ] && echo "$CA_ACME" && return; [ -s "$CA_SELF" ] && echo "$CA_SELF"; }
 
 regen_secrets() {
-	# delegate to the init script's regen (single source of truth)
-	/etc/init.d/homevpn regen >/dev/null 2>&1
+	# delegate to the init script's regen (single source of truth):
+	# regenerates secrets + swanctl conf AND runs `swanctl --load-all`,
+	# so newly added/removed EAP users are live in charon immediately
+	# (without load-all, charon keeps its in-memory secrets and EAP auth
+	# for the new user fails with "EAP-MS-CHAPv2 verification failed").
+	if ! /etc/init.d/homevpn regen >/tmp/homevpn-regen.log 2>&1; then
+		logger -t homevpn-rpcd "regen failed: $(tail -1 /tmp/homevpn-regen.log)"
+		return 1
+	fi
 }
 
 user_index() {

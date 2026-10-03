@@ -13,7 +13,7 @@ var callProvision   = rpc.declare({ object: 'homevpn', method: 'provision' });
 var callDownload    = rpc.declare({ object: 'homevpn', method: 'download', params: [ 'name', 'what' ] });
 
 function reload() { return location.reload(); }
-function fail(res, action) {
+function ok(res, action) {
 	if (res && res.ok) return true;
 	ui.addNotification(null, E('p', _('%s failed: %s').format(action, (res && res.error) || _('unknown error'))), 'danger');
 	return false;
@@ -87,7 +87,7 @@ return view.extend({
 					'class': 'btn cbi-button cbi-button-save',
 					'click': ui.createHandlerFn(this, function() {
 						return callSetSettings(sRemote.value, sName.value, sMode.value, sAcme.value).then(function(r) {
-							if (fail(r, _('Save settings'))) ui.addNotification(null, E('p', _('Saved. Server re-provisioned.')), 'info');
+							if (ok(r, _('Save settings'))) ui.addNotification(null, E('p', _('Saved. Server re-provisioned.')), 'info');
 						});
 					})
 				}, _('Save settings')), ' ',
@@ -95,7 +95,7 @@ return view.extend({
 					'class': 'btn cbi-button cbi-button-action',
 					'click': ui.createHandlerFn(this, function() {
 						return callProvision().then(function(r) {
-							if (fail(r, _('Provision'))) { ui.addNotification(null, E('p', _('Provisioning output: %s').format((r && r.output) || '')), 'info'); reload(); }
+							if (ok(r, _('Provision'))) { ui.addNotification(null, E('p', _('Provisioning output: %s').format((r && r.output) || '')), 'info'); reload(); }
 						});
 					})
 				}, _('Re-provision now'))
@@ -111,19 +111,19 @@ return view.extend({
 				E('td', { 'class': 'td cbi-section-actions' }, [
 					E('button', { 'class': 'btn cbi-button cbi-button-action', 'click': ui.createHandlerFn(this, function() {
 						return callDownload(u.name, 'mobileconfig').then(function(r) {
-							if (!fail(r, _('Generate profile'))) saveBlob(r.mobileconfig, u.name + '.mobileconfig', 'application/x-apple-aspen-config');
+							if (ok(r, _('Generate profile'))) saveBlob(r.mobileconfig, u.name + '.mobileconfig', 'application/x-apple-aspen-config');
 						});
 					}) }, _('iOS/macOS profile')),
 					' ',
 					E('button', { 'class': 'btn cbi-button cbi-button-action', 'click': ui.createHandlerFn(this, function() {
 						return callDownload(u.name, 'sswan').then(function(r) {
-							if (!fail(r, _('Generate profile'))) saveBlob(r.sswan, u.name + '.sswan', 'application/json');
+							if (ok(r, _('Generate profile'))) saveBlob(r.sswan, u.name + '.sswan', 'application/json');
 						});
 					}) }, _('Android .sswan')),
 					' ',
 					E('button', { 'class': 'btn cbi-button cbi-button-remove', 'click': ui.createHandlerFn(this, function() {
 						if (!confirm(_('Delete user "%s"? They will no longer be able to connect.').format(u.name))) return;
-						return callDelUser(u.name).then(function(r) { if (fail(r, _('Delete'))) reload(); });
+						return callDelUser(u.name).then(function(r) { if (ok(r, _('Delete'))) reload(); });
 					}) }, _('Delete'))
 				])
 			]));
@@ -140,7 +140,7 @@ return view.extend({
 					E('button', { 'class': 'btn cbi-button cbi-button-add', 'click': ui.createHandlerFn(this, function() {
 						var n = (nName.value || '').trim(), p = (nPw.value || '').trim();
 						if (!n || !p) { ui.addNotification(null, E('p', _('Enter a username and password.')), 'warning'); return; }
-						return callAddUser(n, p).then(function(r) { if (fail(r, _('Add user'))) { ui.addNotification(null, E('p', _('Added "%s".').format(n)), 'info'); reload(); } });
+						return callAddUser(n, p).then(function(r) { if (ok(r, _('Add user'))) { ui.addNotification(null, E('p', _('Added "%s".').format(n)), 'info'); reload(); } });
 					}) }, _('Add'))
 				])
 			])
@@ -156,7 +156,7 @@ return view.extend({
 				E('div', { 'class': 'cbi-value-field' }, [
 					E('button', { 'class': 'btn cbi-button cbi-button-action', 'click': ui.createHandlerFn(this, function() {
 						return callDownload('', 'ca').then(function(r) {
-							if (!fail(r, _('Download CA'))) saveBlob(r.ca, 'homevpn-ca.crt', 'application/x-x509-ca-cert');
+							if (ok(r, _('Download CA'))) saveBlob(r.ca, 'homevpn-ca.crt', 'application/x-x509-ca-cert');
 						});
 					}) }, _('Download CA certificate'))
 				])

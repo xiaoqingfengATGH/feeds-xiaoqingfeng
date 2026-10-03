@@ -3,7 +3,7 @@
 		"description": "Grant access to HomeLede overview extensions (disk capacity, app status, wake-on-LAN)",
 		"read": {
 			"ubus": {
-				"luci.homestatus": [ "status", "services", "wol_targets" ]
+				"luci.homestatus": [ "status", "services", "wol_targets", "netprobe" ]
 			},
 			"uci": [ "homestatus", "luci-wol" ]
 		},

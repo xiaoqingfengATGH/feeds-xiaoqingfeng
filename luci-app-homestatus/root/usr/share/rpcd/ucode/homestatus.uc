@@ -72,6 +72,11 @@ function read_config() {
 				cfg.warn = int(s.warn);
 			if (s.crit != null && !isnan(int(s.crit)))
 				cfg.crit = int(s.crit);
+			/* optional netprobe target overrides (must stay http(s) URLs) */
+			if (s.probe_cn != null && match(`${s.probe_cn}`, /^https?:\/\//))
+				cfg.probe_cn = `${s.probe_cn}`;
+			if (s.probe_intl != null && match(`${s.probe_intl}`, /^https?:\/\//))
+				cfg.probe_intl = `${s.probe_intl}`;
 		});
 	}
 	catch (e) {
@@ -1292,6 +1297,199 @@ function set_wol_targets(payload) {
 	return { ok: true, targets: build_wol_targets(), rejected: rejected };
 }
 
+// --------------------------------------------------------------- netprobe ----
+// Router-LOCAL dual-path reachability probe for the overview "互联网" KPI.
+//
+// Why popen+curl and not the browser: the KPI must reflect what traffic
+// leaving THE ROUTER experiences - the router's own resolver, its routing
+// table and (with passwall2 localhost_proxy enabled) its proxy chain. A
+// browser-side fetch tests the ADMIN PC's path instead, which is a
+// different question entirely.
+//
+// Two targets with distinct meaning:
+//   cn   - https://www.baidu.com   domestic direct egress
+//   intl - https://www.google.com  overseas; with passwall2 running and
+//          localhost_proxy=1 the router's own OUTPUT traffic is proxied,
+//          so this exercises the same chain LAN clients use. With the
+//          proxy off it fails exactly like un-proxied traffic would -
+//          that is the truth we want to show.
+//
+// One curl --parallel invocation probes both concurrently; each URL
+// writes one %{json} line on stdout. Timing fields name the failure
+// phase (time_namelookup / time_connect / time_appconnect), exitcode +
+// errormsg carry the reason. read_config() allows overriding the two
+// targets (probe_cn / probe_intl) without touching this file.
+const CURL = '/usr/bin/curl';
+
+const CURL_EXIT_REASONS = {
+	'4': 'HTTP 协议错误',
+	'5': '无法解析代理地址',
+	'6': '域名解析失败（DNS）',
+	'7': '连接被拒绝',
+	'21': 'FTP 命令错误',
+	'22': 'HTTP 状态异常',
+	'26': '读取文件失败',
+	'28': '连接超时',
+	'30': 'FTP 端口错误',
+	'35': 'TLS 握手失败',
+	'47': '重定向次数过多',
+	'51': '证书校验失败',
+	'55': '发送数据失败',
+	'56': '接收数据失败',
+	'60': '证书已过期或无效',
+	'61': '内容编码错误',
+	'66': '未知传输协议',
+	'77': 'CA 证书读取失败',
+	'88': 'FTP 登录失败',
+	'90': 'FTP 访问被拒',
+	'92': 'HTTP/2 流错误',
+	'94': '认证方式不受支持',
+	'95': 'HTTP/3 错误',
+};
+
+// Probe one batch { cn: url, intl: url } through a single parallel curl.
+// Returns { cn: result, intl: result } where result is:
+//   { ok: true, ms, ip, code }                    on success
+//   { ok: false, reason, exitcode, stage, ms }    on failure
+function netprobe_run(targets) {
+	const urls = [ targets.cn, targets.intl ];
+	// lightweight per-URL write-out: one line per URL (curl emits the
+	// -w block once per URL in --parallel mode), fields separated so we
+	// can split them without a JSON parser tripwire (the full %{json}
+	// blob embeds the whole peer certificate - huge and fragile).
+	const WF = 'URL=%{url_effective} IP=%{remote_ip} CODE=%{http_code} NL=%{time_namelookup} CT=%{time_connect} AC=%{time_appconnect} TT=%{time_total} ERR=%{errormsg} EC=%{exitcode}\\n';
+	/* one -o per URL: in --parallel mode -o applies to the NEXT url only,
+	 * a single /dev/null would let the second body leak to stdout */
+	const cmd = `${CURL} -s -o /dev/null -o /dev/null -w '${WF}' --parallel --parallel-max 2 --connect-timeout 4 -m 8 ${join(' ', urls)}`;
+
+	let out = '';
+	let rc = null;
+
+	try {
+		const fd = popen(`${cmd} 2>&1`);
+		out = fd.read('all') ?? '';
+		rc = fd.close();
+	}
+	catch (e) {
+		return { cn: { ok: false, reason: `探测执行失败：${e}` }, intl: { ok: false, reason: `探测执行失败：${e}` } };
+	}
+
+	// parse one "KEY=VALUE ..." record per line. ERR (curl errormsg) may
+	// contain spaces, so the line is split from the right at the known
+	// " ERR=" key marker instead of naive whitespace tokenisation.
+	const parsed = [];
+
+	for (let l in split(out, '\n')) {
+		const t = trim(l);
+
+		if (length(t) == 0 || index(t, 'URL=') != 0)
+			continue;
+
+		const rec = {};
+		let head = t;
+
+		// tail: " ERR=<free text> EC=<int>"
+		const ecpos = rindex(t, ' EC=');
+
+		if (ecpos > 0) {
+			rec.EC = substr(t, ecpos + 4);
+			head = substr(t, 0, ecpos);
+
+			const errpos = rindex(head, ' ERR=');
+
+			if (errpos > 0) {
+				rec.ERR = substr(head, errpos + 5);
+				head = substr(head, 0, errpos);
+			}
+		}
+
+		for (let kv in split(head, ' ')) {
+			const eq = index(kv, '=');
+
+			if (eq <= 0)
+				continue;
+
+			rec[substr(kv, 0, eq)] = substr(kv, eq + 1);
+		}
+
+		push(parsed, rec);
+	}
+
+	// match records back to the requested urls: exact first, then
+	// scheme+host prefix, so a http->https redirect still lands
+	const mkResult = (url, want) => {
+		let j = null;
+
+		for (let p in parsed)
+			if (p.URL == url || `${p.URL}/` == url || url == `${p.URL}/`)
+				j = p;
+
+		if (j == null)
+			for (let p in parsed)
+				if (index(p.URL ?? '', want.host) >= 0)
+					j = p;
+
+		if (j == null)
+			return { ok: false, reason: '无探测结果', exitcode: rc };
+
+		const ec = int(j.EC ?? -1);
+		const code = int(j.CODE ?? 0);
+		const tt = +j.TT ?? 0;
+
+		if (ec == 0 && code >= 200 && code < 400)
+			return { ok: true, ms: int(tt * 1000), ip: j.IP, code: code };
+
+		// failure: name the phase from the timing ladder
+		const nl = +j.NL ?? 0;
+		const ct = +j.CT ?? 0;
+		const ac = +j.AC ?? 0;
+		let stage = null;
+
+		if (nl <= 0.0001)
+			stage = 'dns';
+		else if (ct <= 0.0001)
+			stage = 'connect';
+		else if (ac <= 0.0001)
+			stage = 'tls';
+
+		const base = CURL_EXIT_REASONS[`${ec}`] ?? ((ec == 0) ? `HTTP 状态 ${code}` : `curl 退出码 ${ec}`);
+
+		return {
+			ok: false,
+			reason: j.ERR ? (`${base}：${j.ERR}`) : base,
+			exitcode: ec,
+			stage: stage,
+			ms: int(tt * 1000),
+			ip: (j.IP ?? '') || null
+		};
+	};
+
+	function hostOf(url) {
+		const m = match(`${url}`, /^https?:\/\/([^\/]+)/);
+
+		return m ? m[1] : `${url}`;
+	}
+
+	return {
+		cn: mkResult(targets.cn, { host: hostOf(targets.cn) }),
+		intl: mkResult(targets.intl, { host: hostOf(targets.intl) })
+	};
+}
+
+function netprobe() {
+	const cfg = read_config();
+
+	const targets = {
+		cn: cfg.probe_cn ?? 'https://www.baidu.com',
+		intl: cfg.probe_intl ?? 'https://www.google.com'
+	};
+
+	if (access(CURL, 'x') !== true)
+		return { ok: false, error: 'no-curl', message: `未安装 ${CURL}（opkg install curl）` };
+
+	return { ok: true, ts: now(), targets: targets, result: netprobe_run(targets) };
+}
+
 // ------------------------------------------------------------------ methods ---
 // NOTE: rpcd's ucode loader rejects the whole plugin if a method is added to
 // this object *after* its literal is defined (e.g. `methods.foo = fn;` on a
@@ -1440,6 +1638,19 @@ const methods = {
 			const rv = restart_service(name);
 			rv.id = id;
 			return rv;
+		}
+	},
+
+	// Router-local dual-path reachability probe (see netprobe section above).
+	// Read-only; one curl --parallel run, bounded by -m 8.
+	netprobe: {
+		call: function() {
+			try {
+				return netprobe();
+			}
+			catch (e) {
+				return { ok: false, error: `${e}` };
+			}
 		}
 	},
 

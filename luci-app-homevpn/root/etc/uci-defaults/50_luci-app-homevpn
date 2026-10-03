@@ -1,0 +1,49 @@
+# homevpn uci-defaults: INPUT-path firewall rules + default config.
+# The stock Allow-ISAKMP/Allow-IPSec-ESP rules (dest=lan) forward to an IPsec
+# server BEHIND the router; charon here runs ON the router, so these new rules
+# accept 500/4500/ESP in the INPUT path. Stock rules are left untouched.
+
+uci -q get firewall.homevpn_isakmp >/dev/null 2>&1 || {
+	uci set firewall.homevpn_isakmp=rule
+	uci set firewall.homevpn_isakmp.name='homevpn-ISAKMP'
+	uci set firewall.homevpn_isakmp.src='wan'
+	uci set firewall.homevpn_isakmp.proto='udp'
+	uci set firewall.homevpn_isakmp.dest_port='500'
+	uci set firewall.homevpn_isakmp.target='ACCEPT'
+}
+
+uci -q get firewall.homevpn_nat_t >/dev/null 2>&1 || {
+	uci set firewall.homevpn_nat_t=rule
+	uci set firewall.homevpn_nat_t.name='homevpn-NAT-T'
+	uci set firewall.homevpn_nat_t.src='wan'
+	uci set firewall.homevpn_nat_t.proto='udp'
+	uci set firewall.homevpn_nat_t.dest_port='4500'
+	uci set firewall.homevpn_nat_t.target='ACCEPT'
+}
+
+uci -q get firewall.homevpn_esp >/dev/null 2>&1 || {
+	uci set firewall.homevpn_esp=rule
+	uci set firewall.homevpn_esp.name='homevpn-ESP'
+	uci set firewall.homevpn_esp.src='wan'
+	uci set firewall.homevpn_esp.proto='esp'
+	uci set firewall.homevpn_esp.target='ACCEPT'
+}
+
+uci commit firewall
+
+touch /etc/config/homevpn
+uci -q get homevpn.config >/dev/null 2>&1 || {
+	uci set homevpn.config=homevpn
+	uci -q batch <<-UCI
+		set homevpn.config.cert_mode='selfsigned'
+		set homevpn.config.remote=''
+		set homevpn.config.vpn_name='Home VPN'
+		set homevpn.config.ike_enc='AES-256-GCM'
+		set homevpn.config.ike_int='SHA2-384'
+		set homevpn.config.ike_dh='20'
+		commit homevpn
+	UCI
+}
+
+rm -f /tmp/luci-indexcache* /tmp/luci-modulecache*
+exit 0

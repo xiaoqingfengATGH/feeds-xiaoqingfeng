@@ -1,0 +1,21 @@
+{
+	"luci-app-homevpn": {
+		"description": "Grant access to HomeVPN IKEv2 server management",
+		"read": {
+			"ubus": {
+				"homevpn": [ "status", "list_users", "get_settings", "download" ]
+			},
+			"uci": [ "homevpn" ]
+		},
+		"write": {
+			"ubus": {
+				"homevpn": [ "add_user", "del_user", "set_settings", "provision" ]
+			},
+			"uci": [ "homevpn" ],
+			"file": {
+				"/etc/init.d/homevpn": [ "exec" ],
+				"/usr/libexec/rpcd/homevpn": [ "exec" ]
+			}
+		}
+	}
+}

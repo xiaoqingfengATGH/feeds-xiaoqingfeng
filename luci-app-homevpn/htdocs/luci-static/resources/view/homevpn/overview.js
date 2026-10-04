@@ -210,9 +210,9 @@ return view.extend({
 			if (!dom)
 				{ kind = ''; text = _('Set the domain issued in Services → Let\u0027s Encrypt (e.g. vpn.example.com).'); }
 			else if (st.acme_ready && dom === (set.acme_domain || ''))
-				{ kind = 'ok'; text = _('✓ Certificate present at /etc/acme/<domain>/ — switching is allowed.'); }
+				{ kind = 'ok'; text = _('✓ ACME certificate found for this domain — switching is allowed. Renewals are picked up automatically.'); }
 			else
-				{ kind = 'error'; text = _('Issue the certificate first in Services → Let\u0027s Encrypt, then switch here — switching is refused until /etc/acme/<domain>/ holds the certificate, the old mode keeps serving.'); }
+				{ kind = 'error'; text = _('Issue the certificate first in Services → Let\u0027s Encrypt, then switch here — switching is refused until the certificate for this domain exists, the old mode keeps serving.'); }
 			acmeHint.textContent = text;
 			acmeHint.setAttribute('style', 'margin:.25em 0 0' + (kind ? (';' + hintColors(kind)) : ''));
 		}

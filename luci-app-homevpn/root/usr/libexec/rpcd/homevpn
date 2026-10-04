@@ -14,8 +14,14 @@ SECRETS_FILE="$SWANCTL/conf.d/homevpn-eap.conf"
 CA_SELF="$SWANCTL/x509ca/homevpn-ca.crt"
 CA_ACME="$SWANCTL/x509ca/homevpn-acme.crt"
 SRV_CERT="$SWANCTL/x509/homevpn-server.crt"
+ACME_RESOLVER="/usr/share/homevpn/acme-resolve.sh"
 
 cfg() { uci -q get "${CFG}.config.$1"; }
+
+# shared ACME resolver (same code as the init script — single source of truth)
+. "$ACME_RESOLVER" || { echo "homevpn-rpcd: missing $ACME_RESOLVER" >&2; }
+# resolver contract: HV_ACME_CRT (fullchain, leaf first) + HV_ACME_KEY
+acme_ready() { homevpn_acme_resolve "$1"; }
 
 err() { json_init; json_add_boolean ok 0; json_add_string error "$1"; json_dump; exit 0; }
 ok()  { json_add_boolean ok 1; }
@@ -113,9 +119,9 @@ call)
 		json_add_string  remote "$(effective_remote)"
 		caf="$(ca_file)"
 		json_add_boolean pki_ready "$([ -n "$caf" ] && echo 1 || echo 0)"
-		# ACME prerequisite: does /etc/acme/<domain>/ hold cert+key?
+		# ACME prerequisite: resolvable certificate + key for the domain?
 		acme_dom="$(cfg acme_domain)"
-		if [ -n "$acme_dom" ] && [ -s "/etc/acme/$acme_dom/$acme_dom.cer" ] && [ -s "/etc/acme/$acme_dom/$acme_dom.key" ]; then
+		if [ -n "$acme_dom" ] && acme_ready "$acme_dom"; then
 			json_add_boolean acme_ready 1
 		else
 			json_add_boolean acme_ready 0
@@ -277,16 +283,25 @@ set_user_ip)
 		case "$v_mode" in selfsigned|import|acme) ;; *) v_mode="";; esac
 		case "$v_ipmode" in lansubnet|dhcp|subnet) ;; *) v_ipmode="";; esac
 		prev_mode="$(cfg cert_mode)"
-		# switching to ACME requires the certificate to already exist:
-		# otherwise the status page would claim "ACME" while the old cert
-		# keeps serving — a silent lie. Refuse and keep the previous mode.
-		# (also when changing the ACME domain to one that has no certificate)
-		if [ "$v_mode" = acme ] && { [ "$prev_mode" != acme ] || [ "$v_acme" != "$(cfg acme_domain)" ]; }; then
+		# switching to ACME — or changing the domain / server address while
+		# in ACME mode — requires the certificate to exist AND the resulting
+		# server address to be an exact SAN of it: otherwise the status page
+		# would claim "ACME" while the old cert keeps serving (silent lie),
+		# or every IKE_AUTH would fail on the id↔SAN mismatch. Refuse and
+		# keep the previous values.
+		if [ "$v_mode" = acme ] && { [ "$prev_mode" != acme ] || [ "$v_acme" != "$(cfg acme_domain)" ] || [ "$v_remote" != "$(cfg remote)" ]; }; then
 			if [ -z "$v_acme" ]; then
 				err "ACME domain is empty — set it to the domain issued in Services → Let's Encrypt"
 			fi
-			if [ ! -s "/etc/acme/$v_acme/$v_acme.cer" ] || [ ! -s "/etc/acme/$v_acme/$v_acme.key" ]; then
-				err "no ACME certificate at /etc/acme/$v_acme/ — issue it in Services → Let's Encrypt first; staying in '${prev_mode:-selfsigned}' mode"
+			if ! acme_ready "$v_acme"; then
+				err "no ACME certificate for '$v_acme' (checked /etc/acme/<domain>{,_ecc,_rsa}/ and /etc/ssl/acme/) — issue it in Services → Let's Encrypt first; staying in '${prev_mode:-selfsigned}' mode"
+			fi
+			# server address must be an exact SAN of the ACME leaf — same
+			# rule the sync enforces; catch it here so the UI sees the
+			# reason instead of a silent sync-refusal in the regen log
+			remote_for_check="$v_remote"; [ -n "$remote_for_check" ] || remote_for_check="$(effective_remote)"
+			if ! san_exact_match "$remote_for_check" "$HV_ACME_CRT"; then
+				err "server address '$remote_for_check' is not an exact SAN of the ACME certificate for '$v_acme' (SANs: $(openssl x509 -in "$HV_ACME_CRT" -noout -ext subjectAltName 2>/dev/null | tail -n +2 | tr -d ' \n')) — strongSwan never matches wildcard SANs; staying in '${prev_mode:-selfsigned}' mode"
 			fi
 		fi
 		[ -n "$v_remote" ] && uci -q set "${CFG}.config.remote=${v_remote}"

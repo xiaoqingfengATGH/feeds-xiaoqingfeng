@@ -28,6 +28,10 @@ address → add users → clients connect. Based on
     `/etc/swanctl/{x509,x509ca,private}/`
   - `acme` — sync a certificate issued by the luci-app-acme Let's Encrypt app
     (DNS-01; needs a controlled domain). SAN must equal the server address.
+    Resolution covers acme.sh state dirs (`<dom>/`, `<dom>_ecc/`, `<dom>_rsa/`,
+    newest wins) and the acme-common stable links under `/etc/ssl/acme/`.
+    Issuance/renewal hotplug (`/etc/hotplug.d/acme/`) re-syncs and hot-reloads
+    charon credentials — zero-touch renewal, connected clients survive.
 
 ## Requirements
 

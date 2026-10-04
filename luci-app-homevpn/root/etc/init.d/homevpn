@@ -26,7 +26,7 @@ SECRETS_FILE="$SWANCTL_DIR/conf.d/homevpn-eap.conf"
 X509_DIR="$SWANCTL_DIR/x509"
 CA_DIR="$SWANCTL_DIR/x509ca"
 KEY_DIR="$SWANCTL_DIR/private"
-ACME_DIR="/etc/acme"
+ACME_RESOLVER="/usr/share/homevpn/acme-resolve.sh"
 STATE_FILE="/tmp/homevpn.state"
 PLUGIN_FILE="/etc/strongswan.d/charon/homevpn.conf"
 INCLUDE_FILE="/var/etc/homevpn.include"
@@ -173,37 +173,79 @@ san_exact_match() {
 	return 1
 }
 
-# ACME mode: copy certs issued by luci-app-acme into swanctl layout.
+# ACME mode: copy the certificate luci-app-acme issued into the swanctl layout.
+# Resolution (state dir candidates by mtime, acme-common stable links as
+# fallback) lives in the shared resolver; here: validate + install.
 sync_acme_certs() {
 	# NB: busybox ash evaluates later assignments in the SAME `local` statement
 	# against the OUTER scope — `local d="$1" s="x$d"` yields s="x" — so keep
 	# them on separate lines.
 	local domain="$1"
-	local src="$ACME_DIR/$domain"
-	[ -s "$src/$domain.cer" ] && [ -s "$src/$domain.key" ] || {
-		logger_tag "ACME: $src missing cert/key (issue it in Services → Let's Encrypt first)"
+	local src src_crt src_key
+	. "$ACME_RESOLVER" || return 1
+	if ! homevpn_acme_resolve "$domain"; then
+		logger_tag "ACME: no certificate for '$domain' (looked in /etc/acme/<domain>{,_ecc,_rsa}/ and /etc/ssl/acme/ — issue it in Services → Let's Encrypt first)"
 		return 1
-	}
+	fi
+	src_crt="$HV_ACME_CRT"; src_key="$HV_ACME_KEY"
 	# Same rule as the import path: the server address must EXACTLY equal a
 	# SAN of the issued leaf (wildcard SANs never match — strongSwan does not
 	# support wildcard certificates). Refuse the sync and keep the deployed
 	# certificate; otherwise every IKE_AUTH would fail.
-	if ! san_exact_match "$(effective_remote)" "$src/$domain.cer"; then
+	if ! san_exact_match "$(effective_remote)" "$src_crt"; then
 		logger_tag "ACME: refusing to sync '$domain' — server address '$(effective_remote)' is not an exact SAN of it (wildcard SANs never match); keeping the deployed certificate"
 		return 1
 	fi
+	# key ↔ certificate must be a pair (acme.sh never mismatches, but a
+	# hand-edited state dir or a mid-reissue file swap can)
+	local cert_pub key_pub
+	cert_pub="$(openssl x509 -in "$src_crt" -pubkey -noout 2>/dev/null | openssl sha256 2>/dev/null | awk '{print $NF}')"
+	key_pub="$(openssl pkey -in "$src_key" -pubout 2>/dev/null | openssl sha256 2>/dev/null | awk '{print $NF}')"
+	[ -n "$cert_pub" ] && [ "$cert_pub" = "$key_pub" ] || {
+		logger_tag "ACME: refusing to sync '$domain' — private key does not match the certificate; keeping the deployed certificate"
+		return 1
+	}
+	# already in sync? compare leaf pubkeys (cheaper than hashing full PEMs)
+	if [ -s "$X509_DIR/homevpn-server.crt" ] && [ -s "$KEY_DIR/homevpn-server.key" ]; then
+		local dep_pub
+		dep_pub="$(openssl x509 -in "$X509_DIR/homevpn-server.crt" -pubkey -noout 2>/dev/null | openssl sha256 2>/dev/null | awk '{print $NF}')"
+		if [ "$dep_pub" = "$cert_pub" ]; then
+			# refresh the CA file too (chain root may have rotated on reissue)
+			extract_acme_ca "$src_crt" > "$CA_DIR/.homevpn-acme.tmp" \
+				&& [ -s "$CA_DIR/.homevpn-acme.tmp" ] \
+				&& mv "$CA_DIR/.homevpn-acme.tmp" "$CA_DIR/homevpn-acme.crt" \
+				|| rm -f "$CA_DIR/.homevpn-acme.tmp"
+			return 0
+		fi
+	fi
+	# install: stage + rename so charon never reads a half-written file
+	local T
+	T="$(mktemp -d /tmp/homevpn-acme.XXXXXX)" || return 1
 	mkdir -p "$X509_DIR" "$KEY_DIR" "$CA_DIR"
-	cp "$src/$domain.cer" "$X509_DIR/homevpn-server.crt"      # fullchain
-	# charon auto-loads private keys from private/ only (probed live: a key
-	# placed in x509/ is silently ignored by swanctl --load-creds)
-	cp "$src/$domain.key" "$KEY_DIR/homevpn-server.key"
-	chmod 600 "$KEY_DIR/homevpn-server.key"
-	# CA = LAST cert in the chain (the root); the FIRST is the leaf.
-	openssl crl2pkcs7 -nocrl -certfile "$src/$domain.cer" 2>/dev/null \
+	cp "$src_crt" "$T/server.crt"
+	cp "$src_key" "$T/server.key"
+	chmod 600 "$T/server.key"
+	extract_acme_ca "$src_crt" > "$T/ca.crt"
+	[ -s "$T/ca.crt" ] || {
+		logger_tag "ACME: no root cert in the chain of '$domain'"
+		rm -rf "$T"
+		return 1
+	}
+	mv "$T/server.crt" "$X509_DIR/homevpn-server.crt"
+	mv "$T/server.key" "$KEY_DIR/homevpn-server.key"
+	mv "$T/ca.crt" "$CA_DIR/homevpn-acme.crt"
+	rm -rf "$T"
+	logger_tag "ACME: synced certificate for $domain (from $src_crt)"
+}
+
+# Print the LAST certificate of a fullchain (the root CA) to stdout.
+# $1 = fullchain file, leaf first. acme.sh state dirs also ship ca.cer
+# (intermediates + root, no leaf) — but not in the /etc/ssl/acme fallback,
+# so derive it from the chain we already resolved instead of a second file.
+extract_acme_ca() {
+	openssl crl2pkcs7 -nocrl -certfile "$1" 2>/dev/null \
 		| openssl pkcs7 -print_certs 2>/dev/null \
-		| awk '/BEGIN CERT/{n++} {if (n) buf[n] = buf[n] $0 "\n"} END {printf "%s", buf[n]}' > "$CA_DIR/homevpn-acme.crt"
-	[ -s "$CA_DIR/homevpn-acme.crt" ] || { logger_tag "ACME: no root cert in chain"; return 1; }
-	logger_tag "ACME: synced certificate for $domain"
+		| awk '/BEGIN CERT/{n++} {if (n) buf[n] = buf[n] $0 "\n"} END {printf "%s", buf[n]}'
 }
 
 # ---- prechecks (fail-fast; the previously applied config stays live) --------
@@ -630,6 +672,7 @@ provision_certs() {
 			# rpcd provision handler surfaces it in the UI); boot tolerates
 			# it and keeps serving with whatever is deployed.
 			ACME_SYNC_FAILED=1
+			return 1
 		fi
 		;;
 	import)
@@ -643,6 +686,7 @@ provision_certs() {
 		logger_tag "cert_mode '$mode' unknown — no certificate provisioned (set selfsigned/import/acme)"
 		;;
 	esac
+	return 0
 }
 
 # ---- apply -------------------------------------------------------------------
@@ -741,7 +785,28 @@ extra_command "regen" "Regenerate + precheck + apply config (keeps charon runnin
 regen() {
 	load_env
 	[ -n "$LAN_ADDR" ] || { refuse_no_lan; return 1; }
+	# provision_certs: a cert_mode change flows through set_settings → regen;
+	# without the sync here a switch to ACME never copied the certificate.
+	provision_certs
 	apply_config regen
+}
+
+extra_command "sync-acme" "Re-sync the ACME certificate into swanctl and hot-reload credentials (for the acme hotplug hook)"
+sync-acme() {
+	load_env
+	# Only meaningful in ACME mode — the hook fires for EVERY domain the
+	# Let's Encrypt app manages; other domains are not ours to sync.
+	[ "$(hv_get cert_mode)" = acme ] || { echo "homevpn: not in ACME mode — nothing to sync"; return 0; }
+	if provision_certs; then
+		# hot-reload credentials into the running charon (no restart,
+		# connected clients survive a certificate rotation)
+		swanctl --load-creds --clear --noprompt >/dev/null 2>&1 \
+			|| { logger_tag "ACME: credentials reloaded, load-creds reported an error"; return 1; }
+		logger_tag "ACME: certificate re-synced and hot-reloaded into charon"
+		return 0
+	fi
+	logger_tag "ACME: re-sync refused — the deployed certificate keeps serving"
+	return 1
 }
 
 reload_service() {

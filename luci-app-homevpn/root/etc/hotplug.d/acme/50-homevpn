@@ -1,0 +1,8 @@
+#!/bin/sh
+# homevpn — ACME renewal/issue hook (acme-common >= 1.5 notify → hotplug acme).
+# When luci-app-acme issues or renews ANY domain, re-sync ours into swanctl
+# and hot-reload charon credentials — zero-touch renewal for the IKEv2 server.
+# /etc/init.d/homevpn sync-acme no-ops unless cert_mode=acme, so firing on
+# foreign domains is harmless.
+[ "$ACTION" = renewed ] || [ "$ACTION" = issued ] || return 0
+/etc/init.d/homevpn sync-acme >/dev/null 2>&1 &

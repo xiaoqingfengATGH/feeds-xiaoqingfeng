@@ -97,6 +97,13 @@ call)
 		json_add_string  remote "$(effective_remote)"
 		caf="$(ca_file)"
 		json_add_boolean pki_ready "$([ -n "$caf" ] && echo 1 || echo 0)"
+		# ACME prerequisite: does /etc/acme/<domain>/ hold cert+key?
+		acme_dom="$(cfg acme_domain)"
+		if [ -n "$acme_dom" ] && [ -s "/etc/acme/$acme_dom/$acme_dom.cer" ] && [ -s "/etc/acme/$acme_dom/$acme_dom.key" ]; then
+			json_add_boolean acme_ready 1
+		else
+			json_add_boolean acme_ready 0
+		fi
 		# SAN check: cert SAN must match remote (the one hard rule).
 		# A wildcard SAN (*.example.com) matches any single-label host under it.
 		# openssl prints "IP Address:1.2.3.4" / "DNS:foo.example" — normalize.

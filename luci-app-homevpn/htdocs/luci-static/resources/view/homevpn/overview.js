@@ -192,10 +192,21 @@ return view.extend({
 		]);
 		var sAcme = E('input', { 'type': 'text', 'value': set.acme_domain || '', 'placeholder': 'domain from Services → Let\u0027s Encrypt', 'style': 'width:16em' });
 		/* only meaningful in ACME mode — hidden otherwise */
+		var acmeHint = E('div', { 'class': 'cbi-section-descr', 'style': 'margin:.25em 0 0' }, '');
+		function updAcmeHint() {
+			var dom = (sAcme.value || '').trim();
+			if (st.acme_ready && dom === (set.acme_domain || ''))
+				{ acmeHint.textContent = _('✓ Certificate present at /etc/acme/<domain>/ — switching is allowed.'); acmeHint.style.color = '#2e7d32'; }
+			else if (dom)
+				{ acmeHint.textContent = _('Issue the certificate first in Services → Let\u0027s Encrypt, then switch here — switching is refused until /etc/acme/<domain>/ holds the certificate, the old mode keeps serving.'); acmeHint.style.color = '#c62828'; }
+			else
+				{ acmeHint.textContent = _('Set the domain issued in Services → Let\u0027s Encrypt (e.g. vpn.example.com).'); acmeHint.style.color = ''; }
+		}
+		sAcme.addEventListener('input', updAcmeHint);
+		updAcmeHint();
 		var acmeRow = E('div', { 'class': 'cbi-value' }, [ E('label', { 'class': 'cbi-value-title' }, _('ACME domain')), E('div', { 'class': 'cbi-value-field' }, [
 			sAcme,
-			E('div', { 'class': 'cbi-section-descr', 'style': 'margin:.25em 0 0' },
-				_('Issue the certificate first in Services → Let\u0027s Encrypt, then switch here. Switching is refused until /etc/acme/<domain>/ holds the certificate — the old mode keeps serving.'))
+			acmeHint
 		]) ]);
 
 		/* ---- import-mode: deployed-cert info panel + collapsible upload ---- */

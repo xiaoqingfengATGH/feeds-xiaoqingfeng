@@ -157,6 +157,22 @@ effective_remote() {
 	echo "$r"
 }
 
+# Exact SAN membership: charon binds local.id (the server address) to a
+# certificate ONLY on an exact SAN match — wildcard SANs (*.example.com)
+# NEVER match (strongSwan does not support wildcard certificates; an address
+# only wildcard-covered makes every IKE_AUTH fail with AUTH_FAILED and
+# "no private key found"). Case-insensitive; DNS: and IP: forms accepted.
+# $1 = name-or-IP, $2 = certificate file.
+san_exact_match() {
+	local want s
+	[ -s "$2" ] || return 1
+	want="$(printf '%s' "$1" | tr 'a-z' 'A-Z')"
+	for s in $(openssl x509 -in "$2" -noout -ext subjectAltName 2>/dev/null | tail -n +2 | tr -d ' \n' | tr 'a-z' 'A-Z' | sed 's/IPADDRESS:/IP:/g' | tr ',' ' '); do
+		[ "DNS:$want" = "$s" ] || [ "IP:$want" = "$s" ] && return 0
+	done
+	return 1
+}
+
 # ACME mode: copy certs issued by luci-app-acme into swanctl layout.
 sync_acme_certs() {
 	# NB: busybox ash evaluates later assignments in the SAME `local` statement
@@ -168,6 +184,14 @@ sync_acme_certs() {
 		logger_tag "ACME: $src missing cert/key (issue it in Services → Let's Encrypt first)"
 		return 1
 	}
+	# Same rule as the import path: the server address must EXACTLY equal a
+	# SAN of the issued leaf (wildcard SANs never match — strongSwan does not
+	# support wildcard certificates). Refuse the sync and keep the deployed
+	# certificate; otherwise every IKE_AUTH would fail.
+	if ! san_exact_match "$(effective_remote)" "$src/$domain.cer"; then
+		logger_tag "ACME: refusing to sync '$domain' — server address '$(effective_remote)' is not an exact SAN of it (wildcard SANs never match); keeping the deployed certificate"
+		return 1
+	fi
 	mkdir -p "$X509_DIR" "$KEY_DIR" "$CA_DIR"
 	cp "$src/$domain.cer" "$X509_DIR/homevpn-server.crt"      # fullchain
 	# charon auto-loads private keys from private/ only (probed live: a key

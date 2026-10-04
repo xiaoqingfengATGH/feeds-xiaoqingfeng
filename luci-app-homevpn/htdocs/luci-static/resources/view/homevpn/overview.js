@@ -96,7 +96,7 @@ return view.extend({
 				E('tr', { 'class': 'tr' }, [ E('td', { 'class': 'td left' }, _('Listening (500/4500)')), E('td', { 'class': 'td left' }, badge(st.listening, _('yes'), _('no'))) ]),
 				E('tr', { 'class': 'tr' }, [ E('td', { 'class': 'td left' }, _('Certificate mode')), E('td', { 'class': 'td left' }, modeLabel[st.mode] || st.mode) ]),
 				E('tr', { 'class': 'tr' }, [ E('td', { 'class': 'td left' }, _('Server certificate / CA')), E('td', { 'class': 'td left' }, badge(st.pki_ready, _('present'), _('missing'))) ]),
-				E('tr', { 'class': 'tr' }, [ E('td', { 'class': 'td left' }, _('Certificate SAN matches server address')), E('td', { 'class': 'td left' }, badge(st.san_ok, _('match'), _('MISMATCH — clients cannot connect'))) ]),
+				E('tr', { 'class': 'tr' }, [ E('td', { 'class': 'td left' }, _('Certificate SAN matches server address')), E('td', { 'class': 'td left' }, badge(st.san_ok, _('exact match'), _('MISMATCH — server address must be an exact SAN (wildcards never match)'))) ]),
 				E('tr', { 'class': 'tr' }, [ E('td', { 'class': 'td left' }, _('Firewall INPUT rules (500/4500/ESP)')), E('td', { 'class': 'td left' }, badge(st.input_rules, _('present'), _('missing'))) ]),
 				E('tr', { 'class': 'tr' }, [ E('td', { 'class': 'td left' }, _('Connection loaded in charon')), E('td', { 'class': 'td left' }, badge(st.conn_loaded, _('loaded'), _('not loaded'))) ]),
 				E('tr', { 'class': 'tr' }, [ E('td', { 'class': 'td left', 'width': '33%' }, _('Server address (clients dial)')), E('td', { 'class': 'td left' }, st.remote || _('(not set — WAN IP will be used)')) ]),
@@ -311,7 +311,7 @@ return view.extend({
 					})
 				}, _('Upload & apply')),
 				' ',
-				E('span', { 'style': 'color:#666;font-size:90%' }, _('Validated before anything is written: PEM parse, expiry, SAN present, key↔certificate pair, CA signs the certificate. On any error nothing is changed.'))
+				E('span', { 'style': 'color:#666;font-size:90%' }, _('Validated before anything is written: PEM parse, expiry, SAN present, server address must be an EXACT SAN (wildcard SANs never match in strongSwan), key↔certificate pair, CA signs the certificate. On any error nothing is changed.'))
 			]) ])
 		]);
 		function updImportBox() {
@@ -332,7 +332,7 @@ return view.extend({
 		nodes.appendChild(E('div', { 'class': 'cbi-section' }, [
 			E('h3', {}, _('Server settings')),
 			E('p', { 'class': 'cbi-section-descr' },
-				_('Server address is what clients dial (DDNS name or public IP) — the certificate SAN must match it. Self-signed mode generates a CA + server certificate on first boot; import mode uploads your own certificate files; ACME mode syncs a certificate issued by the Let\u0027s Encrypt app (on sync failure the previously deployed certificate keeps serving — it never silently switches to self-signed).')),
+				_('Server address is what clients dial (DDNS name or public IP) — it must EXACTLY equal one SAN of the certificate: strongSwan never matches wildcard SANs (*.example.com), so an address only wildcard-covered fails every connection. Self-signed mode generates a CA + server certificate on first boot; import mode uploads your own certificate files; ACME mode syncs a certificate issued by the Let\u0027s Encrypt app (on sync failure the previously deployed certificate keeps serving — it never silently switches to self-signed).')),
 			E('div', { 'class': 'cbi-value' }, [ E('label', { 'class': 'cbi-value-title' }, _('Server address (DDNS/IP)')), E('div', { 'class': 'cbi-value-field' }, sRemote) ]),
 			E('div', { 'class': 'cbi-value' }, [ E('label', { 'class': 'cbi-value-title' }, _('VPN display name')), E('div', { 'class': 'cbi-value-field' }, sName) ]),
 			E('div', { 'class': 'cbi-value' }, [ E('label', { 'class': 'cbi-value-title' }, _('Certificate mode')), E('div', { 'class': 'cbi-value-field' }, sMode) ]),

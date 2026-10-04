@@ -38,6 +38,22 @@ effective_remote() {
 	ip -4 addr show dev "${dev:-eth1}" 2>/dev/null | grep -oE '[0-9]+\.[0-9]+\.[0-9]+\.[0-9]+' | head -1
 }
 
+# Exact SAN membership: charon binds local.id (the server address) to a
+# certificate ONLY on an exact SAN match — wildcard SANs (*.example.com)
+# NEVER match (strongSwan does not support wildcard certificates; an address
+# only wildcard-covered makes every IKE_AUTH fail with AUTH_FAILED and
+# "no private key found"). Case-insensitive; DNS: and IP: forms accepted.
+# $1 = name-or-IP, $2 = certificate file.
+san_exact_match() {
+	local want s
+	[ -s "$2" ] || return 1
+	want="$(printf '%s' "$1" | tr 'a-z' 'A-Z')"
+	for s in $(openssl x509 -in "$2" -noout -ext subjectAltName 2>/dev/null | tail -n +2 | tr -d ' \n' | tr 'a-z' 'A-Z' | sed 's/IPADDRESS:/IP:/g' | tr ',' ' '); do
+		[ "DNS:$want" = "$s" ] || [ "IP:$want" = "$s" ] && return 0
+	done
+	return 1
+}
+
 ca_file() { [ -s "$CA_ACME" ] && echo "$CA_ACME" && return; [ -s "$CA_SELF" ] && echo "$CA_SELF"; }
 
 regen_secrets() {
@@ -104,27 +120,15 @@ call)
 		else
 			json_add_boolean acme_ready 0
 		fi
-		# SAN check: cert SAN must match remote (the one hard rule).
-		# A wildcard SAN (*.example.com) matches any single-label host under it.
-		# openssl prints "IP Address:1.2.3.4" / "DNS:foo.example" — normalize.
+		# SAN check: the server address must EXACTLY equal one SAN of the
+		# deployed certificate — the same rule charon applies when binding
+		# local.id to a certificate. Wildcard SANs (*.example.com) NEVER
+		# match: strongSwan does not support wildcard certificates, so an
+		# address only wildcard-covered is a hard mismatch (every IKE_AUTH
+		# would fail with AUTH_FAILED and "no private key found").
 		san_ok=0
 		if [ -n "$caf" ] && [ -s "$SRV_CERT" ]; then
-			rem="$(effective_remote)"
-			cert_san="$(openssl x509 -in "$SRV_CERT" -noout -text 2>/dev/null | grep -A1 "Subject Alternative Name" | tail -1 | sed 's/IP Address:/IP:/g; s/ //g')"
-			echo "$cert_san" | grep -qi "DNS:$(effective_remote)\|IP:$(effective_remote)" && san_ok=1
-			if [ "$san_ok" != 1 ]; then
-				# wildcard: DNS:*.example.com (possibly multiple, comma-separated)
-				for san in $(echo "$cert_san" | tr ',' ' '); do
-					case "$san" in
-					DNS:\*.*)
-						pat="${san#DNS:}"; base="${pat#*.}"
-						case "$rem" in
-						*."$base") case "$rem" in *.*."$base") ;; *) san_ok=1; break ;; esac ;;
-						esac
-						;;
-					esac
-				done
-			fi
+			san_exact_match "$(effective_remote)" "$SRV_CERT" && san_ok=1
 		fi
 		json_add_boolean san_ok "$san_ok"
 		# deployed certificate details (import-mode info panel)
@@ -344,6 +348,14 @@ set_user_ip)
 		# SAN is mandatory: the client compares it against the address it dials.
 		openssl x509 -in "$T/x509/server.crt" -noout -text 2>/dev/null | grep -q "Subject Alternative Name" || \
 			err "server certificate has no Subject Alternative Name — clients cannot match it (reissue with SAN)"
+		# The server address must EXACTLY equal one SAN of the uploaded cert —
+		# charon binds local.id (the server address) to a certificate only on
+		# an exact SAN match. Wildcard SANs (*.example.com) NEVER match
+		# (strongSwan does not support wildcard certificates), so a cert that
+		# covers the address only via wildcard can never authenticate this
+		# server — every IKE_AUTH would fail. Reject it before deploying.
+		san_exact_match "$(effective_remote)" "$T/x509/server.crt" || \
+			err "server address '$(effective_remote)' is not an exact SAN of the uploaded certificate (SANs: $(openssl x509 -in "$T/x509/server.crt" -noout -ext subjectAltName 2>/dev/null | tail -n +2 | tr -d ' \n')) — strongSwan never matches wildcard SANs: set the server address to an exact SAN of the certificate, or reissue it with the server address as SAN"
 		# key <-> cert must be a pair
 		cert_pub="$(openssl x509 -in "$T/x509/server.crt" -pubkey -noout 2>/dev/null | openssl sha256 2>/dev/null | awk '{print $NF}')"
 		key_pub="$(openssl pkey -in "$T/private/server.key" -pubout 2>/dev/null | openssl sha256 2>/dev/null | awk '{print $NF}')"

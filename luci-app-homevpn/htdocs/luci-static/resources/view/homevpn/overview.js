@@ -47,6 +47,21 @@ return view.extend({
 
 		/* ---- server status + readiness ---- */
 		var modeLabel = { selfsigned: _('Self-signed'), import: _('Imported'), acme: _('ACME (Let\u0027s Encrypt)') };
+		var appliedCell = (modeLabels[st.applied_mode] || st.applied_mode || '—') + (st.applied_pool ? ' — ' + st.applied_pool : '');
+		var appliedModeRow;
+		if (st.ip_mode && st.ip_mode !== st.applied_mode) {
+			appliedModeRow = E('tr', { 'class': 'tr', 'style': 'background:rgba(217,83,79,.12)' }, [
+				E('td', { 'class': 'td left', 'width': '33%' }, _('IP allocation mode (applied)')),
+				E('td', { 'class': 'td left' }, [
+					E('strong', { 'style': 'color:#d9534f' }, appliedCell),
+					E('br'),
+					E('small', { 'style': 'color:#d9534f' }, _('Selected %s is NOT applied — the precheck refused it (reason below). The highlighted mode is what clients get right now.').format(modeLabels[st.ip_mode] || st.ip_mode))
+				])
+			]);
+		}
+		else {
+			appliedModeRow = E('tr', { 'class': 'tr' }, [ E('td', { 'class': 'td left', 'width': '33%' }, _('IP allocation mode (applied)')), E('td', { 'class': 'td left' }, appliedCell) ]);
+		}
 		var sBox = E('div', { 'class': 'cbi-section' }, [ E('h3', {}, _('Server status')),
 			E('table', { 'class': 'table' }, [
 				E('tr', { 'class': 'tr' }, [ E('td', { 'class': 'td left', 'width': '33%' }, _('strongSwan (charon)')), E('td', { 'class': 'td left' }, badge(st.running, _('running'), _('stopped'))) ]),
@@ -57,7 +72,7 @@ return view.extend({
 				E('tr', { 'class': 'tr' }, [ E('td', { 'class': 'td left' }, _('Firewall INPUT rules (500/4500/ESP)')), E('td', { 'class': 'td left' }, badge(st.input_rules, _('present'), _('missing'))) ]),
 				E('tr', { 'class': 'tr' }, [ E('td', { 'class': 'td left' }, _('Connection loaded in charon')), E('td', { 'class': 'td left' }, badge(st.conn_loaded, _('loaded'), _('not loaded'))) ]),
 				E('tr', { 'class': 'tr' }, [ E('td', { 'class': 'td left', 'width': '33%' }, _('Server address (clients dial)')), E('td', { 'class': 'td left' }, st.remote || _('(not set — WAN IP will be used)')) ]),
-				E('tr', { 'class': 'tr' }, [ E('td', { 'class': 'td left' }, _('IP allocation mode (applied)')), E('td', { 'class': 'td left' }, (modeLabels[st.applied_mode] || st.applied_mode || '—') + (st.applied_pool ? ' — ' + st.applied_pool : '')) ]),
+				appliedModeRow,
 				E('tr', { 'class': 'tr' }, [ E('td', { 'class': 'td left' }, _('Connected clients')), E('td', { 'class': 'td left' }, String(clients.length)) ])
 			]) ]);
 		if (clients.length) {

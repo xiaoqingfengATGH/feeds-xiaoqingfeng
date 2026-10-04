@@ -562,9 +562,14 @@ provision_certs() {
 
 load_env() {
 	PROPOSALS="$(hv_get proposals)"
-	[ -n "$PROPOSALS" ] || PROPOSALS="aes256gcm16-prfsha384-ecp384, aes256-sha256-modp2048"
+	# Proposal #3 is the Windows 11 default fallback: Win11 without a custom
+	# IPsec policy only offers modp1024 DH; strong clients match #1/#2 first.
+	[ -n "$PROPOSALS" ] || PROPOSALS="aes256gcm16-prfsha384-ecp384, aes256-sha256-modp2048, aes256-sha384-modp1024"
 	ESP_PROPOSALS="$(hv_get esp_proposals)"
-	[ -n "$ESP_PROPOSALS" ] || ESP_PROPOSALS="aes256gcm16, aes256-sha1-modp2048"
+	# aes256-sha1 (no PFS) is the Windows 11 default fallback: Windows without
+	# a configured PfsGroup errors (13816) on rekeys when only KE-method
+	# proposals are offered. iOS/Android (PFS-capable) match #1/#2 first.
+	[ -n "$ESP_PROPOSALS" ] || ESP_PROPOSALS="aes256gcm16, aes256-sha1-modp2048, aes256-sha1"
 	LAN_IF="$(uci -q get network.lan.device)"
 	[ -n "$LAN_IF" ] || LAN_IF="br-lan"
 	LAN_ADDR="$(uci -q get network.lan.ipaddr)"
@@ -591,6 +596,11 @@ apply_config() { # $1 = "start" (restart charon) or "regen" (surgical reload)
 		fi
 		return 1
 	fi
+	# Success path too: users added via LuCI flow through add_user → regen →
+	# apply_config regen. Without rewriting the secrets file here, charon kept
+	# the previous (possibly empty) file and the new user failed EAP with
+	# "no EAP key found" — the client reports "wrong password" and drops.
+	regen_secrets
 	render_plugin_conf
 	render_conf
 	apply_include
@@ -616,7 +626,8 @@ start_service() {
 	[ -n "$LAN_ADDR" ] || { refuse_no_lan; return 1; }
 	ensure_firewall
 	provision_certs
-	regen_secrets
+	# regen_secrets lives inside apply_config now (single source of truth,
+	# runs on both refused and success paths).
 	apply_config start
 }
 

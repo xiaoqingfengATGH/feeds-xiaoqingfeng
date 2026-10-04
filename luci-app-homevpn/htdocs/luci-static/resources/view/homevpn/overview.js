@@ -31,6 +31,20 @@ function saveBlob(text, filename, mime) {
 	var a = E('a', { 'href': URL.createObjectURL(blob), 'download': filename });
 	document.body.appendChild(a); a.click(); document.body.removeChild(a);
 }
+function flash(msg, cls) {
+	/* notification that survives the reload() after an import: stash it in
+	   the URL hash and replay it when the page renders again */
+	location.hash = 'hvmsg=' + encodeURIComponent(JSON.stringify({ m: msg, c: cls || 'info' }));
+}
+function replayFlash() {
+	var m = (location.hash || '').match(/^#hvmsg=(.*)$/);
+	if (!m) return;
+	history.replaceState(null, '', location.pathname + location.search);
+	try {
+		var d = JSON.parse(decodeURIComponent(m[1]));
+		ui.addNotification(null, E('p', d.m), d.c);
+	} catch (e) { }
+}
 
 return view.extend({
 	load: function() { return Promise.all([ callStatus(), callListUsers(), callGetSettings() ]); },
@@ -38,6 +52,7 @@ return view.extend({
 		var st = data[0] || {}, ul = data[1] || {}, set = data[2] || {};
 		var users = (ul && ul.users) || [];
 		var clients = (st && st.clients) || [];
+		replayFlash();
 		var badge = function(okv, t, f) { return E('span', { 'style': 'color:' + (okv ? '#2e7d32' : '#c62828') }, okv ? ('✓ ' + t) : ('✗ ' + f)); };
 		var modeLabels = { lansubnet: _('LAN subnet pool + ARP proxy'), dhcp: _('DHCP (local dnsmasq)'), subnet: _('Independent subnet') };
 
@@ -223,8 +238,8 @@ return view.extend({
 										msg += ' ' + _('CA installed — client profiles will embed it.');
 									else
 										msg += ' ' + _('No CA uploaded — the deployed CA (if any) keeps serving client profiles.');
-									ui.addNotification(null, E('p', msg), 'info');
-									if (r.warning) ui.addNotification(null, E('p', r.warning), 'warning');
+									if (r.warning) msg += ' || ' + r.warning;
+									flash(msg, r.warning ? 'warning' : 'info');
 									reload();
 								}
 								else {

@@ -81,6 +81,7 @@ list)
 	json_add_object "get_settings"; json_close_object
 	json_add_object "set_settings"; json_add_string remote ""; json_add_string vpn_name ""; json_add_string cert_mode ""; json_add_string acme_domain ""; json_close_object
 	json_add_object "provision";    json_close_object
+	json_add_object "upload_certs"; json_add_string server ""; json_add_string key ""; json_add_string ca ""; json_close_object
 	json_add_object "download";     json_add_string name ""; json_add_string what ""; json_close_object
 	json_dump
 	;;
@@ -251,6 +252,76 @@ set_user_ip)
 		# (re)run provisioning now: PKI + conf + secrets + firewall + load
 		out="$(/etc/init.d/homevpn provision 2>&1)"
 		json_init; ok; json_add_string output "$out"; json_dump
+		;;
+	upload_certs)
+		# Import own certificate: validate a candidate set server-side, then
+		# atomically install PEM files into the swanctl layout. All-or-nothing:
+		# any validation failure leaves the deployed files untouched.
+		#   $1 server  = server certificate (PEM, fullchain ok)
+		#   $2 key     = matching private key (PEM, unencrypted)
+		#   $3 ca      = CA certificate (PEM) clients will be told to trust
+		# Any subset may be given; a field left empty keeps the deployed file.
+		json_get_var up_server server; json_get_var up_key key; json_get_var up_ca ca
+		[ -n "$up_server$up_key$up_ca" ] || err "nothing to upload — pick at least one file"
+
+		T="$(mktemp -d /tmp/homevpn-up.XXXXXX)" || err "mktemp failed"
+		trap 'rm -rf "$T"' EXIT INT TERM
+		mkdir -p "$T/x509" "$T/x509ca" "$T/private"
+
+		# ---- stage uploads (or fall back to the deployed files) ----
+		if [ -n "$up_server" ]; then printf '%s\n' "$up_server" > "$T/x509/server.crt"; else cp "$SWANCTL/x509/homevpn-server.crt" "$T/x509/server.crt" 2>/dev/null; fi
+		if [ -n "$up_key" ]; then printf '%s\n' "$up_key" > "$T/private/server.key"; else cp "$SWANCTL/private/homevpn-server.key" "$T/private/server.key" 2>/dev/null; fi
+		if [ -n "$up_ca" ]; then printf '%s\n' "$up_ca" > "$T/x509ca/ca.crt"; else cp "$SWANCTL/x509ca/homevpn-ca.crt" "$T/x509ca/ca.crt" 2>/dev/null; fi
+
+		# ---- validate the RESULTING set, fail-fast, nothing deployed yet ----
+		[ -s "$T/x509/server.crt" ] && [ -s "$T/private/server.key" ] || \
+			err "incomplete set: server certificate + private key required (upload both, or deploy the missing part first)"
+		oerr="$(openssl x509 -in "$T/x509/server.crt" -noout 2>&1)" || err "server certificate: not a valid PEM certificate — $(echo "$oerr" | tail -1)"
+		oerr="$(openssl pkey -in "$T/private/server.key" -noout 2>&1)" || err "private key: not a valid unencrypted PEM key — $(echo "$oerr" | tail -1) (export WITHOUT a passphrase)"
+		openssl x509 -in "$T/x509/server.crt" -checkend 0 -noout >/dev/null 2>&1 || \
+			err "server certificate expired on $(openssl x509 -in "$T/x509/server.crt" -noout -enddate 2>/dev/null | cut -d= -f2)"
+		# SAN is mandatory: the client compares it against the address it dials.
+		openssl x509 -in "$T/x509/server.crt" -noout -text 2>/dev/null | grep -q "Subject Alternative Name" || \
+			err "server certificate has no Subject Alternative Name — clients cannot match it (reissue with SAN)"
+		# key <-> cert must be a pair
+		cert_pub="$(openssl x509 -in "$T/x509/server.crt" -pubkey -noout 2>/dev/null | openssl sha256 2>/dev/null | awk '{print $NF}')"
+		key_pub="$(openssl pkey -in "$T/private/server.key" -pubout 2>/dev/null | openssl sha256 2>/dev/null | awk '{print $NF}')"
+		[ -n "$cert_pub" ] && [ "$cert_pub" = "$key_pub" ] || err "private key does not match the server certificate (public keys differ)"
+		# CA (if present in the resulting set): valid PEM + actually signs the server cert
+		ca_warn=""
+		if [ -s "$T/x509ca/ca.crt" ]; then
+			oerr="$(openssl x509 -in "$T/x509ca/ca.crt" -noout 2>&1)" || err "CA certificate: not a valid PEM certificate — $(echo "$oerr" | tail -1)"
+			if ! openssl verify -CAfile "$T/x509ca/ca.crt" "$T/x509/server.crt" >/dev/null 2>&1; then
+				[ -n "$up_ca" ] && err "CA certificate does not sign the server certificate — import the issuer CA, or leave the CA field empty to keep the current one"
+				ca_warn="deployed CA does not sign the uploaded server certificate — clients that trust this CA will reject it"
+			fi
+		else
+			ca_warn="no CA deployed — client profiles embed the CA, so upload one or the generated profiles cannot verify the server"
+		fi
+
+		# ---- all checks passed: install atomically (same-name replace) ----
+		cp "$T/x509/server.crt" "$SWANCTL/x509/homevpn-server.crt"
+		cp "$T/private/server.key" "$SWANCTL/private/homevpn-server.key"
+		chmod 600 "$SWANCTL/private/homevpn-server.key"
+		rm -f "$SWANCTL/x509/homevpn-server.key"   # stray key beside the cert confuses nobody but cleanup is cheap
+		ca_installed=0
+		if [ -s "$T/x509ca/ca.crt" ]; then
+			cp "$T/x509ca/ca.crt" "$SWANCTL/x509ca/homevpn-ca.crt"
+			# ca_file() prefers homevpn-acme.crt — remove it so the imported CA wins
+			rm -f "$SWANCTL/x509ca/homevpn-acme.crt"
+			ca_installed=1
+		fi
+		# switch to import mode (idempotent) so the app never overwrites these files
+		[ "$(cfg cert_mode)" = "import" ] || { uci -q set "${CFG}.config.cert_mode=import"; uci -q commit "$CFG"; }
+		# hot-reload credentials into the running charon (no restart, clients stay up)
+		swanctl --load-creds --clear --noprompt >/dev/null 2>&1
+		json_init; ok
+		json_add_string subject "$(openssl x509 -in "$SWANCTL/x509/homevpn-server.crt" -noout -subject 2>/dev/null | sed 's/^subject=//')"
+		json_add_string san "$(openssl x509 -in "$SWANCTL/x509/homevpn-server.crt" -noout -ext subjectAltName 2>/dev/null | tail -n +2 | tr -d ' ' | tr '\n' ',' | sed 's/,$//')"
+		json_add_string expires "$(openssl x509 -in "$SWANCTL/x509/homevpn-server.crt" -noout -enddate 2>/dev/null | cut -d= -f2)"
+		json_add_boolean ca_installed "$ca_installed"
+		[ -n "$ca_warn" ] && json_add_string warning "$ca_warn"
+		json_dump
 		;;
 	download)
 		json_get_var name name; json_get_var what what

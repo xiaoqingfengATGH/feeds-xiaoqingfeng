@@ -11,6 +11,7 @@ var callAddUser     = rpc.declare({ object: 'homevpn', method: 'add_user', param
 var callDelUser     = rpc.declare({ object: 'homevpn', method: 'del_user', params: [ 'name' ] });
 var callSetUserIp   = rpc.declare({ object: 'homevpn', method: 'set_user_ip', params: [ 'name', 'ip' ] });
 var callProvision   = rpc.declare({ object: 'homevpn', method: 'provision' });
+var callUploadCerts = rpc.declare({ object: 'homevpn', method: 'upload_certs', params: [ 'server', 'key', 'ca' ] });
 var callDownload    = rpc.declare({ object: 'homevpn', method: 'download', params: [ 'name', 'what' ] });
 
 function reload() { return location.reload(); }
@@ -175,6 +176,80 @@ return view.extend({
 			E('option', { 'value': 'acme', 'selected': (set.cert_mode === 'acme' ? 'selected' : null) }, _('ACME / Let\u0027s Encrypt'))
 		]);
 		var sAcme = E('input', { 'type': 'text', 'value': set.acme_domain || '', 'placeholder': 'domain from Services → Let\u0027s Encrypt', 'style': 'width:16em' });
+
+		/* ---- import-mode certificate upload (shown only for cert_mode=import) ---- */
+		function readPem(file) {
+			/* frontend sanity: reject non-text uploads early (DER/PKCS#12) —
+			   full validation happens server-side */
+			return new Promise(function(resolve) {
+				var fr = new FileReader();
+				fr.onload = function() {
+					var t = String(fr.result || '');
+					if (!/-----BEGIN [^-]+-----/.test(t)) { resolve(null); return; }
+					resolve(t);
+				};
+				fr.onerror = function() { resolve(null); };
+				fr.readAsText(file);
+			});
+		}
+		var upServer = E('input', { 'type': 'file', 'accept': '.crt,.cer,.pem' });
+		var upKey    = E('input', { 'type': 'file', 'accept': '.key,.pem' });
+		var upCa     = E('input', { 'type': 'file', 'accept': '.crt,.cer,.pem' });
+		[ upServer, upKey, upCa ].forEach(function(el) { el.style.width = '16em'; });
+		var upHint = E('p', { 'class': 'cbi-section-descr' });
+		var importBox = E('div', { 'style': 'border:1px dashed #888;padding:.6em .9em;margin:.3em 0 .3em' }, [
+			E('strong', {}, _('Import own certificate (PEM)')),
+			upHint,
+			E('div', { 'class': 'cbi-value' }, [ E('label', { 'class': 'cbi-value-title' }, _('Server certificate')), E('div', { 'class': 'cbi-value-field' }, upServer) ]),
+			E('div', { 'class': 'cbi-value' }, [ E('label', { 'class': 'cbi-value-title' }, _('Private key (unencrypted)')), E('div', { 'class': 'cbi-value-field' }, upKey) ]),
+			E('div', { 'class': 'cbi-value' }, [ E('label', { 'class': 'cbi-value-title' }, _('CA certificate (for clients)')), E('div', { 'class': 'cbi-value-field' }, upCa) ]),
+			E('div', { 'class': 'cbi-value' }, [ E('div', { 'class': 'cbi-value-field' }, [
+				E('button', {
+					'class': 'btn cbi-button cbi-button-apply',
+					'click': ui.createHandlerFn(this, function() {
+						var picked = [ upServer.files[0], upKey.files[0], upCa.files[0] ];
+						var names = [ _('server certificate'), _('private key'), _('CA certificate') ];
+						var missing = [0, 1, 2].filter(function(i) { return picked[i] === null || picked[i] === undefined; });
+						if (!(missing.length === 3) && (missing.indexOf(0) >= 0) !== (missing.indexOf(1) >= 0))
+							{ ui.addNotification(null, E('p', _('Server certificate and private key must be uploaded together.')), 'warning'); return; }
+						return Promise.all(picked.map(function(f) { return f ? readPem(f) : Promise.resolve(undefined); })).then(function(txts) {
+							for (var i = 0; i < 3; i++)
+								if (txts[i] === null)
+									{ ui.addNotification(null, E('p', _('%s: not a PEM text file — export Base64 PEM (a .p12/.der needs converting first).').format(names[i])), 'warning'); return; }
+							return callUploadCerts(txts[0] || '', txts[1] || '', txts[2] || '').then(function(r) {
+								if (r && r.ok) {
+									var msg = _('Certificate imported: %s — SAN %s, expires %s.').format(r.subject || '?', r.san || _('(none)'), r.expires || '?');
+									if (r.ca_installed)
+										msg += ' ' + _('CA installed — client profiles will embed it.');
+									else
+										msg += ' ' + _('No CA uploaded — the deployed CA (if any) keeps serving client profiles.');
+									ui.addNotification(null, E('p', msg), 'info');
+									if (r.warning) ui.addNotification(null, E('p', r.warning), 'warning');
+									reload();
+								}
+								else {
+									ok(r, _('Import certificate'));
+								}
+							});
+						});
+					})
+				}, _('Upload & apply')),
+				' ',
+				E('span', { 'style': 'color:#666;font-size:90%' }, _('Validated before anything is written: PEM parse, expiry, SAN present, key↔certificate pair, CA signs the certificate. On any error nothing is changed.'))
+			]) ])
+		]);
+		function updImportBox() {
+			var show = (sMode.value === 'import');
+			importBox.style.display = show ? '' : 'none';
+			if (show) {
+				var has = st.pki_ready;
+				upHint.textContent = has
+					? _('A certificate is deployed. Upload a replacement set (server certificate + private key, CA optional) — the old files are replaced only after all checks pass.')
+					: _('No certificate deployed yet. Upload the server certificate, its private key, and the CA certificate clients should trust (e.g. your NAS/ACME issuer CA).');
+			}
+		}
+		sMode.addEventListener('change', updImportBox);
+		updImportBox();
 		nodes.appendChild(E('div', { 'class': 'cbi-section' }, [
 			E('h3', {}, _('Server settings')),
 			E('p', { 'class': 'cbi-section-descr' },
@@ -183,6 +258,7 @@ return view.extend({
 			E('div', { 'class': 'cbi-value' }, [ E('label', { 'class': 'cbi-value-title' }, _('VPN display name')), E('div', { 'class': 'cbi-value-field' }, sName) ]),
 			E('div', { 'class': 'cbi-value' }, [ E('label', { 'class': 'cbi-value-title' }, _('Certificate mode')), E('div', { 'class': 'cbi-value-field' }, sMode) ]),
 			E('div', { 'class': 'cbi-value' }, [ E('label', { 'class': 'cbi-value-title' }, _('ACME domain')), E('div', { 'class': 'cbi-value-field' }, sAcme) ]),
+			importBox,
 			E('div', { 'class': 'cbi-value' }, [ E('div', { 'class': 'cbi-value-field' }, [
 				E('button', {
 					'class': 'btn cbi-button cbi-button-save',

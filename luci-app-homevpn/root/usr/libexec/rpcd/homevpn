@@ -104,6 +104,17 @@ call)
 		json_add_boolean san_ok "$san_ok"
 		json_add_boolean input_rules "$(/etc/init.d/firewall status >/dev/null 2>&1; uci -q get firewall.homevpn_nat_t >/dev/null && echo 1 || echo 0)"
 		json_add_boolean conn_loaded "$(swanctl --list-conn 2>/dev/null | grep -q homevpn-eap && echo 1 || echo 0)"
+		# precheck state (written by init.d apply_config) + applied config
+		state_get() { sed -n "s/^$1=//p" /tmp/homevpn.state 2>/dev/null | head -1; }
+		json_add_string  ip_mode "$(cfg ip_mode)"
+		json_add_string  applied_mode "$(state_get mode)"
+		json_add_string  applied_pool "$(state_get pool)"
+		json_add_string  applied_masq "$(state_get masq)"
+		json_add_string  lan_net "$(state_get lan_net)"
+		json_add_string  suggest "$(state_get suggest)"
+		pres="$(state_get result)"
+		json_add_string  precheck "${pres:-pending}"
+		json_add_string  precheck_reason "$(state_get reason)"
 		json_add_array clients
 		swanctl --list-sas 2>/dev/null | grep -E "remote '[^']+' @" > /tmp/.homevpn_sas.$$ 2>/dev/null
 		while IFS= read -r line; do
@@ -156,19 +167,39 @@ call)
 		json_add_string ike_enc "$(cfg ike_enc)"
 		json_add_string ike_int "$(cfg ike_int)"
 		json_add_string ike_dh "$(cfg ike_dh)"
+		json_add_string ip_mode "$(cfg ip_mode)"
+		json_add_string pool_start "$(cfg pool_start)"
+		json_add_string pool_end "$(cfg pool_end)"
+		json_add_string pool_subnet "$(cfg pool_subnet)"
+		json_add_string masq "$(cfg masq)"
 		json_dump
 		;;
 	set_settings)
 		json_get_var v_remote remote; json_get_var v_name vpn_name
 		json_get_var v_mode cert_mode; json_get_var v_acme acme_domain
+		json_get_var v_ipmode ip_mode; json_get_var v_ps pool_start
+		json_get_var v_pe pool_end; json_get_var v_pc pool_subnet
+		json_get_var v_masq masq
 		case "$v_mode" in selfsigned|import|acme) ;; *) v_mode="";; esac
+		case "$v_ipmode" in lansubnet|dhcp|subnet) ;; *) v_ipmode="";; esac
 		[ -n "$v_remote" ] && uci -q set "${CFG}.config.remote=${v_remote}"
 		[ -n "$v_name" ] && uci -q set "${CFG}.config.vpn_name=${v_name}"
 		[ -n "$v_mode" ] && uci -q set "${CFG}.config.cert_mode=${v_mode}"
 		[ -n "$v_acme" ] && uci -q set "${CFG}.config.acme_domain=${v_acme}"
+		# pool fields: empty input clears them back to the defaults
+		uci -q set "${CFG}.config.ip_mode=${v_ipmode:-lansubnet}"
+		uci -q set "${CFG}.config.pool_start=${v_ps}"
+		uci -q set "${CFG}.config.pool_end=${v_pe}"
+		uci -q set "${CFG}.config.pool_subnet=${v_pc}"
+		case "$v_masq" in 1|0) uci -q set "${CFG}.config.masq=${v_masq}" ;; esac
 		uci -q commit "$CFG"
-		/etc/init.d/homevpn regen >/dev/null 2>&1
-		json_init; ok; json_dump
+		# full regen (precheck + render + apply); returns the precheck verdict
+		out="$(/etc/init.d/homevpn regen 2>&1)"; rc=$?
+		json_init; ok
+		json_add_string output "$out"
+		json_add_boolean precheck_ok "$rc"
+		json_add_string precheck_reason "$(sed -n 's/^reason=//p' /tmp/homevpn.state 2>/dev/null | head -1)"
+		json_dump
 		;;
 	provision)
 		# (re)run provisioning now: PKI + conf + secrets + firewall + load

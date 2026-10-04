@@ -5,4 +5,17 @@ config homevpn 'config'
 	option ike_enc 'AES-256-GCM'
 	option ike_int 'SHA2-384'
 	option ike_dh '20'
+	# Virtual-IP allocation mode for VPN clients:
+	#   lansubnet — static pool carved from the LAN subnet + farp (safe default,
+	#               works as main or side router, zero main-router config)
+	#   dhcp      — charon relays to the local dnsmasq (THIS router must serve
+	#               DHCP on br-lan; per-user fixed IPs via identity_lease)
+	#   subnet    — independent pool subnet (cleanest as main router; on a side
+	#               router the main router needs a static route, or masq fallback)
+	option ip_mode 'lansubnet'
+	option pool_start ''
+	option pool_end ''
+	option pool_subnet ''
+	# masq fallback, subnet mode + side router + main router can't add a route
+	option masq '0'
 

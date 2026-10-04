@@ -1,7 +1,20 @@
 #!/bin/sh /etc/rc.common
 # homevpn — provision + supervise the router-local strongSwan IKEv2 server.
-# First boot: self-signed PKI, swanctl connection (DHCP pool + farp),
-# INPUT firewall rules. Re-renders when network.lan / homevpn changes.
+# First boot: self-signed PKI, swanctl connection, INPUT firewall rules.
+# Re-renders when network.lan changes.
+#
+# Virtual-IP allocation modes (UCI homevpn.config.ip_mode):
+#   lansubnet — static pool carved from the LAN subnet + farp proxy (default;
+#               works as main OR side router, zero main-router configuration)
+#   dhcp      — charon leases real LAN IPs from THIS router's dnsmasq
+#   subnet    — independent pool subnet. Main router: nothing else needed.
+#               Side router: add the suggested static route on the main
+#               router; masq=1 is a FALLBACK for main routers that cannot.
+#
+# Fail-fast: each mode is prechecked (ARP probe for pool occupancy, local
+# DHCP availability, kernel route lookup for subnet overlap). On refusal the
+# previously applied configuration stays live and the reason is written to
+# /tmp/homevpn.state (surfaced by the LuCI status banner).
 USE_PROCD=1
 START=99
 STOP=10
@@ -14,12 +27,49 @@ X509_DIR="$SWANCTL_DIR/x509"
 CA_DIR="$SWANCTL_DIR/x509ca"
 KEY_DIR="$SWANCTL_DIR/private"
 ACME_DIR="/etc/acme"
+STATE_FILE="/tmp/homevpn.state"
+PLUGIN_FILE="/etc/strongswan.d/charon/homevpn.conf"
+INCLUDE_FILE="/var/etc/homevpn.include"
+NFT_TBL="homevpn"
 
 logger_tag() { logger -t homevpn "$*"; }
 
 hv_get() { uci -q get "$CFG.config.$1"; }
 
+hv_state() { printf '%s\n' "$@" > "$STATE_FILE"; }
+state_get() { sed -n "s/^$1=//p" "$STATE_FILE" 2>/dev/null | head -1; }
+
 # ---- helpers ---------------------------------------------------------------
+
+valid_ip() {
+	echo "$1" | grep -qE '^(25[0-5]|2[0-4][0-9]|1[0-9][0-9]|[1-9]?[0-9])(\.(25[0-5]|2[0-4][0-9]|1[0-9][0-9]|[1-9]?[0-9])){3}$'
+}
+
+# 12-digit zero-padded comparable form (192.168.224.50 -> 192168224050)
+ip_key() { local IFS='.'; set -- $1; printf '%03d%03d%03d%03d' "$1" "$2" "$3" "$4"; }
+ip_last_octet() { local IFS='.'; set -- $1; echo "$4"; }
+ip_prefix3() { local IFS='.'; set -- $1; echo "$1.$2.$3"; }
+
+route_get() { ip route get "$1" 2>/dev/null | head -1; }
+
+# last address of base/prefix — probes subnet overlap at both ends
+subnet_last() { # $1 = base ip, $2 = prefix length
+	local a b c d p m
+	p="$2"
+	local IFS='.'
+	set -- $1
+	a=$1; b=$2; c=$3; d=$4
+	if [ "$p" -ge 25 ]; then
+		m=$(( (1 << (32 - p)) - 1 )); d=$((d | m))
+	elif [ "$p" -eq 24 ]; then d=255
+	elif [ "$p" -ge 17 ]; then d=255; m=$(( (1 << (24 - p)) - 1 )); c=$((c | m))
+	elif [ "$p" -eq 16 ]; then d=255; c=255
+	elif [ "$p" -ge 9 ]; then d=255; c=255; m=$(( (1 << (16 - p)) - 1 )); b=$((b | m))
+	else d=255; c=255; b=255
+	fi
+	echo "$a.$b.$c.$d"
+}
+
 fw_add_rule() {
 	# fw_add_rule <name> <uci options...>
 	local name="$1"; shift
@@ -67,12 +117,12 @@ gen_selfsigned_pki() {
 	fi
 
 	# Server certificate — SAN must equal what clients dial.
-	if [ ! -s "$X509_DIR/homevpn-server.crt" ] || [ ! -s "$KEY_DIR/homevpn-server.key" ]; then
+	if [ ! -s "$X509_DIR/homevpn-server.crt" ] || [ ! -s "$X509_DIR/homevpn-server.key" ]; then
 		openssl req -new -sha256 \
-			-key "$KEY_DIR/homevpn-server.key" 2>/dev/null >/dev/null || \
-		openssl genrsa -out "$KEY_DIR/homevpn-server.key" 2048 2>/dev/null
+			-key "$X509_DIR/homevpn-server.key" 2>/dev/null >/dev/null || \
+		openssl genrsa -out "$X509_DIR/homevpn-server.key" 2048 2>/dev/null
 		openssl req -new -sha256 \
-			-key "$KEY_DIR/homevpn-server.key" \
+			-key "$X509_DIR/homevpn-server.key" \
 			-out /tmp/homevpn-server.csr \
 			-subj "/CN=$cn" 2>/dev/null
 		# SAN may be an IP address — detect and use IP: form.
@@ -113,8 +163,8 @@ sync_acme_certs() {
 	[ -d "$src" ] || { logger_tag "ACME: $src missing"; return 1; }
 	mkdir -p "$X509_DIR" "$KEY_DIR"
 	cp "$src/$domain.cer" "$X509_DIR/homevpn-server.crt"      # fullchain
-	cp "$src/$domain.key" "$KEY_DIR/homevpn-server.key"
-	chmod 600 "$KEY_DIR/homevpn-server.key"
+	cp "$src/$domain.key" "$X509_DIR/homevpn-server.key"
+	chmod 600 "$X509_DIR/homevpn-server.key"
 	# CA = last cert in the chain is the root; use it as trust anchor too.
 	openssl crl2pkcs7 -nocrl -certfile "$src/$domain.cer" 2>/dev/null \
 		| openssl pkcs7 -print_certs 2>/dev/null \
@@ -122,26 +172,314 @@ sync_acme_certs() {
 	logger_tag "ACME: synced certificate for $domain"
 }
 
-render_conf() {
-	local remote lan_net lan_addr pool_start pool_end pool_net
-	remote="$(effective_remote)"
-	lan_addr="$(uci -q get network.lan.ipaddr)"
-	lan_net="$(ip route | awk -v a="$lan_addr" '$0 ~ a {print $1; exit}')"
+# ---- prechecks (fail-fast; the previously applied config stays live) --------
 
-	# Static virtual-IP pool carved out of the LAN subnet, deliberately
-	# OUTSIDE the LAN's DHCP range (dnsmasq start=100 limit=150 => .100-.249;
-	# other DHCP servers on this LAN use the same convention) and away from
-	# the router's own static address. .50-.99 is free on a typical LAN.
-	# Derive from the router's OWN address (192.168.224.247 -> 192.168.224):
-	# prefix-octets of the router IP are always inside the LAN subnet, for
-	# any prefix length (and .0 network-address stripping breaks on !/24).
-	pool_net="${lan_addr%.*}"
-	pool_start="${pool_net}.50"
-	pool_end="${pool_net}.99"
+refuse() { # $1 = human-readable reason
+	# keep the last-APPLIED fields so a later regen can still clean up
+	local km kp kx ks
+	km="$(state_get mode)"; kp="$(state_get pool)"; kx="$(state_get masq)"; ks="$(state_get suggest)"
+	hv_state "result=refused" "reason=$1" "mode=$km" "pool=$kp" "masq=$kx" "suggest=$ks"
+	logger_tag "precheck REFUSED: $1"
+	echo "homevpn: refusing to render: $1" >&2
+}
 
-	mkdir -p "$SWANCTL_DIR/conf.d"
-	cat > "$CONN_FILE" <<EOF
+precheck() {
+	local ip rt occ occ_file o3 i ps pe n pc base pfx last
+	MODE="$(hv_get ip_mode)"
+	[ -n "$MODE" ] || MODE=lansubnet
+	CLIENT_SRC=""; POOL_SPEC=""; POOL_SUBNET=""; SUGGEST=""
+	case "$MODE" in
+	lansubnet)
+		ps="$(hv_get pool_start)"; pe="$(hv_get pool_end)"
+		[ -n "$ps" ] || ps="${LAN_ADDR%.*}.50"
+		[ -n "$pe" ] || pe="${LAN_ADDR%.*}.99"
+		valid_ip "$ps" || { refuse "pool_start '$ps' is not a valid IPv4 address"; return 1; }
+		valid_ip "$pe" || { refuse "pool_end '$pe' is not a valid IPv4 address"; return 1; }
+		[ "$(ip_key "$ps")" -le "$(ip_key "$pe")" ] || { refuse "pool_start ($ps) is greater than pool_end ($pe)"; return 1; }
+		[ "$(ip_key "$ps" | cut -c1-9)" = "$(ip_key "$pe" | cut -c1-9)" ] || { refuse "pool must fit inside a single /24 — start and end are in different subnets"; return 1; }
+		n=$(( $(ip_last_octet "$pe") - $(ip_last_octet "$ps") + 1 ))
+		[ "$n" -le 200 ] || { refuse "pool range too large ($n addresses, max 200)"; return 1; }
+		[ "$(ip_last_octet "$ps")" -eq 0 ] && { refuse "pool must not include the network address $ps"; return 1; }
+		[ "$(ip_last_octet "$pe")" -eq 255 ] && { refuse "pool must not include the broadcast address $pe"; return 1; }
+		for ip in "$ps" "$pe"; do
+			rt="$(route_get "$ip")"
+			echo "$rt" | grep -q "dev $LAN_IF" || { refuse "$ip is outside the LAN subnet ($LAN_NET on $LAN_IF) — the pool must be carved from the LAN subnet"; return 1; }
+			echo "$rt" | grep -q ' via ' && { refuse "$ip is outside the LAN subnet ($LAN_NET on $LAN_IF) — the pool must be carved from the LAN subnet"; return 1; }
+		done
+		if [ "$(ip_key "$ps")" -le "$(ip_key "$LAN_ADDR")" ] && [ "$(ip_key "$LAN_ADDR")" -le "$(ip_key "$pe")" ]; then
+			refuse "pool range includes this router's own address $LAN_ADDR"; return 1
+		fi
+		# ARP occupancy probe (parallel, 1s per address). Skip IPs currently
+		# leased to CONNECTED VPN clients — farp answers ARP for those, they
+		# would otherwise look occupied and refuse our own running pool.
+		if command -v arping >/dev/null 2>&1; then
+			occ_file="/tmp/homevpn-arp.$$"
+			rm -f "$occ_file"
+			vips="$(swanctl --list-sas 2>/dev/null | grep -oE '\[[0-9.]+\]' | tr -d '[]' | tr '\n' ' ')"
+			o3="$(ip_prefix3 "$ps")"
+			i="$(ip_last_octet "$ps")"
+			while [ "$i" -le "$(ip_last_octet "$pe")" ]; do
+				case " $vips " in *" $o3.$i "*) i=$((i + 1)); continue ;; esac
+				( arping -c 1 -w 1 -I "$LAN_IF" "$o3.$i" >/dev/null 2>&1 && echo "$o3.$i" >> "$occ_file" ) &
+				i=$((i + 1))
+			done
+			wait
+			if [ -s "$occ_file" ]; then
+				occ="$(tr '\n' ' ' < "$occ_file" | sed 's/ $//')"
+				rm -f "$occ_file"
+				refuse "pool addresses already in use on the LAN (ARP probe answered): $occ — pick a free range"; return 1
+			fi
+			rm -f "$occ_file"
+		else
+			logger_tag "warning: arping not found — skipping pool occupancy probe"
+		fi
+		CLIENT_SRC="$ps-$pe"
+		POOL_SPEC="$ps-$pe"
+		;;
+	dhcp)
+		[ -f /usr/lib/ipsec/plugins/libstrongswan-dhcp.so ] || { refuse "dhcp mode needs the strongswan-mod-dhcp plugin (not installed)"; return 1; }
+		grep -hs '^dhcp-range' /var/etc/dnsmasq.conf.* /tmp/dnsmasq.d/*.conf /etc/dnsmasq.conf 2>/dev/null | grep -q . || {
+			refuse "dhcp mode requires THIS router's dnsmasq to serve DHCP on $LAN_IF (no dhcp-range found) — enable LAN DHCP here, or use lansubnet mode"
+			return 1
+		}
+		[ "$(uci -q get firewall.@defaults[0].flow_offloading)" = "1" ] && {
+			refuse "dhcp mode together with firewall flow-offloading: offloaded flows bypass the IPsec policies (traffic blackholes after the first packets) — disable flow offloading or use lansubnet mode"
+			return 1
+		}
+		CLIENT_SRC="$LAN_NET"
+		POOL_SPEC="dhcp (real LAN leases via local dnsmasq)"
+		;;
+	subnet)
+		pc="$(hv_get pool_subnet)"
+		[ -n "$pc" ] || { refuse "subnet mode requires pool_subnet (e.g. 10.100.1.0/24)"; return 1; }
+		case "$pc" in
+			*/*) base="${pc%/*}"; pfx="${pc#*/}" ;;
+			*) refuse "pool_subnet must be in CIDR form a.b.c.d/N (got '$pc')"; return 1 ;;
+		esac
+		valid_ip "$base" || { refuse "pool_subnet '$pc' is not a valid subnet"; return 1; }
+		case "$pfx" in ''|*[!0-9]*) refuse "pool_subnet prefix '$pfx' is not a number"; return 1 ;; esac
+		[ "$pfx" -ge 8 ] && [ "$pfx" -le 30 ] || { refuse "pool_subnet prefix must be between /8 and /30 (got /$pfx)"; return 1; }
+		last="$(subnet_last "$base" "$pfx")"
+		for ip in "$base" "$last"; do
+			rt="$(route_get "$ip")"
+			[ -n "$rt" ] || { refuse "cannot probe routing for $ip — no route?"; return 1; }
+			# local-table hit (loopback, own addresses) is a real overlap
+			case "$rt" in local*) refuse "pool_subnet $pc overlaps an existing local network: $rt — pick an unused subnet"; return 1 ;; esac
+			# our own previously installed pool route (plain dev lo in the main table)
+			echo "$rt" | grep -q "dev lo" && continue
+			echo "$rt" | grep -q ' via ' || { refuse "pool_subnet $pc overlaps an existing local network: $rt — pick an unused subnet"; return 1; }
+		done
+		POOL_SUBNET="$pc"
+		CLIENT_SRC="$pc"
+		POOL_SPEC="$pc"
+		SUGGEST="main router: destination $pc / gateway $LAN_ADDR (ip route add $pc via $LAN_ADDR)"
+		;;
+	*)
+		refuse "unknown ip_mode '$MODE' (expected lansubnet, dhcp or subnet)"; return 1
+		;;
+	esac
+	return 0
+}
+
+# ---- firewall / routing artifacts ------------------------------------------
+
+fw_rule_set() { # <name> <key=value>... — create or update, reload on change
+	local name="$1" key val cur changed=0
+	shift
+	uci -q get "firewall.$name" >/dev/null 2>&1 || { uci set "firewall.$name=rule"; changed=1; }
+	for kv in "$@"; do
+		key="${kv%%=*}"; val="${kv#*=}"
+		cur="$(uci -q get "firewall.$name.$key")"
+		[ "$cur" = "$val" ] || { uci set "firewall.$name.$kv"; changed=1; }
+	done
+	uci -q commit firewall
+	[ "$changed" = 1 ] && {
+		/etc/init.d/firewall reload >/dev/null 2>&1
+		logger_tag "firewall: updated rule $name"
+	}
+}
+
+apply_client_rules() {
+	# Decapped client traffic arrives on the WAN device — fw4/nftables here
+	# has no ipsec/xfrm matching, so client rules are scoped by source IP
+	# only. (The forward rule is belt-and-braces; the include below
+	# additionally short-circuits fw4's flow-offload rule for the same range.)
+	fw_rule_set homevpn_client_input "src=wan" "src_ip=$CLIENT_SRC" "family=ipv4" "target=ACCEPT" "name=homevpn-client-input"
+	fw_rule_set homevpn_client_fwd "src=wan" "src_ip=$CLIENT_SRC" "dest=lan" "family=ipv4" "target=ACCEPT" "name=homevpn-client-fwd"
+}
+
+nft_purge_fw4_forward() {
+	local h
+	for h in $(nft -a list chain inet fw4 forward 2>/dev/null | grep 'comment "homevpn' | sed -n 's/.*handle \([0-9]*\).*/\1/p'); do
+		nft delete rule inet fw4 forward handle "$h" 2>/dev/null
+	done
+}
+
+drop_client_include() {
+	uci -q delete firewall.homevpn_include
+	uci -q commit firewall
+	nft_purge_fw4_forward
+	nft delete table inet "$NFT_TBL" 2>/dev/null
+	rm -f "$INCLUDE_FILE"
+}
+
+apply_include() { # offload guard (+ masq fallback in subnet mode)
+	local out old_masq
+	old_masq="$(state_get masq)"
+	WANT_MASQ=0
+	if [ "$MODE" = subnet ] && [ "$(hv_get masq)" = 1 ]; then
+		WANT_MASQ=1
+	elif [ "$(hv_get masq)" = 1 ]; then
+		logger_tag "masq=1 ignored — only effective in subnet mode"
+	fi
+	if [ "$MODE" = dhcp ]; then
+		# no offload guard possible for unknown client IPs; the precheck
+		# already refused dhcp mode while flow-offloading is enabled
+		drop_client_include
+		return 0
+	fi
+	mkdir -p /var/etc
+	if [ "$WANT_MASQ" = 1 ]; then
+		cat > "$INCLUDE_FILE" <<EOF
+#!/bin/sh
 # Auto-generated by homevpn — do not edit by hand.
+# (1) Offload guard: accept VPN pool traffic early in fw4's forward chain so
+#     it never reaches fw4's "flow add @ft" rule — offloaded flows bypass
+#     the XFRM policies and blackhole IPsec traffic after the first packets.
+# (2) Masquerade fallback (subnet mode; use ONLY when the main router cannot
+#     take the suggested static route): NAT pool sources to this router.
+# NOTE: rules go in via 'nft -f -' heredoc — the CLI word-splits quoted
+# comments ("homevpn client-src" would arrive as two bare words and fail).
+for h in \$(nft -a list chain inet fw4 forward 2>/dev/null | grep 'comment "homevpn' | sed -n 's/.*handle \([0-9]*\).*/\1/p'); do
+	nft delete rule inet fw4 forward handle "\$h" 2>/dev/null
+done
+nft -f - <<'NFT'
+insert rule inet fw4 forward ip saddr $CLIENT_SRC counter accept comment "homevpn client-src"
+insert rule inet fw4 forward ip daddr $CLIENT_SRC counter accept comment "homevpn client-dst"
+NFT
+nft list table inet $NFT_TBL >/dev/null 2>&1 || {
+	nft add table inet $NFT_TBL
+	nft add chain inet $NFT_TBL postrouting '{ type nat hook postrouting priority srcnat; policy accept; }'
+}
+nft list chain inet $NFT_TBL postrouting 2>/dev/null | grep -q "saddr $POOL_SUBNET" || \\
+	nft add rule inet $NFT_TBL postrouting ip saddr $POOL_SUBNET oifname != "lo" counter masquerade
+exit 0
+EOF
+	else
+		cat > "$INCLUDE_FILE" <<EOF
+#!/bin/sh
+# Auto-generated by homevpn — do not edit by hand.
+# Offload guard: accept VPN pool traffic early in fw4's forward chain so it
+# never reaches fw4's "flow add @ft" rule — offloaded flows bypass the XFRM
+# policies and blackhole IPsec traffic after the first packets.
+# NOTE: rules go in via 'nft -f -' heredoc — the CLI word-splits quoted
+# comments ("homevpn client-src" would arrive as two bare words and fail).
+for h in \$(nft -a list chain inet fw4 forward 2>/dev/null | grep 'comment "homevpn' | sed -n 's/.*handle \([0-9]*\).*/\1/p'); do
+	nft delete rule inet fw4 forward handle "\$h" 2>/dev/null
+done
+nft -f - <<'NFT'
+insert rule inet fw4 forward ip saddr $CLIENT_SRC counter accept comment "homevpn client-src"
+insert rule inet fw4 forward ip daddr $CLIENT_SRC counter accept comment "homevpn client-dst"
+NFT
+# no masquerade — pool clients keep their real source IPs (the main router
+# has, or gets, the suggested static route)
+nft delete table inet $NFT_TBL 2>/dev/null
+exit 0
+EOF
+	fi
+	chmod 755 "$INCLUDE_FILE"
+	if [ "$(uci -q get firewall.homevpn_include.path)" != "$INCLUDE_FILE" ]; then
+		uci set firewall.homevpn_include=include
+		uci set firewall.homevpn_include.type=script
+		uci set firewall.homevpn_include.path="$INCLUDE_FILE"
+		uci -q delete firewall.homevpn_include.reload
+		uci -q commit firewall
+	fi
+	out="$(sh "$INCLUDE_FILE" 2>&1)"
+	[ -n "$out" ] && logger_tag "include: $out"
+	if [ "$old_masq" != "$WANT_MASQ" ]; then
+		[ "$WANT_MASQ" = 1 ] && logger_tag "masq fallback ENABLED for $POOL_SUBNET (LAN hosts will see this router's IP as source)"
+		[ "$WANT_MASQ" = 0 ] && logger_tag "masq fallback disabled"
+	fi
+}
+
+apply_subnet_routes() {
+	local old_mode old_pool
+	old_mode="$(state_get mode)"; old_pool="$(state_get pool)"
+	# drop a stale pool route from a previous subnet-mode config
+	if [ "$old_mode" = subnet ] && [ -n "$old_pool" ]; then
+		if [ "$MODE" != subnet ] || [ "$old_pool" != "$POOL_SUBNET" ]; then
+			ip route del "$old_pool" dev lo 2>/dev/null && logger_tag "route: removed stale pool route $old_pool dev lo"
+		fi
+	fi
+	if [ "$MODE" = subnet ]; then
+		ip route show dev lo 2>/dev/null | grep -q "^$POOL_SUBNET " || {
+			ip route replace "$POOL_SUBNET" dev lo && logger_tag "route: $POOL_SUBNET dev lo (pool handled locally)"
+		}
+	fi
+}
+
+# ---- rendering ---------------------------------------------------------------
+
+render_plugin_conf() { # sets PLUGIN_RESTART=1 when the dhcp plugin conf changed
+	local new
+	if [ "$MODE" = dhcp ]; then
+		new="dhcp {
+    # virtual-IP leases come from the local dnsmasq on the LAN bridge;
+    # identity_lease sends the IKE identity as DHCP client-id (enables
+    # per-user dhcp-host=id:<user>,<ip> bindings in dnsmasq)
+    interface = $LAN_IF
+    identity_lease = yes
+}"
+	else
+		new="# Auto-generated by homevpn — the dhcp plugin is only configured in dhcp mode.
+# NOTE: this file is included INSIDE charon.plugins{} (see /etc/strongswan.conf)."
+	fi
+	if [ ! -f "$PLUGIN_FILE" ] || [ "$(cat "$PLUGIN_FILE" 2>/dev/null)" != "$new" ]; then
+		mkdir -p /etc/strongswan.d/charon
+		printf '%s\n' "$new" > "$PLUGIN_FILE"
+		PLUGIN_RESTART=1
+	else
+		PLUGIN_RESTART=0
+	fi
+}
+
+render_conf() {
+	local remote conn_pools local_ts pools_block
+	remote="$(effective_remote)"
+	conn_pools="homevpn"
+	[ "$MODE" = dhcp ] && conn_pools="dhcp"
+	case "$MODE" in
+	subnet) local_ts="$LAN_NET, $POOL_SUBNET" ;;
+	*) local_ts="$LAN_NET" ;;
+	esac
+	case "$MODE" in
+	lansubnet)
+		pools_block="pools {
+    homevpn {
+        addrs = $POOL_SPEC
+    }
+}"
+		;;
+	subnet)
+		pools_block="pools {
+    homevpn {
+        addrs = $POOL_SUBNET
+    }
+}"
+		;;
+	dhcp)
+		# no pools{} — the dhcp plugin provides the virtual pool. A
+		# previously loaded 'homevpn' pool may stay registered in charon
+		# until its next restart (harmless: nothing references it).
+		pools_block=""
+		;;
+	esac
+	mkdir -p "$SWANCTL_DIR/conf.d"
+	{
+		cat <<EOF
+# Auto-generated by homevpn — do not edit by hand.
+# mode=$MODE pool=$POOL_SPEC
 connections {
     homevpn-eap {
         version = 2
@@ -153,7 +491,7 @@ connections {
         mobike = yes
         dpd_delay = 60s
         send_cert = always
-        pools = homevpn
+        pools = $conn_pools
         local {
             auth = pubkey
             id = $remote
@@ -164,7 +502,7 @@ connections {
         }
         children {
             homevpn-eap {
-                local_ts = $lan_net
+                local_ts = $local_ts
                 rekey_time = 1h
                 dpd_action = clear
                 close_action = clear
@@ -174,16 +512,9 @@ connections {
         }
     }
 }
-# Static virtual-IP pool (.50-.99 of the LAN subnet): charon assigns IPs
-# itself — no dependency on any DHCP server (this router's dnsmasq does not
-# serve DHCP on br-lan; another DHCP server lives at .254). farp answers ARP
-# for connected clients, so LAN peers can reach them.
-pools {
-    homevpn {
-        addrs = $pool_start-$pool_end
-    }
-}
 EOF
+		[ -n "$pools_block" ] && printf '%s\n' "$pools_block"
+	} > "$CONN_FILE"
 }
 
 regen_secrets() {
@@ -203,13 +534,10 @@ regen_secrets() {
 	chmod 600 "$SECRETS_FILE"
 }
 
-apply_all() {
+provision_certs() {
 	local mode acme_domain
 	mode="$(hv_get cert_mode)"
 	[ -n "$mode" ] || mode="selfsigned"
-
-	ensure_firewall
-
 	case "$mode" in
 	acme)
 		acme_domain="$(hv_get acme_domain)"
@@ -228,58 +556,76 @@ apply_all() {
 		gen_selfsigned_pki "$(effective_remote)"
 		;;
 	esac
+}
 
-	regen_secrets
+# ---- apply -------------------------------------------------------------------
+
+load_env() {
+	PROPOSALS="$(hv_get proposals)"
+	[ -n "$PROPOSALS" ] || PROPOSALS="aes256gcm16-prfsha384-ecp384, aes256-sha256-modp2048"
+	ESP_PROPOSALS="$(hv_get esp_proposals)"
+	[ -n "$ESP_PROPOSALS" ] || ESP_PROPOSALS="aes256gcm16, aes256-sha1-modp2048"
+	LAN_IF="$(uci -q get network.lan.device)"
+	[ -n "$LAN_IF" ] || LAN_IF="br-lan"
+	LAN_ADDR="$(uci -q get network.lan.ipaddr)"
+	LAN_NET="$(ip route | awk -v a="$LAN_ADDR" '$0 ~ a {print $1; exit}')"
+}
+
+refuse_no_lan() {
+	hv_state "result=refused" "reason=network.lan.ipaddr is not set" \
+		"mode=$(state_get mode)" "pool=$(state_get pool)" \
+		"masq=$(state_get masq)" "suggest=$(state_get suggest)"
+	logger_tag "network.lan.ipaddr not set — refusing to start"
+	return 1
+}
+
+apply_config() { # $1 = "start" (restart charon) or "regen" (surgical reload)
+	if ! precheck; then
+		# Refused: the last-applied conf stays live, but fresh EAP secrets
+		# must still reach charon (user add/del while a precheck refuses).
+		regen_secrets
+		if [ "$1" = start ]; then
+			/etc/init.d/swanctl restart >/dev/null 2>&1
+		else
+			swanctl --load-all >/tmp/homevpn-load.log 2>&1 || logger_tag "swanctl load-all failed: $(tail -1 /tmp/homevpn-load.log)"
+		fi
+		return 1
+	fi
+	render_plugin_conf
 	render_conf
-	swanctl --load-all >/tmp/homevpn-load.log 2>&1 || logger_tag "swanctl load-all failed: $(tail -1 /tmp/homevpn-load.log)"
-}
-
-render_strongswan_conf() {
-	# charon plugin options for the dhcp + farp provisioning model:
-	#   dhcp: enroll clients via dnsmasq on br-lan (real LAN leases)
-	#   farp: answer ARP for connected VPN clients
-	mkdir -p /etc/strongswan.d/charon
-	cat > /etc/strongswan.d/charon/homevpn.conf <<EOF
-# Auto-generated by homevpn — do not edit by hand.
-# NOTE: /etc/strongswan.d/charon/*.conf files are included INSIDE
-# charon.plugins{} (see /etc/strongswan.conf), so plugin sections must be
-# written FLAT here (no charon{plugins{}} wrapper, or the nesting silently
-# never applies).
-dhcp {
-    # DHCP requests go out on br-lan; dnsmasq hands out real leases.
-    interface = $LAN_IF
-}
-EOF
+	apply_include
+	apply_client_rules
+	apply_subnet_routes
+	if [ "$1" = start ] || [ "$PLUGIN_RESTART" = 1 ]; then
+		/etc/init.d/swanctl restart >/dev/null 2>&1
+		[ "$PLUGIN_RESTART" = 1 ] && [ "$1" != start ] && logger_tag "dhcp plugin config changed — charon restarted (connected clients reconnect)"
+	else
+		# swanctl --load-all reloads conns+secrets+pools in place;
+		# existing SAs survive.
+		swanctl --load-all >/tmp/homevpn-load.log 2>&1 || logger_tag "swanctl load-all failed: $(tail -1 /tmp/homevpn-load.log)"
+	fi
+	hv_state "result=ok" "mode=$MODE" "pool=$POOL_SPEC" "masq=$WANT_MASQ" "lan_net=$LAN_NET" "suggest=$SUGGEST"
+	logger_tag "applied: mode=$MODE pool=$POOL_SPEC masq=$WANT_MASQ"
+	return 0
 }
 
 start_service() {
 	# Guard: refuse to start before the config exists.
 	[ -s /etc/config/$CFG ] || { logger_tag "no /etc/config/$CFG — refusing to start" ; return 1; }
-
-	PROPOSALS="$(hv_get proposals)"
-	[ -n "$PROPOSALS" ] || PROPOSALS="aes256gcm16-prfsha384-ecp384, aes256-sha256-modp2048"
-	ESP_PROPOSALS="$(hv_get esp_proposals)"
-	[ -n "$ESP_PROPOSALS" ] || ESP_PROPOSALS="aes256gcm16, aes256-sha1-modp2048"
-
-	# LAN interface + subnet are derived, never hardcoded.
-	LAN_IF="$(uci -q get network.lan.device)"
-	[ -n "$LAN_IF" ] || LAN_IF="br-lan"
-	LAN_ADDR="$(uci -q get network.lan.ipaddr)"
-	LAN_NET="$(ip route | awk -v a="$LAN_ADDR" '$0 ~ a {print $1; exit}')"
-
-	apply_all
-	render_strongswan_conf
-
-	# charon itself is started by the swanctl init script; homevpn only
-	# provisions config (PKI/conf/secrets/firewall) and reloads it. No procd
-	# instance of our own — a second charon would fight for ports 500/4500.
-	/etc/init.d/swanctl restart >/dev/null 2>&1
+	load_env
+	[ -n "$LAN_ADDR" ] || { refuse_no_lan; return 1; }
+	ensure_firewall
+	provision_certs
+	regen_secrets
+	apply_config start
 }
 
 service_triggers() {
-	# Re-render when the LAN changes (subnet follows network.lan) or when
-	# homevpn config changes.
-	procd_add_reload_trigger "network" "homevpn"
+	# network.lan changes re-render the config (pool follows the LAN subnet).
+	# homevpn config changes are NOT hooked: the LuCI backend regenerates
+	# explicitly — a procd trigger here would full-restart charon (dropping
+	# every client) on each EAP-user add/del or settings save.
+	procd_add_reload_trigger "network"
 }
 
 extra_command "provision" "Run full provisioning now (PKI + conf + secrets + firewall)"
@@ -287,16 +633,11 @@ provision() {
 	start_service
 }
 
-extra_command "regen" "Regenerate secrets + swanctl config only (no charon restart)"
+extra_command "regen" "Regenerate + precheck + apply config (keeps charon running when possible)"
 regen() {
-	PROPOSALS="$(hv_get proposals)"
-	[ -n "$PROPOSALS" ] || PROPOSALS="aes256gcm16-prfsha384-ecp384, aes256-sha256-modp2048"
-	ESP_PROPOSALS="$(hv_get esp_proposals)"
-	[ -n "$ESP_PROPOSALS" ] || ESP_PROPOSALS="aes256gcm16, aes256-sha1-modp2048"
-	regen_secrets
-	render_conf
-	# swanctl --load-all reloads conns+secrets in place; existing SAs survive.
-	swanctl --load-all >/tmp/homevpn-load.log 2>&1 || logger_tag "swanctl load-all failed: $(tail -1 /tmp/homevpn-load.log)"
+	load_env
+	[ -n "$LAN_ADDR" ] || { refuse_no_lan; return 1; }
+	apply_config regen
 }
 
 reload_service() {
@@ -314,9 +655,15 @@ boot() {
 
 extra_command "status" "Show provisioning status"
 status() {
-	echo "mode: $(hv_get cert_mode || echo selfsigned)"
+	echo "cert_mode: $(hv_get cert_mode || echo selfsigned)"
 	echo "remote: $(effective_remote)"
+	echo "ip_mode: $(state_get mode || echo '(not applied yet)')"
+	echo "pool: $(state_get pool)"
+	echo "masq: $(state_get masq)"
+	echo "precheck: $(state_get result)$( [ "$(state_get result)" = refused ] && echo " — $(state_get reason)")"
+	[ -n "$(state_get suggest)" ] && echo "suggested: $(state_get suggest)"
 	echo "conn file: $( [ -s $CONN_FILE ] && echo present || echo missing)"
 	echo "server cert: $( [ -s $X509_DIR/homevpn-server.crt ] && echo present || echo missing)"
 	swanctl --list-conn 2>/dev/null | head -5
+	swanctl --list-pools 2>/dev/null | head -5
 }

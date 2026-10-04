@@ -14,10 +14,11 @@ LUCI_DESCRIPTION:=Provisions a router-local strongSwan IKEv2 EAP-MSCHAPv2 server
 	client profiles. Certificate modes: self-signed / import / ACME sync.
 LUCI_DEPENDS:=+strongswan-swanctl +strongswan-mod-eap-mschapv2 +strongswan-mod-gcm \
 	+strongswan-mod-openssl +strongswan-mod-curve25519 +strongswan-mod-pkcs8 \
-	+strongswan-mod-dhcp +strongswan-mod-farp +openssl-util +libopenssl-legacy
+	+strongswan-mod-dhcp +strongswan-mod-farp +openssl-util +libopenssl-legacy \
+	+iputils-arping
 LUCI_PKGARCH:=all
-PKG_VERSION:=2.0.0
-PKG_RELEASE:=5
+PKG_VERSION:=2.1.0
+PKG_RELEASE:=6
 PKG_LICENSE:=MIT
 PKG_MAINTAINER:=xiaoqingfeng <xiaoqingfengatgm@gmail.com>
 

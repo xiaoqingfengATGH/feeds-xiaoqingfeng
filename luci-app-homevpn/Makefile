@@ -18,9 +18,17 @@ LUCI_DEPENDS:=+strongswan-swanctl +strongswan-mod-eap-mschapv2 +strongswan-mod-g
 	+iputils-arping
 LUCI_PKGARCH:=all
 PKG_VERSION:=2.1.0
-PKG_RELEASE:=10
+PKG_RELEASE:=11
 PKG_LICENSE:=MIT
 PKG_MAINTAINER:=xiaoqingfeng <xiaoqingfengatgm@gmail.com>
+
+# /etc/config/homevpn ships as a package file but is NOT a conffile by
+# default — without this marker opkg --force-reinstall / upgrades happily
+# OVERWRITE user config (EAP users, fixed IPs, cert mode, remote) with the
+# package defaults. Declare it a conffile so upgrades preserve it.
+define Package/luci-app-homevpn/conffiles
+/etc/config/homevpn
+endef
 
 include $(TOPDIR)/feeds/luci/luci.mk
 

@@ -9,6 +9,7 @@ var callGetSettings = rpc.declare({ object: 'homevpn', method: 'get_settings' })
 var callSetSettings = rpc.declare({ object: 'homevpn', method: 'set_settings', params: [ 'remote', 'vpn_name', 'cert_mode', 'acme_domain', 'ip_mode', 'pool_start', 'pool_end', 'pool_subnet', 'masq' ] });
 var callAddUser     = rpc.declare({ object: 'homevpn', method: 'add_user', params: [ 'name', 'password' ] });
 var callDelUser     = rpc.declare({ object: 'homevpn', method: 'del_user', params: [ 'name' ] });
+var callSetUserIp   = rpc.declare({ object: 'homevpn', method: 'set_user_ip', params: [ 'name', 'ip' ] });
 var callProvision   = rpc.declare({ object: 'homevpn', method: 'provision' });
 var callDownload    = rpc.declare({ object: 'homevpn', method: 'download', params: [ 'name', 'what' ] });
 
@@ -205,11 +206,35 @@ return view.extend({
 		]));
 
 		/* ---- EAP users ---- */
-		var rows = [ E('tr', { 'class': 'tr table-titles' }, [ E('th', { 'class': 'th' }, _('Username')), E('th', { 'class': 'th cbi-section-actions' }, _('Client config + actions')) ]) ];
-		if (!users.length) rows.push(E('tr', { 'class': 'tr' }, [ E('td', { 'class': 'td', 'colspan': 2 }, E('em', {}, _('No users yet.'))) ]));
+		var isDhcp = (st.applied_mode === 'dhcp');
+		var rows = [ E('tr', { 'class': 'tr table-titles' }, [ E('th', { 'class': 'th' }, _('Username')), E('th', { 'class': 'th' }, _('Fixed IP (DHCP mode)')), E('th', { 'class': 'th cbi-section-actions' }, _('Client config + actions')) ]) ];
+		if (!users.length) rows.push(E('tr', { 'class': 'tr' }, [ E('td', { 'class': 'td', 'colspan': 3 }, E('em', {}, _('No users yet.'))) ]));
 		users.forEach(function(u) {
+			var fipCell;
+			if (isDhcp) {
+				var ipInput = E('input', { 'type': 'text', 'value': u.fixed_ip || '', 'placeholder': _('dynamic'), 'style': 'width:9em' });
+				fipCell = E('td', { 'class': 'td' }, [
+					ipInput, ' ',
+					E('button', { 'class': 'btn cbi-button cbi-button-save', 'click': ui.createHandlerFn(this, function() {
+						var v = (ipInput.value || '').trim();
+						return callSetUserIp(u.name, v).then(function(r) {
+							if (ok(r, _('Set fixed IP')))
+								ui.addNotification(null, E('p', v ? _('Fixed IP for "%s": %s — applies on the next dial-in.').format(u.name, v) : _('Fixed IP for "%s" cleared — dynamic allocation again.').format(u.name)), 'info');
+						});
+					}) }, _('Set')),
+					(u.fixed_ip ? E('button', { 'class': 'btn cbi-button cbi-button-remove', 'click': ui.createHandlerFn(this, function() {
+						return callSetUserIp(u.name, '').then(function(r) {
+							if (ok(r, _('Clear fixed IP'))) { ui.addNotification(null, E('p', _('Fixed IP for "%s" cleared — dynamic allocation again.').format(u.name)), 'info'); ipInput.value = ''; }
+						});
+					}) }, _('Clear')) : '')
+				]);
+			}
+			else {
+				fipCell = E('td', { 'class': 'td' }, E('em', {}, u.fixed_ip ? _('%s (not applied — IP mode is not DHCP)').format(u.fixed_ip) : '—'));
+			}
 			rows.push(E('tr', { 'class': 'tr' }, [
 				E('td', { 'class': 'td' }, u.name),
+				fipCell,
 				E('td', { 'class': 'td cbi-section-actions' }, [
 					E('button', { 'class': 'btn cbi-button cbi-button-action', 'click': ui.createHandlerFn(this, function() {
 						return callDownload(u.name, 'mobileconfig').then(function(r) {
@@ -234,6 +259,8 @@ return view.extend({
 		var nPw = E('input', { 'type': 'text', 'value': '', 'placeholder': _('password'), 'style': 'width:14em' });
 		nodes.appendChild(E('div', { 'class': 'cbi-section' }, [
 			E('h3', {}, _('EAP accounts')),
+			E('p', { 'class': 'cbi-section-descr' },
+				_('Fixed IP pins a user\'s virtual IP in DHCP mode: the username travels as the DHCP client-id and dnsmasq hands out the pinned address. Leave empty for dynamic allocation; applies on the next dial-in.')),
 			E('div', { 'class': 'table cbi-section-table' }, rows),
 			E('div', { 'class': 'cbi-value', 'style': 'margin-top:1em' }, [
 				E('label', { 'class': 'cbi-value-title' }, _('Add user')),

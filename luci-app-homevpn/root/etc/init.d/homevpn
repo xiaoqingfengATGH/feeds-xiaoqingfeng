@@ -419,6 +419,37 @@ apply_subnet_routes() {
 	fi
 }
 
+# user-fixed IPs (dhcp mode): render per-user dhcp-host bindings for the local
+# dnsmasq. identity_lease sends the EAP username as the DHCP client-id, so
+# dhcp-host=id:<name>,<ip> pins the VIP dnsmasq hands to that user's leases.
+DHCPHOST_FILE="/tmp/dnsmasq.d/homevpn.conf"
+
+render_user_bindings() {
+	local new="" i=0 name fip
+	if [ "$MODE" = dhcp ]; then
+		while uci -q get "$CFG.@user[$i]" >/dev/null 2>&1; do
+			name="$(uci -q get "$CFG.@user[$i].name")"
+			fip="$(uci -q get "$CFG.@user[$i].fixed_ip")"
+			if [ -n "$name" ] && [ -n "$fip" ]; then
+				new="${new}dhcp-host=id:${name},${fip}
+"
+			fi
+			i=$((i+1))
+		done
+	fi
+	if [ "$new" != "$(cat "$DHCPHOST_FILE" 2>/dev/null)" ]; then
+		mkdir -p /tmp/dnsmasq.d
+		# out-of-range IPs are fine (verified: dnsmasq hands static
+		# dhcp-host IPs even outside dhcp-range); an occupied / in-use IP
+		# would have been rejected by set_user_ip at config time — if the
+		# network changed under us since, dnsmasq refuses the config on
+		# start (conflict) and logread shows it, fail-fast visible.
+		printf '%s' "$new" > "$DHCPHOST_FILE"
+		/etc/init.d/dnsmasq restart 2>/dev/null
+		logger_tag "dnsmasq bindings: $(grep -c '^dhcp-host' "$DHCPHOST_FILE") user-fixed IP(s) — dnsmasq restarted"
+	fi
+}
+
 # ---- rendering ---------------------------------------------------------------
 
 render_plugin_conf() { # sets PLUGIN_RESTART=1 when the dhcp plugin conf changed
@@ -615,6 +646,7 @@ apply_config() { # $1 = "start" (restart charon) or "regen" (surgical reload)
 	# "no EAP key found" — the client reports "wrong password" and drops.
 	regen_secrets
 	render_plugin_conf
+	render_user_bindings
 	render_conf
 	apply_include
 	apply_client_rules

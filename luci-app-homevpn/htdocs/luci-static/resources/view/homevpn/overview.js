@@ -191,6 +191,12 @@ return view.extend({
 			E('option', { 'value': 'acme', 'selected': (set.cert_mode === 'acme' ? 'selected' : null) }, _('ACME / Let\u0027s Encrypt'))
 		]);
 		var sAcme = E('input', { 'type': 'text', 'value': set.acme_domain || '', 'placeholder': 'domain from Services → Let\u0027s Encrypt', 'style': 'width:16em' });
+		/* only meaningful in ACME mode — hidden otherwise */
+		var acmeRow = E('div', { 'class': 'cbi-value' }, [ E('label', { 'class': 'cbi-value-title' }, _('ACME domain')), E('div', { 'class': 'cbi-value-field' }, [
+			sAcme,
+			E('div', { 'class': 'cbi-section-descr', 'style': 'margin:.25em 0 0' },
+				_('Synced from /etc/acme/<domain>/ on reboot or “Re-provision now” — issue the certificate first in Services → Let\u0027s Encrypt.'))
+		]) ]);
 
 		/* ---- import-mode: deployed-cert info panel + collapsible upload ---- */
 		var certRows = [];
@@ -285,6 +291,7 @@ return view.extend({
 		]);
 		function updImportBox() {
 			var show = (sMode.value === 'import');
+			acmeRow.style.display = (sMode.value === 'acme') ? '' : 'none';
 			var hasCert = !!(st.cert && st.cert.subject);
 			importBox.style.display = (show && !hasCert) ? '' : 'none';
 			certInfo.style.display = (show && hasCert) ? '' : 'none';
@@ -304,7 +311,7 @@ return view.extend({
 			E('div', { 'class': 'cbi-value' }, [ E('label', { 'class': 'cbi-value-title' }, _('Server address (DDNS/IP)')), E('div', { 'class': 'cbi-value-field' }, sRemote) ]),
 			E('div', { 'class': 'cbi-value' }, [ E('label', { 'class': 'cbi-value-title' }, _('VPN display name')), E('div', { 'class': 'cbi-value-field' }, sName) ]),
 			E('div', { 'class': 'cbi-value' }, [ E('label', { 'class': 'cbi-value-title' }, _('Certificate mode')), E('div', { 'class': 'cbi-value-field' }, sMode) ]),
-			E('div', { 'class': 'cbi-value' }, [ E('label', { 'class': 'cbi-value-title' }, _('ACME domain')), E('div', { 'class': 'cbi-value-field' }, sAcme) ]),
+			acmeRow,
 			importBox,
 			certInfo,
 			E('div', { 'class': 'cbi-value' }, [ E('div', { 'class': 'cbi-value-field' }, [

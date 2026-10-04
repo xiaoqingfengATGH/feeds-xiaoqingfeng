@@ -117,12 +117,12 @@ gen_selfsigned_pki() {
 	fi
 
 	# Server certificate — SAN must equal what clients dial.
-	if [ ! -s "$X509_DIR/homevpn-server.crt" ] || [ ! -s "$X509_DIR/homevpn-server.key" ]; then
+	if [ ! -s "$X509_DIR/homevpn-server.crt" ] || [ ! -s "$KEY_DIR/homevpn-server.key" ]; then
 		openssl req -new -sha256 \
-			-key "$X509_DIR/homevpn-server.key" 2>/dev/null >/dev/null || \
-		openssl genrsa -out "$X509_DIR/homevpn-server.key" 2048 2>/dev/null
+			-key "$KEY_DIR/homevpn-server.key" 2>/dev/null >/dev/null || \
+		openssl genrsa -out "$KEY_DIR/homevpn-server.key" 2048 2>/dev/null
 		openssl req -new -sha256 \
-			-key "$X509_DIR/homevpn-server.key" \
+			-key "$KEY_DIR/homevpn-server.key" \
 			-out /tmp/homevpn-server.csr \
 			-subj "/CN=$cn" 2>/dev/null
 		# SAN may be an IP address — detect and use IP: form.
@@ -159,16 +159,26 @@ effective_remote() {
 
 # ACME mode: copy certs issued by luci-app-acme into swanctl layout.
 sync_acme_certs() {
-	local domain="$1" src="$ACME_DIR/$domain"
-	[ -d "$src" ] || { logger_tag "ACME: $src missing"; return 1; }
-	mkdir -p "$X509_DIR" "$KEY_DIR"
+	# NB: busybox ash evaluates later assignments in the SAME `local` statement
+	# against the OUTER scope — `local d="$1" s="x$d"` yields s="x" — so keep
+	# them on separate lines.
+	local domain="$1"
+	local src="$ACME_DIR/$domain"
+	[ -s "$src/$domain.cer" ] && [ -s "$src/$domain.key" ] || {
+		logger_tag "ACME: $src missing cert/key (issue it in Services → Let's Encrypt first)"
+		return 1
+	}
+	mkdir -p "$X509_DIR" "$KEY_DIR" "$CA_DIR"
 	cp "$src/$domain.cer" "$X509_DIR/homevpn-server.crt"      # fullchain
-	cp "$src/$domain.key" "$X509_DIR/homevpn-server.key"
-	chmod 600 "$X509_DIR/homevpn-server.key"
-	# CA = last cert in the chain is the root; use it as trust anchor too.
+	# charon auto-loads private keys from private/ only (probed live: a key
+	# placed in x509/ is silently ignored by swanctl --load-creds)
+	cp "$src/$domain.key" "$KEY_DIR/homevpn-server.key"
+	chmod 600 "$KEY_DIR/homevpn-server.key"
+	# CA = LAST cert in the chain (the root); the FIRST is the leaf.
 	openssl crl2pkcs7 -nocrl -certfile "$src/$domain.cer" 2>/dev/null \
 		| openssl pkcs7 -print_certs 2>/dev/null \
-		| awk '/BEGIN CERT/{n++} n==1' > "$CA_DIR/homevpn-acme.crt"
+		| awk '/BEGIN CERT/{n++} {if (n) buf[n] = buf[n] $0 "\n"} END {printf "%s", buf[n]}' > "$CA_DIR/homevpn-acme.crt"
+	[ -s "$CA_DIR/homevpn-acme.crt" ] || { logger_tag "ACME: no root cert in chain"; return 1; }
 	logger_tag "ACME: synced certificate for $domain"
 }
 

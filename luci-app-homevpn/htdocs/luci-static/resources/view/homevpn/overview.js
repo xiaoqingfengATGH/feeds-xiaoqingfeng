@@ -212,17 +212,20 @@ return view.extend({
 		users.forEach(function(u) {
 			var fipCell;
 			if (isDhcp) {
-				var ipInput = E('input', { 'type': 'text', 'value': u.fixed_ip || '', 'placeholder': _('dynamic'), 'style': 'width:9em' });
-				fipCell = E('td', { 'class': 'td' }, [
+				/* match the theme's .cbi-button height (30px) so the input,
+				   the Set/Clear buttons and the username text align on one line */
+				var ipInput = E('input', { 'type': 'text', 'value': u.fixed_ip || '', 'placeholder': _('dynamic'), 'style': 'width:9em;height:30px;padding:2px 8px;vertical-align:middle;box-sizing:border-box' });
+				var btnStyle = 'vertical-align:middle';
+				fipCell = E('td', { 'class': 'td', 'style': 'vertical-align:middle' }, [
 					ipInput, ' ',
-					E('button', { 'class': 'btn cbi-button cbi-button-save', 'click': ui.createHandlerFn(this, function() {
+					E('button', { 'class': 'btn cbi-button cbi-button-save', 'style': btnStyle, 'click': ui.createHandlerFn(this, function() {
 						var v = (ipInput.value || '').trim();
 						return callSetUserIp(u.name, v).then(function(r) {
 							if (ok(r, _('Set fixed IP')))
 								ui.addNotification(null, E('p', v ? _('Fixed IP for "%s": %s — applies on the next dial-in.').format(u.name, v) : _('Fixed IP for "%s" cleared — dynamic allocation again.').format(u.name)), 'info');
 						});
 					}) }, _('Set')),
-					(u.fixed_ip ? E('button', { 'class': 'btn cbi-button cbi-button-remove', 'click': ui.createHandlerFn(this, function() {
+					(u.fixed_ip ? E('button', { 'class': 'btn cbi-button cbi-button-remove', 'style': btnStyle, 'click': ui.createHandlerFn(this, function() {
 						return callSetUserIp(u.name, '').then(function(r) {
 							if (ok(r, _('Clear fixed IP'))) { ui.addNotification(null, E('p', _('Fixed IP for "%s" cleared — dynamic allocation again.').format(u.name)), 'info'); ipInput.value = ''; }
 						});
@@ -233,7 +236,7 @@ return view.extend({
 				fipCell = E('td', { 'class': 'td' }, E('em', {}, u.fixed_ip ? _('%s (not applied — IP mode is not DHCP)').format(u.fixed_ip) : '—'));
 			}
 			rows.push(E('tr', { 'class': 'tr' }, [
-				E('td', { 'class': 'td' }, u.name),
+				E('td', { 'class': 'td', 'style': 'vertical-align:middle' }, u.name),
 				fipCell,
 				E('td', { 'class': 'td cbi-section-actions' }, [
 					E('button', { 'class': 'btn cbi-button cbi-button-action', 'click': ui.createHandlerFn(this, function() {

@@ -6,7 +6,7 @@ include $(TOPDIR)/rules.mk
 
 PKG_NAME:=homelede-autoconfig
 PKG_VERSION:=20261001
-PKG_RELEASE:=5
+PKG_RELEASE:=6
 PKG_DATE:=20240809
 PKG_BUILD_DIR:=$(BUILD_DIR)/$(PKG_NAME)
 
@@ -35,8 +35,6 @@ endef
 define Package/$(PKG_NAME)/install
 	$(INSTALL_DIR) $(1)/etc/init.d
 	$(INSTALL_BIN) files/etc/init.d/homelede-autoconfig $(1)/etc/init.d
-	$(INSTALL_DIR) $(1)/usr/bin
-	$(INSTALL_BIN) files/usr/bin/homeledeCore $(1)/usr/bin
 	$(INSTALL_DATA) files/etc/brand $(1)/etc
 endef
 

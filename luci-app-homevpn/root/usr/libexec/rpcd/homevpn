@@ -119,6 +119,26 @@ call)
 			fi
 		fi
 		json_add_boolean san_ok "$san_ok"
+		# deployed certificate details (import-mode info panel)
+		if [ -s "$SRV_CERT" ]; then
+			json_add_object cert
+			json_add_string subject "$(openssl x509 -in "$SRV_CERT" -noout -subject 2>/dev/null | sed 's/^subject=//')"
+			json_add_string issuer "$(openssl x509 -in "$SRV_CERT" -noout -issuer 2>/dev/null | sed 's/^issuer=//')"
+			json_add_string san "$(openssl x509 -in "$SRV_CERT" -noout -ext subjectAltName 2>/dev/null | tail -n +2 | tr -d ' ' | tr '\n' ',' | sed 's/,$//')"
+			json_add_string notafter "$(openssl x509 -in "$SRV_CERT" -noout -enddate 2>/dev/null | cut -d= -f2)"
+			expiry=ok
+			openssl x509 -in "$SRV_CERT" -checkend 0 -noout >/dev/null 2>&1 || expiry=expired
+			[ "$expiry" = ok ] && ! openssl x509 -in "$SRV_CERT" -checkend 2592000 -noout >/dev/null 2>&1 && expiry=soon
+			json_add_string expiry "$expiry"
+			if [ -s "$SWANCTL/private/homevpn-server.key" ]; then
+				cp1="$(openssl x509 -in "$SRV_CERT" -pubkey -noout 2>/dev/null | openssl sha256 2>/dev/null | awk '{print $NF}')"
+				kp1="$(openssl pkey -in "$SWANCTL/private/homevpn-server.key" -pubout 2>/dev/null | openssl sha256 2>/dev/null | awk '{print $NF}')"
+				json_add_boolean key_matches "$([ -n "$cp1" ] && [ "$cp1" = "$kp1" ] && echo 1 || echo 0)"
+			fi
+			caf1="$(ca_file)"
+			[ -n "$caf1" ] && json_add_string ca_subject "$(openssl x509 -in "$caf1" -noout -subject 2>/dev/null | sed 's/^subject=//')"
+			json_close_object
+		fi
 		json_add_boolean input_rules "$(/etc/init.d/firewall status >/dev/null 2>&1; uci -q get firewall.homevpn_nat_t >/dev/null && echo 1 || echo 0)"
 		json_add_boolean conn_loaded "$(swanctl --list-conn 2>/dev/null | grep -q homevpn-eap && echo 1 || echo 0)"
 		# precheck state (written by init.d apply_config) + applied config

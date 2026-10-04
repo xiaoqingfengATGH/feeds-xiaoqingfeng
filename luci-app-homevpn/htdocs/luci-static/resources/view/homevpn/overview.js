@@ -192,7 +192,37 @@ return view.extend({
 		]);
 		var sAcme = E('input', { 'type': 'text', 'value': set.acme_domain || '', 'placeholder': 'domain from Services → Let\u0027s Encrypt', 'style': 'width:16em' });
 
-		/* ---- import-mode certificate upload (shown only for cert_mode=import) ---- */
+		/* ---- import-mode: deployed-cert info panel + collapsible upload ---- */
+		var certRows = [];
+		var ct = st.cert || null;
+		var keyCell = _('(not deployed)');
+		if (ct && ct.key_matches === true)
+			keyCell = E('span', { 'style': 'color:#2e7d32' }, _('✓ matches the certificate'));
+		else if (ct && ct.key_matches === false)
+			keyCell = E('span', { 'style': 'color:#c62828' }, _('✗ does NOT match the certificate'));
+		if (ct) {
+			var expColor = (ct.expiry === 'expired') ? '#c62828' : ((ct.expiry === 'soon') ? '#e65100' : '#2e7d32');
+			var expText = (ct.expiry === 'expired') ? _('EXPIRED') : ((ct.expiry === 'soon') ? _('expiring soon') : _('valid'));
+			certRows = [
+				E('tr', { 'class': 'tr' }, [ E('td', { 'class': 'td left', 'width': '33%' }, _('Server certificate')), E('td', { 'class': 'td left' }, ct.subject || '?') ]),
+				E('tr', { 'class': 'tr' }, [ E('td', { 'class': 'td left' }, _('Issuer')), E('td', { 'class': 'td left' }, ct.issuer || '?') ]),
+				E('tr', { 'class': 'tr' }, [ E('td', { 'class': 'td left' }, _('SAN')), E('td', { 'class': 'td left' }, ct.san || _('(none)')) ]),
+				E('tr', { 'class': 'tr' }, [ E('td', { 'class': 'td left' }, _('Valid until')), E('td', { 'class': 'td left' },
+					E('span', { 'style': 'color:' + expColor }, (ct.notafter || '?') + ' — ' + expText)) ]),
+				E('tr', { 'class': 'tr' }, [ E('td', { 'class': 'td left' }, _('Private key')), E('td', { 'class': 'td left' }, keyCell) ]),
+				E('tr', { 'class': 'tr' }, [ E('td', { 'class': 'td left' }, _('CA (for client profiles)')), E('td', { 'class': 'td left' }, ct.ca_subject || _('(none deployed)')) ])
+			];
+		}
+		var certInfo = E('div', { 'style': 'margin:.3em 0 .3em' }, [
+			E('strong', {}, _('Imported certificate')),
+			E('div', { 'class': 'table', 'style': 'margin-top:.4em' }, certRows),
+			E('div', { 'style': 'margin-top:.4em' }, [
+				E('button', { 'class': 'btn cbi-button cbi-button-neutral', 'click': function() {
+					importBox.style.display = '';
+					certInfo.style.display = 'none';
+				} }, _('Replace certificate…'))
+			])
+		]);
 		function readPem(file) {
 			/* frontend sanity: reject non-text uploads early (DER/PKCS#12) —
 			   full validation happens server-side */
@@ -255,12 +285,14 @@ return view.extend({
 		]);
 		function updImportBox() {
 			var show = (sMode.value === 'import');
-			importBox.style.display = show ? '' : 'none';
-			if (show) {
-				var has = st.pki_ready;
-				upHint.textContent = has
-					? _('A certificate is deployed. Upload a replacement set (server certificate + private key, CA optional) — the old files are replaced only after all checks pass.')
-					: _('No certificate deployed yet. Upload the server certificate, its private key, and the CA certificate clients should trust (e.g. your NAS/ACME issuer CA).');
+			var hasCert = !!(st.cert && st.cert.subject);
+			importBox.style.display = (show && !hasCert) ? '' : 'none';
+			certInfo.style.display = (show && hasCert) ? '' : 'none';
+			if (show && !hasCert) {
+				upHint.textContent = _('No certificate deployed yet. Upload the server certificate, its private key, and the CA certificate clients should trust (e.g. your NAS/ACME issuer CA).');
+			}
+			else if (show && hasCert) {
+				upHint.textContent = _('Upload the replacement set (server certificate + private key, CA optional) — the old files are replaced only after all checks pass.');
 			}
 		}
 		sMode.addEventListener('change', updImportBox);
@@ -274,6 +306,7 @@ return view.extend({
 			E('div', { 'class': 'cbi-value' }, [ E('label', { 'class': 'cbi-value-title' }, _('Certificate mode')), E('div', { 'class': 'cbi-value-field' }, sMode) ]),
 			E('div', { 'class': 'cbi-value' }, [ E('label', { 'class': 'cbi-value-title' }, _('ACME domain')), E('div', { 'class': 'cbi-value-field' }, sAcme) ]),
 			importBox,
+			certInfo,
 			E('div', { 'class': 'cbi-value' }, [ E('div', { 'class': 'cbi-value-field' }, [
 				E('button', {
 					'class': 'btn cbi-button cbi-button-save',

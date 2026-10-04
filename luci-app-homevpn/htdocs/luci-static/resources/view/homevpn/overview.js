@@ -195,7 +195,7 @@ return view.extend({
 		var acmeRow = E('div', { 'class': 'cbi-value' }, [ E('label', { 'class': 'cbi-value-title' }, _('ACME domain')), E('div', { 'class': 'cbi-value-field' }, [
 			sAcme,
 			E('div', { 'class': 'cbi-section-descr', 'style': 'margin:.25em 0 0' },
-				_('Synced from /etc/acme/<domain>/ on reboot or “Re-provision now” — issue the certificate first in Services → Let\u0027s Encrypt.'))
+				_('Issue the certificate first in Services → Let\u0027s Encrypt, then switch here. Switching is refused until /etc/acme/<domain>/ holds the certificate — the old mode keeps serving.'))
 		]) ]);
 
 		/* ---- import-mode: deployed-cert info panel + collapsible upload ---- */
@@ -321,7 +321,8 @@ return view.extend({
 						return callSetSettings(sRemote.value, sName.value, sMode.value, sAcme.value, sIpMode.value, (sPs.value || '').trim(), (sPe.value || '').trim(), (sPc.value || '').trim(), sMasq.value).then(function(r) {
 							if (r && r.ok && !r.precheck_ok)
 								ui.addNotification(null, E('p', _('Refused: %s — the last working configuration stays active.').format(r.precheck_reason || _('precheck failed'))), 'error');
-							if (ok(r, _('Save settings'))) ui.addNotification(null, E('p', _('Saved. Server re-provisioned.')), 'info');
+							if (ok(r, _('Save settings'))) { flash(_('Saved. Server re-provisioned.'), 'info'); reload(); }
+							else { flash(_('Save refused: %s').format((r && r.error) || _('unknown error')), 'error'); reload(); }
 						});
 					})
 				}, _('Save settings')), ' ',
@@ -329,6 +330,8 @@ return view.extend({
 					'class': 'btn cbi-button cbi-button-action',
 					'click': ui.createHandlerFn(this, function() {
 						return callProvision().then(function(r) {
+							if (r && r.ok && r.provision_ok === false)
+								{ ui.addNotification(null, E('p', _('Provisioning FAILED: %s').format(r.output || _('ACME certificate not found'))), 'error'); return; }
 							if (ok(r, _('Provision'))) { ui.addNotification(null, E('p', _('Provisioning output: %s').format((r && r.output) || '')), 'info'); reload(); }
 						});
 					})

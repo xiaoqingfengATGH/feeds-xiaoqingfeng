@@ -602,6 +602,10 @@ provision_certs() {
 			# served a certificate nobody trusts. Keep whatever is deployed
 			# (a previously synced/imported cert keeps serving) and say so.
 			logger_tag "ACME sync failed — keeping the deployed certificate (none deployed yet: issue it in Services → Let's Encrypt and re-provision)"
+			# provision/reboot path: signal the failure to the caller (the
+			# rpcd provision handler surfaces it in the UI); boot tolerates
+			# it and keeps serving with whatever is deployed.
+			ACME_SYNC_FAILED=1
 		fi
 		;;
 	import)
@@ -701,7 +705,12 @@ service_triggers() {
 
 extra_command "provision" "Run full provisioning now (PKI + conf + secrets + firewall)"
 provision() {
+	ACME_SYNC_FAILED=0
 	start_service
+	if [ "$ACME_SYNC_FAILED" = 1 ]; then
+		echo "homevpn: ACME sync FAILED — the previously deployed certificate (if any) keeps serving; issue the certificate in Services → Let's Encrypt first" >&2
+		return 1
+	fi
 }
 
 extra_command "regen" "Regenerate + precheck + apply config (keeps charon running when possible)"

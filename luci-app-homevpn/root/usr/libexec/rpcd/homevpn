@@ -265,6 +265,19 @@ set_user_ip)
 		json_get_var v_masq masq
 		case "$v_mode" in selfsigned|import|acme) ;; *) v_mode="";; esac
 		case "$v_ipmode" in lansubnet|dhcp|subnet) ;; *) v_ipmode="";; esac
+		prev_mode="$(cfg cert_mode)"
+		# switching to ACME requires the certificate to already exist:
+		# otherwise the status page would claim "ACME" while the old cert
+		# keeps serving — a silent lie. Refuse and keep the previous mode.
+		# (also when changing the ACME domain to one that has no certificate)
+		if [ "$v_mode" = acme ] && { [ "$prev_mode" != acme ] || [ "$v_acme" != "$(cfg acme_domain)" ]; }; then
+			if [ -z "$v_acme" ]; then
+				err "ACME domain is empty — set it to the domain issued in Services → Let's Encrypt"
+			fi
+			if [ ! -s "/etc/acme/$v_acme/$v_acme.cer" ] || [ ! -s "/etc/acme/$v_acme/$v_acme.key" ]; then
+				err "no ACME certificate at /etc/acme/$v_acme/ — issue it in Services → Let's Encrypt first; staying in '${prev_mode:-selfsigned}' mode"
+			fi
+		fi
 		[ -n "$v_remote" ] && uci -q set "${CFG}.config.remote=${v_remote}"
 		[ -n "$v_name" ] && uci -q set "${CFG}.config.vpn_name=${v_name}"
 		[ -n "$v_mode" ] && uci -q set "${CFG}.config.cert_mode=${v_mode}"
@@ -286,8 +299,13 @@ set_user_ip)
 		;;
 	provision)
 		# (re)run provisioning now: PKI + conf + secrets + firewall + load
-		out="$(/etc/init.d/homevpn provision 2>&1)"
-		json_init; ok; json_add_string output "$out"; json_dump
+		out="$(/etc/init.d/homevpn provision 2>&1)"; rc=$?
+		json_init; ok
+		json_add_string output "$out"
+		# exit 0 = success; json_add_boolean maps "0" to false — invert
+		pok=0; [ "$rc" = 0 ] && pok=1
+		json_add_boolean provision_ok "$pok"
+		json_dump
 		;;
 	upload_certs)
 		# Import own certificate: validate a candidate set server-side, then

@@ -212,9 +212,10 @@ return view.extend({
 		users.forEach(function(u) {
 			var fipCell;
 			if (isDhcp) {
-				/* match the theme's .cbi-button height (30px) so the input,
-				   the Set/Clear buttons and the username text align on one line */
-				var ipInput = E('input', { 'type': 'text', 'value': u.fixed_ip || '', 'placeholder': _('dynamic'), 'style': 'width:9em;height:30px;padding:2px 8px;vertical-align:middle;box-sizing:border-box' });
+				/* measured live: theme .cbi-button renders 36px tall
+				   (padding 7.2px 14.4px + 13px font) — match it exactly so
+				   the input, Set/Clear buttons and username align on a line */
+				var ipInput = E('input', { 'type': 'text', 'value': u.fixed_ip || '', 'placeholder': _('dynamic'), 'style': 'width:11em;height:36px;padding:2px 10px;vertical-align:middle;box-sizing:border-box' });
 				var btnStyle = 'vertical-align:middle';
 				fipCell = E('td', { 'class': 'td', 'style': 'vertical-align:middle' }, [
 					ipInput, ' ',

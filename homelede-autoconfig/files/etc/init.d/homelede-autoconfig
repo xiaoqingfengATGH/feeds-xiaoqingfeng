@@ -68,9 +68,12 @@ UCIEOF
 
     # --- version identity (lean: keep, buildmark-coupled) ----------------
     # /etc/buildmark is written at compile time by package/updateCompileMark.
+    # LV comes from DISTRIB_RELEASE: written by base-files VERSION_SED_SCRIPT
+    # (include/version.mk %V, e.g. 24.10.5) - the same source the banner's
+    # %V placeholder expands to, so banner and openwrt_release always agree.
     if [ -r /etc/buildmark ]; then
         HV=$(cat /etc/buildmark)
-        LV=$(grep -o "R[0-9]\{1,\}\.[0-9]\{1,\}\.[0-9]\{1,\}" /etc/openwrt_release | head -n 1)
+        LV=$(sed -n "s/^DISTRIB_RELEASE='\(.*\)'$/\1/p" /etc/openwrt_release)
         sed -i '/DISTRIB_REVISION/d' /etc/openwrt_release
         echo "DISTRIB_REVISION='$HV based on OpenWrt $LV'" >> /etc/openwrt_release
         sed -i '/DISTRIB_DESCRIPTION/d' /etc/openwrt_release

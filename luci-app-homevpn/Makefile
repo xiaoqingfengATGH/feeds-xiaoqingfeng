@@ -18,7 +18,7 @@ LUCI_DEPENDS:=+strongswan-swanctl +strongswan-mod-eap-mschapv2 +strongswan-mod-g
 	+iputils-arping
 LUCI_PKGARCH:=all
 PKG_VERSION:=2.1.0
-PKG_RELEASE:=18
+PKG_RELEASE:=19
 PKG_LICENSE:=MIT
 PKG_MAINTAINER:=xiaoqingfeng <xiaoqingfengatgm@gmail.com>
 

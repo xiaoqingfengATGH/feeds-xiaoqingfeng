@@ -36,6 +36,17 @@ function flash(msg, cls) {
 	   the URL hash and replay it when the page renders again */
 	location.hash = 'hvmsg=' + encodeURIComponent(JSON.stringify({ m: msg, c: cls || 'info' }));
 }
+/* Unified severity palette, dark-theme tuned + WCAG-verified (AA ≥4.5:1 on the
+   measured theme bg rgb(48,56,65)): layered design per Material dark-theme
+   practice — saturated border anchors the severity, PASTEL text carries the
+   message (a saturated 500-level color on a same-hue tint is unreadable:
+   ~3:1), background stays a ≤10% faint tint of the same hue. */
+var CLR = {
+	error: { txt: '#f9dedc', box: 'border-left:3px solid #ef5350;background:rgba(239,83,80,.10);color:#f9dedc' },
+	ok:    { txt: '#c8ecca', box: 'border-left:3px solid #66bb6a;background:rgba(102,187,106,.10);color:#c8ecca' },
+	warn:  { txt: '#ffe0b2', box: 'border-left:3px solid #ffb74d;background:rgba(255,183,77,.10);color:#ffe0b2' }
+};
+function hintColors(kind) { return CLR[kind] ? CLR[kind].box : ''; }
 function replayFlash() {
 	var m = (location.hash || '').match(/^#hvmsg=(.*)$/);
 	if (!m) return;
@@ -53,7 +64,7 @@ return view.extend({
 		var users = (ul && ul.users) || [];
 		var clients = (st && st.clients) || [];
 		replayFlash();
-		var badge = function(okv, t, f) { return E('span', { 'style': 'color:' + (okv ? '#2e7d32' : '#c62828') }, okv ? ('✓ ' + t) : ('✗ ' + f)); };
+		var badge = function(okv, t, f) { return E('span', { 'style': 'color:' + (okv ? CLR.ok.txt : CLR.error.txt) }, okv ? ('✓ ' + t) : ('✗ ' + f)); };
 		var modeLabels = { lansubnet: _('LAN subnet pool + ARP proxy'), dhcp: _('DHCP (local dnsmasq)'), subnet: _('Independent subnet') };
 
 		var nodes = E('div', {}, [
@@ -195,12 +206,15 @@ return view.extend({
 		var acmeHint = E('div', { 'class': 'cbi-section-descr', 'style': 'margin:.25em 0 0' }, '');
 		function updAcmeHint() {
 			var dom = (sAcme.value || '').trim();
-			if (st.acme_ready && dom === (set.acme_domain || ''))
-				{ acmeHint.textContent = _('✓ Certificate present at /etc/acme/<domain>/ — switching is allowed.'); acmeHint.style.color = '#2e7d32'; }
-			else if (dom)
-				{ acmeHint.textContent = _('Issue the certificate first in Services → Let\u0027s Encrypt, then switch here — switching is refused until /etc/acme/<domain>/ holds the certificate, the old mode keeps serving.'); acmeHint.style.color = '#c62828'; }
+			var kind, text;
+			if (!dom)
+				{ kind = ''; text = _('Set the domain issued in Services → Let\u0027s Encrypt (e.g. vpn.example.com).'); }
+			else if (st.acme_ready && dom === (set.acme_domain || ''))
+				{ kind = 'ok'; text = _('✓ Certificate present at /etc/acme/<domain>/ — switching is allowed.'); }
 			else
-				{ acmeHint.textContent = _('Set the domain issued in Services → Let\u0027s Encrypt (e.g. vpn.example.com).'); acmeHint.style.color = ''; }
+				{ kind = 'error'; text = _('Issue the certificate first in Services → Let\u0027s Encrypt, then switch here — switching is refused until /etc/acme/<domain>/ holds the certificate, the old mode keeps serving.'); }
+			acmeHint.textContent = text;
+			acmeHint.setAttribute('style', 'margin:.25em 0 0' + (kind ? (';' + hintColors(kind)) : ''));
 		}
 		sAcme.addEventListener('input', updAcmeHint);
 		updAcmeHint();
@@ -214,11 +228,11 @@ return view.extend({
 		var ct = st.cert || null;
 		var keyCell = _('(not deployed)');
 		if (ct && ct.key_matches === true)
-			keyCell = E('span', { 'style': 'color:#2e7d32' }, _('✓ matches the certificate'));
+			keyCell = E('span', { 'style': 'color:' + CLR.ok.txt }, _('✓ matches the certificate'));
 		else if (ct && ct.key_matches === false)
-			keyCell = E('span', { 'style': 'color:#c62828' }, _('✗ does NOT match the certificate'));
+			keyCell = E('span', { 'style': 'color:' + CLR.error.txt }, _('✗ does NOT match the certificate'));
 		if (ct) {
-			var expColor = (ct.expiry === 'expired') ? '#c62828' : ((ct.expiry === 'soon') ? '#e65100' : '#2e7d32');
+			var expColor = (ct.expiry === 'expired') ? CLR.error.txt : ((ct.expiry === 'soon') ? CLR.warn.txt : CLR.ok.txt);
 			var expText = (ct.expiry === 'expired') ? _('EXPIRED') : ((ct.expiry === 'soon') ? _('expiring soon') : _('valid'));
 			certRows = [
 				E('tr', { 'class': 'tr' }, [ E('td', { 'class': 'td left', 'width': '33%' }, _('Server certificate')), E('td', { 'class': 'td left' }, ct.subject || '?') ]),

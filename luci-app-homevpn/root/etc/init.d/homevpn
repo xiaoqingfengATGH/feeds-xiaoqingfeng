@@ -429,6 +429,19 @@ render_plugin_conf() { # sets PLUGIN_RESTART=1 when the dhcp plugin conf changed
     # identity_lease sends the IKE identity as DHCP client-id (enables
     # per-user dhcp-host=id:<user>,<ip> bindings in dnsmasq)
     interface = $LAN_IF
+    # receive on lo: dnsmasq answers broadcast DISCOVERs with broadcast
+    # OFFERs, whose local copy is looped back via lo (not $LAN_IF) — an
+    # AF_PACKET socket bound to $LAN_IF never sees them (DISCOVER timed
+    # out -> INTERNAL_ADDRESS_FAILURE). strongSwan >= 6.0.5 splits
+    # send (interface) and receive (interface_receive) binding.
+    interface_receive = lo
+    # unicast to the local dnsmasq: even with interface_receive=lo the
+    # looped-back copy of a broadcast OFFER never reaches the AF_PACKET
+    # socket (kernel loopback has no Ethernet header). Unicast DISCOVER
+    # gets a unicast OFFER routed via lo, which the receive socket sees.
+    # Verified matrix on 6.0.7: broadcast+lo-receive still times out;
+    # unicast+lo-receive passes end-to-end (OFFER->REQUEST->ACK->VIP).
+    server = $LAN_ADDR
     identity_lease = yes
 }"
 	else

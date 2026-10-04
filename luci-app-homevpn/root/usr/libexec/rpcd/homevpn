@@ -23,7 +23,8 @@ valid_name() { echo "$1" | grep -qE '^[A-Za-z0-9_.-]{1,32}$'; }
 
 active_mode() {
 	local m; m="$(cfg cert_mode)"; [ -n "$m" ] || m=selfsigned
-	# ACME mode without a usable sync falls back per-boot in init; report truth
+	# report the configured mode truthfully; init keeps the deployed cert
+	# on ACME sync failure (no silent self-signed fallback)
 	echo "$m"
 }
 

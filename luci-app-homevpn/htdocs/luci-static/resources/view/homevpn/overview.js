@@ -307,7 +307,7 @@ return view.extend({
 		nodes.appendChild(E('div', { 'class': 'cbi-section' }, [
 			E('h3', {}, _('Server settings')),
 			E('p', { 'class': 'cbi-section-descr' },
-				_('Server address is what clients dial (DDNS name or public IP) — the certificate SAN must match it. Self-signed mode generates a CA + server certificate on first boot; import mode uses files you place under /etc/swanctl/; ACME mode syncs a certificate issued by the Let\u0027s Encrypt app.')),
+				_('Server address is what clients dial (DDNS name or public IP) — the certificate SAN must match it. Self-signed mode generates a CA + server certificate on first boot; import mode uploads your own certificate files; ACME mode syncs a certificate issued by the Let\u0027s Encrypt app (on sync failure the previously deployed certificate keeps serving — it never silently switches to self-signed).')),
 			E('div', { 'class': 'cbi-value' }, [ E('label', { 'class': 'cbi-value-title' }, _('Server address (DDNS/IP)')), E('div', { 'class': 'cbi-value-field' }, sRemote) ]),
 			E('div', { 'class': 'cbi-value' }, [ E('label', { 'class': 'cbi-value-title' }, _('VPN display name')), E('div', { 'class': 'cbi-value-field' }, sName) ]),
 			E('div', { 'class': 'cbi-value' }, [ E('label', { 'class': 'cbi-value-title' }, _('Certificate mode')), E('div', { 'class': 'cbi-value-field' }, sMode) ]),

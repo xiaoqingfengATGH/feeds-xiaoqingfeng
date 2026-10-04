@@ -598,16 +598,21 @@ provision_certs() {
 		if [ -n "$acme_domain" ] && sync_acme_certs "$acme_domain"; then
 			:
 		else
-			logger_tag "ACME sync failed — falling back to self-signed for this boot"
-			[ -s "$X509_DIR/homevpn-server.crt" ] || gen_selfsigned_pki "$(effective_remote)"
+			# No silent fallback to self-signed: clients would suddenly be
+			# served a certificate nobody trusts. Keep whatever is deployed
+			# (a previously synced/imported cert keeps serving) and say so.
+			logger_tag "ACME sync failed — keeping the deployed certificate (none deployed yet: issue it in Services → Let's Encrypt and re-provision)"
 		fi
 		;;
 	import)
 		# User placed certs into /etc/swanctl/{x509,x509ca,private} manually.
 		[ -s "$X509_DIR/homevpn-server.crt" ] || logger_tag "import mode: no server cert present yet"
 		;;
-	*)
+	selfsigned)
 		gen_selfsigned_pki "$(effective_remote)"
+		;;
+	*)
+		logger_tag "cert_mode '$mode' unknown — no certificate provisioned (set selfsigned/import/acme)"
 		;;
 	esac
 }

@@ -67,10 +67,11 @@ UCIEOF
     sed -i '/REDIRECT --to-ports 53/d' /etc/firewall.user 2>/dev/null
 
     # --- version identity (lean: keep, buildmark-coupled) ----------------
-    # /etc/buildmark is written at compile time by package/updateCompileMark.
+    # /etc/buildmark is written at compile time by package/updateCompileMark,
+    # which also stamps the lean revision (Ryy.m.d) into /etc/banner.
     if [ -r /etc/buildmark ]; then
         HV=$(cat /etc/buildmark)
-        LV=$(grep -o "R[0-9]\{1,\}\.[0-9]\{1,\}\.[0-9]\{1,\}" /etc/openwrt_release | head -n 1)
+        LV=$(grep -o "R[0-9]\{1,\}\.[0-9]\{1,\}\.[0-9]\{1,\}" /etc/banner | head -n 1)
         sed -i '/DISTRIB_REVISION/d' /etc/openwrt_release
         echo "DISTRIB_REVISION='$HV based on OpenWrt $LV'" >> /etc/openwrt_release
         sed -i '/DISTRIB_DESCRIPTION/d' /etc/openwrt_release

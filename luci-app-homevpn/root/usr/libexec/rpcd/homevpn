@@ -12,7 +12,8 @@ SWANCTL="/etc/swanctl"
 CONN_FILE="$SWANCTL/conf.d/homevpn.conf"
 SECRETS_FILE="$SWANCTL/conf.d/homevpn-eap.conf"
 CA_SELF="$SWANCTL/x509ca/homevpn-ca.crt"
-CA_ACME="$SWANCTL/x509ca/homevpn-acme.crt"
+CA_ACME="$SWANCTL/x509ca/homevpn-acme.crt" # legacy single-file layout (pre-r22)
+ACME_CHAIN_GLOB="$SWANCTL/x509ca/homevpn-acme-*.crt"
 SRV_CERT="$SWANCTL/x509/homevpn-server.crt"
 ACME_RESOLVER="/usr/share/homevpn/acme-resolve.sh"
 
@@ -60,7 +61,21 @@ san_exact_match() {
 	return 1
 }
 
-ca_file() { [ -s "$CA_ACME" ] && echo "$CA_ACME" && return; [ -s "$CA_SELF" ] && echo "$CA_SELF"; }
+# CA to embed in client profiles: the ACME chain root (the LAST cert of the
+# chain, e.g. ISRG Root X2) — it is the anchor clients must trust. New layout
+# (r22+): homevpn-acme-NN.crt, one cert per file (the first file is an
+# intermediate — openssl x509 reads exactly one cert, so read the LAST file).
+# Legacy fallback: single homevpn-acme.crt (multi-PEM — same last-cert rule,
+# but pre-r22 it held only the root anyway).
+ca_file() {
+	local f last
+	for f in $ACME_CHAIN_GLOB; do
+		[ -s "$f" ] && last="$f"
+	done
+	[ -n "$last" ] && { echo "$last"; return; }
+	[ -s "$CA_ACME" ] && { echo "$CA_ACME"; return; }
+	[ -s "$CA_SELF" ] && echo "$CA_SELF"
+}
 
 regen_secrets() {
 	# delegate to the init script's regen (single source of truth):
@@ -395,8 +410,8 @@ set_user_ip)
 		ca_installed=0
 		if [ -s "$T/x509ca/ca.crt" ]; then
 			cp "$T/x509ca/ca.crt" "$SWANCTL/x509ca/homevpn-ca.crt"
-			# ca_file() prefers homevpn-acme.crt — remove it so the imported CA wins
-			rm -f "$SWANCTL/x509ca/homevpn-acme.crt"
+			# ca_file() prefers the ACME chain/root — remove it so the imported CA wins
+			rm -f "$SWANCTL"/x509ca/homevpn-acme*.crt
 			ca_installed=1
 		fi
 		# switch to import mode (idempotent) so the app never overwrites these files

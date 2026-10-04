@@ -206,15 +206,17 @@ sync_acme_certs() {
 		return 1
 	}
 	# already in sync? compare leaf pubkeys (cheaper than hashing full PEMs)
-	if [ -s "$X509_DIR/homevpn-server.crt" ] && [ -s "$KEY_DIR/homevpn-server.key" ]; then
+	# AND require the deployed server cert to be the leaf ALONE — a multi-PEM
+	# fullchain there (pre-r22 layout) only ever loads its FIRST cert into
+	# charon, so it must be re-stripped even when the leaf matches.
+	if [ -s "$X509_DIR/homevpn-server.crt" ] && [ -s "$KEY_DIR/homevpn-server.key" ] \
+		&& [ "$(grep -c 'BEGIN CERTIFICATE' "$X509_DIR/homevpn-server.crt" 2>/dev/null)" = 1 ]; then
 		local dep_pub
 		dep_pub="$(openssl x509 -in "$X509_DIR/homevpn-server.crt" -pubkey -noout 2>/dev/null | openssl sha256 2>/dev/null | awk '{print $NF}')"
 		if [ "$dep_pub" = "$cert_pub" ]; then
-			# refresh the CA file too (chain root may have rotated on reissue)
-			extract_acme_ca "$src_crt" > "$CA_DIR/.homevpn-acme.tmp" \
-				&& [ -s "$CA_DIR/.homevpn-acme.tmp" ] \
-				&& mv "$CA_DIR/.homevpn-acme.tmp" "$CA_DIR/homevpn-acme.crt" \
-				|| rm -f "$CA_DIR/.homevpn-acme.tmp"
+			# refresh the chain files too (intermediates may have rotated on
+			# reissue) — same install routine as below, idempotent
+			install_acme_chain "$src_crt" || return 1
 			return 0
 		fi
 	fi
@@ -222,30 +224,74 @@ sync_acme_certs() {
 	local T
 	T="$(mktemp -d /tmp/homevpn-acme.XXXXXX)" || return 1
 	mkdir -p "$X509_DIR" "$KEY_DIR" "$CA_DIR"
+	# x509/ gets the LEAF ONLY: swanctl --load-creds loads only the FIRST
+	# certificate of a multi-PEM file (VICI load-cert parses one cert), so a
+	# fullchain in x509/ silently drops every intermediate — the server then
+	# answers IKE_AUTH with a bare leaf no client can chain to its trust
+	# anchor (iOS drops silently, "deleting half open IKE_SA after timeout").
 	cp "$src_crt" "$T/server.crt"
 	cp "$src_key" "$T/server.key"
 	chmod 600 "$T/server.key"
-	extract_acme_ca "$src_crt" > "$T/ca.crt"
-	[ -s "$T/ca.crt" ] || {
-		logger_tag "ACME: no root cert in the chain of '$domain'"
-		rm -rf "$T"
-		return 1
-	}
+	# strip the chain: keep only the first PEM block (the leaf)
+	awk '/BEGIN CERT/{n++} n==1{print} /END CERT/ && n==1{exit}' "$T/server.crt" > "$T/leaf.crt"
+	[ -s "$T/leaf.crt" ] || { logger_tag "ACME: leaf extraction failed for '$domain'"; rm -rf "$T"; return 1; }
+	mv "$T/leaf.crt" "$T/server.crt"
+	# x509ca/ gets every NON-leaf cert of the chain, one file each: charon
+	# assembles the certificate chain it sends from its CA store — separate
+	# files are the only layout it fully loads (one cert per file).
+	install_acme_chain "$src_crt" "$T" || { rm -rf "$T"; return 1; }
 	mv "$T/server.crt" "$X509_DIR/homevpn-server.crt"
 	mv "$T/server.key" "$KEY_DIR/homevpn-server.key"
-	mv "$T/ca.crt" "$CA_DIR/homevpn-acme.crt"
 	rm -rf "$T"
-	logger_tag "ACME: synced certificate for $domain (from $src_crt)"
+	logger_tag "ACME: synced certificate for $domain (leaf → x509/, chain tail → x509ca/homevpn-acme-NN.crt)"
 }
 
-# Print the LAST certificate of a fullchain (the root CA) to stdout.
-# $1 = fullchain file, leaf first. acme.sh state dirs also ship ca.cer
-# (intermediates + root, no leaf) — but not in the /etc/ssl/acme fallback,
-# so derive it from the chain we already resolved instead of a second file.
-extract_acme_ca() {
-	openssl crl2pkcs7 -nocrl -certfile "$1" 2>/dev/null \
-		| openssl pkcs7 -print_certs 2>/dev/null \
-		| awk '/BEGIN CERT/{n++} {if (n) buf[n] = buf[n] $0 "\n"} END {printf "%s", buf[n]}'
+# Install the NON-leaf certificates of a fullchain into x509ca/, one file per
+# certificate (homevpn-acme-01.crt, -02.crt, ...). charon loads each file's
+# first cert only, so separate files are required; it picks intermediates
+# from x509ca/ to build the chain it sends with the leaf (send_cert = always).
+# $1 = fullchain file (leaf first). $2 = optional staging dir (default: in place).
+install_acme_chain() {
+	local src="$1" T="${2:-$CA_DIR}" f i=0 n
+	# stage every NON-leaf certificate of the chain as .new (never clobber a
+	# live file mid-write). Index 0 is the leaf. This includes the chain TAIL
+	# even when it is a cross-signed root (e.g. ISRG Root X2 signed by X1 —
+	# fullchain.cer ends at X2, whose issuer X1 is NOT in the file): charon
+	# reports "no issuer certificate found" and stops building there, but the
+	# tail itself IS needed so iOS/Windows can close the chain to their
+	# preinstalled anchor (ISRG Root X1/X2 ship with the OS).
+	while :; do
+		f="$(extract_chain_cert "$src" "$((i + 1))")"
+		[ -n "$f" ] || break
+		i=$((i + 1))
+		printf '%s\n' "$f" > "$T/homevpn-acme-$(printf '%02d' $i).crt.new"
+	done
+	n="$i"
+	if [ "$n" -eq 0 ]; then
+		logger_tag "ACME: no chain certificates found in '$src' (leaf only) — keeping whatever is deployed in x509ca/"
+		rm -f "$T"/homevpn-acme-*.crt.new
+		return 0
+	fi
+	# publish: atomic renames, then drop stale files (longer previous chain,
+	# leftovers from an interrupted run, and the pre-r22 single-file layout)
+	i=1
+	while [ "$i" -le "$n" ]; do
+		mv "$T/homevpn-acme-$(printf '%02d' $i).crt.new" "$CA_DIR/homevpn-acme-$(printf '%02d' $i).crt"
+		i=$((i + 1))
+	done
+	rm -f "$T"/homevpn-acme-*.crt.new
+	rm -f "$CA_DIR/homevpn-acme.crt"
+	while [ -e "$CA_DIR/homevpn-acme-$(printf '%02d' $((n + 1))).crt" ]; do
+		rm -f "$CA_DIR/homevpn-acme-$(printf '%02d' $((n + 1))).crt"
+		n=$((n + 1))
+	done
+	return 0
+}
+
+# Print PEM of the n-th (0-based) certificate of a multi-PEM file, or nothing.
+# $1 = file, $2 = index. Empty output = no such certificate.
+extract_chain_cert() {
+	awk -v n="$2" '/BEGIN CERT/{i++} {if (i == n + 1) print} /END CERT/ && i == n + 1 {exit}' "$1" 2>/dev/null
 }
 
 # ---- prechecks (fail-fast; the previously applied config stays live) --------

@@ -1,5 +1,6 @@
 config homevpn 'config'
 	option cert_mode 'selfsigned'
+	option acme_key_type 'rsa'
 	option remote ''
 	option vpn_name 'Home VPN'
 	option ike_enc 'AES-256-GCM'

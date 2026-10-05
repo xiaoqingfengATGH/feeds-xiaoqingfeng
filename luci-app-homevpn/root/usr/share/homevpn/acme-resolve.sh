@@ -1,51 +1,37 @@
 #!/bin/sh
-# =============================================================================
-# homevpn — ACME certificate resolver, shared by /etc/init.d/homevpn and
-# /usr/libexec/rpcd/homevpn (single source of truth — edit here only).
-#
-# Locates the certificate luci-app-acme / acme.sh issued for a domain:
-#   homevpn_acme_resolve <domain>
-# sets
-#   HV_ACME_CRT — full chain, leaf FIRST (openssl x509 reads the leaf from it)
-#   HV_ACME_KEY — matching private key
-# and returns 0 when both exist, 1 otherwise. No side effects.
-#
-# Layouts handled (acme.sh 3.x / acme-common 1.5.x):
-#   state dirs  /etc/acme/<dom>/ (RSA), /etc/acme/<dom>_ecc/ (EC),
-#               /etc/acme/<dom>_rsa/ — the key-type suffix is on the
-#               DIRECTORY only; inside, files are named after the domain:
-#               <dom>.cer (LEAF ONLY — not a fullchain!), <dom>.key,
-#               fullchain.cer, ca.cer. NB: <dom>.cer must never be used as
-#               the server certificate (lone leaf) nor for CA extraction
-#               (its only cert IS the leaf).
-#   stable links /etc/ssl/acme/<dom>.fullchain.crt / .key / .chain.crt
-#               (acme-common /usr/lib/acme/hook link_certs). Fallback for
-#               custom state_dir setups — NOT preferred over state dirs:
-#               a re-issue with a different key type re-points nothing, the
-#               links keep targeting the OLD directory.
-# When several state dirs exist the NEWEST fullchain.cer wins (test -nt —
-# busybox on HomeLede ships no stat(1)).
-# =============================================================================
+# Shared resolver: explicit type, never mtime or cross-type fallback.
+# Directory overrides are for isolated shell regression tests.
+homevpn_acme_valid_domain() {
+ case "$1" in ''|*[!A-Za-z0-9.*_-]*|*..*|.*) return 1;; esac
+ return 0
+}
 homevpn_acme_resolve() {
-	HV_ACME_CRT=""; HV_ACME_KEY=""
-	local d="$1" best="" f
-	[ -n "$d" ] || return 1
-	for f in "/etc/acme/$d/fullchain.cer" "/etc/acme/${d}_ecc/fullchain.cer" "/etc/acme/${d}_rsa/fullchain.cer"; do
-		[ -s "$f" ] || continue
-		[ -s "${f%fullchain.cer}$d.key" ] || continue
-		[ -z "$best" ] || [ "$f" -nt "$best" ] || continue
-		best="$f"
-	done
-	if [ -n "$best" ]; then
-		HV_ACME_CRT="$best"
-		HV_ACME_KEY="${best%fullchain.cer}$d.key"
-		return 0
-	fi
-	# fallback: acme-common stable symlink dir
-	if [ -s "/etc/ssl/acme/$d.fullchain.crt" ] && [ -s "/etc/ssl/acme/$d.key" ]; then
-		HV_ACME_CRT="/etc/ssl/acme/$d.fullchain.crt"
-		HV_ACME_KEY="/etc/ssl/acme/$d.key"
-		return 0
-	fi
-	return 1
+ HV_ACME_CRT=""; HV_ACME_KEY=""; HV_ACME_ERROR=""
+ local d="$1" kind="${2:-rsa}" dirs base f key cert_pub key_pub
+ homevpn_acme_valid_domain "$d" || { HV_ACME_ERROR="invalid domain"; return 1; }
+ base="${HV_ACME_STATE_DIR:-/etc/acme}"
+ case "$kind" in
+ rsa) dirs="$base/$d $base/${d}_rsa";;
+ ecc) dirs="$base/${d}_ecc";;
+ *) HV_ACME_ERROR="invalid key type (use rsa or ecc)"; return 1;;
+ esac
+ for f in $dirs "${HV_ACME_LINK_DIR:-/etc/ssl/acme}"; do
+  if [ "$f" = "${HV_ACME_LINK_DIR:-/etc/ssl/acme}" ]; then
+   key="$f/$d.key"; f="$f/$d.fullchain.crt"
+  else
+   key="$f/$d.key"; f="$f/fullchain.cer"
+  fi
+  [ -s "$f" ] && [ -s "$key" ] || continue
+  cert_pub="$(openssl x509 -in "$f" -pubkey -noout 2>/dev/null)" || continue
+  key_pub="$(openssl pkey -in "$key" -passin pass: -pubout 2>/dev/null)" || continue
+  [ -n "$cert_pub" ] && [ "$cert_pub" = "$key_pub" ] || continue
+  case "$kind" in
+   rsa) printf '%s\n' "$cert_pub" | openssl rsa -pubin -noout >/dev/null 2>&1 || continue;;
+   ecc) printf '%s\n' "$cert_pub" | openssl ec -pubin -noout >/dev/null 2>&1 || continue;;
+  esac
+  HV_ACME_CRT="$f"; HV_ACME_KEY="$key"
+  return 0
+ done
+ HV_ACME_ERROR="no valid matching $kind certificate/key for $d in $base or ${HV_ACME_LINK_DIR:-/etc/ssl/acme}"
+ return 1
 }

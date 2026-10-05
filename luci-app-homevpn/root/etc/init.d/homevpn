@@ -174,8 +174,8 @@ san_exact_match() {
 }
 
 # ACME mode: copy the certificate luci-app-acme issued into the swanctl layout.
-# Resolution (state dir candidates by mtime, acme-common stable links as
-# fallback) lives in the shared resolver; here: validate + install.
+# Resolution uses explicit UCI key type (default RSA), never mtime.
+# The shared resolver validates the actual algorithm and certificate/key pair.
 sync_acme_certs() {
 	# NB: busybox ash evaluates later assignments in the SAME `local` statement
 	# against the OUTER scope — `local d="$1" s="x$d"` yields s="x" — so keep
@@ -183,8 +183,8 @@ sync_acme_certs() {
 	local domain="$1"
 	local src src_crt src_key
 	. "$ACME_RESOLVER" || return 1
-	if ! homevpn_acme_resolve "$domain"; then
-		logger_tag "ACME: no certificate for '$domain' (looked in /etc/acme/<domain>{,_ecc,_rsa}/ and /etc/ssl/acme/ — issue it in Services → Let's Encrypt first)"
+	if ! homevpn_acme_resolve "$domain" "$(hv_get acme_key_type)"; then
+		logger_tag "ACME: $HV_ACME_ERROR; keeping the deployed certificate"
 		return 1
 	fi
 	src_crt="$HV_ACME_CRT"; src_key="$HV_ACME_KEY"
@@ -196,30 +196,7 @@ sync_acme_certs() {
 		logger_tag "ACME: refusing to sync '$domain' — server address '$(effective_remote)' is not an exact SAN of it (wildcard SANs never match); keeping the deployed certificate"
 		return 1
 	fi
-	# key ↔ certificate must be a pair (acme.sh never mismatches, but a
-	# hand-edited state dir or a mid-reissue file swap can)
-	local cert_pub key_pub
-	cert_pub="$(openssl x509 -in "$src_crt" -pubkey -noout 2>/dev/null | openssl sha256 2>/dev/null | awk '{print $NF}')"
-	key_pub="$(openssl pkey -in "$src_key" -pubout 2>/dev/null | openssl sha256 2>/dev/null | awk '{print $NF}')"
-	[ -n "$cert_pub" ] && [ "$cert_pub" = "$key_pub" ] || {
-		logger_tag "ACME: refusing to sync '$domain' — private key does not match the certificate; keeping the deployed certificate"
-		return 1
-	}
-	# already in sync? compare leaf pubkeys (cheaper than hashing full PEMs)
-	# AND require the deployed server cert to be the leaf ALONE — a multi-PEM
-	# fullchain there (pre-r22 layout) only ever loads its FIRST cert into
-	# charon, so it must be re-stripped even when the leaf matches.
-	if [ -s "$X509_DIR/homevpn-server.crt" ] && [ -s "$KEY_DIR/homevpn-server.key" ] \
-		&& [ "$(grep -c 'BEGIN CERTIFICATE' "$X509_DIR/homevpn-server.crt" 2>/dev/null)" = 1 ]; then
-		local dep_pub
-		dep_pub="$(openssl x509 -in "$X509_DIR/homevpn-server.crt" -pubkey -noout 2>/dev/null | openssl sha256 2>/dev/null | awk '{print $NF}')"
-		if [ "$dep_pub" = "$cert_pub" ]; then
-			# refresh the chain files too (intermediates may have rotated on
-			# reissue) — same install routine as below, idempotent
-			install_acme_chain "$src_crt" || return 1
-			return 0
-		fi
-	fi
+	# Resolver validated the type and pair. Renewal may reuse the same key.
 	# install: stage + rename so charon never reads a half-written file
 	local T
 	T="$(mktemp -d /tmp/homevpn-acme.XXXXXX)" || return 1

@@ -5,8 +5,9 @@
 
 var callStatus      = rpc.declare({ object: 'homevpn', method: 'status' });
 var callListUsers   = rpc.declare({ object: 'homevpn', method: 'list_users' });
+var callDiscoverAcme = rpc.declare({ object: 'homevpn', method: 'discover_acme', params: [ 'domain' ] });
 var callGetSettings = rpc.declare({ object: 'homevpn', method: 'get_settings' });
-var callSetSettings = rpc.declare({ object: 'homevpn', method: 'set_settings', params: [ 'remote', 'vpn_name', 'cert_mode', 'acme_domain', 'ip_mode', 'pool_start', 'pool_end', 'pool_subnet', 'masq' ] });
+var callSetSettings = rpc.declare({ object: 'homevpn', method: 'set_settings', params: [ 'remote', 'vpn_name', 'cert_mode', 'acme_domain', 'acme_key_type', 'ip_mode', 'pool_start', 'pool_end', 'pool_subnet', 'masq' ] });
 var callAddUser     = rpc.declare({ object: 'homevpn', method: 'add_user', params: [ 'name', 'password' ] });
 var callDelUser     = rpc.declare({ object: 'homevpn', method: 'del_user', params: [ 'name' ] });
 var callSetUserIp   = rpc.declare({ object: 'homevpn', method: 'set_user_ip', params: [ 'name', 'ip' ] });
@@ -174,7 +175,7 @@ return view.extend({
 						if (sIpMode.value === 'lansubnet' && ps && !/^\d+\.\d+\.\d+\.\d+$/.test(ps)) { ui.addNotification(null, E('p', _('Pool start is not a valid IP address.')), 'warning'); return; }
 						if (sIpMode.value === 'lansubnet' && pe && !/^\d+\.\d+\.\d+\.\d+$/.test(pe)) { ui.addNotification(null, E('p', _('Pool end is not a valid IP address.')), 'warning'); return; }
 						if (sIpMode.value === 'subnet' && !/^(\d+\.){3}\d+\/\d+$/.test(pc)) { ui.addNotification(null, E('p', _('Pool subnet must be a CIDR like 10.100.1.0/24.')), 'warning'); return; }
-						return callSetSettings(sRemote.value, sName.value, sMode.value, sAcme.value, sIpMode.value, ps, pe, pc, sMasq.value).then(function(r) {
+						return saveSettings(ps, pe, pc, function(r) {
 							if (r && r.ok) {
 								if (r.precheck_ok) {
 									ui.addNotification(null, E('p', _('Applied. Mode: %s, pool: %s').format(sIpMode.value, pc || (ps || 'auto') + '-' + (pe || 'auto'))), 'info');
@@ -201,27 +202,75 @@ return view.extend({
 			E('option', { 'value': 'import', 'selected': (set.cert_mode === 'import' ? 'selected' : null) }, _('Import own certificate')),
 			E('option', { 'value': 'acme', 'selected': (set.cert_mode === 'acme' ? 'selected' : null) }, _('ACME / Let\u0027s Encrypt'))
 		]);
-		var sAcme = E('input', { 'type': 'text', 'value': set.acme_domain || '', 'placeholder': 'domain from Services → Let\u0027s Encrypt', 'style': 'width:16em' });
-		/* only meaningful in ACME mode — hidden otherwise */
-		var acmeHint = E('div', { 'class': 'cbi-section-descr', 'style': 'margin:.25em 0 0' }, '');
-		function updAcmeHint() {
-			var dom = (sAcme.value || '').trim();
-			var kind, text;
-			if (!dom)
-				{ kind = ''; text = _('Set the domain issued in Services → Let\u0027s Encrypt (e.g. vpn.example.com).'); }
-			else if (st.acme_ready && dom === (set.acme_domain || ''))
-				{ kind = 'ok'; text = _('✓ ACME certificate found for this domain — switching is allowed. Renewals are picked up automatically.'); }
-			else
-				{ kind = 'error'; text = _('Issue the certificate first in Services → Let\u0027s Encrypt, then switch here — switching is refused until the certificate for this domain exists, the old mode keeps serving.'); }
+		var sAcme = E('input', { 'id': 'homevpn-acme-domain', 'type': 'text', 'value': set.acme_domain || '', 'placeholder': 'domain from Services → Let\u0027s Encrypt', 'style': 'width:16em' });
+		var typeLabels = { rsa: _('RSA (recommended for iPhone)'), ecc: _('ECC (ECDSA)') };
+		var sAcmeType = E('select', { 'id': 'homevpn-acme-type', 'style': 'width:16em' });
+		var acmeSingle = E('span', { 'id': 'homevpn-acme-single' });
+		var acmeHint = E('div', { 'id': 'homevpn-acme-hint', 'class': 'cbi-section-descr', 'role': 'status', 'aria-live': 'polite' });
+		var acme = { generation: 0, domain: '', state: 'empty', types: [], selected: set.acme_key_type || 'rsa' };
+		var acmeTimer;
+		function paintAcme() {
+			var ready = acme.state === 'ready', dual = ready && acme.types.length === 2;
+			sAcmeType.style.display = dual ? '' : 'none';
+			sAcmeType.disabled = !dual;
+			acmeSingle.style.display = ready && acme.types.length === 1 ? '' : 'none';
+			acmeSingle.textContent = ready && acme.types.length === 1 ? typeLabels[acme.selected] : '';
+			var text = _('Enter the domain to look for local certificates.'), kind = '';
+			if (acme.state === 'loading') text = _('Checking local certificates…');
+			else if (acme.state === 'error') { text = _('Certificate query failed. Edit the domain or retry; this does not mean no certificate was found.'); kind = 'error'; }
+			else if (ready && !acme.types.length) { text = _('No usable local certificate found for this domain. Issue a certificate in Services → Let\u0027s Encrypt first.'); kind = 'warn'; }
+			else if (ready) { text = _('Local certificate found. The server address will be checked against its SAN when saving.'); kind = 'ok'; }
 			acmeHint.textContent = text;
-			acmeHint.setAttribute('style', 'margin:.25em 0 0' + (kind ? (';' + hintColors(kind)) : ''));
+			acmeHint.setAttribute('style', 'margin:.25em 0 0' + (kind ? ';' + hintColors(kind) : ''));
 		}
-		sAcme.addEventListener('input', updAcmeHint);
-		updAcmeHint();
+		function queryAcme(delay) {
+			clearTimeout(acmeTimer);
+			var generation = ++acme.generation, domain = (sAcme.value || '').trim();
+			acme.domain = domain; acme.types = []; acme.state = domain ? 'loading' : 'empty';
+			paintAcme();
+			if (!domain) return;
+			acmeTimer = setTimeout(function() {
+				Promise.resolve().then(function() { return callDiscoverAcme(domain); }).then(function(r) {
+					if (generation !== acme.generation || domain !== (sAcme.value || '').trim()) return;
+					if (!r || r.ok !== true || r.domain !== domain || !Array.isArray(r.types) ||
+						r.types.some(function(t) { return t !== 'rsa' && t !== 'ecc'; }) ||
+						r.types.length !== r.types.filter(function(t, i, a) { return a.indexOf(t) === i; }).length)
+						throw new Error('Invalid certificate discovery response');
+					acme.types = r.types; acme.state = 'ready';
+					if (acme.types.indexOf(acme.selected) < 0) acme.selected = acme.types.indexOf('rsa') >= 0 ? 'rsa' : (acme.types[0] || '');
+					while (sAcmeType.firstChild) sAcmeType.removeChild(sAcmeType.firstChild);
+					acme.types.forEach(function(t) { sAcmeType.appendChild(E('option', { 'value': t }, typeLabels[t])); });
+					sAcmeType.value = acme.selected;
+					paintAcme();
+				}).catch(function() {
+					if (generation !== acme.generation || domain !== (sAcme.value || '').trim()) return;
+					acme.state = 'error'; acme.types = []; paintAcme();
+				});
+			}, delay);
+		}
+		sAcme.addEventListener('input', function() { queryAcme(300); });
+		sAcmeType.addEventListener('change', function() { acme.selected = sAcmeType.value; });
+		queryAcme(0);
 		var acmeRow = E('div', { 'class': 'cbi-value' }, [ E('label', { 'class': 'cbi-value-title' }, _('ACME domain')), E('div', { 'class': 'cbi-value-field' }, [
 			sAcme,
-			acmeHint
+			E('div', {}, [ sAcmeType, acmeSingle ]),
+			E('div', { 'class': 'cbi-section-descr' }, _('A single available key type is selected automatically. If both exist, choose RSA or ECC. Source: /etc/acme, then /etc/ssl/acme.')),
+			acmeHint,
+			E('button', { 'class': 'btn cbi-button', 'click': function() { queryAcme(0); } }, _('Check again'))
 		]) ]);
+		var settingsSaving = false;
+		function saveSettings(ps, pe, pc, done) {
+			if (settingsSaving) return Promise.resolve();
+			var domain = (sAcme.value || '').trim();
+			if (sMode.value === 'acme' && (acme.state !== 'ready' || domain !== acme.domain || !domain || acme.types.indexOf(acme.selected) < 0)) {
+				ui.addNotification(null, E('p', _('Wait for a successful local certificate query and select an available type before saving.')), 'warning');
+				return Promise.resolve();
+			}
+			// Snapshot and dispatch in the same turn: an edited/unqueried domain cannot use an old result.
+			settingsSaving = true;
+			return callSetSettings(sRemote.value, sName.value, sMode.value, domain, acme.selected || set.acme_key_type || 'rsa', sIpMode.value, ps, pe, pc, sMasq.value)
+				.then(done).finally(function() { settingsSaving = false; });
+		}
 
 		/* ---- import-mode: deployed-cert info panel + collapsible upload ---- */
 		var certRows = [];
@@ -343,7 +392,7 @@ return view.extend({
 				E('button', {
 					'class': 'btn cbi-button cbi-button-save',
 					'click': ui.createHandlerFn(this, function() {
-						return callSetSettings(sRemote.value, sName.value, sMode.value, sAcme.value, sIpMode.value, (sPs.value || '').trim(), (sPe.value || '').trim(), (sPc.value || '').trim(), sMasq.value).then(function(r) {
+						return saveSettings((sPs.value || '').trim(), (sPe.value || '').trim(), (sPc.value || '').trim(), function(r) {
 							if (r && r.ok && !r.precheck_ok)
 								ui.addNotification(null, E('p', _('Refused: %s — the last working configuration stays active.').format(r.precheck_reason || _('precheck failed'))), 'error');
 							if (ok(r, _('Save settings'))) { flash(_('Saved. Server re-provisioned.'), 'info'); reload(); }

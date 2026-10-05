@@ -28,8 +28,23 @@ address → add users → clients connect. Based on
     `/etc/swanctl/{x509,x509ca,private}/`
   - `acme` — sync a certificate issued by the luci-app-acme Let's Encrypt app
     (DNS-01; needs a controlled domain). SAN must equal the server address.
-    Resolution covers acme.sh state dirs (`<dom>/`, `<dom>_ecc/`, `<dom>_rsa/`,
-    newest wins) and the acme-common stable links under `/etc/ssl/acme/`.
+    Selection uses domain + `homevpn.config.acme_key_type` (`rsa` by default,
+    or `ecc` in LuCI). RSA searches `/etc/acme/<dom>/`, then `<dom>_rsa/`;
+    ECC searches `/etc/acme/<dom>_ecc/`. The acme-common stable links under
+    `/etc/ssl/acme/` are fallback only. Every candidate must have the requested
+    actual key algorithm and a matching certificate/private-key pair; mtime
+    never changes the resolver's choice, and a missing requested type is refused.
+    LuCI queries the entered domain through read-only `discover_acme`: no usable
+    pair shows “not found”, one available type is displayed and selected without
+    a dropdown, and two types allow selection (retain a valid choice, else RSA).
+    Debounced queries ignore stale replies; errors are distinct from not-found.
+    Both settings-save entrances require a current successful discovery result
+    in ACME mode; the backend rechecks the pair and exact server SAN before writing.
+    Regression tests: `node tests/acme-discovery-ui-test.cjs htdocs/luci-static/resources/view/homevpn/overview.js`;
+    on OpenWrt, `sh tests/acme-discovery-test.sh /` and
+    `sh tests/acme-discovery-ubus-test.sh` (temporary read-only test object,
+    isolated `/tmp` certificates; reloads rpcd, never charon).
+    Renewals replace the complete leaf even when they reuse the same key.
     Issuance/renewal hotplug (`/etc/hotplug.d/acme/`) re-syncs and hot-reloads
     charon credentials — zero-touch renewal, connected clients survive.
 

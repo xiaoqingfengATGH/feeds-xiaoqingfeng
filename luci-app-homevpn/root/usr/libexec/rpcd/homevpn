@@ -22,7 +22,7 @@ cfg() { uci -q get "${CFG}.config.$1"; }
 # shared ACME resolver (same code as the init script — single source of truth)
 . "$ACME_RESOLVER" || { echo "homevpn-rpcd: missing $ACME_RESOLVER" >&2; }
 # resolver contract: HV_ACME_CRT (fullchain, leaf first) + HV_ACME_KEY
-acme_ready() { homevpn_acme_resolve "$1"; }
+acme_ready() { homevpn_acme_resolve "$1" "${2:-$(cfg acme_key_type)}"; }
 
 err() { json_init; json_add_boolean ok 0; json_add_string error "$1"; json_dump; exit 0; }
 ok()  { json_add_boolean ok 1; }
@@ -116,8 +116,9 @@ list)
 	json_add_object "add_user";     json_add_string name ""; json_add_string password ""; json_close_object
 	json_add_object "del_user";     json_add_string name ""; json_close_object
 	json_add_object "set_user_ip";  json_add_string name ""; json_add_string ip ""; json_close_object
+	json_add_object "discover_acme"; json_add_string domain ""; json_close_object
 	json_add_object "get_settings"; json_close_object
-	json_add_object "set_settings"; json_add_string remote ""; json_add_string vpn_name ""; json_add_string cert_mode ""; json_add_string acme_domain ""; json_close_object
+	json_add_object "set_settings"; json_add_string remote ""; json_add_string vpn_name ""; json_add_string cert_mode ""; json_add_string acme_domain ""; json_add_string acme_key_type ""; json_add_string ip_mode ""; json_add_string pool_start ""; json_add_string pool_end ""; json_add_string pool_subnet ""; json_add_string masq ""; json_close_object
 	json_add_object "provision";    json_close_object
 	json_add_object "upload_certs"; json_add_string server ""; json_add_string key ""; json_add_string ca ""; json_close_object
 	json_add_object "download";     json_add_string name ""; json_add_string what ""; json_close_object
@@ -273,12 +274,27 @@ set_user_ip)
 		regen_secrets || err "regen failed"
 		json_init; ok; json_add_string name "$name"; json_add_string fixed_ip "$ip"; json_dump
 		;;
+	discover_acme)
+		# Read-only: reuse the save/provision resolver for both algorithms.
+		json_get_var domain domain
+		command -v openssl >/dev/null 2>&1 || err "certificate query unavailable: openssl missing"
+		type homevpn_acme_resolve >/dev/null 2>&1 && type homevpn_acme_valid_domain >/dev/null 2>&1 || err "certificate query unavailable: resolver missing"
+		homevpn_acme_valid_domain "$domain" || err "invalid domain"
+		json_init; ok; json_add_string domain "$domain"
+		json_add_array types
+		for kind in rsa ecc; do
+			if homevpn_acme_resolve "$domain" "$kind"; then json_add_string "" "$kind"; fi
+		done
+		json_close_array; json_dump
+		;;
 	get_settings)
 		json_init; ok
 		json_add_string remote "$(cfg remote)"
 		json_add_string vpn_name "$(cfg vpn_name)"
 		json_add_string cert_mode "$(active_mode)"
 		json_add_string acme_domain "$(cfg acme_domain)"
+		acme_type="$(cfg acme_key_type)"
+		json_add_string acme_key_type "${acme_type:-rsa}"
 		json_add_string ike_enc "$(cfg ike_enc)"
 		json_add_string ike_int "$(cfg ike_int)"
 		json_add_string ike_dh "$(cfg ike_dh)"
@@ -292,6 +308,10 @@ set_user_ip)
 	set_settings)
 		json_get_var v_remote remote; json_get_var v_name vpn_name
 		json_get_var v_mode cert_mode; json_get_var v_acme acme_domain
+		json_get_var v_type acme_key_type
+		[ -n "$v_type" ] || v_type="$(cfg acme_key_type)"
+		v_type="${v_type:-rsa}"
+		case "$v_type" in rsa|ecc) ;; *) err "invalid ACME key type (use rsa or ecc)";; esac
 		json_get_var v_ipmode ip_mode; json_get_var v_ps pool_start
 		json_get_var v_pe pool_end; json_get_var v_pc pool_subnet
 		json_get_var v_masq masq
@@ -304,12 +324,13 @@ set_user_ip)
 		# would claim "ACME" while the old cert keeps serving (silent lie),
 		# or every IKE_AUTH would fail on the id↔SAN mismatch. Refuse and
 		# keep the previous values.
-		if [ "$v_mode" = acme ] && { [ "$prev_mode" != acme ] || [ "$v_acme" != "$(cfg acme_domain)" ] || [ "$v_remote" != "$(cfg remote)" ]; }; then
+		if [ "${v_mode:-$prev_mode}" = acme ]; then
+			[ -n "$v_acme" ] || v_acme="$(cfg acme_domain)"
 			if [ -z "$v_acme" ]; then
 				err "ACME domain is empty — set it to the domain issued in Services → Let's Encrypt"
 			fi
-			if ! acme_ready "$v_acme"; then
-				err "no ACME certificate for '$v_acme' (checked /etc/acme/<domain>{,_ecc,_rsa}/ and /etc/ssl/acme/) — issue it in Services → Let's Encrypt first; staying in '${prev_mode:-selfsigned}' mode"
+			if ! acme_ready "$v_acme" "$v_type"; then
+				err "$HV_ACME_ERROR; keeping previous settings"
 			fi
 			# server address must be an exact SAN of the ACME leaf — same
 			# rule the sync enforces; catch it here so the UI sees the
@@ -323,6 +344,7 @@ set_user_ip)
 		[ -n "$v_name" ] && uci -q set "${CFG}.config.vpn_name=${v_name}"
 		[ -n "$v_mode" ] && uci -q set "${CFG}.config.cert_mode=${v_mode}"
 		[ -n "$v_acme" ] && uci -q set "${CFG}.config.acme_domain=${v_acme}"
+		uci -q set "${CFG}.config.acme_key_type=${v_type}"
 		# pool fields: empty input clears them back to the defaults
 		uci -q set "${CFG}.config.ip_mode=${v_ipmode:-lansubnet}"
 		uci -q set "${CFG}.config.pool_start=${v_ps}"

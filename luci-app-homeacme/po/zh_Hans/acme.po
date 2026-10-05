@@ -338,12 +338,9 @@ msgstr "所有域名要使用的域名别称。"
 
 #: applications/luci-app-acme/htdocs/luci-static/resources/view/acme/acme.js:41
 msgid ""
-"This configures ACME (Letsencrypt) automatic certificate installation. "
-"Simply fill out this to have the router configured with Letsencrypt-issued "
-"certificates for the web interface."
-msgstr ""
-"此项配置 ACME (Letsencrypt) 自动证书安装。只要填写这个就能让路由器 web 界面安"
-"装 Letsencrypt 所发行的证书。"
+"A free certificate issuance and automatic renewal tool customized by Homelede. "
+"Once the domain name is configured, setup can be completed in a few minutes."
+msgstr "Homelede定制的免费证书申请及自动续期工具，配置好域名几分钟后即可完成。"
 
 #: applications/luci-app-acme/htdocs/luci-static/resources/view/acme/acme.js:119
 msgid "To temporary open port you can specify your web server port e.g. 80."

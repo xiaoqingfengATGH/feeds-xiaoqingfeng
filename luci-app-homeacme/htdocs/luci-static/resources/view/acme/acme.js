@@ -38,9 +38,8 @@ return view.extend({
 		let m, s, o;
 
 		m = new form.Map("acme", _("ACME certificates"),
-			_("This configures ACME (Letsencrypt) automatic certificate installation. " +
-				"Simply fill out this to have the router configured with Letsencrypt-issued " +
-				"certificates for the web interface.") + '<br />' +
+			_("A free certificate issuance and automatic renewal tool customized by Homelede. " +
+				"Once the domain name is configured, setup can be completed in a few minutes.") + '<br />' +
 			_("Note that the domain names in the certificate must already be configured to " +
 				"point at the router's public IP address.") + '<br />' +
 			_("Once configured, issuing certificates can take a while. " +

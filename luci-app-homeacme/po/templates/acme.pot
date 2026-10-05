@@ -325,9 +325,8 @@ msgstr ""
 
 #: applications/luci-app-acme/htdocs/luci-static/resources/view/acme/acme.js:41
 msgid ""
-"This configures ACME (Letsencrypt) automatic certificate installation. "
-"Simply fill out this to have the router configured with Letsencrypt-issued "
-"certificates for the web interface."
+"A free certificate issuance and automatic renewal tool customized by Homelede. "
+"Once the domain name is configured, setup can be completed in a few minutes."
 msgstr ""
 
 #: applications/luci-app-acme/htdocs/luci-static/resources/view/acme/acme.js:119

@@ -1,0 +1,26 @@
+// SPDX-License-Identifier: GPL-3.0-or-later
+import { cursor } from 'uci';
+import { inventory } from '/usr/share/ucode/luci/acme-inventory.uc';
+
+return {
+	'luci.acme': {
+		getCertificates: {
+			args: {},
+			call: function() {
+				let uci = cursor();
+				let state_dir = '/etc/acme', configs = [];
+				uci.foreach('acme', 'acme', (section) => {
+					if (section.state_dir)
+						state_dir = section.state_dir;
+				});
+				uci.foreach('acme', 'cert', (section) => {
+					// Only allowlisted configuration metadata leaves this boundary.
+					push(configs, { name: section['.name'], domains: section.domains,
+						key_type: section.key_type || (section.keylength ?
+							(match(section.keylength, /^ec-/) ? replace(section.keylength, '-', '') : 'rsa' + section.keylength) : 'ec256') });
+				});
+				return inventory(state_dir, configs, '/etc/ssl/acme');
+			}
+		}
+	}
+};

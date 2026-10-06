@@ -15,7 +15,7 @@ LUCI_DEPENDS:=+strongswan-swanctl +strongswan-mod-eap-mschapv2 +strongswan-mod-g
 	+iputils-arping
 LUCI_PKGARCH:=all
 PKG_VERSION:=2.1.0
-PKG_RELEASE:=27
+PKG_RELEASE:=28
 # Keep the translation package upgradeable before its first git revision.
 PKG_PO_VERSION:=$(PKG_VERSION)-r$(PKG_RELEASE)
 PKG_LICENSE:=MIT

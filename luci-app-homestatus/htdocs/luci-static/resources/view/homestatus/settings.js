@@ -161,6 +161,31 @@ function importServices(map) {
 }
 
 return view.extend({
+	handleSave: function() {
+		/* Both maps share the singleton uci client. Stock view.handleSave
+		 * calls map.save() in parallel, racing flush/reorder/unload. Parse
+		 * every map first, then flush the shared state exactly once. */
+		if (this._saveTask)
+			return this._saveTask;
+		var maps = this._maps;
+		this._saveTask = Promise.all(maps.map(function(map) {
+			map.checkDepends();
+			return map.parse();
+		})).then(function() {
+			return uci.save();
+		}).then(function() {
+			return Promise.all(maps.map(function(map) {
+				return map.load().then(function() { return map.reset(); });
+			}));
+		}).catch(function(err) {
+			ui.addNotification(null, E('p', {}, [
+				_('未保存：%s').format(err.message || String(err))
+			]), 'error');
+			throw err;
+		}).finally(L.bind(function() { this._saveTask = null; }, this));
+		return this._saveTask;
+	},
+
 	load: function() {
 		/* luci-wol holds the wake targets, shared with the stock
 		 * luci-app-wol page so both stay in sync */
@@ -411,9 +436,10 @@ return view.extend({
 		 * belongs directly under that section, not after the WOL table:
 		 * m renders 显示与监测 + 关键应用状态监视, so appending this block
 		 * before wolNode lands it in the right place. */
+		this._maps = [ m, wolMap ];
 		return Promise.resolve(m.render()).then(function(node) {
 			return wolMap.render().then(function(wolNode) {
-				node.appendChild(E('div', { 'class': 'cbi-section' }, [
+				var importer = E('div', { 'class': 'cbi-section' }, [
 					E('h3', {}, [ _('从已安装服务添加') ]),
 					E('div', { 'class': 'cbi-section-descr' }, [
 						_('列出所有带 init 脚本的服务，勾选后加入上方的「关键应用状态监视」列表。')
@@ -426,11 +452,10 @@ return view.extend({
 							})
 						}, [ _('选择服务…') ])
 					])
-				]));
+				]);
 
-				node.appendChild(wolNode);
-
-				return node;
+				/* Keep maps as siblings: resetting m must not detach WOL. */
+				return E('div', {}, [ node, importer, wolNode ]);
 			});
 		});
 	}

@@ -16,7 +16,7 @@ export PATH="$t/bin:$PATH"
 # No production init command can execute from this branch fixture.
 {
  printf '. /usr/share/libubox/jshn.sh\nCFG=homevpn\ncfg() { uci -q get "homevpn.config.$1"; }\nerr() { json_init; json_add_boolean ok 0; json_add_string error "$1"; json_dump; exit 0; }\nok() { json_add_boolean ok 1; }\njson_load "$1"\ncase set_settings in\n'
- sed -n '/^[[:space:]]*set_settings)/,/^[[:space:]]*provision)/p' "$src" | sed '$d' | sed 's@/etc/init.d/homevpn regen@true@g; s@/tmp/homevpn.state@/dev/null@g'
+ sed -n '/^[[:space:]]*set_settings)/,/^[[:space:]]*provision)/p' "$src" | sed '$d' | sed 's@/etc/init.d/homevpn provision@true@g; s@/etc/init.d/homevpn unconfigure@true@g; s@/tmp/homevpn.state@/dev/null@g'
  printf 'esac\n'
 } > "$t/branch"
 before=$(sha256sum "$t/config/homevpn")

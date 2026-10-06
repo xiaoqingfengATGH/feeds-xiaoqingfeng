@@ -14,7 +14,7 @@ async function main(){
  const document={createTextNode:x=>x,body:new Node('body')};
  const URL={createObjectURL:b=>{blobs.push(b);return 'blob:fixture';},revokeObjectURL(){}};
  const view=new Function('view','rpc','ui','E','_','location','history','document','URL','Blob',src)({extend:x=>x},rpc,ui,E,x=>x,{hash:'',reload(){}},{},document,URL,Blob);
- const root=view.render([{}, {users:[{name:'alice'}]}, {cert_mode:'selfsigned'}]);
+ const root=view.render([{pki_ready:true,remote:'vpn.example.com'}, {users:[{name:'alice'}]}, {cert_mode:'import'}]);
  const click=async label=>{const button=all(root).find(n=>n.tag==='button'&&n.children.includes(label));assert(button,label);await button.listeners.click();};
  for(const [label,user,type,extension,mime,key] of [
   ['Android .sswan','alice','sswan','alice.sswan','application/vnd.strongswan.profile','sswan'],

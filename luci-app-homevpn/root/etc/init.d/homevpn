@@ -99,63 +99,10 @@ ensure_firewall() {
 	fi
 }
 
-# Self-signed PKI: CA (RSA 3072) + server cert (SAN=$1, EKU serverAuth).
-gen_selfsigned_pki() {
-	local san="$1" cn="${2:-$1}"
-	mkdir -p "$CA_DIR" "$X509_DIR" "$KEY_DIR" || return 1
-
-	# CA
-	if [ ! -s "$CA_DIR/homevpn-ca.crt" ] || [ ! -s "$KEY_DIR/homevpn-ca.key" ]; then
-		openssl genrsa -out "$KEY_DIR/homevpn-ca.key" 3072 2>/dev/null || return 1
-		openssl req -x509 -new -sha256 -days 3650 \
-			-key "$KEY_DIR/homevpn-ca.key" \
-			-out "$CA_DIR/homevpn-ca.crt" \
-			-subj "/CN=HomeVPN Root CA" \
-			-addext "basicConstraints=critical,CA:TRUE" \
-			-addext "keyUsage=critical,keyCertSign,cRLSign" 2>/dev/null || return 1
-		logger_tag "PKI: generated self-signed CA (RSA 3072, 10y)"
-	fi
-
-	# Server certificate — SAN must equal what clients dial.
-	if [ ! -s "$X509_DIR/homevpn-server.crt" ] || [ ! -s "$KEY_DIR/homevpn-server.key" ]; then
-		openssl req -new -sha256 \
-			-key "$KEY_DIR/homevpn-server.key" 2>/dev/null >/dev/null || \
-		openssl genrsa -out "$KEY_DIR/homevpn-server.key" 2048 2>/dev/null || return 1
-		openssl req -new -sha256 \
-			-key "$KEY_DIR/homevpn-server.key" \
-			-out /tmp/homevpn-server.csr \
-			-subj "/CN=$cn" 2>/dev/null || return 1
-		# SAN may be an IP address — detect and use IP: form.
-		local sanfmt="DNS:$san"
-		echo "$san" | grep -qE '^[0-9]+\.[0-9]+\.[0-9]+\.[0-9]+$' && sanfmt="IP:$san"
-		cat > /tmp/homevpn-ext.cnf <<EOF || return 1
-basicConstraints=CA:FALSE
-keyUsage=digitalSignature,keyEncipherment
-extendedKeyUsage=serverAuth
-subjectAltName=$sanfmt
-EOF
-		openssl x509 -req -sha256 -days 825 \
-			-in /tmp/homevpn-server.csr \
-			-CA "$CA_DIR/homevpn-ca.crt" \
-			-CAkey "$KEY_DIR/homevpn-ca.key" \
-			-CAcreateserial \
-			-out "$X509_DIR/homevpn-server.crt" \
-			-extfile /tmp/homevpn-ext.cnf 2>/dev/null || return 1
-		rm -f /tmp/homevpn-server.csr /tmp/homevpn-ext.cnf "$CA_DIR/homevpn-ca.srl" || return 1
-		logger_tag "PKI: issued server cert SAN=$san (RSA 2048, 825d)"
-	fi
-	chmod 600 "$KEY_DIR"/*.key 2>/dev/null
-}
-
-# Pick the effective server identity: UCI remote > current WAN IPv4.
-effective_remote() {
-	local r
-	r="$(hv_get remote)"
-	[ -n "$r" ] && { echo "$r"; return; }
-	r="$(uci -q get network.wan.ipaddr)"
-	[ -n "$r" ] || r="$(ip -4 addr show dev $(uci -q get network.wan.device 2>/dev/null || echo eth1) 2>/dev/null | grep -oE '[0-9]+\.[0-9]+\.[0-9]+\.[0-9]+' | head -1)"
-	echo "$r"
-}
+# CA and leaf lifecycles are separate and shared with rpcd.
+. /usr/share/homevpn/selfsigned-pki.sh
+gen_selfsigned_pki() { hv_pki_sync_leaf "$1" || { hv_error "$HV_PKI_ERROR"; return 1; }; }
+effective_remote() { hv_get remote; }
 
 # Exact SAN membership: charon binds local.id (the server address) to a
 # certificate ONLY on an exact SAN match — wildcard SANs (*.example.com)
@@ -705,7 +652,10 @@ regen_secrets() {
 }
 
 provision_certs() {
+	hv_exclusive || return 1
+	hv_pki_recover || { hv_error "$HV_PKI_ERROR"; return 1; }
 	local mode acme_domain
+	hv_pki_valid_remote "$(effective_remote)" || { hv_error remote_required; return 1; }
 	mode="$(hv_get cert_mode)"
 	[ -n "$mode" ] || mode="selfsigned"
 	case "$mode" in
@@ -807,6 +757,7 @@ hv_start() {
 	[ -s /etc/config/$CFG ] || { logger_tag "no /etc/config/$CFG — refusing to start" ; return 1; }
 	load_env
 	[ -n "$LAN_ADDR" ] || { refuse_no_lan; return 1; }
+	hv_pki_valid_remote "$(effective_remote)" || { hv_error remote_required; return 1; }
 	ensure_firewall || { hv_error "INPUT firewall apply failed"; return 1; }
 	provision_certs || return 1
 	# regen_secrets lives inside apply_config now (single source of truth,
@@ -823,10 +774,33 @@ service_triggers() {
 	procd_add_reload_trigger "network"
 }
 
+extra_command "check-ownership" "Check exclusive strongSwan ownership without modifying assets"
+check-ownership() { hv_with_lock hv_exclusive; }
 extra_command "provision" "Run full provisioning now (PKI + conf + secrets + firewall)"
 provision() {
-	start_service
+ hv_with_lock hv_provision_saved
 }
+hv_provision_saved() {
+ hv_exclusive || return 1
+ hv_pki_recover || { hv_error "$HV_PKI_ERROR"; return 1; }
+ provision_certs || return 1
+ [ "$(hv_get enabled)" != 0 ] || return 0
+ hv_install_guard || return 1
+ load_env
+ [ -n "$LAN_ADDR" ] || { refuse_no_lan; return 1; }
+ ensure_firewall || return 1
+ if pidof charon >/dev/null; then apply_config regen; else apply_config start; fi
+}
+extra_command "unconfigure" "Remove inactive HomeVPN connection, refusing unsafe live unload"
+unconfigure() { hv_with_lock hv_unconfigure; }
+hv_unconfigure() {
+ # This swanctl build has no target-only unload-conn CLI. Never use global
+ # --load-conns --clear, terminate foreign SAs, or stop a shared daemon here.
+ if pidof charon >/dev/null; then hv_error remote_clear_blocked; return 1; fi
+ rm -f "$CONN_FILE" || return 1
+ hv_state "result=unconfigured" "reason=remote_required"
+}
+
 
 extra_command "regen" "Regenerate + precheck + apply config (keeps charon running when possible)"
 hv_regen() {

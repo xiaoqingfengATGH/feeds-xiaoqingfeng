@@ -5,6 +5,8 @@ ROOT="${1:-/}"
 RPC="$ROOT/usr/libexec/rpcd/homevpn"
 T=$(mktemp -d /tmp/homevpn-discovery.XXXXXX)
 trap 'rm -rf "$T"' EXIT
+sed "s@/usr/share/homevpn/@$ROOT/usr/share/homevpn/@g" "$RPC" > "$T/rpc"
+RPC="$T/rpc"
 export HV_ACME_STATE_DIR="$T/acme" HV_ACME_LINK_DIR="$T/links"
 mkdir -p "$HV_ACME_STATE_DIR/test.example" "$HV_ACME_STATE_DIR/test.example_ecc" "$HV_ACME_LINK_DIR"
 probe() { printf '%s\n' '{"domain":"test.example"}' | sh "$RPC" call discover_acme; }

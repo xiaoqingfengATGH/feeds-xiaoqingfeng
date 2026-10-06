@@ -35,15 +35,9 @@ active_mode() {
 	echo "$m"
 }
 
-effective_remote() {
-	local r; r="$(cfg remote)"
-	[ -n "$r" ] && { echo "$r"; return; }
-	r="$(uci -q get network.wan.ipaddr)"
-	[ -n "$r" ] && { echo "$r"; return; }
-	# live interface address (wan may be DHCP — nothing in UCI)
-	local dev; dev="$(uci -q get network.wan.device 2>/dev/null)"
-	ip -4 addr show dev "${dev:-eth1}" 2>/dev/null | grep -oE '[0-9]+\.[0-9]+\.[0-9]+\.[0-9]+' | head -1
-}
+CA_DIR="$SWANCTL/x509ca"; X509_DIR="$SWANCTL/x509"; KEY_DIR="$SWANCTL/private"
+. /usr/share/homevpn/selfsigned-pki.sh
+effective_remote() { cfg remote; }
 
 # Exact SAN membership: charon binds local.id (the server address) to a
 # certificate ONLY on an exact SAN match — wildcard SANs (*.example.com)
@@ -69,6 +63,9 @@ san_exact_match() {
 # but pre-r22 it held only the root anyway).
 ca_file() {
 	local f last
+	if [ "$(active_mode)" = selfsigned ]; then
+		hv_pki_ca_valid && echo "$CA_SELF"; return
+	fi
 	for f in $ACME_CHAIN_GLOB; do
 		[ -s "$f" ] && last="$f"
 	done
@@ -126,6 +123,7 @@ list)
 	json_add_object "discover_acme"; json_add_string domain ""; json_close_object
 	json_add_object "get_settings"; json_close_object
 	json_add_object "set_settings"; json_add_string remote ""; json_add_string vpn_name ""; json_add_string cert_mode ""; json_add_string acme_domain ""; json_add_string acme_key_type ""; json_add_string ip_mode ""; json_add_string pool_start ""; json_add_string pool_end ""; json_add_string pool_subnet ""; json_add_string masq ""; json_close_object
+	json_add_object "ensure_selfsigned_ca"; json_add_boolean replace 0; json_add_string fingerprint ""; json_close_object
 	json_add_object "provision";    json_close_object
 	json_add_object "upload_certs"; json_add_string server ""; json_add_string key ""; json_add_string ca ""; json_close_object
 	json_add_object "download";     json_add_string name ""; json_add_string what ""; json_close_object
@@ -146,6 +144,7 @@ call)
 		json_dump
 		;;
 	status)
+		hv_pki_recover || err "$HV_PKI_ERROR"
 		json_init; ok
 		json_add_boolean enabled "$([ "$(cfg enabled)" != 0 ] && echo 1 || echo 0)"
 		json_add_boolean boot_enabled "$(/etc/init.d/homevpn enabled >/dev/null 2>&1 && echo 1 || echo 0)"
@@ -154,7 +153,26 @@ call)
 		json_add_string  mode "$(active_mode)"
 		json_add_string  remote "$(effective_remote)"
 		caf="$(ca_file)"
-		json_add_boolean pki_ready "$([ -n "$caf" ] && echo 1 || echo 0)"
+		ready=0
+		if [ -n "$(effective_remote)" ] && [ -n "$caf" ] && san_exact_match "$(effective_remote)" "$SRV_CERT"; then
+			if [ "$(active_mode)" = selfsigned ]; then hv_pki_leaf_valid "$(effective_remote)" 0 && ready=1; else ready=1; fi
+		fi
+		json_add_boolean pki_ready "$ready"
+		if [ "$(active_mode)" = selfsigned ]; then
+			ca_valid=0; hv_pki_ca_valid && ca_valid=1
+			json_add_object selfsigned
+			json_add_boolean ca_valid "$ca_valid"
+			json_add_string ca_reason "$HV_PKI_ERROR"
+			json_add_string fingerprint "$(openssl x509 -in "$CA_SELF" -noout -fingerprint -sha256 2>/dev/null | cut -d= -f2)"
+			json_add_string notafter "$(openssl x509 -in "$CA_SELF" -noout -enddate 2>/dev/null | cut -d= -f2)"
+			json_add_boolean ca_expiring "$(openssl x509 -in "$CA_SELF" -checkend 2592000 -noout >/dev/null 2>&1 && echo 0 || echo 1)"
+			leaf_state=remote_required
+			if [ -n "$(effective_remote)" ]; then
+				if hv_pki_leaf_valid "$(effective_remote)" 2592000; then leaf_state=ready; else leaf_state="$HV_PKI_ERROR"; fi
+			fi
+			json_add_string leaf_state "$leaf_state"
+			json_close_object
+		fi
 		# ACME prerequisite: resolvable certificate + key for the domain?
 		acme_dom="$(cfg acme_domain)"
 		if [ -n "$acme_dom" ] && acme_ready "$acme_dom"; then
@@ -346,6 +364,9 @@ set_user_ip)
 				  if ($5 !~ /^[0-9]+$/ || length($5) > 2 || $5 < 8 || $5 > 30) exit 1; }
 			' || err "Enter a valid IPv4 CIDR with a prefix from /8 to /30, such as 10.100.1.0/24."
 		fi
+		json_get_type remote_type remote
+		[ "$remote_type" = string ] || v_remote="$(cfg remote)"
+		[ -z "$v_remote" ] || hv_pki_valid_remote "$v_remote" || err invalid_remote
 		prev_mode="$(cfg cert_mode)"
 		# switching to ACME — or changing the domain / server address while
 		# in ACME mode — requires the certificate to exist AND the resulting
@@ -353,7 +374,7 @@ set_user_ip)
 		# would claim "ACME" while the old cert keeps serving (silent lie),
 		# or every IKE_AUTH would fail on the id↔SAN mismatch. Refuse and
 		# keep the previous values.
-		if [ "${v_mode:-$prev_mode}" = acme ]; then
+		if [ "${v_mode:-$prev_mode}" = acme ] && [ -n "$v_remote" ]; then
 			[ -n "$v_acme" ] || v_acme="$(cfg acme_domain)"
 			if [ -z "$v_acme" ]; then
 				err "ACME domain is empty — set it to the domain issued in Services → Let's Encrypt"
@@ -364,12 +385,21 @@ set_user_ip)
 			# server address must be an exact SAN of the ACME leaf — same
 			# rule the sync enforces; catch it here so the UI sees the
 			# reason instead of a silent sync-refusal in the regen log
-			remote_for_check="$v_remote"; [ -n "$remote_for_check" ] || remote_for_check="$(effective_remote)"
+			remote_for_check="$v_remote"
 			if ! san_exact_match "$remote_for_check" "$HV_ACME_CRT"; then
 				err "server address '$remote_for_check' is not an exact SAN of the ACME certificate for '$v_acme' (SANs: $(openssl x509 -in "$HV_ACME_CRT" -noout -ext subjectAltName 2>/dev/null | tail -n +2 | tr -d ' \n')) — strongSwan never matches wildcard SANs; staying in '${prev_mode:-selfsigned}' mode"
 			fi
 		fi
-		[ -n "$v_remote" ] && uci -q set "${CFG}.config.remote=${v_remote}"
+		# Missing remote preserves existing configuration; explicit empty clears it.
+		json_get_type remote_type remote
+		[ "$remote_type" = string ] || v_remote="$(cfg remote)"
+		if [ -n "$v_remote" ]; then
+			hv_pki_valid_remote "$v_remote" || err invalid_remote
+		else
+			out="$(/etc/init.d/homevpn unconfigure 2>&1)"; rc=$?
+			[ "$rc" = 0 ] || err remote_clear_blocked
+		fi
+		uci -q set "${CFG}.config.remote=${v_remote}" || err "Failed to save settings"
 		[ -n "$v_name" ] && uci -q set "${CFG}.config.vpn_name=${v_name}"
 		[ -n "$v_mode" ] && uci -q set "${CFG}.config.cert_mode=${v_mode}"
 		[ -n "$v_acme" ] && uci -q set "${CFG}.config.acme_domain=${v_acme}"
@@ -382,15 +412,39 @@ set_user_ip)
 		case "$v_masq" in 1|0) uci -q set "${CFG}.config.masq=${v_masq}" ;; esac
 		# Saving and applying are separate outcomes: regen may refuse after commit.
 		uci -q commit "$CFG" || err "Failed to save settings"
-		out="$(/etc/init.d/homevpn regen 2>&1)"; rc=$?
+		if [ -z "$v_remote" ]; then
+			json_init; ok; json_add_boolean saved 1; json_add_boolean applied 0
+			json_add_boolean precheck_ok 0; json_add_string reason remote_required; json_dump
+			return
+		fi
+		# Maintenance remains available while disabled, without starting charon.
+		out="$(/etc/init.d/homevpn provision 2>&1)"; rc=$?
 		applied=0; [ "$rc" = 0 ] && applied=1
 		json_init
 		json_add_boolean ok "$applied"
 		json_add_boolean saved 1
 		json_add_string output "$out"
 		json_add_boolean precheck_ok "$applied"
+		json_add_boolean applied "$applied"
 		[ "$rc" = 0 ] || json_add_string error "Settings saved, but application failed."
 		json_add_string precheck_reason "$(sed -n 's/^reason=//p' /tmp/homevpn.state 2>/dev/null | head -1)"
+		json_dump
+		;;
+	ensure_selfsigned_ca)
+		out="$(/etc/init.d/homevpn check-ownership 2>&1)"; [ "$?" = 0 ] || err "$out"
+		hv_pki_recover || err "$HV_PKI_ERROR"
+		[ "$(active_mode)" = selfsigned ] || err selfsigned_mode_required
+		json_get_type replace_type replace; json_get_var replace_ca replace
+		[ "$replace_type" = boolean ] || replace_ca=0
+		if [ "$replace_ca" = 1 ]; then
+			json_get_var expected fingerprint
+			actual="$(openssl x509 -in "$CA_SELF" -noout -fingerprint -sha256 2>/dev/null | cut -d= -f2)"
+			[ "$expected" = "$actual" ] || err ca_changed_retry
+			pidof charon >/dev/null && err ca_rotation_requires_stopped_service
+		fi
+		hv_pki_ensure_ca "$replace_ca" "$([ "$replace_ca" = 1 ] && cfg remote)" || err "$HV_PKI_ERROR"
+		json_init; ok; json_add_boolean changed "$HV_PKI_CHANGED"
+		json_add_boolean replaced "$([ "$replace_ca" = 1 ] && [ "$HV_PKI_CHANGED" = 1 ] && echo 1 || echo 0)"
 		json_dump
 		;;
 	provision)
@@ -406,6 +460,8 @@ set_user_ip)
 		json_dump
 		;;
 	upload_certs)
+		out="$(/etc/init.d/homevpn check-ownership 2>&1)"; [ "$?" = 0 ] || err "$out"
+		hv_pki_recover || err "$HV_PKI_ERROR"
 		# Import own certificate: validate a candidate set server-side, then
 		# atomically install PEM files into the swanctl layout. All-or-nothing:
 		# any validation failure leaves the deployed files untouched.
@@ -488,8 +544,14 @@ set_user_ip)
 		json_dump
 		;;
 	download)
+		hv_pki_recover || err "$HV_PKI_ERROR"
 		json_get_var name name; json_get_var what what
 		REMOTE="$(effective_remote)"
+		if [ "$what" != ca ]; then
+			hv_pki_valid_remote "$REMOTE" || err remote_required
+			[ -s "$SRV_CERT" ] && san_exact_match "$REMOTE" "$SRV_CERT" || err leaf_san_mismatch
+			if [ "$(active_mode)" = selfsigned ]; then hv_pki_leaf_valid "$REMOTE" 0 || err "$HV_PKI_ERROR"; fi
+		fi
 		VPN_NAME="$(cfg vpn_name)"; [ -n "$VPN_NAME" ] || VPN_NAME="Home VPN"
 		IKE_ENC="$(cfg ike_enc)";   [ -n "$IKE_ENC" ] || IKE_ENC="AES-256-GCM"
 		IKE_INT="$(cfg ike_int)";   [ -n "$IKE_INT" ] || IKE_INT="SHA2-384"
@@ -607,7 +669,7 @@ esac
 # Lock the entire transaction, not just the init subprocess after UCI/cert writes.
 # rpcd launches a new shell per request; JSON fields cannot assert lock ownership.
 case "${1:-}:${2:-}" in
-call:set_enabled|call:set_settings|call:add_user|call:del_user|call:set_user_ip|call:provision|call:upload_certs)
+call:status|call:download|call:ensure_selfsigned_ca|call:set_enabled|call:set_settings|call:add_user|call:del_user|call:set_user_ip|call:provision|call:upload_certs)
 	. /usr/share/homevpn/service-lock.sh || err "service lock unavailable"
 	hv_with_lock hv_rpc_dispatch "$@" || err "HomeVPN service is busy or transaction failed; retry shortly."
 	;;

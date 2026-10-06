@@ -22,8 +22,8 @@ assert.match(src, /E\('h2', \{\}, _\('HomeVPN'\)\),\s*E\('div', \{ 'class': 'cbi
  'Page description must use the theme div.cbi-map-descr contract, not a section description');
 assert.equal((src.match(/class': 'cbi-map-descr'/g)||[]).length, 1, 'Exactly one page description');
 assert.equal(po['HomeVPN'], 'HomeVPN');
-const serverDescription = "Server address is the domain name or public IP that clients connect to and must exactly match one SAN in the certificate. Home broadband IP addresses change, so you must use a domain name and this firmware's DDNS to update its address dynamically. Modern devices require the VPN server they connect to to have a certificate. This service only supports single-domain certificates; do not use wildcard certificates (for example, a certificate whose SAN is *.example.com). Three certificate modes are supported: self-signed, where HomeVPN generates a CA and server certificate on first startup; import, which uses the certificate files you upload; and ACME, which uses a certificate obtained through ACME (recommended; for iOS compatibility, request an RSA certificate).";
-assert.equal(po[serverDescription], "服务器地址是客户端连接的域名或公网 IP，必须与证书中的某个 SAN 完全一致。家庭宽带IP会变，所以必须使用域名，结合本固件的DDNS实现动态更新域名地址。现代设备要求连接的VPN服务器必须有证书，本服务仅支持单一域名证书，不要使用通配符证书( 例如证书的 SAN 为 *.example.com）。证书模式支持三种：自签名证书，HomeVPN在首次启动时生成 CA 和服务器证书；导入，使用您上传的证书文件；ACME ，使用ACME申请的证书（推荐，兼容iOS设备要求使用RSA格式证书，申请时请注意）。");
+const serverDescription = "The server address must exactly match a certificate SAN; wildcard certificates are not supported. Self-signed mode prepares a local root CA and issues the server certificate only after an address is saved. Import uses your uploaded files. ACME uses a locally issued certificate (RSA is recommended for iOS).";
+assert.equal(po[serverDescription], "服务器地址必须与证书 SAN 完全一致，不支持通配符证书。自签模式准备本地根 CA，只有保存地址后才签发服务器证书；导入模式使用上传的文件；ACME 使用本地已签发的证书（iOS 推荐 RSA）。");
 const serverSection = src.slice(src.indexOf("_('Server settings')"));
 const serverLiteral = serverSection.match(/E\('p', \{ 'class': 'cbi-section-descr' \},\s*_\('((?:\\.|[^'\\])*)'\)/)[1];
 assert.equal(vm.runInNewContext("'" + serverLiteral + "'"), serverDescription);
@@ -69,7 +69,7 @@ for (const mode of ['lansubnet', 'subnet', 'unknown', '']) {
 }
 for (const [applied, selected] of [['dhcp','subnet'], ['subnet','dhcp']]) {
  const row = statusRow(applied, selected, 'pool');
- assert.equal(row.attrs.style, 'background:rgba(217,83,79,.12)');
+ assert.equal(row.attrs.style, vm.runInContext("hintColors('error')", context));
  assert.equal(row.children[1].children[0].tag, 'strong');
  if (applied === 'dhcp') assert.equal(text(row.children[1].children[0]), exactDhcp);
  assert.equal(text(row.children[1].children[2]), po['Selected %s is NOT applied — the precheck refused it (reason below). The highlighted mode is what clients get right now.'].replace('%s',context.modeLabels[selected]));

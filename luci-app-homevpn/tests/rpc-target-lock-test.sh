@@ -18,7 +18,7 @@ EOF
 sh "$t/holder" & holder=$!
 n=0; while [ ! -f "$t/ready" ]; do n=$((n+1)); [ "$n" -lt 100 ]; sleep 1; done
 . /usr/share/libubox/jshn.sh
-for method in set_enabled set_settings add_user del_user set_user_ip provision upload_certs; do
+for method in status download ensure_selfsigned_ca set_enabled set_settings add_user del_user set_user_ip provision upload_certs; do
  out=$(printf '{}\n' | HOMEVPN_SERVICE_LOCK_HELD=1 sh "$t/rpc" call "$method")
  json_load "$out"; json_get_var result ok; json_get_var error error
  [ "$result" = 0 ]; case "$error" in *busy*) ;; *) exit 1;; esac

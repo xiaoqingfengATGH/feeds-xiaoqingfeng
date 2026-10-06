@@ -1,975 +1,212 @@
 msgid ""
 msgstr ""
-"Project-Id-Version: HomeVPN 2.1.0\n"
-"MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
-"Content-Transfer-Encoding: 8bit\n"
 
-#: htdocs/luci-static/resources/view/homevpn/overview.js
-#, c-format
 msgid "%s (not applied — IP mode is not DHCP)"
 msgstr ""
 
-#: htdocs/luci-static/resources/view/homevpn/overview.js
-#, c-format
 msgid "%s answers ping — already occupied by a LAN host"
 msgstr ""
 
-#: htdocs/luci-static/resources/view/homevpn/overview.js
-#, c-format
 msgid "%s failed: %s"
 msgstr ""
 
-#: htdocs/luci-static/resources/view/homevpn/overview.js
-#, c-format
 msgid "%s is in an active DHCP lease"
 msgstr ""
 
-#: htdocs/luci-static/resources/view/homevpn/overview.js
-#, c-format
 msgid "%s is outside the LAN subnet (%s on %s) — the pool must be carved from the LAN subnet"
 msgstr ""
 
-#: htdocs/luci-static/resources/view/homevpn/overview.js
-#, c-format
 msgid "%s: not a PEM text file — export Base64 PEM (a .p12/.der needs converting first)."
 msgstr ""
 
-#: htdocs/luci-static/resources/view/homevpn/overview.js
-#, c-format
 msgid "%s; keeping previous settings"
 msgstr ""
 
-#: htdocs/luci-static/resources/view/homevpn/overview.js
-#, c-format
-msgid "Example: %s"
-msgstr ""
-
-#: htdocs/luci-static/resources/view/homevpn/overview.js
 msgid "(none deployed)"
 msgstr ""
 
-#: htdocs/luci-static/resources/view/homevpn/overview.js
 msgid "(none)"
 msgstr ""
 
-#: htdocs/luci-static/resources/view/homevpn/overview.js
 msgid "(not deployed)"
 msgstr ""
 
-#: htdocs/luci-static/resources/view/homevpn/overview.js
-msgid "(not set — WAN IP will be used)"
-msgstr ""
-
-#: htdocs/luci-static/resources/view/homevpn/overview.js
 msgid "A single available key type is selected automatically. If both exist, choose RSA or ECC. Source: /etc/acme, then /etc/ssl/acme."
 msgstr ""
 
-#: htdocs/luci-static/resources/view/homevpn/overview.js
 msgid "ACME (Let's Encrypt)"
 msgstr ""
 
-#: htdocs/luci-static/resources/view/homevpn/overview.js
 msgid "ACME / Let's Encrypt"
 msgstr ""
 
-#: htdocs/luci-static/resources/view/homevpn/overview.js
-msgid "ACME certificate not found"
+msgid "ACME certificates are recommended: they are free, quick to obtain, and avoid extra trust steps."
 msgstr ""
 
-#: htdocs/luci-static/resources/view/homevpn/overview.js
 msgid "ACME domain"
 msgstr ""
 
-#: htdocs/luci-static/resources/view/homevpn/overview.js
 msgid "ACME domain is empty — set it to the domain issued in Services → Let's Encrypt"
 msgstr ""
 
-#: htdocs/luci-static/resources/view/homevpn/overview.js
 msgid "Add"
 msgstr ""
 
-#: htdocs/luci-static/resources/view/homevpn/overview.js
 msgid "Add user"
 msgstr ""
 
-#: htdocs/luci-static/resources/view/homevpn/overview.js
-#, c-format
 msgid "Added \"%s\"."
 msgstr ""
 
-#: htdocs/luci-static/resources/view/homevpn/overview.js
+msgid "Address changes require updating client connection settings. Leaf renewal under the same CA normally does not require installing the CA again."
+msgstr ""
+
 msgid "Android .sswan"
 msgstr ""
 
-#: htdocs/luci-static/resources/view/homevpn/overview.js
-#, c-format
+msgid "Android: download the .sswan file and import it with the strongSwan App. The CA is imported into the App with the profile; no separate installation in the system certificate store is needed. Enter the account password when importing or connecting; if the file cannot be opened directly, use the App file picker."
+msgstr ""
+
+msgid "Apple devices (iPhone/iPad example): download the .mobileconfig file, transfer it to the device using WeChat or another method, and save it in \"Files\". Open it in \"Files\"; the system will prompt you to enable trust in \"Settings\"."
+msgstr ""
+
 msgid "Applied. Mode: %s, pool: %s"
 msgstr ""
 
-#: htdocs/luci-static/resources/view/homevpn/overview.js
 msgid "Apply"
 msgstr ""
 
-#: htdocs/luci-static/resources/view/homevpn/overview.js
 msgid "Apply IP settings"
 msgstr ""
 
-#: htdocs/luci-static/resources/view/homevpn/overview.js
+msgid "Apply the IP allocation settings first."
+msgstr ""
+
 msgid "Applying re-runs the prechecks and (re)loads the swanctl config; existing VPN connections survive whenever possible."
-msgstr ""
-
-#: htdocs/luci-static/resources/view/homevpn/overview.js
-msgid "CA (for client profiles)"
-msgstr ""
-
-#: htdocs/luci-static/resources/view/homevpn/overview.js
-msgid "CA certificate"
-msgstr ""
-
-#: htdocs/luci-static/resources/view/homevpn/overview.js
-msgid "CA certificate (PEM)"
-msgstr ""
-
-#: htdocs/luci-static/resources/view/homevpn/overview.js
-msgid "CA certificate (for clients)"
-msgstr ""
-
-#: htdocs/luci-static/resources/view/homevpn/overview.js
-msgid "CA certificate does not sign the server certificate — import the issuer CA, or leave the CA field empty to keep the current one"
-msgstr ""
-
-#: htdocs/luci-static/resources/view/homevpn/overview.js
-#, c-format
-msgid "CA certificate: not a valid PEM certificate — %s"
-msgstr ""
-
-#: htdocs/luci-static/resources/view/homevpn/overview.js
-msgid "CA installed — client profiles will embed it."
-msgstr ""
-
-#: htdocs/luci-static/resources/view/homevpn/overview.js
-msgid "CA not found — run provisioning first"
-msgstr ""
-
-#: htdocs/luci-static/resources/view/homevpn/overview.js
-msgid "Certificate SAN matches server address"
-msgstr ""
-
-#: htdocs/luci-static/resources/view/homevpn/overview.js
-#, c-format
-msgid "Certificate imported: %s — SAN %s, expires %s."
-msgstr ""
-
-#: htdocs/luci-static/resources/view/homevpn/overview.js
-msgid "Certificate mode"
-msgstr ""
-
-#: htdocs/luci-static/resources/view/homevpn/overview.js
-msgid "Certificate query failed. Edit the domain or retry; this does not mean no certificate was found."
-msgstr ""
-
-#: htdocs/luci-static/resources/view/homevpn/overview.js
-msgid "Check again"
-msgstr ""
-
-#: htdocs/luci-static/resources/view/homevpn/overview.js
-msgid "Checking local certificates…"
-msgstr ""
-
-#: htdocs/luci-static/resources/view/homevpn/overview.js
-msgid "Clear"
-msgstr ""
-
-#: htdocs/luci-static/resources/view/homevpn/overview.js
-msgid "Clear fixed IP"
-msgstr ""
-
-#: htdocs/luci-static/resources/view/homevpn/overview.js
-msgid "Client IP allocation"
-msgstr ""
-
-#: htdocs/luci-static/resources/view/homevpn/overview.js
-msgid "Client config + actions"
-msgstr ""
-
-#: htdocs/luci-static/resources/view/homevpn/overview.js
-msgid "Obtain addresses via local DHCP so VPN clients share the same subnet as local devices. This mode requires local dnsmasq and is only available when this device provides DHCP service for the LAN. Supports mDNS/AirPlay. To assign fixed IPs to VPN users, use the \"Fixed IP (DHCP mode)\" column in the \"EAP accounts\" section. This mode is unavailable when firewall flow offloading is enabled."
-msgstr ""
-
-#: htdocs/luci-static/resources/view/homevpn/overview.js
-msgid "Clients use a subnet separate from the local LAN; recommended when this device is the main LAN router. When this device is a side router, expand the main-router static route guidance below after applying so local LAN devices can reach VPN users (VPN users can still access local LAN devices without it); enable \"Masquerade fallback\" only if a static route cannot be added on the main router"
-msgstr ""
-
-#: htdocs/luci-static/resources/view/homevpn/overview.js
-msgid "Configuration check refused:"
-msgstr ""
-
-#: htdocs/luci-static/resources/view/homevpn/overview.js
-msgid "Connected clients"
-msgstr ""
-
-#: htdocs/luci-static/resources/view/homevpn/overview.js
-msgid "Connection loaded in charon"
-msgstr ""
-
-#: htdocs/luci-static/resources/view/homevpn/overview.js
-msgid "DHCP (local dnsmasq)"
-msgstr ""
-
-#: htdocs/luci-static/resources/view/homevpn/overview.js
-msgid "Obtain an address via local DHCP"
-msgstr ""
-
-#: htdocs/luci-static/resources/view/homevpn/overview.js
-msgid "Delete"
-msgstr ""
-
-#: htdocs/luci-static/resources/view/homevpn/overview.js
-#, c-format
-msgid "Delete user \"%s\"? They will no longer be able to connect."
-msgstr ""
-
-#: htdocs/luci-static/resources/view/homevpn/overview.js
-msgid "Download CA"
-msgstr ""
-
-#: htdocs/luci-static/resources/view/homevpn/overview.js
-msgid "Download CA certificate"
-msgstr ""
-
-#: htdocs/luci-static/resources/view/homevpn/overview.js
-msgid "EAP accounts"
-msgstr ""
-
-#: htdocs/luci-static/resources/view/homevpn/overview.js
-msgid "ECC (ECDSA)"
-msgstr ""
-
-#: htdocs/luci-static/resources/view/homevpn/overview.js
-msgid "EXPIRED"
-msgstr ""
-
-#: htdocs/luci-static/resources/view/homevpn/overview.js
-msgid "Enter a username and password."
-msgstr ""
-
-#: htdocs/luci-static/resources/view/homevpn/overview.js
-msgid "Enter the domain to look for local certificates."
-msgstr ""
-
-#: htdocs/luci-static/resources/view/homevpn/overview.js
-msgid "Firewall INPUT rules (500/4500/ESP)"
-msgstr ""
-
-#: htdocs/luci-static/resources/view/homevpn/overview.js
-msgid "Fixed IP (DHCP mode)"
-msgstr ""
-
-#: htdocs/luci-static/resources/view/homevpn/overview.js
-#, c-format
-msgid "Fixed IP for \"%s\" cleared — dynamic allocation again."
-msgstr ""
-
-#: htdocs/luci-static/resources/view/homevpn/overview.js
-#, c-format
-msgid "Fixed IP for \"%s\": %s — applies on the next dial-in."
-msgstr ""
-
-#: htdocs/luci-static/resources/view/homevpn/overview.js
-msgid "Generate profile"
-msgstr ""
-
-#: htdocs/luci-static/resources/view/homevpn/overview.js
-msgid "DHCP (real LAN leases via local dnsmasq)"
 msgstr ""
 
 msgid "Applying service state…"
 msgstr ""
 
-msgid "Service state unavailable. Refresh before trying again."
+msgid "CA (for client profiles)"
 msgstr ""
 
-msgid "Enable HomeVPN"
+msgid "CA certificate"
 msgstr ""
 
-msgid "Disable HomeVPN"
+msgid "CA certificate (PEM)"
 msgstr ""
 
-msgid "Disabled, but strongSwan is still running — retry or check the conflict."
+msgid "CA certificate (for clients)"
 msgstr ""
 
-msgid "Disabled — strongSwan stopped"
+msgid "CA certificate does not sign the server certificate — import the issuer CA, or leave the CA field empty to keep the current one"
 msgstr ""
 
-msgid "Enabled — HomeVPN connection loaded"
+msgid "CA certificate: not a valid PEM certificate — %s"
 msgstr ""
 
-msgid "Enabled, but HomeVPN is not ready"
+msgid "CA installed — client profiles will embed it."
 msgstr ""
 
-msgid "HomeVPN service"
+msgid "CA not found — run provisioning first"
 msgstr ""
 
-msgid "Disabling disconnects VPN clients and stops strongSwan. HomeVPN requires exclusive use of strongSwan."
+msgid "Cancel"
 msgstr ""
 
-msgid "HomeVPN"
+msgid "Cannot clear the address while strongSwan is running. Disable HomeVPN first; the saved configuration was not changed."
 msgstr ""
 
-#: htdocs/luci-static/resources/view/homevpn/overview.js
-#, c-format
-msgid "HomeVPN configuration refused: %s"
+msgid "Certificate SAN matches server address"
 msgstr ""
 
-#: htdocs/luci-static/resources/view/homevpn/overview.js
-msgid "Homelede customized IKEv2 + EAP-MSCHAPv2 VPN server, supporting the default clients on iOS, Android, Windows and MacOS for convenient device access to your home network."
+msgid "Certificate imported: %s — SAN %s, expires %s."
 msgstr ""
 
-#: htdocs/luci-static/resources/view/homevpn/overview.js
-msgid "How VPN clients get their virtual IP. Every mode is prechecked before applying (pool occupancy on the LAN, DHCP availability, subnet conflicts) — a failed check refuses the change and keeps the last working configuration, with the reason shown in the status banner above."
+msgid "Certificate installation failed; previous assets were restored."
 msgstr ""
 
-#: htdocs/luci-static/resources/view/homevpn/overview.js
-#, c-format
-msgid "IP %s already pinned to user '%s'"
+msgid "Certificate missing"
 msgstr ""
 
-#: htdocs/luci-static/resources/view/homevpn/overview.js
-msgid "IP allocation mode"
+msgid "Certificate mode"
 msgstr ""
 
-#: htdocs/luci-static/resources/view/homevpn/overview.js
-msgid "IP allocation mode (applied)"
+msgid "Certificate mode: ACME (recommended)"
 msgstr ""
 
-#: htdocs/luci-static/resources/view/homevpn/overview.js
-msgid "IP equals the router LAN address"
+msgid "Certificate mode: self-signed (automatically generated)"
 msgstr ""
 
-#: htdocs/luci-static/resources/view/homevpn/overview.js
-#, c-format
-msgid "IP must be in the LAN subnet (%s expected)"
+msgid "Certificate query failed."
 msgstr ""
 
-#: htdocs/luci-static/resources/view/homevpn/overview.js
-msgid "Import certificate"
+msgid "Certificate query failed. Edit the domain or retry; this does not mean no certificate was found."
 msgstr ""
 
-#: htdocs/luci-static/resources/view/homevpn/overview.js
-msgid "Import own certificate"
+msgid "Check again"
 msgstr ""
 
-#: htdocs/luci-static/resources/view/homevpn/overview.js
-msgid "Import own certificate (PEM)"
+msgid "Check and apply"
 msgstr ""
 
-#: htdocs/luci-static/resources/view/homevpn/overview.js
-msgid "Imported"
+msgid "Checking local certificates…"
 msgstr ""
 
-#: htdocs/luci-static/resources/view/homevpn/overview.js
-msgid "Imported certificate"
+msgid "Checking or creating root CA…"
 msgstr ""
 
-#: htdocs/luci-static/resources/view/homevpn/overview.js
-msgid "Independent subnet"
+msgid "Clear"
 msgstr ""
 
-#: htdocs/luci-static/resources/view/homevpn/overview.js
-msgid "Issuer"
+msgid "Clear fixed IP"
 msgstr ""
 
-#: htdocs/luci-static/resources/view/homevpn/overview.js
-msgid "LAN subnet pool + ARP proxy"
+msgid "Clear server address?"
 msgstr ""
 
-#: htdocs/luci-static/resources/view/homevpn/overview.js
-msgid "Listening (500/4500)"
+msgid "Clearing the address makes HomeVPN unconfigured and disables profile exports. Certificates and accounts are kept. Disable HomeVPN first if it is running; unsafe live unloading is refused."
 msgstr ""
 
-#: htdocs/luci-static/resources/view/homevpn/overview.js
-msgid "Local certificate found. The server address will be checked against its SAN when saving."
+msgid "Client IP allocation"
 msgstr ""
 
-#: htdocs/luci-static/resources/view/homevpn/overview.js
-msgid "MISMATCH — server address must be an exact SAN (wildcards never match)"
+msgid "Client config + actions"
 msgstr ""
 
-#: htdocs/luci-static/resources/view/homevpn/overview.js
-msgid "Manual client setup (no profile)"
+msgid "Client connection guide"
 msgstr ""
 
-#: htdocs/luci-static/resources/view/homevpn/overview.js
-msgid "Masquerade fallback"
+msgid "Clients use a subnet separate from the local LAN; recommended when this device is the main LAN router. When this device is a side router, expand the main-router static route guidance below after applying so local LAN devices can reach VPN users (VPN users can still access local LAN devices without it); enable \"Masquerade fallback\" only if a static route cannot be added on the main router"
 msgstr ""
 
-#: htdocs/luci-static/resources/view/homevpn/overview.js
-msgid "No CA uploaded — the deployed CA (if any) keeps serving client profiles."
-msgstr ""
-
-#: htdocs/luci-static/resources/view/homevpn/overview.js
-msgid "No certificate deployed yet. Upload the server certificate, its private key, and the CA certificate clients should trust (e.g. your NAS/ACME issuer CA)."
-msgstr ""
-
-#: htdocs/luci-static/resources/view/homevpn/overview.js
-msgid "No usable local certificate found for this domain. Issue a certificate in Services → Let's Encrypt first."
-msgstr ""
-
-#: htdocs/luci-static/resources/view/homevpn/overview.js
-msgid "No users yet."
-msgstr ""
-
-#: htdocs/luci-static/resources/view/homevpn/overview.js
-msgid "Off (static route preferred)"
-msgstr ""
-
-#: htdocs/luci-static/resources/view/homevpn/overview.js
-msgid "On (fallback: main router cannot route)"
-msgstr ""
-
-#: htdocs/luci-static/resources/view/homevpn/overview.js
-msgid "Pool carved from the LAN subnet (default .50-.99) — suitable for side routers where the main router provides DHCP; keep the main router DHCP allocation range clear of the addresses reserved on this device for VPN clients"
-msgstr ""
-
-#: htdocs/luci-static/resources/view/homevpn/overview.js
-msgid "Pool end"
-msgstr ""
-
-#: htdocs/luci-static/resources/view/homevpn/overview.js
-msgid "Pool end is not a valid IP address."
-msgstr ""
-
-#: htdocs/luci-static/resources/view/homevpn/overview.js
-msgid "Pool start"
-msgstr ""
-
-#: htdocs/luci-static/resources/view/homevpn/overview.js
-msgid "Pool start is not a valid IP address."
-msgstr ""
-
-#: htdocs/luci-static/resources/view/homevpn/overview.js
-msgid "Pool subnet (CIDR)"
-msgstr ""
-
-#: htdocs/luci-static/resources/view/homevpn/overview.js
-msgid "Pool subnet is required in independent subnet mode. Enter a CIDR such as 10.100.1.0/24."
-msgstr ""
-
-msgid "Enter a valid IPv4 CIDR with a prefix from /8 to /30, such as 10.100.1.0/24."
-msgstr ""
-
-msgid "Settings saved, but application failed."
-msgstr ""
-
-msgid "Save settings failed"
-msgstr ""
-
-msgid "Unable to save settings: %s"
+msgid "Clipboard API is unavailable; the command is selected for manual copying."
 msgstr ""
 
 msgid "Close"
 msgstr ""
 
-#: htdocs/luci-static/resources/view/homevpn/overview.js
-msgid "Private key"
+msgid "Configuration check refused:"
 msgstr ""
 
-#: htdocs/luci-static/resources/view/homevpn/overview.js
-msgid "Private key (unencrypted)"
+msgid "Confirm"
 msgstr ""
 
-#: htdocs/luci-static/resources/view/homevpn/overview.js
-msgid "Provision"
+msgid "Connected clients"
 msgstr ""
 
-#: htdocs/luci-static/resources/view/homevpn/overview.js
-#, c-format
-msgid "Provisioning FAILED: %s"
+msgid "Connection loaded in charon"
 msgstr ""
 
-#: htdocs/luci-static/resources/view/homevpn/overview.js
-#, c-format
-msgid "Provisioning output: %s"
+msgid "Connection steps depend on the \"Certificate mode\" in \"Server settings\":"
 msgstr ""
 
-#: htdocs/luci-static/resources/view/homevpn/overview.js
-msgid "RSA (recommended for iPhone)"
+msgid "Copied."
 msgstr ""
 
-#: htdocs/luci-static/resources/view/homevpn/overview.js
-msgid "Random"
-msgstr ""
-
-#: htdocs/luci-static/resources/view/homevpn/overview.js
-msgid "Re-provision now"
-msgstr ""
-
-#: htdocs/luci-static/resources/view/homevpn/overview.js
-#, c-format
-msgid "Refused: %s — the last working configuration stays active."
-msgstr ""
-
-#: htdocs/luci-static/resources/view/homevpn/overview.js
-msgid "Remote IP"
-msgstr ""
-
-#: htdocs/luci-static/resources/view/homevpn/overview.js
-msgid "Replace certificate…"
-msgstr ""
-
-#: htdocs/luci-static/resources/view/homevpn/overview.js
-msgid "SAN"
-msgstr ""
-
-#: htdocs/luci-static/resources/view/homevpn/overview.js
-#, c-format
-msgid "Save refused: %s"
-msgstr ""
-
-#: htdocs/luci-static/resources/view/homevpn/overview.js
-msgid "Save settings"
-msgstr ""
-
-#: htdocs/luci-static/resources/view/homevpn/overview.js
-msgid "Saved. Server re-provisioned."
-msgstr ""
-
-#: htdocs/luci-static/resources/view/homevpn/overview.js
-#, c-format
-msgid "Selected %s is NOT applied — the precheck refused it (reason below). The highlighted mode is what clients get right now."
-msgstr ""
-
-#: htdocs/luci-static/resources/view/homevpn/overview.js
-msgid "Self-signed"
-msgstr ""
-
-#: htdocs/luci-static/resources/view/homevpn/overview.js
-msgid "Self-signed (auto-generated)"
-msgstr ""
-
-#: htdocs/luci-static/resources/view/homevpn/overview.js
-msgid "Server address (DDNS/IP)"
-msgstr ""
-
-#: htdocs/luci-static/resources/view/homevpn/overview.js
-msgid "Server address (clients dial)"
-msgstr ""
-
-#: htdocs/luci-static/resources/view/homevpn/overview.js
-msgid "Server address is the domain name or public IP that clients connect to and must exactly match one SAN in the certificate. Home broadband IP addresses change, so you must use a domain name and this firmware's DDNS to update its address dynamically. Modern devices require the VPN server they connect to to have a certificate. This service only supports single-domain certificates; do not use wildcard certificates (for example, a certificate whose SAN is *.example.com). Three certificate modes are supported: self-signed, where HomeVPN generates a CA and server certificate on first startup; import, which uses the certificate files you upload; and ACME, which uses a certificate obtained through ACME (recommended; for iOS compatibility, request an RSA certificate)."
-msgstr ""
-
-#: htdocs/luci-static/resources/view/homevpn/overview.js
-msgid "Server certificate"
-msgstr ""
-
-#: htdocs/luci-static/resources/view/homevpn/overview.js
-msgid "Server certificate / CA"
-msgstr ""
-
-#: htdocs/luci-static/resources/view/homevpn/overview.js
-msgid "Server certificate and private key must be uploaded together."
-msgstr ""
-
-#: htdocs/luci-static/resources/view/homevpn/overview.js
-msgid "Server settings"
-msgstr ""
-
-#: htdocs/luci-static/resources/view/homevpn/overview.js
-msgid "Server status"
-msgstr ""
-
-#: htdocs/luci-static/resources/view/homevpn/overview.js
-msgid "Set"
-msgstr ""
-
-#: htdocs/luci-static/resources/view/homevpn/overview.js
-msgid "Set fixed IP"
-msgstr ""
-
-#: htdocs/luci-static/resources/view/homevpn/overview.js
-msgid "The last working configuration stays active. Fix the issue above, then apply again."
-msgstr ""
-
-#: htdocs/luci-static/resources/view/homevpn/overview.js
-msgid "Upload & apply"
-msgstr ""
-
-#: htdocs/luci-static/resources/view/homevpn/overview.js
-msgid "Upload the replacement set (server certificate + private key, CA optional) — the old files are replaced only after all checks pass."
-msgstr ""
-
-#: htdocs/luci-static/resources/view/homevpn/overview.js
-msgid "User"
-msgstr ""
-
-#: htdocs/luci-static/resources/view/homevpn/overview.js
-msgid "Username"
-msgstr ""
-
-#: htdocs/luci-static/resources/view/homevpn/overview.js
-msgid "VPN IP"
-msgstr ""
-
-#: htdocs/luci-static/resources/view/homevpn/overview.js
-msgid "VPN display name"
-msgstr ""
-
-#: htdocs/luci-static/resources/view/homevpn/overview.js
-msgid "Valid until"
-msgstr ""
-
-#: htdocs/luci-static/resources/view/homevpn/overview.js
-msgid "Validated before anything is written: PEM parse, expiry, SAN present, server address must be an EXACT SAN (wildcard SANs never match in strongSwan), key↔certificate pair, CA signs the certificate. On any error nothing is changed."
-msgstr ""
-
-#: htdocs/luci-static/resources/view/homevpn/overview.js
-msgid "Wait for a successful local certificate query and select an available type before saving."
-msgstr ""
-
-#: htdocs/luci-static/resources/view/homevpn/overview.js
-msgid "automatic"
-msgstr ""
-
-#: htdocs/luci-static/resources/view/homevpn/overview.js
-#, c-format
-msgid "cannot probe routing for %s — no route?"
-msgstr ""
-
-#: htdocs/luci-static/resources/view/homevpn/overview.js
-msgid "certificate query unavailable: openssl missing"
-msgstr ""
-
-#: htdocs/luci-static/resources/view/homevpn/overview.js
-msgid "certificate query unavailable: resolver missing"
-msgstr ""
-
-#: htdocs/luci-static/resources/view/homevpn/overview.js
-msgid "deployed CA does not sign the uploaded server certificate — clients that trust this CA will reject it"
-msgstr ""
-
-#: htdocs/luci-static/resources/view/homevpn/overview.js
-msgid "dhcp mode needs the strongswan-mod-dhcp plugin (not installed)"
-msgstr ""
-
-#: htdocs/luci-static/resources/view/homevpn/overview.js
-#, c-format
-msgid "dhcp mode requires THIS router's dnsmasq to serve DHCP on %s (no dhcp-range found) — enable LAN DHCP here, or use lansubnet mode"
-msgstr ""
-
-#: htdocs/luci-static/resources/view/homevpn/overview.js
-msgid "dhcp mode together with firewall flow-offloading: offloaded flows bypass the IPsec policies (traffic blackholes after the first packets) — disable flow offloading or use lansubnet mode"
-msgstr ""
-
-#: htdocs/luci-static/resources/view/homevpn/overview.js
-msgid "domain from Services → Let's Encrypt"
-msgstr ""
-
-#: htdocs/luci-static/resources/view/homevpn/overview.js
-msgid "dynamic"
-msgstr ""
-
-#: htdocs/luci-static/resources/view/homevpn/overview.js
-msgid "e.g. alice, iphone"
-msgstr ""
-
-#: htdocs/luci-static/resources/view/homevpn/overview.js
-msgid "exact match"
-msgstr ""
-
-#: htdocs/luci-static/resources/view/homevpn/overview.js
-msgid "expiring soon"
-msgstr ""
-
-#: htdocs/luci-static/resources/view/homevpn/overview.js
-msgid "homevpn: ACME sync FAILED — the previously deployed certificate (if any) keeps serving; issue the certificate in Services → Let's Encrypt first"
-msgstr ""
-
-#: htdocs/luci-static/resources/view/homevpn/overview.js
-msgid "iOS/macOS profile"
-msgstr ""
-
-#: htdocs/luci-static/resources/view/homevpn/overview.js
-msgid "incomplete set: server certificate + private key required (upload both, or deploy the missing part first)"
-msgstr ""
-
-#: htdocs/luci-static/resources/view/homevpn/overview.js
-msgid "invalid ACME key type (use rsa or ecc)"
-msgstr ""
-
-#: htdocs/luci-static/resources/view/homevpn/overview.js
-#, c-format
-msgid "invalid IP '%s'"
-msgstr ""
-
-#: htdocs/luci-static/resources/view/homevpn/overview.js
-msgid "invalid domain"
-msgstr ""
-
-#: htdocs/luci-static/resources/view/homevpn/overview.js
-msgid "invalid key type (use rsa or ecc)"
-msgstr ""
-
-#: htdocs/luci-static/resources/view/homevpn/overview.js
-msgid "invalid name (A-Z a-z 0-9 . _ - max 32)"
-msgstr ""
-
-#: htdocs/luci-static/resources/view/homevpn/overview.js
-msgid "loaded"
-msgstr ""
-
-#: htdocs/luci-static/resources/view/homevpn/overview.js
-msgid "missing"
-msgstr ""
-
-#: htdocs/luci-static/resources/view/homevpn/overview.js
-msgid "mktemp failed"
-msgstr ""
-
-#: htdocs/luci-static/resources/view/homevpn/overview.js
-msgid "network.lan.ipaddr is not set"
-msgstr ""
-
-#: htdocs/luci-static/resources/view/homevpn/overview.js
-msgid "network.lan.ipaddr not set"
-msgstr ""
-
-#: htdocs/luci-static/resources/view/homevpn/overview.js
-msgid "no"
-msgstr ""
-
-#: htdocs/luci-static/resources/view/homevpn/overview.js
-msgid "no CA deployed — client profiles embed the CA, so upload one or the generated profiles cannot verify the server"
-msgstr ""
-
-#: htdocs/luci-static/resources/view/homevpn/overview.js
-#, c-format
-msgid "no valid matching %s certificate/key for %s in %s or %s"
-msgstr ""
-
-#: htdocs/luci-static/resources/view/homevpn/overview.js
-msgid "not loaded"
-msgstr ""
-
-#: htdocs/luci-static/resources/view/homevpn/overview.js
-msgid "nothing to upload — pick at least one file"
-msgstr ""
-
-#: htdocs/luci-static/resources/view/homevpn/overview.js
-msgid "password"
-msgstr ""
-
-#: htdocs/luci-static/resources/view/homevpn/overview.js
-msgid "password required"
-msgstr ""
-
-#: htdocs/luci-static/resources/view/homevpn/overview.js
-#, c-format
-msgid "pool addresses already in use on the LAN (ARP probe answered): %s — pick a free range"
-msgstr ""
-
-#: htdocs/luci-static/resources/view/homevpn/overview.js
-msgid "pool must fit inside a single /24 — start and end are in different subnets"
-msgstr ""
-
-#: htdocs/luci-static/resources/view/homevpn/overview.js
-#, c-format
-msgid "pool must not include the broadcast address %s"
-msgstr ""
-
-#: htdocs/luci-static/resources/view/homevpn/overview.js
-#, c-format
-msgid "pool must not include the network address %s"
-msgstr ""
-
-#: htdocs/luci-static/resources/view/homevpn/overview.js
-#, c-format
-msgid "pool range includes this router's own address %s"
-msgstr ""
-
-#: htdocs/luci-static/resources/view/homevpn/overview.js
-#, c-format
-msgid "pool range too large (%s addresses, max 200)"
-msgstr ""
-
-#: htdocs/luci-static/resources/view/homevpn/overview.js
-#, c-format
-msgid "pool_end '%s' is not a valid IPv4 address"
-msgstr ""
-
-#: htdocs/luci-static/resources/view/homevpn/overview.js
-#, c-format
-msgid "pool_start '%s' is not a valid IPv4 address"
-msgstr ""
-
-#: htdocs/luci-static/resources/view/homevpn/overview.js
-#, c-format
-msgid "pool_start (%s) is greater than pool_end (%s)"
-msgstr ""
-
-#: htdocs/luci-static/resources/view/homevpn/overview.js
-#, c-format
-msgid "pool_subnet %s overlaps an existing local network: %s — pick an unused subnet"
-msgstr ""
-
-#: htdocs/luci-static/resources/view/homevpn/overview.js
-#, c-format
-msgid "pool_subnet '%s' is not a valid subnet"
-msgstr ""
-
-#: htdocs/luci-static/resources/view/homevpn/overview.js
-#, c-format
-msgid "pool_subnet must be in CIDR form a.b.c.d/N (got '%s')"
-msgstr ""
-
-#: htdocs/luci-static/resources/view/homevpn/overview.js
-#, c-format
-msgid "pool_subnet prefix '%s' is not a number"
-msgstr ""
-
-#: htdocs/luci-static/resources/view/homevpn/overview.js
-#, c-format
-msgid "pool_subnet prefix must be between /8 and /30 (got /%s)"
-msgstr ""
-
-#: htdocs/luci-static/resources/view/homevpn/overview.js
-msgid "precheck failed"
-msgstr ""
-
-#: htdocs/luci-static/resources/view/homevpn/overview.js
-msgid "present"
-msgstr ""
-
-#: htdocs/luci-static/resources/view/homevpn/overview.js
-msgid "private key"
-msgstr ""
-
-#: htdocs/luci-static/resources/view/homevpn/overview.js
-msgid "private key does not match the server certificate (public keys differ)"
-msgstr ""
-
-#: htdocs/luci-static/resources/view/homevpn/overview.js
-#, c-format
-msgid "private key: not a valid unencrypted PEM key — %s (export WITHOUT a passphrase)"
-msgstr ""
-
-#: htdocs/luci-static/resources/view/homevpn/overview.js
-msgid "regen failed"
-msgstr ""
-
-#: htdocs/luci-static/resources/view/homevpn/overview.js
-msgid "running"
-msgstr ""
-
-#: htdocs/luci-static/resources/view/homevpn/overview.js
-#, c-format
-msgid "server address '%s' is not an exact SAN of the ACME certificate for '%s' (SANs: %s) — strongSwan never matches wildcard SANs; staying in '%s' mode"
-msgstr ""
-
-#: htdocs/luci-static/resources/view/homevpn/overview.js
-#, c-format
-msgid "server address '%s' is not an exact SAN of the uploaded certificate (SANs: %s) — strongSwan never matches wildcard SANs: set the server address to an exact SAN of the certificate, or reissue it with the server address as SAN"
-msgstr ""
-
-#: htdocs/luci-static/resources/view/homevpn/overview.js
-msgid "server address not set — set it in Settings first"
-msgstr ""
-
-#: htdocs/luci-static/resources/view/homevpn/overview.js
-msgid "server certificate"
-msgstr ""
-
-#: htdocs/luci-static/resources/view/homevpn/overview.js
-#, c-format
-msgid "server certificate expired on %s"
-msgstr ""
-
-#: htdocs/luci-static/resources/view/homevpn/overview.js
-msgid "server certificate has no Subject Alternative Name — clients cannot match it (reissue with SAN)"
-msgstr ""
-
-#: htdocs/luci-static/resources/view/homevpn/overview.js
-#, c-format
-msgid "server certificate: not a valid PEM certificate — %s"
-msgstr ""
-
-#: htdocs/luci-static/resources/view/homevpn/overview.js
-msgid "stopped"
-msgstr ""
-
-#: htdocs/luci-static/resources/view/homevpn/overview.js
-msgid "strongSwan (charon)"
-msgstr ""
-
-#: htdocs/luci-static/resources/view/homevpn/overview.js
-msgid "subnet mode requires pool_subnet (e.g. 10.100.1.0/24)"
-msgstr ""
-
-#: htdocs/luci-static/resources/view/homevpn/overview.js
-#, c-format
-msgid "unknown download type: %s"
-msgstr ""
-
-#: htdocs/luci-static/resources/view/homevpn/overview.js
-msgid "unknown error"
-msgstr ""
-
-#: htdocs/luci-static/resources/view/homevpn/overview.js
-#, c-format
-msgid "unknown ip_mode '%s' (expected lansubnet, dhcp or subnet)"
-msgstr ""
-
-#: htdocs/luci-static/resources/view/homevpn/overview.js
-#, c-format
-msgid "unknown method: %s"
-msgstr ""
-
-#: htdocs/luci-static/resources/view/homevpn/overview.js
-msgid "unknown reason"
-msgstr ""
-
-#: htdocs/luci-static/resources/view/homevpn/overview.js
-#, c-format
-msgid "user '%s' already exists"
-msgstr ""
-
-#: htdocs/luci-static/resources/view/homevpn/overview.js
-#, c-format
-msgid "user '%s' not found"
-msgstr ""
-
-#: htdocs/luci-static/resources/view/homevpn/overview.js
-msgid "valid"
-msgstr ""
-
-#: htdocs/luci-static/resources/view/homevpn/overview.js
-msgid "vpn.example.com or public IP"
-msgstr ""
-
-#: htdocs/luci-static/resources/view/homevpn/overview.js
-msgid "x.x.x.1-9 reserved for the router"
-msgstr ""
-
-#: htdocs/luci-static/resources/view/homevpn/overview.js
-msgid "yes"
-msgstr ""
-
-#: htdocs/luci-static/resources/view/homevpn/overview.js
-msgid "✓ matches the certificate"
-msgstr ""
-
-#: htdocs/luci-static/resources/view/homevpn/overview.js
-msgid "✗ does NOT match the certificate"
-msgstr ""
-
-msgid "Get main-router static route command (side-router mode only)"
-msgstr ""
-
-msgid "Hide main-router static route"
-msgstr ""
-
-msgid "Run this command on the main router, not on this device. It is temporary and is lost after reboot; configure a permanent static route on the main router for persistence."
+msgid "Copy command"
 msgstr ""
 
 msgid "Currently applied destination:"
@@ -978,74 +215,716 @@ msgstr ""
 msgid "Currently applied next hop:"
 msgstr ""
 
-msgid "Copy command"
+msgid "DHCP (local dnsmasq)"
 msgstr ""
 
-msgid "Copied."
+msgid "DHCP (real LAN leases via local dnsmasq)"
 msgstr ""
 
-msgid "Clipboard API is unavailable; the command is selected for manual copying."
+msgid "Delete"
 msgstr ""
 
-msgid "No route command is available from the applied snapshot."
+msgid "Delete user \"%s\"? They will no longer be able to connect."
 msgstr ""
 
-msgid "unavailable"
+msgid "Deployed certificate SAN"
 msgstr ""
 
-msgid "Apply the IP allocation settings first."
+msgid "Disable HomeVPN"
 msgstr ""
 
-#: htdocs/luci-static/resources/view/homevpn/overview.js
+msgid "Disabled — strongSwan stopped"
+msgstr ""
+
+msgid "Disabled, but strongSwan is still running — retry or check the conflict."
+msgstr ""
+
+msgid "Disabling disconnects VPN clients and stops strongSwan. HomeVPN requires exclusive use of strongSwan."
+msgstr ""
+
+msgid "Download CA"
+msgstr ""
+
+msgid "Download CA certificate"
+msgstr ""
+
+msgid "Download root CA"
+msgstr ""
+
+msgid "EAP accounts"
+msgstr ""
+
+msgid "ECC (ECDSA)"
+msgstr ""
+
+msgid "EXPIRED"
+msgstr ""
+
+msgid "Enable HomeVPN"
+msgstr ""
+
+msgid "Enabled — HomeVPN connection loaded"
+msgstr ""
+
+msgid "Enabled, but HomeVPN is not ready"
+msgstr ""
+
+msgid "Enter a domain or IPv4 address, without URL, port, path or wildcard. IPv6 is not supported."
+msgstr ""
+
+msgid "Enter a username and password."
+msgstr ""
+
+msgid "Enter a valid IPv4 CIDR with a prefix from /8 to /30, such as 10.100.1.0/24."
+msgstr ""
+
+msgid "Enter the domain or IP clients connect to. Use DDNS for a dynamic public IP; HomeVPN never uses the WAN IP automatically."
+msgstr ""
+
+msgid "Enter the domain to look for local certificates."
+msgstr ""
+
+msgid "Example: %s"
+msgstr ""
+
+msgid "Existing CA assets are invalid. Confirm replacement to migrate client trust."
+msgstr ""
+
+msgid "Existing clients must install the new CA or re-import their profiles, otherwise they cannot verify the new server certificate. Certificates are replaced only after validation. Stop HomeVPN before replacing its CA."
+msgstr ""
+
+msgid "Firewall INPUT rules (500/4500/ESP)"
+msgstr ""
+
+msgid "Fixed IP (DHCP mode)"
+msgstr ""
+
+msgid "Fixed IP for \"%s\" cleared — dynamic allocation again."
+msgstr ""
+
+msgid "Fixed IP for \"%s\": %s — applies on the next dial-in."
+msgstr ""
+
 msgid "Fixed IP: only effective in DHCP mode. When set, dnsmasq assigns a fixed IP to the VPN user by username; leave empty for dynamic allocation. Changes apply on the next connection. The fixed IP must be within the LAN subnet and must not conflict with other devices."
 msgstr ""
 
-#: htdocs/luci-static/resources/view/homevpn/overview.js
-msgid "Client connection guide"
-msgstr ""
-
-#: htdocs/luci-static/resources/view/homevpn/overview.js
 msgid "For manual IKEv2 setup, enter the server domain, matching remote identifier, EAP username and password. Install the CA first for self-signed certificates; usually this is unnecessary with ACME certificates. See the client connection guide in EAP accounts for device-specific instructions."
 msgstr ""
 
-msgid "Connection steps depend on the \"Certificate mode\" in \"Server settings\":"
+msgid "Generate profile"
 msgstr ""
 
-msgid "Certificate mode: ACME (recommended)"
+msgid "Get main-router static route command (side-router mode only)"
 msgstr ""
 
-msgid "The CA for an ACME certificate is trusted by mainstream clients, so no CA certificate installation is needed on the client."
+msgid "Hide main-router static route"
 msgstr ""
 
-msgid "To connect, use the device built-in IKEv2 client (phone or operating system) and enter the server domain, remote identifier (the same as the server domain), EAP username and password."
+msgid "HomeVPN"
 msgstr ""
 
-msgid "You can also download and import a profile (one per VPN user): .mobileconfig for Apple devices and .sswan for Android. Android system client support varies by device; the strongSwan App is recommended."
+msgid "HomeVPN configuration refused: %s"
 msgstr ""
 
-msgid "Reminder: for iPhone/iPad compatibility, when requesting an ACME certificate, select an option starting with RSA in the \"Key length\" dropdown under certificate \"Advanced settings\" to generate an RSA certificate."
+msgid "HomeVPN service"
 msgstr ""
 
-msgid "Certificate mode: self-signed (automatically generated)"
+msgid "Homelede customized IKEv2 + EAP-MSCHAPv2 VPN server, supporting the default clients on iOS, Android, Windows and MacOS for convenient device access to your home network."
+msgstr ""
+
+msgid "How VPN clients get their virtual IP. Every mode is prechecked before applying (pool occupancy on the LAN, DHCP availability, subnet conflicts) — a failed check refuses the change and keeps the last working configuration, with the reason shown in the status banner above."
+msgstr ""
+
+msgid "IP %s already pinned to user '%s'"
+msgstr ""
+
+msgid "IP allocation mode"
+msgstr ""
+
+msgid "IP allocation mode (applied)"
+msgstr ""
+
+msgid "IP equals the router LAN address"
+msgstr ""
+
+msgid "IP must be in the LAN subnet (%s expected)"
+msgstr ""
+
+msgid "Import certificate"
+msgstr ""
+
+msgid "Import own certificate"
+msgstr ""
+
+msgid "Import own certificate (PEM)"
+msgstr ""
+
+msgid "Imported"
+msgstr ""
+
+msgid "Imported certificate"
 msgstr ""
 
 msgid "In this mode, HomeVPN generates a certificate and signs it with the generated CA certificate. Mainstream clients do not trust self-signed certificates, so import and trust the HomeVPN CA certificate on the client before connecting."
 msgstr ""
 
-msgid "The profiles provided on this page are recommended (one per VPN user; download using the button after the username)."
+msgid "Independent subnet"
 msgstr ""
 
-msgid "Apple devices (iPhone/iPad example): download the .mobileconfig file, transfer it to the device using WeChat or another method, and save it in \"Files\". Open it in \"Files\"; the system will prompt you to enable trust in \"Settings\"."
+msgid "Invalid server address. Use a domain or IPv4 address without URL, port or path."
 msgstr ""
 
-msgid "Then go to Settings → General → About → Certificate Trust Settings and trust the self-signed CA certificate. This VPN connection will appear in the system VPN settings, where you can connect."
+msgid "Issuer"
 msgstr ""
 
-msgid "Android: download the .sswan file and import it with the strongSwan App. The CA is imported into the App with the profile; no separate installation in the system certificate store is needed. Enter the account password when importing or connecting; if the file cannot be opened directly, use the App file picker."
+msgid "LAN subnet pool + ARP proxy"
+msgstr ""
+
+msgid "Listening (500/4500)"
+msgstr ""
+
+msgid "Local certificate found. The server address will be checked against its SAN when saving."
+msgstr ""
+
+msgid "MISMATCH — server address must be an exact SAN (wildcards never match)"
+msgstr ""
+
+msgid "Manual client setup (no profile)"
+msgstr ""
+
+msgid "Masquerade fallback"
+msgstr ""
+
+msgid "New address or certificate mode is not saved. Save and apply to issue or re-sign; deployed certificate details below remain unchanged."
+msgstr ""
+
+msgid "No CA uploaded — the deployed CA (if any) keeps serving client profiles."
+msgstr ""
+
+msgid "No certificate deployed yet. Upload the server certificate, its private key, and the CA certificate clients should trust (e.g. your NAS/ACME issuer CA)."
+msgstr ""
+
+msgid "No route command is available from the applied snapshot."
+msgstr ""
+
+msgid "No usable local certificate found for this domain. Issue a certificate in Services → Let's Encrypt first."
+msgstr ""
+
+msgid "No users yet."
+msgstr ""
+
+msgid "Not configured"
+msgstr ""
+
+msgid "Obtain addresses via local DHCP so VPN clients share the same subnet as local devices. This mode requires local dnsmasq and is only available when this device provides DHCP service for the LAN. Supports mDNS/AirPlay. To assign fixed IPs to VPN users, use the \"Fixed IP (DHCP mode)\" column in the \"EAP accounts\" section. This mode is unavailable when firewall flow offloading is enabled."
+msgstr ""
+
+msgid "Obtain an address via local DHCP"
+msgstr ""
+
+msgid "Off (static route preferred)"
+msgstr ""
+
+msgid "On (fallback: main router cannot route)"
 msgstr ""
 
 msgid "Other clients: download and install the CA certificate, trust it, then manually configure an IKEv2 connection."
 msgstr ""
 
-msgid "ACME certificates are recommended: they are free, quick to obtain, and avoid extra trust steps."
+msgid "Pool carved from the LAN subnet (default .50-.99) — suitable for side routers where the main router provides DHCP; keep the main router DHCP allocation range clear of the addresses reserved on this device for VPN clients"
+msgstr ""
+
+msgid "Pool end"
+msgstr ""
+
+msgid "Pool end is not a valid IP address."
+msgstr ""
+
+msgid "Pool start"
+msgstr ""
+
+msgid "Pool start is not a valid IP address."
+msgstr ""
+
+msgid "Pool subnet (CIDR)"
+msgstr ""
+
+msgid "Pool subnet is required in independent subnet mode. Enter a CIDR such as 10.100.1.0/24."
+msgstr ""
+
+msgid "Preview only. The local CA is prepared after saving self-signed mode."
+msgstr ""
+
+msgid "Private key"
+msgstr ""
+
+msgid "Private key (unencrypted)"
+msgstr ""
+
+msgid "Provision"
+msgstr ""
+
+msgid "RSA (recommended for iPhone)"
+msgstr ""
+
+msgid "Random"
+msgstr ""
+
+msgid "Re-provision now"
+msgstr ""
+
+msgid "Refused: %s — the last working configuration stays active."
+msgstr ""
+
+msgid "Reminder: for iPhone/iPad compatibility, when requesting an ACME certificate, select an option starting with RSA in the \"Key length\" dropdown under certificate \"Advanced settings\" to generate an RSA certificate."
+msgstr ""
+
+msgid "Remote IP"
+msgstr ""
+
+msgid "Replace certificate…"
+msgstr ""
+
+msgid "Replace root CA?"
+msgstr ""
+
+msgid "Replace root CA…"
+msgstr ""
+
+msgid "Root CA certificate or private key is missing, invalid or mismatched."
+msgstr ""
+
+msgid "Root CA changed. Refresh and confirm again."
+msgstr ""
+
+msgid "Root CA creation failed; existing assets were kept."
+msgstr ""
+
+msgid "Root CA does not permit certificate signing."
+msgstr ""
+
+msgid "Root CA expires soon. Renewing a leaf does not change client trust; replacing the CA does."
+msgstr ""
+
+msgid "Root CA has less than 31 days remaining. Confirm CA replacement before signing."
+msgstr ""
+
+msgid "Root CA is not self-signed."
+msgstr ""
+
+msgid "Root CA is valid."
+msgstr ""
+
+msgid "Root CA needs attention. Existing trust assets are never replaced automatically."
+msgstr ""
+
+msgid "Root CA replaced. Update client trust now."
+msgstr ""
+
+msgid "Root CA signature or validity check failed."
+msgstr ""
+
+msgid "Root certificate is not a CA."
+msgstr ""
+
+msgid "Run this command on the main router, not on this device. It is temporary and is lost after reboot; configure a permanent static route on the main router for persistence."
+msgstr ""
+
+msgid "SAN"
+msgstr ""
+
+msgid "SHA-256 fingerprint"
+msgstr ""
+
+msgid "Save a server address first."
+msgstr ""
+
+msgid "Save and apply"
+msgstr ""
+
+msgid "Save refused: %s"
+msgstr ""
+
+msgid "Save self-signed mode before preparing the root CA."
+msgstr ""
+
+msgid "Save settings"
+msgstr ""
+
+msgid "Save settings failed"
+msgstr ""
+
+msgid "Saved and checked. Disabled service remains stopped."
+msgstr ""
+
+msgid "Saved server address"
+msgstr ""
+
+msgid "Saved. Enter a server address before applying or exporting profiles."
+msgstr ""
+
+msgid "Saved. Server re-provisioned."
+msgstr ""
+
+msgid "Selected %s is NOT applied — the precheck refused it (reason below). The highlighted mode is what clients get right now."
+msgstr ""
+
+msgid "Self-signed"
+msgstr ""
+
+msgid "Self-signed (auto-generated)"
+msgstr ""
+
+msgid "Self-signed certificates"
+msgstr ""
+
+msgid "Server address (DDNS/IP)"
+msgstr ""
+
+msgid "Server address (clients dial)"
+msgstr ""
+
+msgid "Server certificate"
+msgstr ""
+
+msgid "Server certificate / CA"
+msgstr ""
+
+msgid "Server certificate SAN does not match the saved address."
+msgstr ""
+
+msgid "Server certificate and private key must be uploaded together."
+msgstr ""
+
+msgid "Server certificate does not permit server authentication or digital signatures."
+msgstr ""
+
+msgid "Server certificate has invalid basic constraints."
+msgstr ""
+
+msgid "Server certificate is expired or enters its 30-day renewal window."
+msgstr ""
+
+msgid "Server certificate is not valid under the current root CA."
+msgstr ""
+
+msgid "Server certificate is ready and reusable."
+msgstr ""
+
+msgid "Server certificate needs issuance or re-signing: %s"
+msgstr ""
+
+msgid "Server certificate or private key is missing, invalid or mismatched."
+msgstr ""
+
+msgid "Server certificate signing failed; previous assets were kept."
+msgstr ""
+
+msgid "Server certificate: waiting for a saved address."
+msgstr ""
+
+msgid "Server settings"
+msgstr ""
+
+msgid "Server status"
+msgstr ""
+
+msgid "Service state unavailable. Refresh before trying again."
+msgstr ""
+
+msgid "Set"
+msgstr ""
+
+msgid "Set fixed IP"
+msgstr ""
+
+msgid "Settings saved, but application failed."
+msgstr ""
+
+msgid "Stop HomeVPN before replacing the root CA."
+msgstr ""
+
+msgid "The CA for an ACME certificate is trusted by mainstream clients, so no CA certificate installation is needed on the client."
+msgstr ""
+
+msgid "The last working configuration stays active. Fix the issue above, then apply again."
+msgstr ""
+
+msgid "The profiles provided on this page are recommended (one per VPN user; download using the button after the username)."
+msgstr ""
+
+msgid "The server address must exactly match a certificate SAN; wildcard certificates are not supported. Self-signed mode prepares a local root CA and issues the server certificate only after an address is saved. Import uses your uploaded files. ACME uses a locally issued certificate (RSA is recommended for iOS)."
+msgstr ""
+
+msgid "Then go to Settings → General → About → Certificate Trust Settings and trust the self-signed CA certificate. This VPN connection will appear in the system VPN settings, where you can connect."
+msgstr ""
+
+msgid "To connect, use the device built-in IKEv2 client (phone or operating system) and enter the server domain, remote identifier (the same as the server domain), EAP username and password."
+msgstr ""
+
+msgid "Unable to save settings: %s"
+msgstr ""
+
+msgid "Upload & apply"
+msgstr ""
+
+msgid "Upload the replacement set (server certificate + private key, CA optional) — the old files are replaced only after all checks pass."
+msgstr ""
+
+msgid "User"
+msgstr ""
+
+msgid "Username"
+msgstr ""
+
+msgid "VPN IP"
+msgstr ""
+
+msgid "VPN display name"
+msgstr ""
+
+msgid "Valid until"
+msgstr ""
+
+msgid "Validated before anything is written: PEM parse, expiry, SAN present, server address must be an EXACT SAN (wildcard SANs never match in strongSwan), key↔certificate pair, CA signs the certificate. On any error nothing is changed."
+msgstr ""
+
+msgid "Wait for a successful local certificate query and select an available type before saving."
+msgstr ""
+
+msgid "You can also download and import a profile (one per VPN user): .mobileconfig for Apple devices and .sswan for Android. Android system client support varies by device; the strongSwan App is recommended."
+msgstr ""
+
+msgid "automatic"
+msgstr ""
+
+msgid "cannot probe routing for %s — no route?"
+msgstr ""
+
+msgid "certificate query unavailable: openssl missing"
+msgstr ""
+
+msgid "certificate query unavailable: resolver missing"
+msgstr ""
+
+msgid "deployed CA does not sign the uploaded server certificate — clients that trust this CA will reject it"
+msgstr ""
+
+msgid "dhcp mode needs the strongswan-mod-dhcp plugin (not installed)"
+msgstr ""
+
+msgid "dhcp mode requires THIS router's dnsmasq to serve DHCP on %s (no dhcp-range found) — enable LAN DHCP here, or use lansubnet mode"
+msgstr ""
+
+msgid "dhcp mode together with firewall flow-offloading: offloaded flows bypass the IPsec policies (traffic blackholes after the first packets) — disable flow offloading or use lansubnet mode"
+msgstr ""
+
+msgid "domain from Services → Let's Encrypt"
+msgstr ""
+
+msgid "dynamic"
+msgstr ""
+
+msgid "e.g. alice, iphone"
+msgstr ""
+
+msgid "exact match"
+msgstr ""
+
+msgid "expiring soon"
+msgstr ""
+
+msgid "homevpn: ACME sync FAILED — the previously deployed certificate (if any) keeps serving; issue the certificate in Services → Let's Encrypt first"
+msgstr ""
+
+msgid "iOS/macOS profile"
+msgstr ""
+
+msgid "incomplete set: server certificate + private key required (upload both, or deploy the missing part first)"
+msgstr ""
+
+msgid "invalid ACME key type (use rsa or ecc)"
+msgstr ""
+
+msgid "invalid IP '%s'"
+msgstr ""
+
+msgid "invalid domain"
+msgstr ""
+
+msgid "invalid key type (use rsa or ecc)"
+msgstr ""
+
+msgid "invalid name (A-Z a-z 0-9 . _ - max 32)"
+msgstr ""
+
+msgid "loaded"
+msgstr ""
+
+msgid "missing"
+msgstr ""
+
+msgid "mktemp failed"
+msgstr ""
+
+msgid "network.lan.ipaddr is not set"
+msgstr ""
+
+msgid "network.lan.ipaddr not set"
+msgstr ""
+
+msgid "no"
+msgstr ""
+
+msgid "no CA deployed — client profiles embed the CA, so upload one or the generated profiles cannot verify the server"
+msgstr ""
+
+msgid "no valid matching %s certificate/key for %s in %s or %s"
+msgstr ""
+
+msgid "not loaded"
+msgstr ""
+
+msgid "nothing to upload — pick at least one file"
+msgstr ""
+
+msgid "password"
+msgstr ""
+
+msgid "password required"
+msgstr ""
+
+msgid "pool addresses already in use on the LAN (ARP probe answered): %s — pick a free range"
+msgstr ""
+
+msgid "pool must fit inside a single /24 — start and end are in different subnets"
+msgstr ""
+
+msgid "pool must not include the broadcast address %s"
+msgstr ""
+
+msgid "pool must not include the network address %s"
+msgstr ""
+
+msgid "pool range includes this router's own address %s"
+msgstr ""
+
+msgid "pool range too large (%s addresses, max 200)"
+msgstr ""
+
+msgid "pool_end '%s' is not a valid IPv4 address"
+msgstr ""
+
+msgid "pool_start '%s' is not a valid IPv4 address"
+msgstr ""
+
+msgid "pool_start (%s) is greater than pool_end (%s)"
+msgstr ""
+
+msgid "pool_subnet %s overlaps an existing local network: %s — pick an unused subnet"
+msgstr ""
+
+msgid "pool_subnet '%s' is not a valid subnet"
+msgstr ""
+
+msgid "pool_subnet must be in CIDR form a.b.c.d/N (got '%s')"
+msgstr ""
+
+msgid "pool_subnet prefix '%s' is not a number"
+msgstr ""
+
+msgid "pool_subnet prefix must be between /8 and /30 (got /%s)"
+msgstr ""
+
+msgid "precheck failed"
+msgstr ""
+
+msgid "present"
+msgstr ""
+
+msgid "private key"
+msgstr ""
+
+msgid "private key does not match the server certificate (public keys differ)"
+msgstr ""
+
+msgid "private key: not a valid unencrypted PEM key — %s (export WITHOUT a passphrase)"
+msgstr ""
+
+msgid "regen failed"
+msgstr ""
+
+msgid "running"
+msgstr ""
+
+msgid "server address '%s' is not an exact SAN of the ACME certificate for '%s' (SANs: %s) — strongSwan never matches wildcard SANs; staying in '%s' mode"
+msgstr ""
+
+msgid "server address '%s' is not an exact SAN of the uploaded certificate (SANs: %s) — strongSwan never matches wildcard SANs: set the server address to an exact SAN of the certificate, or reissue it with the server address as SAN"
+msgstr ""
+
+msgid "server address not set — set it in Settings first"
+msgstr ""
+
+msgid "server certificate"
+msgstr ""
+
+msgid "server certificate expired on %s"
+msgstr ""
+
+msgid "server certificate has no Subject Alternative Name — clients cannot match it (reissue with SAN)"
+msgstr ""
+
+msgid "server certificate: not a valid PEM certificate — %s"
+msgstr ""
+
+msgid "stopped"
+msgstr ""
+
+msgid "strongSwan (charon)"
+msgstr ""
+
+msgid "subnet mode requires pool_subnet (e.g. 10.100.1.0/24)"
+msgstr ""
+
+msgid "unavailable"
+msgstr ""
+
+msgid "unknown download type: %s"
+msgstr ""
+
+msgid "unknown error"
+msgstr ""
+
+msgid "unknown ip_mode '%s' (expected lansubnet, dhcp or subnet)"
+msgstr ""
+
+msgid "unknown method: %s"
+msgstr ""
+
+msgid "unknown reason"
+msgstr ""
+
+msgid "user '%s' already exists"
+msgstr ""
+
+msgid "user '%s' not found"
+msgstr ""
+
+msgid "valid"
+msgstr ""
+
+msgid "vpn.example.com or public IP"
+msgstr ""
+
+msgid "x.x.x.1-9 reserved for the router"
+msgstr ""
+
+msgid "yes"
+msgstr ""
+
+msgid "✓ matches the certificate"
+msgstr ""
+
+msgid "✗ does NOT match the certificate"
 msgstr ""

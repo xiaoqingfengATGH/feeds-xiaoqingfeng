@@ -1,0 +1,14 @@
+const fs = require('fs');
+const assert = require('assert');
+const path = require('path');
+const root = process.argv[2];
+const src = fs.readFileSync(path.join(root, 'htdocs/luci-static/resources/view/homevpn/overview.js'), 'utf8');
+const po = fs.readFileSync(path.join(root, 'po/zh_Hans/homevpn.po'), 'utf8');
+new Function(src);
+const field = src.match(/var sRemote = E\('input', ([^\n]+)/);
+assert(field, 'server-address field exists');
+const key = field[1].match(/'placeholder': _\('([^']+)'\)/)[1];
+const entry = po.match(new RegExp('msgid "' + key.replace(/[.*+?^${}()|[\]\\]/g, '\\$&') + '"\\r?\\nmsgstr "([^"]*)"'));
+assert(entry, 'placeholder has Chinese translation');
+assert.equal(entry[1], '域名/IP', 'Chinese server-address placeholder');
+console.log('PASS: server-address placeholder renders as 域名/IP in Chinese');

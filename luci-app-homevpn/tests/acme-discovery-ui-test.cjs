@@ -38,7 +38,7 @@ async function main() {
  const domain = byId('homevpn-acme-domain');
  assert(domain, 'domain-driven discovery controls must exist');
  const selector = byId('homevpn-acme-type'), single = byId('homevpn-acme-single'), hint = byId('homevpn-acme-hint');
- const save = nodes.find(n=>n.tag==='button' && n.children.includes('Save settings'));
+ const save = nodes.find(n=>n.tag==='button' && n.children.includes('Save and apply'));
  const apply = nodes.find(n=>n.tag==='button' && n.children.includes('Apply IP settings'));
  await tick();
  assert.equal(requests.length,1,'initial domain queried');

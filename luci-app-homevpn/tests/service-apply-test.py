@@ -16,6 +16,7 @@ with tempfile.TemporaryDirectory(prefix='hv-apply-') as d:
  source=re.sub(r'/(?:etc|var|tmp)/',lambda m: str(p)+m.group(),source)
  # The controller path was already isolated before absolute-path rewriting.
  source=source.replace(str(p) + str(p) + '/controller', str(p) + '/controller')
+ source=source.replace('/usr/share/homevpn/selfsigned-pki.sh',str(root/'usr/share/homevpn/selfsigned-pki.sh'))
  (p/'init').write_text(source)
  for name in ['firewall','swanctl','dnsmasq']:
   f=p/'etc/init.d'/name;f.parent.mkdir(exist_ok=True)
@@ -70,7 +71,7 @@ case "$ENTRY" in
   hv_state result=ok;;
  apply) apply_config regen;;
  rollback)
-  hv_get() { case "$1" in enabled) echo 0;; ip_mode) echo subnet;; pool_subnet) echo 10.99.0.0/24;; cert_mode) if [ "$FAULT" = certificate ]; then echo selfsigned; else echo import; fi;; esac; }
+  hv_get() { case "$1" in enabled) echo 0;; remote) echo vpn.example;; ip_mode) echo subnet;; pool_subnet) echo 10.99.0.0/24;; cert_mode) if [ "$FAULT" = certificate ]; then echo selfsigned; else echo import; fi;; esac; }
   hv_install_guard() { :; }
   hv_stop_engine() { echo stopped >> "$SANDBOX/rollback"; }
   hv_cleanup_network() { echo cleaned >> "$SANDBOX/rollback"; }
@@ -82,7 +83,7 @@ printf 'RC=%s RESULT=%s\\n' "$rc" "$(state_get result)"
 exit "$rc"
 '''
  # Real hv_set_enabled changes enabled through UCI; keep its subsequent guard enabled.
- driver=driver.replace('echo 0;; ip_mode','echo 1;; ip_mode').replace('hv_install_guard() { :; }','hv_install_guard() { :; }\n  hv_ready() { return 1; }')
+ driver=driver.replace('echo 0;; remote','echo 1;; remote').replace('hv_install_guard() { :; }','hv_install_guard() { :; }\n  hv_ready() { return 1; }')
  (p/'etc/init.d/homevpn').write_text('#!/bin/sh\nexit 0\n');(p/'etc/init.d/homevpn').chmod(0o755)
  (p/'etc/swanctl/x509').mkdir()
  (p/'driver').write_text(driver)

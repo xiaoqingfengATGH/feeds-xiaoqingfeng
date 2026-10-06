@@ -12,6 +12,7 @@ var callSetSettings = rpc.declare({ object: 'homevpn', method: 'set_settings', p
 var callAddUser     = rpc.declare({ object: 'homevpn', method: 'add_user', params: [ 'name', 'password' ] });
 var callDelUser     = rpc.declare({ object: 'homevpn', method: 'del_user', params: [ 'name' ] });
 var callSetUserIp   = rpc.declare({ object: 'homevpn', method: 'set_user_ip', params: [ 'name', 'ip' ] });
+var callEnsureCA = rpc.declare({ object: 'homevpn', method: 'ensure_selfsigned_ca', params: [ 'replace', 'fingerprint' ] });
 var callProvision   = rpc.declare({ object: 'homevpn', method: 'provision' });
 var callUploadCerts = rpc.declare({ object: 'homevpn', method: 'upload_certs', params: [ 'server', 'key', 'ca' ] });
 var callDownload    = rpc.declare({ object: 'homevpn', method: 'download', params: [ 'name', 'what' ] });
@@ -20,6 +21,31 @@ var callDownload    = rpc.declare({ object: 'homevpn', method: 'download', param
  * Keep service/RPC strings and unknown tool diagnostics intact. */
 function backendMessage(value) {
 	var text = String(value || '');
+	var pkiMessages = {
+		"remote_required": _('Save a server address first.'),
+		"invalid_remote": _('Invalid server address. Use a domain or IPv4 address without URL, port or path.'),
+		"remote_clear_blocked": _('Cannot clear the address while strongSwan is running. Disable HomeVPN first; the saved configuration was not changed.'),
+		"ca_replace_confirmation_required": _('Existing CA assets are invalid. Confirm replacement to migrate client trust.'),
+		"ca_key_invalid": _('Root CA certificate or private key is missing, invalid or mismatched.'),
+		"ca_constraints_invalid": _('Root certificate is not a CA.'),
+		"ca_usage_invalid": _('Root CA does not permit certificate signing.'),
+		"ca_not_selfsigned": _('Root CA is not self-signed.'),
+		"ca_signature_or_validity_invalid": _('Root CA signature or validity check failed.'),
+		"ca_lifetime_insufficient": _('Root CA has less than 31 days remaining. Confirm CA replacement before signing.'),
+		"ca_creation_failed": _('Root CA creation failed; existing assets were kept.'),
+		"pki_publish_failed": _('Certificate installation failed; previous assets were restored.'),
+		"leaf_key_invalid": _('Server certificate or private key is missing, invalid or mismatched.'),
+		"leaf_san_mismatch": _('Server certificate SAN does not match the saved address.'),
+		"leaf_renewal_required": _('Server certificate is expired or enters its 30-day renewal window.'),
+		"leaf_constraints_invalid": _('Server certificate has invalid basic constraints.'),
+		"leaf_usage_invalid": _('Server certificate does not permit server authentication or digital signatures.'),
+		"leaf_chain_invalid": _('Server certificate is not valid under the current root CA.'),
+		"leaf_signing_failed": _('Server certificate signing failed; previous assets were kept.'),
+		"selfsigned_mode_required": _('Save self-signed mode before preparing the root CA.'),
+		"ca_changed_retry": _('Root CA changed. Refresh and confirm again.'),
+		"ca_rotation_requires_stopped_service": _('Stop HomeVPN before replacing the root CA.')
+	};
+	if (pkiMessages[text]) return pkiMessages[text];
 	if (text.indexOf('\n') >= 0) return text.split('\n').map(backendMessage).join('\n');
 	if (text === 'dhcp (real LAN leases via local dnsmasq)') return _('DHCP (real LAN leases via local dnsmasq)');
 	if (text === 'Pool subnet is required in independent subnet mode. Enter a CIDR such as 10.100.1.0/24.') return _('Pool subnet is required in independent subnet mode. Enter a CIDR such as 10.100.1.0/24.');
@@ -163,8 +189,8 @@ return view.extend({
 		var switchBusy = false, switchState = st, stateKnown = true;
 		var switchStatus = E('div', { 'id': 'homevpn-toggle-status', 'role': 'status', 'aria-live': 'polite' });
 		var switchButton = E('button', { 'id': 'homevpn-toggle', 'type': 'button', 'class': 'btn cbi-button cbi-button-action', 'click': function() {
-			if (switchBusy || !stateKnown) return Promise.resolve();
-			switchBusy = true; switchButton.disabled = true;
+			if (switchBusy || settingsSaving || caBusy || !stateKnown) return Promise.resolve();
+			switchBusy = true; switchButton.disabled = true; paintPkiDraft();
 			switchStatus.textContent = _('Applying service state…');
 			var failure = '';
 			return callSetEnabled(switchState.enabled === false).then(function(res) {
@@ -182,13 +208,13 @@ return view.extend({
 					panel.appendChild(E('p', { 'role': 'alert', 'style': hintColors('error') + ';padding:.5em .75em' }, _('Service state unavailable. Refresh before trying again.')));
 				});
 				switchStatus.textContent = (failure ? failure + ' — ' : '') + String(err.message || err) + ' — ' + _('Service state unavailable. Refresh before trying again.');
-			}).then(function() { switchBusy = false; switchButton.disabled = !stateKnown; });
+			}).then(function() { switchBusy = false; switchButton.disabled = !stateKnown; paintPkiDraft(); });
 		} });
 		function paintSwitch() {
 			switchButton.textContent = switchState.enabled === false ? _('Enable HomeVPN') : _('Disable HomeVPN');
 			switchStatus.textContent = switchState.enabled === false
 				? (switchState.running ? _('Disabled, but strongSwan is still running — retry or check the conflict.') : _('Disabled — strongSwan stopped'))
-				: (switchState.running && switchState.conn_loaded ? _('Enabled — HomeVPN connection loaded') : _('Enabled, but HomeVPN is not ready'));
+				: (switchState.running && switchState.conn_loaded && switchState.remote && switchState.pki_ready !== false ? _('Enabled — HomeVPN connection loaded') : _('Enabled, but HomeVPN is not ready'));
 		}
 		paintSwitch();
 		nodes.appendChild(E('div', { 'class': 'cbi-section' }, [
@@ -228,10 +254,10 @@ return view.extend({
 					E('tr', { 'class': 'tr' }, [ E('td', { 'class': 'td left' }, _('Listening (500/4500)')), E('td', { 'class': 'td left' }, badge(st.listening, _('yes'), _('no'))) ]),
 					E('tr', { 'class': 'tr' }, [ E('td', { 'class': 'td left' }, _('Certificate mode')), E('td', { 'class': 'td left' }, modeLabel[st.mode] || st.mode) ]),
 					E('tr', { 'class': 'tr' }, [ E('td', { 'class': 'td left' }, _('Server certificate / CA')), E('td', { 'class': 'td left' }, badge(st.pki_ready, _('present'), _('missing'))) ]),
-					E('tr', { 'class': 'tr' }, [ E('td', { 'class': 'td left' }, _('Certificate SAN matches server address')), E('td', { 'class': 'td left' }, badge(st.san_ok, _('exact match'), _('MISMATCH — server address must be an exact SAN (wildcards never match)'))) ]),
+					E('tr', { 'class': 'tr' }, [ E('td', { 'class': 'td left' }, _('Certificate SAN matches server address')), E('td', { 'class': 'td left' }, E('span', { 'style': 'color:' + (!st.remote || !st.cert ? CLR.warn.txt : st.san_ok ? CLR.ok.txt : CLR.error.txt) }, !st.remote ? _('Not configured') : !st.cert ? _('Certificate missing') : st.san_ok ? _('exact match') : _('MISMATCH — server address must be an exact SAN (wildcards never match)'))) ]),
 					E('tr', { 'class': 'tr' }, [ E('td', { 'class': 'td left' }, _('Firewall INPUT rules (500/4500/ESP)')), E('td', { 'class': 'td left' }, badge(st.input_rules, _('present'), _('missing'))) ]),
 					E('tr', { 'class': 'tr' }, [ E('td', { 'class': 'td left' }, _('Connection loaded in charon')), E('td', { 'class': 'td left' }, badge(st.conn_loaded, _('loaded'), _('not loaded'))) ]),
-					E('tr', { 'class': 'tr' }, [ E('td', { 'class': 'td left', 'width': '33%' }, _('Server address (clients dial)')), E('td', { 'class': 'td left' }, st.remote || _('(not set — WAN IP will be used)')) ]),
+					E('tr', { 'class': 'tr' }, [ E('td', { 'class': 'td left', 'width': '33%' }, _('Server address (clients dial)')), E('td', { 'class': 'td left' }, st.remote || _('Not configured')) ]),
 					appliedModeRow,
 					E('tr', { 'class': 'tr' }, [ E('td', { 'class': 'td left' }, _('Connected clients')), E('td', { 'class': 'td left' }, String(clients.length)) ])
 				]) ]);
@@ -300,6 +326,7 @@ return view.extend({
 			switchState = st;
 			paintStatus();
 			paintCertificate();
+			paintPki();
 			paintSwitch();
 			if (sIpMode) updModeHint();
 		}
@@ -396,9 +423,9 @@ return view.extend({
 		updModeHint();
 
 		/* ---- settings ---- */
-		var sRemote = E('input', { 'type': 'text', 'value': set.remote || '', 'placeholder': _('vpn.example.com or public IP'), 'style': 'width:16em' });
+		var sRemote = E('input', { 'id': 'homevpn-remote', 'type': 'text', 'value': set.remote || '', 'placeholder': _('vpn.example.com or public IP'), 'style': 'width:16em' });
 		var sName = E('input', { 'type': 'text', 'value': set.vpn_name || 'Home VPN', 'style': 'width:16em' });
-		var sMode = E('select', { 'style': 'width:16em' }, [
+		var sMode = E('select', { 'id': 'homevpn-cert-mode', 'style': 'width:16em' }, [
 			E('option', { 'value': 'selfsigned', 'selected': (set.cert_mode === 'selfsigned' ? 'selected' : null) }, _('Self-signed (auto-generated)')),
 			E('option', { 'value': 'import', 'selected': (set.cert_mode === 'import' ? 'selected' : null) }, _('Import own certificate')),
 			E('option', { 'value': 'acme', 'selected': (set.cert_mode === 'acme' ? 'selected' : null) }, _('ACME / Let\u0027s Encrypt'))
@@ -467,27 +494,119 @@ return view.extend({
 				E('div', { 'class': 'right' }, E('button', { 'class': 'btn', 'click': ui.hideModal }, _('Close')))
 			]);
 		}
+		function confirmPki(title, message) {
+			return new Promise(function(resolve) {
+				ui.showModal(title, [ E('p', {}, message), E('div', { 'class': 'right' }, [
+					E('button', { 'class': 'btn', 'click': function() { ui.hideModal(); resolve(false); } }, _('Cancel')), ' ',
+					E('button', { 'class': 'btn cbi-button-apply', 'click': function() { ui.hideModal(); resolve(true); } }, _('Confirm'))
+				]) ]);
+			});
+		}
 		function saveSettings(ps, pe, pc, done) {
-			if (settingsSaving) return Promise.resolve();
-			if (!validateCidr(pc)) return Promise.resolve();
+			if (settingsSaving || caBusy || switchBusy) return Promise.resolve();
+			if (!validateCidr(pc) || !validateRemote()) return Promise.resolve();
 			var domain = (sAcme.value || '').trim();
 			if (sMode.value === 'acme' && (acme.state !== 'ready' || domain !== acme.domain || !domain || acme.types.indexOf(acme.selected) < 0)) {
 				ui.addNotification(null, E('p', _('Wait for a successful local certificate query and select an available type before saving.')), 'warning');
 				return Promise.resolve();
 			}
-			// Snapshot and dispatch in the same turn: an edited/unqueried domain cannot use an old result.
-			settingsSaving = true;
-			return callSetSettings(sRemote.value, sName.value, sMode.value, domain, acme.selected || set.acme_key_type || 'rsa', sIpMode.value, ps, pe, pc, sMasq.value)
-				.then(function(r) {
-					if (!r || !r.ok || r.precheck_ok === false) {
+			var payload = [ sRemote.value.trim(), sName.value, sMode.value, domain, acme.selected || set.acme_key_type || 'rsa', sIpMode.value, ps, pe, pc, sMasq.value ];
+			settingsSaving = true; paintPkiDraft();
+			function submit(yes) {
+				if (!yes) return;
+				return callSetSettings.apply(null, payload).then(function(r) {
+					if (!r || !r.ok) {
 						settingsError(r && r.saved ? _('Settings saved, but application failed.') : (backendMessage(r && r.error) || _('unknown error')), backendMessage(r && (r.output || r.precheck_reason)));
 						return;
 					}
-					done(r);
-				}).catch(function(e) {
-					settingsError(_('Unable to save settings: %s').format(e && e.message || _('unknown error')));
-				}).finally(function() { settingsSaving = false; });
+					set = Object.assign({}, set, {remote:payload[0],vpn_name:payload[1],cert_mode:payload[2],acme_domain:payload[3],acme_key_type:payload[4],ip_mode:payload[5],pool_start:payload[6],pool_end:payload[7],pool_subnet:payload[8],masq:payload[9]});
+					return callStatus().then(function(actual) {
+						if (!actual || actual.ok === false) throw new Error(_('Certificate query failed.'));
+						refreshState(actual);
+						ui.addNotification(null, E('p', r.reason === 'remote_required' ? _('Saved. Enter a server address before applying or exporting profiles.') : _('Saved and checked. Disabled service remains stopped.')), r.reason === 'remote_required' ? 'warning' : 'info');
+						if (payload[2] === 'selfsigned' && !payload[0]) return ensureCA(false, true);
+					});
+				});
+			}
+			var task = !payload[0] && (st.remote || st.conn_loaded)
+				? confirmPki(_('Clear server address?'), _('Clearing the address makes HomeVPN unconfigured and disables profile exports. Certificates and accounts are kept. Disable HomeVPN first if it is running; unsafe live unloading is refused.')).then(submit) : submit(true);
+			return Promise.resolve(task).catch(function(e) { settingsError(_('Unable to save settings: %s').format(e && e.message || _('unknown error'))); })
+				.finally(function() { settingsSaving = false; paintPkiDraft(); });
 		}
+
+		var profileButtons = [];
+		var caBusy = false, caMessage = '', caError = false;
+		var remoteError = E('div', { 'id': 'homevpn-remote-error', 'role': 'alert', 'style': hintColors('error') + ';padding:.5em .75em;display:none' });
+		sRemote.setAttribute('aria-describedby', 'homevpn-remote-error');
+		var pkiDraft = E('div', { 'id': 'homevpn-pki-draft', 'role': 'status', 'aria-live': 'polite' });
+		var pkiDetails = E('div', { 'id': 'homevpn-pki-details', 'style': 'overflow-wrap:anywhere' });
+		var pkiPanel = E('div', { 'id': 'homevpn-selfsigned' }, [ E('strong', {}, _('Self-signed certificates')), pkiDetails, pkiDraft ]);
+		function validateRemote() {
+			var r = sRemote.value.trim(), valid = !r || r.length <= 253 && /^[A-Za-z0-9.-]+$/.test(r) && r.split('.').every(function(label) { return label.length <= 63 && /^[A-Za-z0-9]([A-Za-z0-9-]*[A-Za-z0-9])?$/.test(label); });
+			if (r && /^[0-9.]+$/.test(r)) valid = /^(\d{1,3}\.){3}\d{1,3}$/.test(r) && r.split('.').every(function(o) { return +o <= 255 && (o.length === 1 || o[0] !== '0'); });
+			remoteError.textContent = valid ? '' : _('Enter a domain or IPv4 address, without URL, port, path or wildcard. IPv6 is not supported.');
+			remoteError.style.display = valid ? 'none' : '';
+			sRemote.setAttribute('aria-invalid', valid ? 'false' : 'true');
+			if (!valid) { sRemote.focus(); remoteError.scrollIntoView({block:'center',behavior:'instant'}); }
+			return valid;
+		}
+		function pkiDirty() { return sRemote.value.trim() !== (set.remote || '') || sMode.value !== (set.cert_mode || 'selfsigned'); }
+		function paintPkiDraft() {
+			if (!pkiDraft) return;
+			pkiDraft.textContent = pkiDirty() ? _('New address or certificate mode is not saved. Save and apply to issue or re-sign; deployed certificate details below remain unchanged.') : '';
+			pkiDraft.setAttribute('style', 'margin:.5em 0;padding:.5em .75em;' + hintColors('warn'));
+			if (profileButtons) profileButtons.forEach(function(b) { b.disabled = !st.pki_ready; });
+			var caButtons = pkiDetails.querySelectorAll ? pkiDetails.querySelectorAll('button') : [];
+			Array.prototype.forEach.call(caButtons, function(b, i) { b.disabled = caBusy || settingsSaving || switchBusy || (i === 0 && !(st.selfsigned || {}).ca_valid); });
+			if (provisionButton) { provisionButton.disabled = settingsSaving || caBusy || switchBusy || !stateKnown || pkiDirty(); provisionButton.textContent = sMode.value === 'selfsigned' ? _('Check and apply') : _('Re-provision now'); }
+		}
+		function paintPki() {
+			if (!pkiDetails) return;
+			pkiPanel.style.display = sMode.value === 'selfsigned' ? '' : 'none';
+			while (pkiDetails.firstChild) pkiDetails.removeChild(pkiDetails.firstChild);
+			var pk = st.selfsigned || {}, preview = (set.cert_mode || 'selfsigned') !== 'selfsigned';
+			pkiDetails.appendChild(E('p', { 'role': 'status', 'style': hintColors(caError ? 'error' : pk.ca_valid ? 'ok' : 'warn') + ';padding:.5em .75em' },
+				preview ? _('Preview only. The local CA is prepared after saving self-signed mode.') : caBusy ? _('Checking or creating root CA…') : caMessage || (pk.ca_valid ? _('Root CA is valid.') : _('Root CA needs attention. Existing trust assets are never replaced automatically.'))));
+			if (!preview) {
+				pkiDetails.appendChild(E('p', {}, _('Valid until') + ': ' + (pk.notafter || '—')));
+				pkiDetails.appendChild(E('p', {}, _('SHA-256 fingerprint') + ': ' + (pk.fingerprint || '—')));
+				if (pk.ca_reason) pkiDetails.appendChild(E('p', { 'style': hintColors('error') }, backendMessage(pk.ca_reason)));
+				if (pk.ca_expiring) pkiDetails.appendChild(E('p', { 'style': hintColors('warn') }, _('Root CA expires soon. Renewing a leaf does not change client trust; replacing the CA does.')));
+				pkiDetails.appendChild(E('p', {}, !st.remote ? _('Server certificate: waiting for a saved address.') : pk.leaf_state === 'ready' ? _('Server certificate is ready and reusable.') : _('Server certificate needs issuance or re-signing: %s').format(backendMessage(pk.leaf_state))));
+				pkiDetails.appendChild(E('p', {}, _('Saved server address') + ': ' + (st.remote || '—')));
+				pkiDetails.appendChild(E('p', {}, _('Deployed certificate SAN') + ': ' + ((st.cert || {}).san || '—')));
+				pkiDetails.appendChild(E('p', {}, _('Valid until') + ': ' + ((st.cert || {}).notafter || '—')));
+				pkiDetails.appendChild(E('p', {}, _('Address changes require updating client connection settings. Leaf renewal under the same CA normally does not require installing the CA again.')));
+				pkiDetails.appendChild(E('button', { 'class':'btn cbi-button cbi-button-neutral', 'click': function() {
+					return callDownload('', 'ca').then(function(r) { if (ok(r, _('Download CA'))) saveBlob(r.ca, 'homevpn-ca.crt', 'application/x-x509-ca-cert'); });
+				} }, _('Download root CA')));
+				pkiDetails.appendChild(E('button', { 'class':'btn cbi-button cbi-button-neutral', 'click': function() {
+					if (caBusy || settingsSaving || switchBusy) return;
+					return confirmPki(_('Replace root CA?'), _('Existing clients must install the new CA or re-import their profiles, otherwise they cannot verify the new server certificate. Certificates are replaced only after validation. Stop HomeVPN before replacing its CA.')).then(function(yes) { if (yes) return ensureCA(true); });
+				} }, _('Replace root CA…')));
+			}
+
+			paintPkiDraft();
+		}
+		function ensureCA(replace, savedAction) {
+			if (caBusy || switchBusy || (settingsSaving && !savedAction) || (set.cert_mode || 'selfsigned') !== 'selfsigned') return Promise.resolve();
+			caBusy = true; caError = false; caMessage = ''; paintPki();
+			return callEnsureCA(!!replace, (st.selfsigned || {}).fingerprint || '').then(function(r) {
+				if (!r || !r.ok) { caError = true; caMessage = backendMessage(r && r.error) || _('Certificate query failed.'); }
+				else if (r.replaced) caMessage = _('Root CA replaced. Update client trust now.');
+				return callStatus().then(function(actual) { if (!actual || actual.ok === false) throw new Error(_('Certificate query failed.')); refreshState(actual); });
+			}).catch(function(e) { caError = true; caMessage = String(e.message || e); })
+				.finally(function() { caBusy = false; paintPki(); });
+		}
+		var provisionButton = E('button', { 'id':'homevpn-provision', 'class':'btn cbi-button cbi-button-action', 'click': function() {
+			if (settingsSaving || caBusy || switchBusy || !stateKnown || pkiDirty()) return Promise.resolve();
+			settingsSaving = true; paintPkiDraft();
+			return callProvision().then(function(r) { if (!ok(r, _('Provision'))) return; return callStatus().then(refreshState); })
+				.catch(function(e) { settingsError(String(e.message || e)); }).finally(function() { settingsSaving = false; paintPkiDraft(); });
+		} }, _('Check and apply'));
+		sRemote.addEventListener('input', paintPkiDraft);
+		sMode.addEventListener('change', paintPki);
+		paintPki();
 
 		/* ---- import-mode: deployed-cert info panel + collapsible upload ---- */
 		var certTable = E('div', { 'class': 'table', 'style': 'margin-top:.4em' });
@@ -604,10 +723,11 @@ return view.extend({
 		nodes.appendChild(E('div', { 'class': 'cbi-section' }, [
 			E('h3', {}, _('Server settings')),
 			E('p', { 'class': 'cbi-section-descr' },
-				_('Server address is the domain name or public IP that clients connect to and must exactly match one SAN in the certificate. Home broadband IP addresses change, so you must use a domain name and this firmware\u0027s DDNS to update its address dynamically. Modern devices require the VPN server they connect to to have a certificate. This service only supports single-domain certificates; do not use wildcard certificates (for example, a certificate whose SAN is *.example.com). Three certificate modes are supported: self-signed, where HomeVPN generates a CA and server certificate on first startup; import, which uses the certificate files you upload; and ACME, which uses a certificate obtained through ACME (recommended; for iOS compatibility, request an RSA certificate).')),
-			E('div', { 'class': 'cbi-value' }, [ E('label', { 'class': 'cbi-value-title' }, _('Server address (DDNS/IP)')), E('div', { 'class': 'cbi-value-field' }, sRemote) ]),
+				_('The server address must exactly match a certificate SAN; wildcard certificates are not supported. Self-signed mode prepares a local root CA and issues the server certificate only after an address is saved. Import uses your uploaded files. ACME uses a locally issued certificate (RSA is recommended for iOS).')),
+			E('div', { 'class': 'cbi-value' }, [ E('label', { 'class': 'cbi-value-title' }, _('Server address (DDNS/IP)')), E('div', { 'class': 'cbi-value-field' }, [ sRemote, remoteError, E('p', {}, _('Enter the domain or IP clients connect to. Use DDNS for a dynamic public IP; HomeVPN never uses the WAN IP automatically.')) ]) ]),
 			E('div', { 'class': 'cbi-value' }, [ E('label', { 'class': 'cbi-value-title' }, _('VPN display name')), E('div', { 'class': 'cbi-value-field' }, sName) ]),
 			E('div', { 'class': 'cbi-value' }, [ E('label', { 'class': 'cbi-value-title' }, _('Certificate mode')), E('div', { 'class': 'cbi-value-field' }, sMode) ]),
+			pkiPanel,
 			acmeRow,
 			importBox,
 			certInfo,
@@ -622,17 +742,8 @@ return view.extend({
 							else { flash(_('Save refused: %s').format(backendMessage(r && r.error) || _('unknown error')), 'error'); reload(); }
 						});
 					})
-				}, _('Save settings')), ' ',
-				E('button', {
-					'class': 'btn cbi-button cbi-button-action',
-					'click': ui.createHandlerFn(this, function() {
-						return callProvision().then(function(r) {
-							if (r && r.ok && r.provision_ok === false)
-								{ ui.addNotification(null, E('p', _('Provisioning FAILED: %s').format(backendMessage(r.output) || _('ACME certificate not found'))), 'error'); return; }
-							if (ok(r, _('Provision'))) { ui.addNotification(null, E('p', _('Provisioning output: %s').format(backendMessage(r && r.output))), 'info'); reload(); }
-						});
-					})
-				}, _('Re-provision now'))
+				}, _('Save and apply')), ' ',
+				provisionButton
 			]) ])
 		]));
 
@@ -671,17 +782,17 @@ return view.extend({
 				E('td', { 'class': 'td', 'style': 'vertical-align:middle' }, u.name),
 				fipCell,
 				E('td', { 'class': 'td cbi-section-actions' }, [
-					E('button', { 'class': 'btn cbi-button cbi-button-action', 'click': ui.createHandlerFn(this, function() {
+					(function() { var button = E('button', { 'class': 'btn cbi-button cbi-button-action', 'click': ui.createHandlerFn(this, function() {
 						return callDownload(u.name, 'mobileconfig').then(function(r) {
 							if (ok(r, _('Generate profile'))) saveBlob(r.mobileconfig, u.name + '.mobileconfig', 'application/x-apple-aspen-config');
 						});
-					}) }, _('iOS/macOS profile')),
+					}) }, _('iOS/macOS profile')); profileButtons.push(button); button.disabled = !st.pki_ready; return button; })(),
 					' ',
-					E('button', { 'class': 'btn cbi-button cbi-button-action', 'click': ui.createHandlerFn(this, function() {
+					(function() { var button = E('button', { 'class': 'btn cbi-button cbi-button-action', 'click': ui.createHandlerFn(this, function() {
 						return callDownload(u.name, 'sswan').then(function(r) {
 							if (ok(r, _('Generate profile'))) saveBlob(r.sswan, u.name + '.sswan', 'application/vnd.strongswan.profile');
 						});
-					}) }, _('Android .sswan')),
+					}) }, _('Android .sswan')); profileButtons.push(button); button.disabled = !st.pki_ready; return button; })(),
 					' ',
 					E('button', { 'class': 'btn cbi-button cbi-button-remove', 'click': ui.createHandlerFn(this, function() {
 						if (!confirm(_('Delete user "%s"? They will no longer be able to connect.').format(u.name))) return;
@@ -747,6 +858,7 @@ return view.extend({
 			])
 		]));
 
+		if ((set.cert_mode || 'selfsigned') === 'selfsigned') Promise.resolve().then(function() { return ensureCA(false); });
 		return nodes;
 	},
 	handleSaveApply: null, handleSave: null, handleReset: null

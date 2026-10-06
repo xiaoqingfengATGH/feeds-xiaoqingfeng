@@ -26,7 +26,8 @@ for stamp in 202001010000 203001010000; do
 done
 echo 'PASS: explicit RSA/ECC independent of mtime'
 extra_command() { :; }
-. "$ROOT/etc/init.d/homevpn"
+sed "s@/usr/share/homevpn/@$ROOT/usr/share/homevpn/@g" "$ROOT/etc/init.d/homevpn" > "$T/init"
+. "$T/init"
 ACME_RESOLVER="$ROOT/usr/share/homevpn/acme-resolve.sh"
 X509_DIR="$T/swan/x509"; KEY_DIR="$T/swan/private"; CA_DIR="$T/swan/x509ca"
 mkdir -p "$X509_DIR" "$KEY_DIR" "$CA_DIR"
@@ -78,7 +79,8 @@ homevpn_acme_resolve missing.example rsa && fail 'missing certificate accepted'
 homevpn_acme_resolve test.example invalid && fail 'invalid type accepted'
 echo 'PASS: missing/invalid type rejected; fallback type-safe'
 # rpcd must advertise the type argument or ubus drops it before dispatch.
-sh "$ROOT/usr/libexec/rpcd/homevpn" list | grep -q '"acme_key_type"' || fail 'rpcd key-type contract missing'
+sed "s@/usr/share/homevpn/@$ROOT/usr/share/homevpn/@g" "$ROOT/usr/libexec/rpcd/homevpn" > "$T/rpc"
+sh "$T/rpc" list | grep -q '"acme_key_type"' || fail 'rpcd key-type contract missing'
 echo 'PASS: rpcd advertises key-type setting'
-sh "$ROOT/usr/libexec/rpcd/homevpn" list | grep -q '"ip_mode"' || fail 'key-type saves must preserve UI network fields through ubus'
+sh "$T/rpc" list | grep -q '"ip_mode"' || fail 'key-type saves must preserve UI network fields through ubus'
 echo 'PASS: rpcd advertises existing network settings'

@@ -3,7 +3,11 @@
 # service/network side effects replaced. Disabled entry points must do no work.
 set -eu
 extra_command() { :; }
-. "$1"
+INIT_FIXTURE="$(mktemp)"
+LIB_DIR="$(dirname "$1")/../../usr/share/homevpn"
+sed "s@/usr/share/homevpn/@$LIB_DIR/@g" "$1" > "$INIT_FIXTURE"
+. "$INIT_FIXTURE"
+rm -f "$INIT_FIXTURE"
 TRACE="$(mktemp)"; trap 'rm -f "$TRACE"' EXIT
 hv_get() { [ "$1" = enabled ] && { echo 0; return; }; return 1; }
 load_env() { echo load_env >> "$TRACE"; LAN_ADDR=192.0.2.1; }

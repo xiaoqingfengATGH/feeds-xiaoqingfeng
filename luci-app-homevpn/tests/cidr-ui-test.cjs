@@ -9,12 +9,12 @@ Node.prototype.removeAttribute=function(k){delete this.attrs[k];};
 String.prototype.format=function(...args){let i=0;return this.replace(/%s/g,()=>args[i++]);};
 const text=n=>typeof n==='string'?n:((n.textContent||'')+n.children.map(text).join(' '));
 async function main(){
-for(const entry of ['Apply IP settings','Save settings']){
+for(const entry of ['Apply IP settings','Save and apply']){
  const saves=[],modals=[],notes=[];let response={ok:true,precheck_ok:true},reject=false;
  const rpc={declare:d=>(...a)=>{if(d.method==='set_settings'){saves.push(a);return reject?Promise.reject(new Error('transport failure')):Promise.resolve(response);}return Promise.resolve({});}};
  const ui={createHandlerFn:(_,fn)=>fn,addNotification:(...a)=>notes.push(a),showModal:(...a)=>modals.push(a),hideModal(){}};
  const view=new Function('view','rpc','ui','E','_','location','history','document',src)({extend:x=>x},rpc,ui,E,x=>x,{hash:'',reload(){}},{},{createTextNode:x=>x});
- const root=view.render([{}, {}, {ip_mode:'subnet',cert_mode:'selfsigned'}]),nodes=all(root);
+ const root=view.render([{}, {}, {ip_mode:'subnet',cert_mode:'import'}]),nodes=all(root);
  const cidr=nodes.find(n=>n.attrs.placeholder==='10.100.1.0/24'),button=nodes.find(n=>n.tag==='button'&&n.children.includes(entry));
  for(const value of ['', '   ', 'garbage','999.1.1.0/24','10.1.0.0/33']){
   cidr.value=value;await button.listeners.click();assert.equal(saves.length,0);

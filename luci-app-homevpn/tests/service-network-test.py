@@ -5,7 +5,7 @@ root=pathlib.Path(sys.argv[1])
 with tempfile.TemporaryDirectory(prefix='hv-network-') as d:
  p=pathlib.Path(d)
  (p/'controller').write_text((root/'usr/share/homevpn/service-control.sh').read_text().replace('/usr/share/homevpn/service-lock.sh',str(root/'usr/share/homevpn/service-lock.sh')))
- (p/'init').write_text((root/'etc/init.d/homevpn').read_text().replace('/usr/share/homevpn/service-control.sh',str(p/'controller')).replace('/etc/init.d/firewall',str(p/'firewall')))
+ (p/'init').write_text((root/'etc/init.d/homevpn').read_text().replace('/usr/share/homevpn/selfsigned-pki.sh',str(root/'usr/share/homevpn/selfsigned-pki.sh')).replace('/usr/share/homevpn/service-control.sh',str(p/'controller')).replace('/etc/init.d/firewall',str(p/'firewall')))
  (p/'firewall').write_text('#!/bin/sh\nexit 1\n');(p/'firewall').chmod(0o755)
  driver=f'''extra_command() {{ :; }}
  . {p}/init

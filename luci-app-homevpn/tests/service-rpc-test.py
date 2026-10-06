@@ -11,6 +11,7 @@ with tempfile.TemporaryDirectory(prefix='hv-toggle-rpc-') as d:
  src=src.replace('/usr/share/libubox/jshn.sh',jshn).replace('/usr/share/homevpn/acme-resolve.sh',str(p/'resolver')).replace('/etc/init.d/homevpn',str(p/'init'))
  (p/'lock-lib').write_text((pathlib.Path(sys.argv[1]).parents[2]/'share/homevpn/service-lock.sh').read_text().replace('/var/lock/homevpn-service.lock',str(p/'lock')))
  src=src.replace('/usr/share/homevpn/service-lock.sh',str(p/'lock-lib'))
+ src=src.replace('/usr/share/homevpn/selfsigned-pki.sh',str(pathlib.Path(sys.argv[1]).parents[2]/'share/homevpn/selfsigned-pki.sh'))
  rpc=p/'rpc';rpc.write_text(src)
  env=dict(os.environ,PATH=str(p/'bin')+':'+os.environ['PATH'])
  def call(arg):

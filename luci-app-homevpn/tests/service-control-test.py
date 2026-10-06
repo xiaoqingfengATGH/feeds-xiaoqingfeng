@@ -34,6 +34,7 @@ case "$1" in stop) rm -f {p}/running;; start|restart) [ ! -e {p}/start-fail ] ||
  if (p/'control').exists():
   c=(p/'control').read_text().replace(str(p)+'/swanctl.conf',str(p/'main.conf'));(p/'control').write_text(c)
  (p/'main.conf').write_text('include conf.d/*.conf\ninclude '+str(p/'var.conf')+'\n')
+ src=src.replace('/usr/share/homevpn/selfsigned-pki.sh',str(root/'usr/share/homevpn/selfsigned-pki.sh'))
  (p/'init').write_text(src)
  script=f'''extra_command() {{ :; }}
 . {p}/init
@@ -60,7 +61,7 @@ hv_cleanup_network() {{ :; }}
   assert (r.returncode==0)==ok,(args,r.returncode,r.stdout,r.stderr)
   return r
  # guard installation is separately tested; this fixture exercises the controller.
- (p/'swanctl').write_text((p/'swanctl').read_text()+'\n# homevpn-service-guard-v1\n')
+ (p/'swanctl').write_text((p/'swanctl').read_text()+'\n# homevpn-service-guard-v2\n')
  (p/'disable-fail').touch();run('set-enabled','0',ok=False);assert not (p/'running').exists(),'disable failure must still stop charon';(p/'disable-fail').unlink()
  run('set-enabled','1')
  run('set-enabled','0');assert not (p/'running').exists();assert (p/'enabled').read_text()=='0'

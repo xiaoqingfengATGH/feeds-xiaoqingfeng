@@ -72,32 +72,40 @@ hv_exclusive() {
 
 hv_install_guard() {
 	local target=/etc/init.d/swanctl tmp
-	grep -q '^# homevpn-service-guard-v1$' "$target" && return 0
+	grep -q '^# homevpn-service-guard-v2$' "$target" && return 0
 	# Adapt only known function declarations, never overwrite a vendor script
 	# blindly. The original implementation remains in place for package upgrades.
 	tmp="$(mktemp /etc/init.d/.homevpn-swanctl.XXXXXX)" || return 1
 	if ! awk '
-	/^start_service\(\) \{$/ { sub(/start_service/, "hv_original_start_service"); a++ }
-	/^reload_service\(\) \{$/ { sub(/reload_service/, "hv_original_reload_service"); b++ }
-	/^service_triggers\(\) \{$/ { sub(/service_triggers/, "hv_original_service_triggers"); c++ }
+	/^# homevpn-service-guard-v1$/ { exit }
+	/^(hv_original_)?start_service\(\) \{$/ { sub(/(hv_original_)?start_service/, "hv_original_start_service"); a++ }
+	/^(hv_original_)?reload_service\(\) \{$/ { sub(/(hv_original_)?reload_service/, "hv_original_reload_service"); b++ }
+	/^(hv_original_)?service_triggers\(\) \{$/ { sub(/(hv_original_)?service_triggers/, "hv_original_service_triggers"); c++ }
 	{print} END { if(a!=1 || b!=1 || c!=1)exit 1 }' "$target" > "$tmp"; then
 		rm -f "$tmp"; hv_error 'Unsupported swanctl init script; no service state changed.'; return 1
 	fi
 	cat >> "$tmp" <<'GUARD'
 
-# homevpn-service-guard-v1
+# homevpn-service-guard-v2
 # Added by HomeVPN on exclusive takeover. No daemon is restarted to install it.
 # Package upgrades replacing swanctl must re-install the guard before enabling.
 hv_swanctl_dispatch() {
 	[ "$(uci -q get homevpn.config.enabled)" != 0 ] || return 0
 	"$@"
 }
+hv_swanctl_recovered() {
+	[ "$(uci -q get homevpn.config.enabled)" != 0 ] || return 0
+	. /usr/share/homevpn/selfsigned-pki.sh || return 1
+	CA_DIR=/etc/swanctl/x509ca; KEY_DIR=/etc/swanctl/private; X509_DIR=/etc/swanctl/x509
+	hv_pki_recover || return 1
+	hv_swanctl_dispatch "$@"
+}
 hv_swanctl_guard() {
 	if [ -r /usr/share/homevpn/service-lock.sh ]; then
 		. /usr/share/homevpn/service-lock.sh
-		hv_with_lock hv_swanctl_dispatch "$@"
+		hv_with_lock hv_swanctl_recovered "$@"
 	else
-		hv_swanctl_dispatch "$@"
+		hv_swanctl_recovered "$@"
 	fi
 }
 start_service() { hv_swanctl_guard hv_original_start_service "$@"; }

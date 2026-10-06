@@ -28,7 +28,7 @@ with tempfile.TemporaryDirectory(prefix='hv-rpc-lock-') as d:
  while [ -f {p}/load-hold ]; do sleep 0.02; done
  ''')
  subprocess.run(['openssl','req','-x509','-newkey','ec','-pkeyopt','ec_paramgen_curve:prime256v1','-nodes','-keyout',str(p/'key.pem'),'-out',str(p/'cert.pem'),'-days','1','-subj','/CN=vpn.example.test','-addext','subjectAltName=DNS:vpn.example.test'],check=True,capture_output=True)
- src=src.replace('/etc/swanctl',str(p/'swan'))
+ src=src.replace('/etc/swanctl',str(p/'swan')).replace('/usr/share/homevpn/selfsigned-pki.sh',str(root/'usr/share/homevpn/selfsigned-pki.sh'))
  (p/'rpc').write_text(src)
  env=dict(os.environ,PATH=str(p/'bin')+':'+os.environ['PATH'])
  def call(method,arg):
@@ -43,7 +43,7 @@ with tempfile.TemporaryDirectory(prefix='hv-rpc-lock-') as d:
   while not (p/'entered').exists() and time.monotonic()<deadline:time.sleep(.02)
   assert (p/'entered').exists(),'first RPC never reached UCI write'
   before=(p/'writes').read_text()
-  for method,arg in [('set_enabled',{'enabled':False}),('set_settings',{'vpn_name':'rival'}),('upload_certs',{'server':'invalid fixture'}),('add_user',{}),('del_user',{}),('set_user_ip',{}),('provision',{})]:
+  for method,arg in [('status',{}),('download',{'what':'ca'}),('set_enabled',{'enabled':False}),('set_settings',{'vpn_name':'rival'}),('upload_certs',{'server':'invalid fixture'}),('add_user',{}),('del_user',{}),('set_user_ip',{}),('provision',{})]:
    result=call(method,arg)
    assert result.get('ok') is False and 'busy' in result.get('error','').lower(),(method,result)
    assert (p/'writes').read_text()==before,(method,'partial writes while busy')
@@ -52,7 +52,7 @@ with tempfile.TemporaryDirectory(prefix='hv-rpc-lock-') as d:
   (p/'hold').unlink(missing_ok=True)
   out,err=a.communicate(timeout=10)
  assert a.returncode==0 and json.loads(out).get('ok') is True,(out,err)
- assert (p/'applied').read_text().strip()=='regen','nested RPC/init did not apply'
+ assert (p/'applied').read_text().strip()=='provision','nested RPC/init did not apply'
  assert call('set_enabled',{'enabled':False})['ok'] is True
  result=call('upload_certs',{'server':(p/'cert.pem').read_text(),'key':(p/'key.pem').read_text(),'ca':(p/'cert.pem').read_text()})
  assert result.get('ok') is True,result

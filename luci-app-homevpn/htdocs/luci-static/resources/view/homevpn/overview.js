@@ -179,7 +179,7 @@ return view.extend({
 				stateKnown = false;
 				[ statusPanel, routeCard, certTable ].forEach(function(panel) {
 					while (panel.firstChild) panel.removeChild(panel.firstChild);
-					panel.appendChild(E('p', { 'role': 'alert' }, _('Service state unavailable. Refresh before trying again.')));
+					panel.appendChild(E('p', { 'role': 'alert', 'style': hintColors('error') + ';padding:.5em .75em' }, _('Service state unavailable. Refresh before trying again.')));
 				});
 				switchStatus.textContent = (failure ? failure + ' — ' : '') + String(err.message || err) + ' — ' + _('Service state unavailable. Refresh before trying again.');
 			}).then(function() { switchBusy = false; switchButton.disabled = !stateKnown; });
@@ -210,12 +210,12 @@ return view.extend({
 				: (modeLabels[st.applied_mode] || st.applied_mode || '—') + (st.applied_pool ? ' — ' + backendMessage(st.applied_pool) : '');
 			var appliedModeRow;
 			if (st.ip_mode && st.ip_mode !== st.applied_mode) {
-				appliedModeRow = E('tr', { 'class': 'tr', 'style': 'background:rgba(217,83,79,.12)' }, [
+				appliedModeRow = E('tr', { 'class': 'tr', 'style': hintColors('error') }, [
 					E('td', { 'class': 'td left', 'width': '33%' }, _('IP allocation mode (applied)')),
 					E('td', { 'class': 'td left' }, [
-						E('strong', { 'style': 'color:#d9534f' }, appliedCell),
+						E('strong', { 'style': 'color:' + CLR.error.txt }, appliedCell),
 						E('br'),
-						E('small', { 'style': 'color:#d9534f' }, _('Selected %s is NOT applied — the precheck refused it (reason below). The highlighted mode is what clients get right now.').format(modeLabels[st.ip_mode] || st.ip_mode))
+						E('small', { 'style': 'color:' + CLR.error.txt }, _('Selected %s is NOT applied — the precheck refused it (reason below). The highlighted mode is what clients get right now.').format(modeLabels[st.ip_mode] || st.ip_mode))
 					])
 				]);
 			}
@@ -317,7 +317,7 @@ return view.extend({
 		var sPs = E('input', { 'type': 'text', 'value': set.pool_start || '', 'placeholder': _('Example: %s').format(poolPrefix + '.50'), 'style': 'width:16em' });
 		var sPe = E('input', { 'type': 'text', 'value': set.pool_end || '', 'placeholder': _('Example: %s').format(poolPrefix + '.99'), 'style': 'width:16em' });
 		var sPc = E('input', { 'type': 'text', 'value': set.pool_subnet || '', 'placeholder': '10.100.1.0/24', 'style': 'width:16em' });
-		var cidrError = E('div', { 'id': 'homevpn-cidr-error', 'role': 'alert', 'style': 'color:#c00;display:none' });
+		var cidrError = E('div', { 'id': 'homevpn-cidr-error', 'role': 'alert', 'style': hintColors('error') + ';margin-top:.5em;padding:.5em .75em;display:none' });
 		sPc.setAttribute('aria-describedby', 'homevpn-cidr-error');
 		function validateCidr(pc) {
 			var match = pc.match(/^(\d{1,3})\.(\d{1,3})\.(\d{1,3})\.(\d{1,3})\/(\d{1,2})$/);
@@ -367,7 +367,8 @@ return view.extend({
 			E('div', { 'class': 'cbi-value' }, [ E('label', { 'class': 'cbi-value-title' }, _('Pool subnet (CIDR)')), E('div', { 'class': 'cbi-value-field' }, [ sPc, cidrError ]) ]),
 			E('div', { 'class': 'cbi-value' }, [ E('label', { 'class': 'cbi-value-title' }, _('Masquerade fallback')), E('div', { 'cbi-value-field': null, 'class': 'cbi-value-field' }, sMasq) ]),
 			routeCard,
-			E('div', { 'class': 'cbi-value' }, [ E('div', { 'class': 'cbi-value-field' }, [
+			/* This label-free action row must not inherit the theme's half-width field column. */
+			E('div', { 'class': 'cbi-value' }, [ E('div', { 'id': 'homevpn-ip-actions', 'class': 'cbi-value-field', 'style': 'width:100%;max-width:100%' }, [
 				E('button', {
 					'class': 'btn cbi-button cbi-button-apply',
 					'click': ui.createHandlerFn(this, function() {
@@ -389,7 +390,7 @@ return view.extend({
 						});
 					})
 				}, _('Apply IP settings')), ' ',
-				E('span', { 'style': 'color:#666;font-size:90%' }, _('Applying re-runs the prechecks and (re)loads the swanctl config; existing VPN connections survive whenever possible.'))
+				E('span', { 'style': 'font-size:90%;color:inherit' }, _('Applying re-runs the prechecks and (re)loads the swanctl config; existing VPN connections survive whenever possible.'))
 			]) ])
 		]));
 		updModeHint();
@@ -582,7 +583,7 @@ return view.extend({
 					})
 				}, _('Upload & apply')),
 				' ',
-				E('span', { 'style': 'color:#666;font-size:90%' }, _('Validated before anything is written: PEM parse, expiry, SAN present, server address must be an EXACT SAN (wildcard SANs never match in strongSwan), key↔certificate pair, CA signs the certificate. On any error nothing is changed.'))
+				E('span', { 'style': 'font-size:90%;color:inherit' }, _('Validated before anything is written: PEM parse, expiry, SAN present, server address must be an EXACT SAN (wildcard SANs never match in strongSwan), key↔certificate pair, CA signs the certificate. On any error nothing is changed.'))
 			]) ])
 		]);
 		function updImportBox() {

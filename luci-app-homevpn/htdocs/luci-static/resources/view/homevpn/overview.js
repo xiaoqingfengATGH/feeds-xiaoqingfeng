@@ -3,6 +3,7 @@
 'require rpc';
 'require ui';
 
+var callSetEnabled  = rpc.declare({ object: 'homevpn', method: 'set_enabled', params: [ 'enabled' ] });
 var callStatus      = rpc.declare({ object: 'homevpn', method: 'status' });
 var callListUsers   = rpc.declare({ object: 'homevpn', method: 'list_users' });
 var callDiscoverAcme = rpc.declare({ object: 'homevpn', method: 'discover_acme', params: [ 'domain' ] });
@@ -15,10 +16,94 @@ var callProvision   = rpc.declare({ object: 'homevpn', method: 'provision' });
 var callUploadCerts = rpc.declare({ object: 'homevpn', method: 'upload_certs', params: [ 'server', 'key', 'ca' ] });
 var callDownload    = rpc.declare({ object: 'homevpn', method: 'download', params: [ 'name', 'what' ] });
 
+/* Translate known backend diagnostics only at the presentation boundary.
+ * Keep service/RPC strings and unknown tool diagnostics intact. */
+function backendMessage(value) {
+	var text = String(value || '');
+	if (text.indexOf('\n') >= 0) return text.split('\n').map(backendMessage).join('\n');
+	if (text === 'dhcp (real LAN leases via local dnsmasq)') return _('DHCP (real LAN leases via local dnsmasq)');
+	if (text === 'Pool subnet is required in independent subnet mode. Enter a CIDR such as 10.100.1.0/24.') return _('Pool subnet is required in independent subnet mode. Enter a CIDR such as 10.100.1.0/24.');
+	if (text === 'Enter a valid IPv4 CIDR with a prefix from /8 to /30, such as 10.100.1.0/24.') return _('Enter a valid IPv4 CIDR with a prefix from /8 to /30, such as 10.100.1.0/24.');
+	var suffix = '; keeping previous settings';
+	if (text.slice(-suffix.length) === suffix)
+		return _('%s; keeping previous settings').format(backendMessage(text.slice(0, -suffix.length)));
+	var prefix = 'homevpn: refusing to render: ';
+	if (text.indexOf(prefix) === 0)
+		return _('HomeVPN configuration refused: %s').format(backendMessage(text.slice(prefix.length)));
+	var messages = [
+		[ /^invalid\ name\ \(A\-Z\ a\-z\ 0\-9\ \.\ _\ \-\ max\ 32\)$/ , _('invalid name (A-Z a-z 0-9 . _ - max 32)') ],
+		[ /^password\ required$/ , _('password required') ],
+		[ /^user\ '(.+?)'\ already\ exists$/ , _('user \'%s\' already exists') ],
+		[ /^user\ '(.+?)'\ not\ found$/ , _('user \'%s\' not found') ],
+		[ /^regen\ failed$/ , _('regen failed') ],
+		[ /^invalid\ IP\ '(.+?)'$/ , _('invalid IP \'%s\'') ],
+		[ /^x\.x\.x\.1\-9\ reserved\ for\ the\ router$/ , _('x.x.x.1-9 reserved for the router') ],
+		[ /^network\.lan\.ipaddr\ not\ set$/ , _('network.lan.ipaddr not set') ],
+		[ /^network\.lan\.ipaddr\ is\ not\ set$/ , _('network.lan.ipaddr is not set') ],
+		[ /^IP\ must\ be\ in\ the\ LAN\ subnet\ \((.+?)\ expected\)$/ , _('IP must be in the LAN subnet (%s expected)') ],
+		[ /^IP\ equals\ the\ router\ LAN\ address$/ , _('IP equals the router LAN address') ],
+		[ /^IP\ (.+?)\ already\ pinned\ to\ user\ '(.+?)'$/ , _('IP %s already pinned to user \'%s\'') ],
+		[ /^(.+?)\ answers\ ping\ —\ already\ occupied\ by\ a\ LAN\ host$/ , _('%s answers ping — already occupied by a LAN host') ],
+		[ /^(.+?)\ is\ in\ an\ active\ DHCP\ lease$/ , _('%s is in an active DHCP lease') ],
+		[ /^certificate\ query\ unavailable:\ openssl\ missing$/ , _('certificate query unavailable: openssl missing') ],
+		[ /^certificate\ query\ unavailable:\ resolver\ missing$/ , _('certificate query unavailable: resolver missing') ],
+		[ /^invalid\ domain$/ , _('invalid domain') ],
+		[ /^invalid\ ACME\ key\ type\ \(use\ rsa\ or\ ecc\)$/ , _('invalid ACME key type (use rsa or ecc)') ],
+		[ /^invalid\ key\ type\ \(use\ rsa\ or\ ecc\)$/ , _('invalid key type (use rsa or ecc)') ],
+		[ /^ACME\ domain\ is\ empty\ —\ set\ it\ to\ the\ domain\ issued\ in\ Services\ →\ Let's\ Encrypt$/ , _('ACME domain is empty — set it to the domain issued in Services → Let\'s Encrypt') ],
+		[ /^no\ valid\ matching\ (.+?)\ certificate\/key\ for\ (.+?)\ in\ (.+?)\ or\ (.+?)$/ , _('no valid matching %s certificate/key for %s in %s or %s') ],
+		[ /^server\ address\ '(.+?)'\ is\ not\ an\ exact\ SAN\ of\ the\ ACME\ certificate\ for\ '(.+?)'\ \(SANs:\ (.+?)\)\ —\ strongSwan\ never\ matches\ wildcard\ SANs;\ staying\ in\ '(.+?)'\ mode$/ , _('server address \'%s\' is not an exact SAN of the ACME certificate for \'%s\' (SANs: %s) — strongSwan never matches wildcard SANs; staying in \'%s\' mode') ],
+		[ /^nothing\ to\ upload\ —\ pick\ at\ least\ one\ file$/ , _('nothing to upload — pick at least one file') ],
+		[ /^mktemp\ failed$/ , _('mktemp failed') ],
+		[ /^incomplete\ set:\ server\ certificate\ \+\ private\ key\ required\ \(upload\ both,\ or\ deploy\ the\ missing\ part\ first\)$/ , _('incomplete set: server certificate + private key required (upload both, or deploy the missing part first)') ],
+		[ /^server\ certificate:\ not\ a\ valid\ PEM\ certificate\ —\ (.+?)$/ , _('server certificate: not a valid PEM certificate — %s') ],
+		[ /^private\ key:\ not\ a\ valid\ unencrypted\ PEM\ key\ —\ (.+?)\ \(export\ WITHOUT\ a\ passphrase\)$/ , _('private key: not a valid unencrypted PEM key — %s (export WITHOUT a passphrase)') ],
+		[ /^server\ certificate\ expired\ on\ (.+?)$/ , _('server certificate expired on %s') ],
+		[ /^server\ certificate\ has\ no\ Subject\ Alternative\ Name\ —\ clients\ cannot\ match\ it\ \(reissue\ with\ SAN\)$/ , _('server certificate has no Subject Alternative Name — clients cannot match it (reissue with SAN)') ],
+		[ /^server\ address\ '(.+?)'\ is\ not\ an\ exact\ SAN\ of\ the\ uploaded\ certificate\ \(SANs:\ (.+?)\)\ —\ strongSwan\ never\ matches\ wildcard\ SANs:\ set\ the\ server\ address\ to\ an\ exact\ SAN\ of\ the\ certificate,\ or\ reissue\ it\ with\ the\ server\ address\ as\ SAN$/ , _('server address \'%s\' is not an exact SAN of the uploaded certificate (SANs: %s) — strongSwan never matches wildcard SANs: set the server address to an exact SAN of the certificate, or reissue it with the server address as SAN') ],
+		[ /^private\ key\ does\ not\ match\ the\ server\ certificate\ \(public\ keys\ differ\)$/ , _('private key does not match the server certificate (public keys differ)') ],
+		[ /^CA\ certificate:\ not\ a\ valid\ PEM\ certificate\ —\ (.+?)$/ , _('CA certificate: not a valid PEM certificate — %s') ],
+		[ /^CA\ certificate\ does\ not\ sign\ the\ server\ certificate\ —\ import\ the\ issuer\ CA,\ or\ leave\ the\ CA\ field\ empty\ to\ keep\ the\ current\ one$/ , _('CA certificate does not sign the server certificate — import the issuer CA, or leave the CA field empty to keep the current one') ],
+		[ /^deployed\ CA\ does\ not\ sign\ the\ uploaded\ server\ certificate\ —\ clients\ that\ trust\ this\ CA\ will\ reject\ it$/ , _('deployed CA does not sign the uploaded server certificate — clients that trust this CA will reject it') ],
+		[ /^no\ CA\ deployed\ —\ client\ profiles\ embed\ the\ CA,\ so\ upload\ one\ or\ the\ generated\ profiles\ cannot\ verify\ the\ server$/ , _('no CA deployed — client profiles embed the CA, so upload one or the generated profiles cannot verify the server') ],
+		[ /^CA\ not\ found\ —\ run\ provisioning\ first$/ , _('CA not found — run provisioning first') ],
+		[ /^server\ address\ not\ set\ —\ set\ it\ in\ Settings\ first$/ , _('server address not set — set it in Settings first') ],
+		[ /^unknown\ download\ type:\ (.+?)$/ , _('unknown download type: %s') ],
+		[ /^unknown\ method:\ (.+?)$/ , _('unknown method: %s') ],
+		[ /^pool_start\ '(.+?)'\ is\ not\ a\ valid\ IPv4\ address$/ , _('pool_start \'%s\' is not a valid IPv4 address') ],
+		[ /^pool_end\ '(.+?)'\ is\ not\ a\ valid\ IPv4\ address$/ , _('pool_end \'%s\' is not a valid IPv4 address') ],
+		[ /^pool_start\ \((.+?)\)\ is\ greater\ than\ pool_end\ \((.+?)\)$/ , _('pool_start (%s) is greater than pool_end (%s)') ],
+		[ /^pool\ must\ fit\ inside\ a\ single\ \/24\ —\ start\ and\ end\ are\ in\ different\ subnets$/ , _('pool must fit inside a single /24 — start and end are in different subnets') ],
+		[ /^pool\ range\ too\ large\ \((.+?)\ addresses,\ max\ 200\)$/ , _('pool range too large (%s addresses, max 200)') ],
+		[ /^pool\ must\ not\ include\ the\ network\ address\ (.+?)$/ , _('pool must not include the network address %s') ],
+		[ /^pool\ must\ not\ include\ the\ broadcast\ address\ (.+?)$/ , _('pool must not include the broadcast address %s') ],
+		[ /^(.+?)\ is\ outside\ the\ LAN\ subnet\ \((.+?)\ on\ (.+?)\)\ —\ the\ pool\ must\ be\ carved\ from\ the\ LAN\ subnet$/ , _('%s is outside the LAN subnet (%s on %s) — the pool must be carved from the LAN subnet') ],
+		[ /^pool\ range\ includes\ this\ router's\ own\ address\ (.+?)$/ , _('pool range includes this router\'s own address %s') ],
+		[ /^pool\ addresses\ already\ in\ use\ on\ the\ LAN\ \(ARP\ probe\ answered\):\ (.+?)\ —\ pick\ a\ free\ range$/ , _('pool addresses already in use on the LAN (ARP probe answered): %s — pick a free range') ],
+		[ /^dhcp\ mode\ needs\ the\ strongswan\-mod\-dhcp\ plugin\ \(not\ installed\)$/ , _('dhcp mode needs the strongswan-mod-dhcp plugin (not installed)') ],
+		[ /^dhcp\ mode\ requires\ THIS\ router's\ dnsmasq\ to\ serve\ DHCP\ on\ (.+?)\ \(no\ dhcp\-range\ found\)\ —\ enable\ LAN\ DHCP\ here,\ or\ use\ lansubnet\ mode$/ , _('dhcp mode requires THIS router\'s dnsmasq to serve DHCP on %s (no dhcp-range found) — enable LAN DHCP here, or use lansubnet mode') ],
+		[ /^dhcp\ mode\ together\ with\ firewall\ flow\-offloading:\ offloaded\ flows\ bypass\ the\ IPsec\ policies\ \(traffic\ blackholes\ after\ the\ first\ packets\)\ —\ disable\ flow\ offloading\ or\ use\ lansubnet\ mode$/ , _('dhcp mode together with firewall flow-offloading: offloaded flows bypass the IPsec policies (traffic blackholes after the first packets) — disable flow offloading or use lansubnet mode') ],
+		[ /^subnet\ mode\ requires\ pool_subnet\ \(e\.g\.\ 10\.100\.1\.0\/24\)$/ , _('subnet mode requires pool_subnet (e.g. 10.100.1.0/24)') ],
+		[ /^pool_subnet\ must\ be\ in\ CIDR\ form\ a\.b\.c\.d\/N\ \(got\ '(.+?)'\)$/ , _('pool_subnet must be in CIDR form a.b.c.d/N (got \'%s\')') ],
+		[ /^pool_subnet\ '(.+?)'\ is\ not\ a\ valid\ subnet$/ , _('pool_subnet \'%s\' is not a valid subnet') ],
+		[ /^pool_subnet\ prefix\ '(.+?)'\ is\ not\ a\ number$/ , _('pool_subnet prefix \'%s\' is not a number') ],
+		[ /^pool_subnet\ prefix\ must\ be\ between\ \/8\ and\ \/30\ \(got\ \/(.+?)\)$/ , _('pool_subnet prefix must be between /8 and /30 (got /%s)') ],
+		[ /^cannot\ probe\ routing\ for\ (.+?)\ —\ no\ route\?$/ , _('cannot probe routing for %s — no route?') ],
+		[ /^pool_subnet\ (.+?)\ overlaps\ an\ existing\ local\ network:\ (.+?)\ —\ pick\ an\ unused\ subnet$/ , _('pool_subnet %s overlaps an existing local network: %s — pick an unused subnet') ],
+		[ /^unknown\ ip_mode\ '(.+?)'\ \(expected\ lansubnet,\ dhcp\ or\ subnet\)$/ , _('unknown ip_mode \'%s\' (expected lansubnet, dhcp or subnet)') ],
+		[ /^homevpn:\ ACME\ sync\ FAILED\ —\ the\ previously\ deployed\ certificate\ \(if\ any\)\ keeps\ serving;\ issue\ the\ certificate\ in\ Services\ →\ Let's\ Encrypt\ first$/ , _('homevpn: ACME sync FAILED — the previously deployed certificate (if any) keeps serving; issue the certificate in Services → Let\'s Encrypt first') ]
+	];
+	for (var i = 0; i < messages.length; i++) {
+		var match = text.match(messages[i][0]);
+		if (match) return messages[i][1].format.apply(messages[i][1], match.slice(1));
+	}
+	return text;
+}
+
 function reload() { return location.reload(); }
 function ok(res, action) {
 	if (res && res.ok) return true;
-	ui.addNotification(null, E('p', _('%s failed: %s').format(action, (res && res.error) || _('unknown error'))), 'danger');
+	ui.addNotification(null, E('p', _('%s failed: %s').format(action, backendMessage(res && res.error) || _('unknown error'))), 'danger');
 	return false;
 }
 function randpw() {
@@ -69,62 +154,156 @@ return view.extend({
 		var modeLabels = { lansubnet: _('LAN subnet pool + ARP proxy'), dhcp: _('DHCP (local dnsmasq)'), subnet: _('Independent subnet') };
 
 		var nodes = E('div', {}, [
-			E('h2', {}, _('HomeVPN — IKEv2 Server')),
-			E('p', { 'class': 'cbi-section-descr' },
-				_('Turnkey strongSwan IKEv2 VPN server: clients dial in with username/password (EAP-MSCHAPv2) and become full LAN members via DHCP pool + ARP proxy.'))
+			E('h2', {}, _('HomeVPN')),
+			E('div', { 'class': 'cbi-map-descr' },
+				_('Homelede customized IKEv2 + EAP-MSCHAPv2 VPN server, supporting the default clients on iOS, Android, Windows and MacOS for convenient device access to your home network.'))
 		]);
 
-		/* ---- server status + readiness ---- */
-		var modeLabel = { selfsigned: _('Self-signed'), import: _('Imported'), acme: _('ACME (Let\u0027s Encrypt)') };
-		var appliedCell = (modeLabels[st.applied_mode] || st.applied_mode || '—') + (st.applied_pool ? ' — ' + st.applied_pool : '');
-		var appliedModeRow;
-		if (st.ip_mode && st.ip_mode !== st.applied_mode) {
-			appliedModeRow = E('tr', { 'class': 'tr', 'style': 'background:rgba(217,83,79,.12)' }, [
-				E('td', { 'class': 'td left', 'width': '33%' }, _('IP allocation mode (applied)')),
-				E('td', { 'class': 'td left' }, [
-					E('strong', { 'style': 'color:#d9534f' }, appliedCell),
-					E('br'),
-					E('small', { 'style': 'color:#d9534f' }, _('Selected %s is NOT applied — the precheck refused it (reason below). The highlighted mode is what clients get right now.').format(modeLabels[st.ip_mode] || st.ip_mode))
-				])
-			]);
+		/* Independent action: never submits or validates the settings draft. */
+		var switchBusy = false, switchState = st, stateKnown = true;
+		var switchStatus = E('div', { 'id': 'homevpn-toggle-status', 'role': 'status', 'aria-live': 'polite' });
+		var switchButton = E('button', { 'id': 'homevpn-toggle', 'type': 'button', 'class': 'btn cbi-button cbi-button-action', 'click': function() {
+			if (switchBusy || !stateKnown) return Promise.resolve();
+			switchBusy = true; switchButton.disabled = true;
+			switchStatus.textContent = _('Applying service state…');
+			var failure = '';
+			return callSetEnabled(switchState.enabled === false).then(function(res) {
+				if (!res || !res.ok) failure = backendMessage(res && res.error) || _('unknown error');
+			}, function(err) { failure = String(err.message || err); }).then(function() {
+				return callStatus().then(function(actual) {
+					if (!actual || actual.enabled == null) throw new Error(_('Service state unavailable. Refresh before trying again.'));
+					refreshState(actual);
+					if (failure) switchStatus.textContent += ' — ' + failure;
+				}, function(err) { throw err; });
+			}).catch(function(err) {
+				stateKnown = false;
+				[ statusPanel, routeCard, certTable ].forEach(function(panel) {
+					while (panel.firstChild) panel.removeChild(panel.firstChild);
+					panel.appendChild(E('p', { 'role': 'alert' }, _('Service state unavailable. Refresh before trying again.')));
+				});
+				switchStatus.textContent = (failure ? failure + ' — ' : '') + String(err.message || err) + ' — ' + _('Service state unavailable. Refresh before trying again.');
+			}).then(function() { switchBusy = false; switchButton.disabled = !stateKnown; });
+		} });
+		function paintSwitch() {
+			switchButton.textContent = switchState.enabled === false ? _('Enable HomeVPN') : _('Disable HomeVPN');
+			switchStatus.textContent = switchState.enabled === false
+				? (switchState.running ? _('Disabled, but strongSwan is still running — retry or check the conflict.') : _('Disabled — strongSwan stopped'))
+				: (switchState.running && switchState.conn_loaded ? _('Enabled — HomeVPN connection loaded') : _('Enabled, but HomeVPN is not ready'));
 		}
-		else {
-			appliedModeRow = E('tr', { 'class': 'tr' }, [ E('td', { 'class': 'td left', 'width': '33%' }, _('IP allocation mode (applied)')), E('td', { 'class': 'td left' }, appliedCell) ]);
-		}
-		var sBox = E('div', { 'class': 'cbi-section' }, [ E('h3', {}, _('Server status')),
-			E('table', { 'class': 'table' }, [
-				E('tr', { 'class': 'tr' }, [ E('td', { 'class': 'td left', 'width': '33%' }, _('strongSwan (charon)')), E('td', { 'class': 'td left' }, badge(st.running, _('running'), _('stopped'))) ]),
-				E('tr', { 'class': 'tr' }, [ E('td', { 'class': 'td left' }, _('Listening (500/4500)')), E('td', { 'class': 'td left' }, badge(st.listening, _('yes'), _('no'))) ]),
-				E('tr', { 'class': 'tr' }, [ E('td', { 'class': 'td left' }, _('Certificate mode')), E('td', { 'class': 'td left' }, modeLabel[st.mode] || st.mode) ]),
-				E('tr', { 'class': 'tr' }, [ E('td', { 'class': 'td left' }, _('Server certificate / CA')), E('td', { 'class': 'td left' }, badge(st.pki_ready, _('present'), _('missing'))) ]),
-				E('tr', { 'class': 'tr' }, [ E('td', { 'class': 'td left' }, _('Certificate SAN matches server address')), E('td', { 'class': 'td left' }, badge(st.san_ok, _('exact match'), _('MISMATCH — server address must be an exact SAN (wildcards never match)'))) ]),
-				E('tr', { 'class': 'tr' }, [ E('td', { 'class': 'td left' }, _('Firewall INPUT rules (500/4500/ESP)')), E('td', { 'class': 'td left' }, badge(st.input_rules, _('present'), _('missing'))) ]),
-				E('tr', { 'class': 'tr' }, [ E('td', { 'class': 'td left' }, _('Connection loaded in charon')), E('td', { 'class': 'td left' }, badge(st.conn_loaded, _('loaded'), _('not loaded'))) ]),
-				E('tr', { 'class': 'tr' }, [ E('td', { 'class': 'td left', 'width': '33%' }, _('Server address (clients dial)')), E('td', { 'class': 'td left' }, st.remote || _('(not set — WAN IP will be used)')) ]),
-				appliedModeRow,
-				E('tr', { 'class': 'tr' }, [ E('td', { 'class': 'td left' }, _('Connected clients')), E('td', { 'class': 'td left' }, String(clients.length)) ])
-			]) ]);
-		if (clients.length) {
-			var crows = [ E('tr', { 'class': 'tr table-titles' }, [ E('th', { 'class': 'th' }, _('User')), E('th', { 'class': 'th' }, _('VPN IP')), E('th', { 'class': 'th' }, _('Remote IP')) ]) ];
-			clients.forEach(function(c) { crows.push(E('tr', { 'class': 'tr' }, [ E('td', { 'class': 'td' }, c.user), E('td', { 'class': 'td' }, c.vip), E('td', { 'class': 'td' }, c.remote_ip) ])); });
-			sBox.appendChild(E('div', { 'class': 'table cbi-section-table', 'style': 'margin-top:.5em' }, crows));
-		}
-		nodes.appendChild(sBox);
+		paintSwitch();
+		nodes.appendChild(E('div', { 'class': 'cbi-section' }, [
+			E('h3', {}, _('HomeVPN service')), switchButton, switchStatus,
+			E('p', {}, _('Disabling disconnects VPN clients and stops strongSwan. HomeVPN requires exclusive use of strongSwan.'))
+		]));
 
-		if (st.precheck === 'refused') {
-			nodes.appendChild(E('div', { 'class': 'alert-message warning', 'style': 'margin:0 0 .5em' }, [
-				E('strong', {}, _('Configuration check refused: ')),
-				document.createTextNode(st.precheck_reason || _('unknown reason')),
-				E('br'), E('small', {}, _('The last working configuration stays active. Fix the issue above, then apply again.'))
-			]));
+		/* Refresh read-only snapshots only; never rebuild draft controls. */
+		var statusPanel = E('div', { 'id': 'homevpn-status-panel' });
+		var routeCard = E('div', { 'id': 'homevpn-route-status' });
+		nodes.appendChild(statusPanel);
+		function paintStatus() {
+			while (statusPanel.firstChild) statusPanel.removeChild(statusPanel.firstChild);
+			while (routeCard.firstChild) routeCard.removeChild(routeCard.firstChild);
+			/* ---- server status + readiness ---- */
+			var modeLabel = { selfsigned: _('Self-signed'), import: _('Imported'), acme: _('ACME (Let\u0027s Encrypt)') };
+			var appliedCell = st.applied_mode === 'dhcp'
+				? _('Obtain an address via local DHCP')
+				: (modeLabels[st.applied_mode] || st.applied_mode || '—') + (st.applied_pool ? ' — ' + backendMessage(st.applied_pool) : '');
+			var appliedModeRow;
+			if (st.ip_mode && st.ip_mode !== st.applied_mode) {
+				appliedModeRow = E('tr', { 'class': 'tr', 'style': 'background:rgba(217,83,79,.12)' }, [
+					E('td', { 'class': 'td left', 'width': '33%' }, _('IP allocation mode (applied)')),
+					E('td', { 'class': 'td left' }, [
+						E('strong', { 'style': 'color:#d9534f' }, appliedCell),
+						E('br'),
+						E('small', { 'style': 'color:#d9534f' }, _('Selected %s is NOT applied — the precheck refused it (reason below). The highlighted mode is what clients get right now.').format(modeLabels[st.ip_mode] || st.ip_mode))
+					])
+				]);
+			}
+			else {
+				appliedModeRow = E('tr', { 'class': 'tr' }, [ E('td', { 'class': 'td left', 'width': '33%' }, _('IP allocation mode (applied)')), E('td', { 'class': 'td left' }, appliedCell) ]);
+			}
+			var sBox = E('div', { 'class': 'cbi-section' }, [ E('h3', {}, _('Server status')),
+				E('table', { 'class': 'table' }, [
+					E('tr', { 'class': 'tr' }, [ E('td', { 'class': 'td left', 'width': '33%' }, _('strongSwan (charon)')), E('td', { 'class': 'td left' }, badge(st.running, _('running'), _('stopped'))) ]),
+					E('tr', { 'class': 'tr' }, [ E('td', { 'class': 'td left' }, _('Listening (500/4500)')), E('td', { 'class': 'td left' }, badge(st.listening, _('yes'), _('no'))) ]),
+					E('tr', { 'class': 'tr' }, [ E('td', { 'class': 'td left' }, _('Certificate mode')), E('td', { 'class': 'td left' }, modeLabel[st.mode] || st.mode) ]),
+					E('tr', { 'class': 'tr' }, [ E('td', { 'class': 'td left' }, _('Server certificate / CA')), E('td', { 'class': 'td left' }, badge(st.pki_ready, _('present'), _('missing'))) ]),
+					E('tr', { 'class': 'tr' }, [ E('td', { 'class': 'td left' }, _('Certificate SAN matches server address')), E('td', { 'class': 'td left' }, badge(st.san_ok, _('exact match'), _('MISMATCH — server address must be an exact SAN (wildcards never match)'))) ]),
+					E('tr', { 'class': 'tr' }, [ E('td', { 'class': 'td left' }, _('Firewall INPUT rules (500/4500/ESP)')), E('td', { 'class': 'td left' }, badge(st.input_rules, _('present'), _('missing'))) ]),
+					E('tr', { 'class': 'tr' }, [ E('td', { 'class': 'td left' }, _('Connection loaded in charon')), E('td', { 'class': 'td left' }, badge(st.conn_loaded, _('loaded'), _('not loaded'))) ]),
+					E('tr', { 'class': 'tr' }, [ E('td', { 'class': 'td left', 'width': '33%' }, _('Server address (clients dial)')), E('td', { 'class': 'td left' }, st.remote || _('(not set — WAN IP will be used)')) ]),
+					appliedModeRow,
+					E('tr', { 'class': 'tr' }, [ E('td', { 'class': 'td left' }, _('Connected clients')), E('td', { 'class': 'td left' }, String(clients.length)) ])
+				]) ]);
+			if (clients.length) {
+				var crows = [ E('tr', { 'class': 'tr table-titles' }, [ E('th', { 'class': 'th' }, _('User')), E('th', { 'class': 'th' }, _('VPN IP')), E('th', { 'class': 'th' }, _('Remote IP')) ]) ];
+				clients.forEach(function(c) { crows.push(E('tr', { 'class': 'tr' }, [ E('td', { 'class': 'td' }, c.user), E('td', { 'class': 'td' }, c.vip), E('td', { 'class': 'td' }, c.remote_ip) ])); });
+				sBox.appendChild(E('div', { 'class': 'table cbi-section-table', 'style': 'margin-top:.5em' }, crows));
+			}
+			statusPanel.appendChild(sBox);
+
+			if (st.precheck === 'refused') {
+				statusPanel.appendChild(E('div', { 'class': 'alert-message warning', 'style': 'margin:0 0 .5em' }, [
+					E('strong', {}, _('Configuration check refused:') + ' '),
+					document.createTextNode(backendMessage(st.precheck_reason) || _('unknown reason')),
+					E('br'), E('small', {}, _('The last working configuration stays active. Fix the issue above, then apply again.'))
+				]));
+			}
+			/* The route guidance is deliberately tied to the applied snapshot. It is
+			 * read-only: draft UCI values never become a route suggestion. */
+			var routeToggle, routeContent;
+			if (st.applied_mode === 'subnet') {
+				var routeOpen = false;
+				var routeBody = E('div', { 'style': 'display:none;margin:.5em 0 0' });
+				var routeButtonText = _('Get main-router static route command (side-router mode only)');
+				routeToggle = E('button', {
+					'class': 'btn cbi-button cbi-button-neutral',
+					'click': function() {
+						routeOpen = !routeOpen;
+						routeBody.style.display = routeOpen ? '' : 'none';
+						routeToggle.textContent = routeOpen ? _('Hide main-router static route') : routeButtonText;
+					}
+				}, routeButtonText);
+				var routeText = String(st.suggest || '');
+				var routeTarget = routeText.match(/destination\s+([^ ]+)/);
+				var routeGateway = routeText.match(/gateway\s+([^ ]+)/);
+				var routeCommand = routeText.match(/\((ip route add [^)]+)\)/);
+				var routeRows = [
+					E('p', {}, _('Run this command on the main router, not on this device. It is temporary and is lost after reboot; configure a permanent static route on the main router for persistence.')),
+					E('div', {}, [ E('strong', {}, _('Currently applied destination:')), ' ', document.createTextNode(routeTarget ? routeTarget[1] : (st.applied_pool || _('unavailable'))) ]),
+					E('div', {}, [ E('strong', {}, _('Currently applied next hop:')), ' ', document.createTextNode(routeGateway ? routeGateway[1] : _('unavailable')) ])
+				];
+				if (routeCommand) {
+					var commandText = routeCommand[1];
+					var commandInput = E('input', { 'type': 'text', 'readonly': 'readonly', 'value': commandText, 'style': 'width:28em;max-width:100%' });
+					var copyButton = E('button', { 'class': 'btn cbi-button cbi-button-neutral', 'click': function() {
+						if (navigator.clipboard && navigator.clipboard.writeText) navigator.clipboard.writeText(commandText).then(function() { ui.addNotification(null, E('p', _('Copied.')), 'info'); }, function() { commandInput.focus(); commandInput.select(); ui.addNotification(null, E('p', _('Clipboard API is unavailable; the command is selected for manual copying.')), 'warning'); });
+						else { commandInput.focus(); commandInput.select(); ui.addNotification(null, E('p', _('Clipboard API is unavailable; the command is selected for manual copying.')), 'warning'); }
+					} }, _('Copy command'));
+					routeRows.push(E('div', {}, [ commandInput, ' ', copyButton ]));
+				} else routeRows.push(E('p', {}, _('No route command is available from the applied snapshot.')));
+				routeBody.appendChild(E('div', { 'class': 'alert-message info' }, routeRows));
+				routeContent = E('div', { 'class': 'cbi-value' }, [ E('div', { 'class': 'cbi-value-field' }, [ routeToggle, routeBody ]) ]);
+			} else {
+				routeToggle = E('button', {
+					'class': 'btn cbi-button cbi-button-neutral',
+					'click': function() { ui.addNotification(null, E('p', _('Apply the IP allocation settings first.')), 'info'); }
+				}, _('Get main-router static route command (side-router mode only)'));
+				routeContent = E('div', { 'class': 'cbi-value' }, [ E('div', { 'class': 'cbi-value-field' }, [ routeToggle ]) ]);
+			}
+
+			routeCard.appendChild(routeContent);
 		}
-		if (st.suggest && st.applied_mode === 'subnet' && st.applied_masq !== '1') {
-			nodes.appendChild(E('div', { 'class': 'alert-message info', 'style': 'margin:0 0 .5em' }, [
-				E('strong', {}, _('Static route needed on the main router: ')),
-				document.createTextNode(st.suggest),
-				E('br'), E('small', {}, _('Add this route so LAN hosts can reach VPN clients. If the main router cannot configure static routes, enable the masquerade fallback in Client IP allocation instead.'))
-			]));
+		function refreshState(actual) {
+			st = actual;
+			clients = st.clients || [];
+			switchState = st;
+			paintStatus();
+			paintCertificate();
+			paintSwitch();
+			if (sIpMode) updModeHint();
 		}
+		paintStatus();
 
 		/* ---- IP allocation mode ---- */
 		var sIpMode = E('select', { 'style': 'width:22em' }, [
@@ -132,20 +311,41 @@ return view.extend({
 			E('option', { 'value': 'dhcp', 'selected': (set.ip_mode === 'dhcp') ? 'selected' : null }, modeLabels.dhcp),
 			E('option', { 'value': 'subnet', 'selected': (set.ip_mode === 'subnet') ? 'selected' : null }, modeLabels.subnet)
 		]);
-		var sPs = E('input', { 'type': 'text', 'value': set.pool_start || '', 'placeholder': '(auto) ' + (st.lan_net || '192.168.x.x').replace(/\.\d+$/, '.50'), 'style': 'width:10em' });
-		var sPe = E('input', { 'type': 'text', 'value': set.pool_end || '', 'placeholder': '(auto) .99', 'style': 'width:10em' });
-		var sPc = E('input', { 'type': 'text', 'value': set.pool_subnet || '', 'placeholder': '10.100.1.0/24', 'style': 'width:10em' });
-		var sMasq = E('select', { 'style': 'width:10em' }, [
+		// Use only a validated /24 LAN network for examples; never change saved pool values.
+		var poolLan = String(st.lan_net || '').match(/^(\d{1,3})\.(\d{1,3})\.(\d{1,3})\.(\d{1,3})\/24$/);
+		var poolPrefix = poolLan && poolLan.slice(1).every(function(o) { return +o <= 255; }) ? poolLan.slice(1, 4).join('.') : '192.168.1';
+		var sPs = E('input', { 'type': 'text', 'value': set.pool_start || '', 'placeholder': _('Example: %s').format(poolPrefix + '.50'), 'style': 'width:16em' });
+		var sPe = E('input', { 'type': 'text', 'value': set.pool_end || '', 'placeholder': _('Example: %s').format(poolPrefix + '.99'), 'style': 'width:16em' });
+		var sPc = E('input', { 'type': 'text', 'value': set.pool_subnet || '', 'placeholder': '10.100.1.0/24', 'style': 'width:16em' });
+		var cidrError = E('div', { 'id': 'homevpn-cidr-error', 'role': 'alert', 'style': 'color:#c00;display:none' });
+		sPc.setAttribute('aria-describedby', 'homevpn-cidr-error');
+		function validateCidr(pc) {
+			var match = pc.match(/^(\d{1,3})\.(\d{1,3})\.(\d{1,3})\.(\d{1,3})\/(\d{1,2})$/);
+			var message = sIpMode.value !== 'subnet' ? '' : !pc
+				? _('Pool subnet is required in independent subnet mode. Enter a CIDR such as 10.100.1.0/24.')
+				: !match || !match.slice(1, 5).every(function(o) { return +o <= 255; }) || +match[5] < 8 || +match[5] > 30
+					? _('Enter a valid IPv4 CIDR with a prefix from /8 to /30, such as 10.100.1.0/24.') : '';
+			cidrError.textContent = message;
+			cidrError.style.display = message ? '' : 'none';
+			sPc.setAttribute('aria-invalid', message ? 'true' : 'false');
+			if (message) {
+				sPc.focus();
+				cidrError.scrollIntoView({ block: 'center', behavior: 'instant' });
+			}
+			return !message;
+		}
+		var sMasq = E('select', { 'style': 'width:16em' }, [
 			E('option', { 'value': '0', 'selected': (set.masq === '1') ? null : 'selected' }, _('Off (static route preferred)')),
 			E('option', { 'value': '1', 'selected': (set.masq === '1') ? 'selected' : null }, _('On (fallback: main router cannot route)'))
 		]);
 		var modeHint = E('p', { 'class': 'cbi-section-descr' });
 		function updModeHint() {
 			var m = sIpMode.value;
+			if (typeof routeCard !== 'undefined' && routeCard) routeCard.style.display = (m === 'subnet' || st.applied_mode === 'subnet') ? '' : 'none';
 			var hints = {
-				lansubnet: _('Pool carved from the LAN subnet (default .50-.99) — no configuration on any other router needed, and VPN clients are reachable from the LAN. Recommended for side routers.'),
-				dhcp: _('Clients get real LAN leases from THIS router\u0027s dnsmasq (DHCP must run here). Supports mDNS/AirPlay. Per-user fixed IPs need identity_lease + dhcp-host bindings. Not available while firewall flow-offloading is on.'),
-				subnet: _('Clients live in an independent subnet — cleanest isolation, recommended as main router. On a SIDE router the main router needs a static route for the pool subnet (suggested command shown below after saving); masquerade is the last-resort fallback when it cannot.')
+				lansubnet: _('Pool carved from the LAN subnet (default .50-.99) — suitable for side routers where the main router provides DHCP; keep the main router DHCP allocation range clear of the addresses reserved on this device for VPN clients'),
+				dhcp: _('Obtain addresses via local DHCP so VPN clients share the same subnet as local devices. This mode requires local dnsmasq and is only available when this device provides DHCP service for the LAN. Supports mDNS/AirPlay. To assign fixed IPs to VPN users, use the "Fixed IP (DHCP mode)" column in the "EAP accounts" section. This mode is unavailable when firewall flow offloading is enabled.'),
+				subnet: _('Clients use a subnet separate from the local LAN; recommended when this device is the main LAN router. When this device is a side router, expand the main-router static route guidance below after applying so local LAN devices can reach VPN users (VPN users can still access local LAN devices without it); enable "Masquerade fallback" only if a static route cannot be added on the main router')
 			};
 			modeHint.textContent = hints[m] || '';
 			[ sPs, sPe ].forEach(function(el) {
@@ -161,12 +361,12 @@ return view.extend({
 		nodes.appendChild(E('div', { 'class': 'cbi-section' }, [
 			E('h3', {}, _('Client IP allocation')),
 			E('p', { 'class': 'cbi-section-descr' }, _('How VPN clients get their virtual IP. Every mode is prechecked before applying (pool occupancy on the LAN, DHCP availability, subnet conflicts) — a failed check refuses the change and keeps the last working configuration, with the reason shown in the status banner above.')),
-			modeHint,
-			E('div', { 'class': 'cbi-value' }, [ E('label', { 'class': 'cbi-value-title' }, _('Mode')), E('div', { 'class': 'cbi-value-field' }, sIpMode) ]),
+			E('div', { 'class': 'cbi-value' }, [ E('label', { 'class': 'cbi-value-title' }, _('IP allocation mode')), E('div', { 'class': 'cbi-value-field' }, [ sIpMode, modeHint ]) ]),
 			E('div', { 'class': 'cbi-value' }, [ E('label', { 'class': 'cbi-value-title' }, _('Pool start')), E('div', { 'class': 'cbi-value-field' }, sPs) ]),
 			E('div', { 'class': 'cbi-value' }, [ E('label', { 'class': 'cbi-value-title' }, _('Pool end')), E('div', { 'class': 'cbi-value-field' }, sPe) ]),
-			E('div', { 'class': 'cbi-value' }, [ E('label', { 'class': 'cbi-value-title' }, _('Pool subnet (CIDR)')), E('div', { 'class': 'cbi-value-field' }, sPc) ]),
+			E('div', { 'class': 'cbi-value' }, [ E('label', { 'class': 'cbi-value-title' }, _('Pool subnet (CIDR)')), E('div', { 'class': 'cbi-value-field' }, [ sPc, cidrError ]) ]),
 			E('div', { 'class': 'cbi-value' }, [ E('label', { 'class': 'cbi-value-title' }, _('Masquerade fallback')), E('div', { 'cbi-value-field': null, 'class': 'cbi-value-field' }, sMasq) ]),
+			routeCard,
 			E('div', { 'class': 'cbi-value' }, [ E('div', { 'class': 'cbi-value-field' }, [
 				E('button', {
 					'class': 'btn cbi-button cbi-button-apply',
@@ -174,13 +374,13 @@ return view.extend({
 						var ps = (sPs.value || '').trim(), pe = (sPe.value || '').trim(), pc = (sPc.value || '').trim();
 						if (sIpMode.value === 'lansubnet' && ps && !/^\d+\.\d+\.\d+\.\d+$/.test(ps)) { ui.addNotification(null, E('p', _('Pool start is not a valid IP address.')), 'warning'); return; }
 						if (sIpMode.value === 'lansubnet' && pe && !/^\d+\.\d+\.\d+\.\d+$/.test(pe)) { ui.addNotification(null, E('p', _('Pool end is not a valid IP address.')), 'warning'); return; }
-						if (sIpMode.value === 'subnet' && !/^(\d+\.){3}\d+\/\d+$/.test(pc)) { ui.addNotification(null, E('p', _('Pool subnet must be a CIDR like 10.100.1.0/24.')), 'warning'); return; }
+						/* CIDR validation is shared by both save entrances below. */
 						return saveSettings(ps, pe, pc, function(r) {
 							if (r && r.ok) {
 								if (r.precheck_ok) {
-									ui.addNotification(null, E('p', _('Applied. Mode: %s, pool: %s').format(sIpMode.value, pc || (ps || 'auto') + '-' + (pe || 'auto'))), 'info');
+									ui.addNotification(null, E('p', _('Applied. Mode: %s, pool: %s').format(modeLabels[sIpMode.value] || sIpMode.value, pc || (ps || _('automatic')) + '-' + (pe || _('automatic')))), 'info');
 								} else {
-									ui.addNotification(null, E('p', _('Refused: %s — the last working configuration stays active.').format(r.precheck_reason || _('precheck failed'))), 'error');
+									ui.addNotification(null, E('p', _('Refused: %s — the last working configuration stays active.').format(backendMessage(r.precheck_reason) || _('precheck failed'))), 'error');
 								}
 								reload();
 							} else {
@@ -195,14 +395,14 @@ return view.extend({
 		updModeHint();
 
 		/* ---- settings ---- */
-		var sRemote = E('input', { 'type': 'text', 'value': set.remote || '', 'placeholder': 'vpn.example.com or public IP', 'style': 'width:16em' });
+		var sRemote = E('input', { 'type': 'text', 'value': set.remote || '', 'placeholder': _('vpn.example.com or public IP'), 'style': 'width:16em' });
 		var sName = E('input', { 'type': 'text', 'value': set.vpn_name || 'Home VPN', 'style': 'width:16em' });
 		var sMode = E('select', { 'style': 'width:16em' }, [
 			E('option', { 'value': 'selfsigned', 'selected': (set.cert_mode === 'selfsigned' ? 'selected' : null) }, _('Self-signed (auto-generated)')),
 			E('option', { 'value': 'import', 'selected': (set.cert_mode === 'import' ? 'selected' : null) }, _('Import own certificate')),
 			E('option', { 'value': 'acme', 'selected': (set.cert_mode === 'acme' ? 'selected' : null) }, _('ACME / Let\u0027s Encrypt'))
 		]);
-		var sAcme = E('input', { 'id': 'homevpn-acme-domain', 'type': 'text', 'value': set.acme_domain || '', 'placeholder': 'domain from Services → Let\u0027s Encrypt', 'style': 'width:16em' });
+		var sAcme = E('input', { 'id': 'homevpn-acme-domain', 'type': 'text', 'value': set.acme_domain || '', 'placeholder': _('domain from Services → Let\u0027s Encrypt'), 'style': 'width:16em' });
 		var typeLabels = { rsa: _('RSA (recommended for iPhone)'), ecc: _('ECC (ECDSA)') };
 		var sAcmeType = E('select', { 'id': 'homevpn-acme-type', 'style': 'width:16em' });
 		var acmeSingle = E('span', { 'id': 'homevpn-acme-single' });
@@ -259,8 +459,16 @@ return view.extend({
 			E('button', { 'class': 'btn cbi-button', 'click': function() { queryAcme(0); } }, _('Check again'))
 		]) ]);
 		var settingsSaving = false;
+		function settingsError(message, output) {
+			ui.showModal(_('Save settings failed'), [
+				E('p', {}, message),
+				E('pre', { 'style': 'white-space:pre-wrap' }, output || ''),
+				E('div', { 'class': 'right' }, E('button', { 'class': 'btn', 'click': ui.hideModal }, _('Close')))
+			]);
+		}
 		function saveSettings(ps, pe, pc, done) {
 			if (settingsSaving) return Promise.resolve();
+			if (!validateCidr(pc)) return Promise.resolve();
 			var domain = (sAcme.value || '').trim();
 			if (sMode.value === 'acme' && (acme.state !== 'ready' || domain !== acme.domain || !domain || acme.types.indexOf(acme.selected) < 0)) {
 				ui.addNotification(null, E('p', _('Wait for a successful local certificate query and select an available type before saving.')), 'warning');
@@ -269,33 +477,47 @@ return view.extend({
 			// Snapshot and dispatch in the same turn: an edited/unqueried domain cannot use an old result.
 			settingsSaving = true;
 			return callSetSettings(sRemote.value, sName.value, sMode.value, domain, acme.selected || set.acme_key_type || 'rsa', sIpMode.value, ps, pe, pc, sMasq.value)
-				.then(done).finally(function() { settingsSaving = false; });
+				.then(function(r) {
+					if (!r || !r.ok || r.precheck_ok === false) {
+						settingsError(r && r.saved ? _('Settings saved, but application failed.') : (backendMessage(r && r.error) || _('unknown error')), backendMessage(r && (r.output || r.precheck_reason)));
+						return;
+					}
+					done(r);
+				}).catch(function(e) {
+					settingsError(_('Unable to save settings: %s').format(e && e.message || _('unknown error')));
+				}).finally(function() { settingsSaving = false; });
 		}
 
 		/* ---- import-mode: deployed-cert info panel + collapsible upload ---- */
-		var certRows = [];
-		var ct = st.cert || null;
-		var keyCell = _('(not deployed)');
-		if (ct && ct.key_matches === true)
-			keyCell = E('span', { 'style': 'color:' + CLR.ok.txt }, _('✓ matches the certificate'));
-		else if (ct && ct.key_matches === false)
-			keyCell = E('span', { 'style': 'color:' + CLR.error.txt }, _('✗ does NOT match the certificate'));
-		if (ct) {
-			var expColor = (ct.expiry === 'expired') ? CLR.error.txt : ((ct.expiry === 'soon') ? CLR.warn.txt : CLR.ok.txt);
-			var expText = (ct.expiry === 'expired') ? _('EXPIRED') : ((ct.expiry === 'soon') ? _('expiring soon') : _('valid'));
-			certRows = [
-				E('tr', { 'class': 'tr' }, [ E('td', { 'class': 'td left', 'width': '33%' }, _('Server certificate')), E('td', { 'class': 'td left' }, ct.subject || '?') ]),
-				E('tr', { 'class': 'tr' }, [ E('td', { 'class': 'td left' }, _('Issuer')), E('td', { 'class': 'td left' }, ct.issuer || '?') ]),
-				E('tr', { 'class': 'tr' }, [ E('td', { 'class': 'td left' }, _('SAN')), E('td', { 'class': 'td left' }, ct.san || _('(none)')) ]),
-				E('tr', { 'class': 'tr' }, [ E('td', { 'class': 'td left' }, _('Valid until')), E('td', { 'class': 'td left' },
-					E('span', { 'style': 'color:' + expColor }, (ct.notafter || '?') + ' — ' + expText)) ]),
-				E('tr', { 'class': 'tr' }, [ E('td', { 'class': 'td left' }, _('Private key')), E('td', { 'class': 'td left' }, keyCell) ]),
-				E('tr', { 'class': 'tr' }, [ E('td', { 'class': 'td left' }, _('CA (for client profiles)')), E('td', { 'class': 'td left' }, ct.ca_subject || _('(none deployed)')) ])
-			];
+		var certTable = E('div', { 'class': 'table', 'style': 'margin-top:.4em' });
+		function paintCertificate() {
+			var certRows = [];
+			var ct = st.cert || null;
+			var keyCell = _('(not deployed)');
+			if (ct && ct.key_matches === true)
+				keyCell = E('span', { 'style': 'color:' + CLR.ok.txt }, _('✓ matches the certificate'));
+			else if (ct && ct.key_matches === false)
+				keyCell = E('span', { 'style': 'color:' + CLR.error.txt }, _('✗ does NOT match the certificate'));
+			if (ct) {
+				var expColor = (ct.expiry === 'expired') ? CLR.error.txt : ((ct.expiry === 'soon') ? CLR.warn.txt : CLR.ok.txt);
+				var expText = (ct.expiry === 'expired') ? _('EXPIRED') : ((ct.expiry === 'soon') ? _('expiring soon') : _('valid'));
+				certRows = [
+					E('tr', { 'class': 'tr' }, [ E('td', { 'class': 'td left', 'width': '33%' }, _('Server certificate')), E('td', { 'class': 'td left' }, ct.subject || '?') ]),
+					E('tr', { 'class': 'tr' }, [ E('td', { 'class': 'td left' }, _('Issuer')), E('td', { 'class': 'td left' }, ct.issuer || '?') ]),
+					E('tr', { 'class': 'tr' }, [ E('td', { 'class': 'td left' }, _('SAN')), E('td', { 'class': 'td left' }, ct.san || _('(none)')) ]),
+					E('tr', { 'class': 'tr' }, [ E('td', { 'class': 'td left' }, _('Valid until')), E('td', { 'class': 'td left' },
+						E('span', { 'style': 'color:' + expColor }, (ct.notafter || '?') + ' — ' + expText)) ]),
+					E('tr', { 'class': 'tr' }, [ E('td', { 'class': 'td left' }, _('Private key')), E('td', { 'class': 'td left' }, keyCell) ]),
+					E('tr', { 'class': 'tr' }, [ E('td', { 'class': 'td left' }, _('CA (for client profiles)')), E('td', { 'class': 'td left' }, ct.ca_subject || _('(none deployed)')) ])
+				];
+			}
+			while (certTable.firstChild) certTable.removeChild(certTable.firstChild);
+			certRows.forEach(function(row) { certTable.appendChild(row); });
 		}
+		paintCertificate();
 		var certInfo = E('div', { 'style': 'margin:.3em 0 .3em' }, [
 			E('strong', {}, _('Imported certificate')),
-			E('div', { 'class': 'table', 'style': 'margin-top:.4em' }, certRows),
+			certTable,
 			E('div', { 'style': 'margin-top:.4em' }, [
 				E('button', { 'class': 'btn cbi-button cbi-button-neutral', 'click': function() {
 					importBox.style.display = '';
@@ -348,7 +570,7 @@ return view.extend({
 										msg += ' ' + _('CA installed — client profiles will embed it.');
 									else
 										msg += ' ' + _('No CA uploaded — the deployed CA (if any) keeps serving client profiles.');
-									if (r.warning) msg += ' || ' + r.warning;
+									if (r.warning) msg += ' || ' + backendMessage(r.warning);
 									flash(msg, r.warning ? 'warning' : 'info');
 									reload();
 								}
@@ -381,7 +603,7 @@ return view.extend({
 		nodes.appendChild(E('div', { 'class': 'cbi-section' }, [
 			E('h3', {}, _('Server settings')),
 			E('p', { 'class': 'cbi-section-descr' },
-				_('Server address is what clients dial (DDNS name or public IP) — it must EXACTLY equal one SAN of the certificate: strongSwan never matches wildcard SANs (*.example.com), so an address only wildcard-covered fails every connection. Self-signed mode generates a CA + server certificate on first boot; import mode uploads your own certificate files; ACME mode syncs a certificate issued by the Let\u0027s Encrypt app (on sync failure the previously deployed certificate keeps serving — it never silently switches to self-signed).')),
+				_('Server address is the domain name or public IP that clients connect to and must exactly match one SAN in the certificate. Home broadband IP addresses change, so you must use a domain name and this firmware\u0027s DDNS to update its address dynamically. Modern devices require the VPN server they connect to to have a certificate. This service only supports single-domain certificates; do not use wildcard certificates (for example, a certificate whose SAN is *.example.com). Three certificate modes are supported: self-signed, where HomeVPN generates a CA and server certificate on first startup; import, which uses the certificate files you upload; and ACME, which uses a certificate obtained through ACME (recommended; for iOS compatibility, request an RSA certificate).')),
 			E('div', { 'class': 'cbi-value' }, [ E('label', { 'class': 'cbi-value-title' }, _('Server address (DDNS/IP)')), E('div', { 'class': 'cbi-value-field' }, sRemote) ]),
 			E('div', { 'class': 'cbi-value' }, [ E('label', { 'class': 'cbi-value-title' }, _('VPN display name')), E('div', { 'class': 'cbi-value-field' }, sName) ]),
 			E('div', { 'class': 'cbi-value' }, [ E('label', { 'class': 'cbi-value-title' }, _('Certificate mode')), E('div', { 'class': 'cbi-value-field' }, sMode) ]),
@@ -394,9 +616,9 @@ return view.extend({
 					'click': ui.createHandlerFn(this, function() {
 						return saveSettings((sPs.value || '').trim(), (sPe.value || '').trim(), (sPc.value || '').trim(), function(r) {
 							if (r && r.ok && !r.precheck_ok)
-								ui.addNotification(null, E('p', _('Refused: %s — the last working configuration stays active.').format(r.precheck_reason || _('precheck failed'))), 'error');
+								ui.addNotification(null, E('p', _('Refused: %s — the last working configuration stays active.').format(backendMessage(r.precheck_reason) || _('precheck failed'))), 'error');
 							if (ok(r, _('Save settings'))) { flash(_('Saved. Server re-provisioned.'), 'info'); reload(); }
-							else { flash(_('Save refused: %s').format((r && r.error) || _('unknown error')), 'error'); reload(); }
+							else { flash(_('Save refused: %s').format(backendMessage(r && r.error) || _('unknown error')), 'error'); reload(); }
 						});
 					})
 				}, _('Save settings')), ' ',
@@ -405,8 +627,8 @@ return view.extend({
 					'click': ui.createHandlerFn(this, function() {
 						return callProvision().then(function(r) {
 							if (r && r.ok && r.provision_ok === false)
-								{ ui.addNotification(null, E('p', _('Provisioning FAILED: %s').format(r.output || _('ACME certificate not found'))), 'error'); return; }
-							if (ok(r, _('Provision'))) { ui.addNotification(null, E('p', _('Provisioning output: %s').format((r && r.output) || '')), 'info'); reload(); }
+								{ ui.addNotification(null, E('p', _('Provisioning FAILED: %s').format(backendMessage(r.output) || _('ACME certificate not found'))), 'error'); return; }
+							if (ok(r, _('Provision'))) { ui.addNotification(null, E('p', _('Provisioning output: %s').format(backendMessage(r && r.output))), 'info'); reload(); }
 						});
 					})
 				}, _('Re-provision now'))
@@ -456,7 +678,7 @@ return view.extend({
 					' ',
 					E('button', { 'class': 'btn cbi-button cbi-button-action', 'click': ui.createHandlerFn(this, function() {
 						return callDownload(u.name, 'sswan').then(function(r) {
-							if (ok(r, _('Generate profile'))) saveBlob(r.sswan, u.name + '.sswan', 'application/json');
+							if (ok(r, _('Generate profile'))) saveBlob(r.sswan, u.name + '.sswan', 'application/vnd.strongswan.profile');
 						});
 					}) }, _('Android .sswan')),
 					' ',
@@ -471,8 +693,28 @@ return view.extend({
 		var nPw = E('input', { 'type': 'text', 'value': '', 'placeholder': _('password'), 'style': 'width:14em' });
 		nodes.appendChild(E('div', { 'class': 'cbi-section' }, [
 			E('h3', {}, _('EAP accounts')),
-			E('p', { 'class': 'cbi-section-descr' },
-				_('Fixed IP pins a user\'s virtual IP in DHCP mode: the username travels as the DHCP client-id and dnsmasq hands out the pinned address. Leave empty for dynamic allocation; applies on the next dial-in.')),
+			E('p', { 'class': 'cbi-section-descr' }, _('Fixed IP: only effective in DHCP mode. When set, dnsmasq assigns a fixed IP to the VPN user by username; leave empty for dynamic allocation. Changes apply on the next connection. The fixed IP must be within the LAN subnet and must not conflict with other devices.')),
+			E('details', { 'id': 'homevpn-client-guide', 'style': 'margin:0 0 1em' }, [
+				E('summary', { 'style': 'cursor:pointer;font-weight:600' }, _('Client connection guide')),
+				E('p', {}, _('Connection steps depend on the "Certificate mode" in "Server settings":')),
+				E('div', { 'style': 'margin:0.75em 0' }, [
+					E('strong', {}, _('Certificate mode: ACME (recommended)')),
+					E('p', {}, _('The CA for an ACME certificate is trusted by mainstream clients, so no CA certificate installation is needed on the client.')),
+					E('p', {}, _('To connect, use the device built-in IKEv2 client (phone or operating system) and enter the server domain, remote identifier (the same as the server domain), EAP username and password.')),
+					E('p', {}, _('You can also download and import a profile (one per VPN user): .mobileconfig for Apple devices and .sswan for Android. Android system client support varies by device; the strongSwan App is recommended.')),
+					E('p', {}, _('Reminder: for iPhone/iPad compatibility, when requesting an ACME certificate, select an option starting with RSA in the "Key length" dropdown under certificate "Advanced settings" to generate an RSA certificate.'))
+				]),
+				E('div', { 'style': 'margin:0.75em 0' }, [
+					E('strong', {}, _('Certificate mode: self-signed (automatically generated)')),
+					E('p', {}, _('In this mode, HomeVPN generates a certificate and signs it with the generated CA certificate. Mainstream clients do not trust self-signed certificates, so import and trust the HomeVPN CA certificate on the client before connecting.')),
+					E('p', {}, _('The profiles provided on this page are recommended (one per VPN user; download using the button after the username).')),
+					E('p', {}, _('Apple devices (iPhone/iPad example): download the .mobileconfig file, transfer it to the device using WeChat or another method, and save it in "Files". Open it in "Files"; the system will prompt you to enable trust in "Settings".')),
+					E('p', {}, _('Then go to Settings → General → About → Certificate Trust Settings and trust the self-signed CA certificate. This VPN connection will appear in the system VPN settings, where you can connect.')),
+					E('p', {}, _('Android: download the .sswan file and import it with the strongSwan App. The CA is imported into the App with the profile; no separate installation in the system certificate store is needed. Enter the account password when importing or connecting; if the file cannot be opened directly, use the App file picker.')),
+					E('p', {}, _('Other clients: download and install the CA certificate, trust it, then manually configure an IKEv2 connection.'))
+				]),
+				E('p', {}, _('ACME certificates are recommended: they are free, quick to obtain, and avoid extra trust steps.'))
+			]),
 			E('div', { 'class': 'table cbi-section-table' }, rows),
 			E('div', { 'class': 'cbi-value', 'style': 'margin-top:1em' }, [
 				E('label', { 'class': 'cbi-value-title' }, _('Add user')),
@@ -491,7 +733,7 @@ return view.extend({
 		nodes.appendChild(E('div', { 'class': 'cbi-section' }, [
 			E('h3', {}, _('Manual client setup (no profile)')),
 			E('p', { 'class': 'cbi-section-descr' },
-				_('For Android 11+ native VPN or other manual clients: download the CA certificate, install it on the device, then create an IKEv2 connection with EAP-MSCHAPv2 (username/password) pointing at the server address above.')),
+				_('For manual IKEv2 setup, enter the server domain, matching remote identifier, EAP username and password. Install the CA first for self-signed certificates; usually this is unnecessary with ACME certificates. See the client connection guide in EAP accounts for device-specific instructions.')),
 			E('div', { 'class': 'cbi-value' }, [
 				E('label', { 'class': 'cbi-value-title' }, _('CA certificate (PEM)')),
 				E('div', { 'class': 'cbi-value-field' }, [

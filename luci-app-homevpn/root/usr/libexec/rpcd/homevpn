@@ -84,8 +84,13 @@ regen_secrets() {
 	# (without load-all, charon keeps its in-memory secrets and EAP auth
 	# for the new user fails with "EAP-MS-CHAPv2 verification failed").
 	if ! /etc/init.d/homevpn regen >/tmp/homevpn-regen.log 2>&1; then
-		logger -t homevpn-rpcd "regen failed: $(tail -1 /tmp/homevpn-regen.log)"
-		return 1
+		json_init
+		json_add_boolean ok 0
+		json_add_boolean saved 1
+		json_add_string error "Changes saved, but application failed."
+		json_add_string output "$(cat /tmp/homevpn-regen.log)"
+		json_dump
+		exit 0
 	fi
 }
 
@@ -108,9 +113,11 @@ cat <<PLIST
 PLIST
 }
 
+hv_rpc_dispatch() {
 case "$1" in
 list)
 	json_init
+	json_add_object "set_enabled"; json_add_boolean enabled 0; json_close_object
 	json_add_object "status";       json_close_object
 	json_add_object "list_users";   json_close_object
 	json_add_object "add_user";     json_add_string name ""; json_add_string password ""; json_close_object
@@ -127,9 +134,22 @@ list)
 call)
 	method="$2"; read -r input; [ -n "$input" ] && json_load "$input"
 	case "$method" in
+	set_enabled)
+		json_get_type enabled_type enabled
+		[ "$enabled_type" = boolean ] || err "enabled must be a boolean"
+		json_get_var enabled enabled
+		case "$enabled" in 0|1) ;; *) err "enabled must be a boolean";; esac
+		out="$(/etc/init.d/homevpn set-enabled "$enabled" 2>&1)"; rc=$?
+		[ "$rc" = 0 ] || err "${out:-service state change failed}"
+		json_init; ok
+		json_add_boolean enabled "$([ "$(cfg enabled)" != 0 ] && echo 1 || echo 0)"
+		json_dump
+		;;
 	status)
 		json_init; ok
-		json_add_boolean running "$(pgrep charon >/dev/null && echo 1 || echo 0)"
+		json_add_boolean enabled "$([ "$(cfg enabled)" != 0 ] && echo 1 || echo 0)"
+		json_add_boolean boot_enabled "$(/etc/init.d/homevpn enabled >/dev/null 2>&1 && echo 1 || echo 0)"
+		json_add_boolean running "$(pidof charon >/dev/null && echo 1 || echo 0)"
 		json_add_boolean listening "$(netstat -lnu 2>/dev/null | grep -qE ':(500|4500) ' && echo 1 || echo 0)"
 		json_add_string  mode "$(active_mode)"
 		json_add_string  remote "$(effective_remote)"
@@ -317,6 +337,15 @@ set_user_ip)
 		json_get_var v_masq masq
 		case "$v_mode" in selfsigned|import|acme) ;; *) v_mode="";; esac
 		case "$v_ipmode" in lansubnet|dhcp|subnet) ;; *) v_ipmode="";; esac
+		# Validate before ANY UCI write, including the unrelated server fields.
+		if [ "${v_ipmode:-$(cfg ip_mode)}" = subnet ]; then
+			printf '%s' "$v_pc" | grep -q '[^[:space:]]' || err "Pool subnet is required in independent subnet mode. Enter a CIDR such as 10.100.1.0/24."
+			printf '%s\n' "$v_pc" | awk -F '[./]' '
+				NR != 1 || NF != 5 { exit 1 }
+				{ for (i = 1; i <= 4; i++) if ($i !~ /^[0-9]+$/ || length($i) > 3 || $i > 255) exit 1;
+				  if ($5 !~ /^[0-9]+$/ || length($5) > 2 || $5 < 8 || $5 > 30) exit 1; }
+			' || err "Enter a valid IPv4 CIDR with a prefix from /8 to /30, such as 10.100.1.0/24."
+		fi
 		prev_mode="$(cfg cert_mode)"
 		# switching to ACME — or changing the domain / server address while
 		# in ACME mode — requires the certificate to exist AND the resulting
@@ -351,23 +380,29 @@ set_user_ip)
 		uci -q set "${CFG}.config.pool_end=${v_pe}"
 		uci -q set "${CFG}.config.pool_subnet=${v_pc}"
 		case "$v_masq" in 1|0) uci -q set "${CFG}.config.masq=${v_masq}" ;; esac
-		uci -q commit "$CFG"
-		# full regen (precheck + render + apply); returns the precheck verdict
+		# Saving and applying are separate outcomes: regen may refuse after commit.
+		uci -q commit "$CFG" || err "Failed to save settings"
 		out="$(/etc/init.d/homevpn regen 2>&1)"; rc=$?
-		json_init; ok
+		applied=0; [ "$rc" = 0 ] && applied=1
+		json_init
+		json_add_boolean ok "$applied"
+		json_add_boolean saved 1
 		json_add_string output "$out"
-		json_add_boolean precheck_ok "$rc"
+		json_add_boolean precheck_ok "$applied"
+		[ "$rc" = 0 ] || json_add_string error "Settings saved, but application failed."
 		json_add_string precheck_reason "$(sed -n 's/^reason=//p' /tmp/homevpn.state 2>/dev/null | head -1)"
 		json_dump
 		;;
 	provision)
 		# (re)run provisioning now: PKI + conf + secrets + firewall + load
 		out="$(/etc/init.d/homevpn provision 2>&1)"; rc=$?
-		json_init; ok
+		json_init
 		json_add_string output "$out"
-		# exit 0 = success; json_add_boolean maps "0" to false — invert
+		# Exit status is not a JSON boolean: zero means success.
 		pok=0; [ "$rc" = 0 ] && pok=1
+		json_add_boolean ok "$pok"
 		json_add_boolean provision_ok "$pok"
+		[ "$rc" = 0 ] || json_add_string error "$out"
 		json_dump
 		;;
 	upload_certs)
@@ -382,7 +417,8 @@ set_user_ip)
 		[ -n "$up_server$up_key$up_ca" ] || err "nothing to upload — pick at least one file"
 
 		T="$(mktemp -d /tmp/homevpn-up.XXXXXX)" || err "mktemp failed"
-		trap 'rm -rf "$T"' EXIT INT TERM
+		trap 'rm -rf "$T"; hv_lock_release' EXIT
+		trap 'exit 1' INT TERM
 		mkdir -p "$T/x509" "$T/x509ca" "$T/private"
 
 		# ---- stage uploads (or fall back to the deployed files) ----
@@ -439,7 +475,10 @@ set_user_ip)
 		# switch to import mode (idempotent) so the app never overwrites these files
 		[ "$(cfg cert_mode)" = "import" ] || { uci -q set "${CFG}.config.cert_mode=import"; uci -q commit "$CFG"; }
 		# hot-reload credentials into the running charon (no restart, clients stay up)
-		swanctl --load-creds --clear --noprompt >/dev/null 2>&1
+		if [ "$(cfg enabled)" != 0 ] && pidof charon >/dev/null; then
+			swanctl --load-creds --clear --noprompt >/dev/null 2>&1 || err "certificates installed, but credential reload failed"
+		fi
+		rm -rf "$T"
 		json_init; ok
 		json_add_string subject "$(openssl x509 -in "$SWANCTL/x509/homevpn-server.crt" -noout -subject 2>/dev/null | sed 's/^subject=//')"
 		json_add_string san "$(openssl x509 -in "$SWANCTL/x509/homevpn-server.crt" -noout -ext subjectAltName 2>/dev/null | tail -n +2 | tr -d ' ' | tr '\n' ',' | sed 's/,$//')"
@@ -524,15 +563,30 @@ set_user_ip)
 			json_init; ok; json_add_string name "$name"; json_add_string mobileconfig "$plist"; json_dump
 			;;
 		sswan)
-			# strongSwan Android app profile (v1.8.0+ JSON import)
+			# Documented minimal Android profile. Proposals are negotiated by the
+			# app; UI algorithm labels must not be guessed into profile strings.
 			caf="$(ca_file)"
-			[ -n "$caf" ] || err "CA not found — run provisioning first"
+			[ -n "$caf" ] && [ -s "$caf" ] || err "CA not found — run provisioning first"
 			[ -n "$REMOTE" ] || err "server address not set — set it in Settings first"
 			idx="$(user_index "$name")"; [ -n "$idx" ] || err "user '$name' not found"
-			pw="$(uci -q get "${CFG}.@user[$idx].password")"
-			ca_b64="$(openssl x509 -in "$caf" -outform DER 2>/dev/null | base64 | tr -d '\n')"
-			u="$(cat /proc/sys/kernel/random/uuid)"
-			sswan="{\"uuid\":\"$u\",\"name\":\"$VPN_NAME\",\"type\":\"ikev2-eap\",\"remote\":{\"addr\":\"$REMOTE\"},\"local\":{\"id\":\"$name\",\"eap_id\":\"$name\"},\"IKE_proposal\":\"$IKE_ENC-$IKE_INT-$IKE_DH,3DES-SHA1-MODP1024\",\"ESP_proposal\":\"$IKE_ENC-$IKE_INT-$IKE_DH,3DES-SHA1\",\"cert\":\"$ca_b64\",\"save_password\":true}"
+			tmpdir="$(mktemp -d /tmp/homevpn-sswan.XXXXXX 2>/dev/null)" || err "unable to prepare CA conversion"
+			der="$tmpdir/ca.der"; b64file="$tmpdir/ca.b64"
+			if ! openssl x509 -in "$caf" -outform DER -out "$der" >/dev/null 2>&1 || [ ! -s "$der" ]; then
+				rm -rf "$tmpdir"; err "CA conversion failed"
+			fi
+			if ! base64 "$der" > "$b64file" || [ ! -s "$b64file" ]; then
+				rm -rf "$tmpdir"; err "CA encoding failed"
+			fi
+			ca_b64="$(tr -d '\n' < "$b64file")" || { rm -rf "$tmpdir"; err "CA encoding failed"; }; rm -rf "$tmpdir"
+			u="$(cat /proc/sys/kernel/random/uuid 2>/dev/null)"
+			printf '%s' "$u" | grep -qE '^[0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[1-5][0-9a-fA-F]{3}-[89abAB][0-9a-fA-F]{3}-[0-9a-fA-F]{12}$' || err "UUID generation failed"
+			sswan_profile() {
+				json_init; json_add_string uuid "$u"; json_add_string name "$VPN_NAME"; json_add_string type "ikev2-eap"
+				json_add_object remote; json_add_string addr "$REMOTE"; json_add_string id "$REMOTE"; json_add_string cert "$ca_b64"; json_close_object
+				json_add_object local; json_add_string id "$name"; json_add_string eap_id "$name"; json_close_object
+				json_dump
+			}
+			sswan="$(sswan_profile)"; [ -n "$sswan" ] || err "profile serialization failed"
 			json_init; ok; json_add_string name "$name"; json_add_string sswan "$sswan"; json_dump
 			;;
 		ca)
@@ -547,4 +601,15 @@ set_user_ip)
 	*) err "unknown method: $method" ;;
 	esac
 	;;
+esac
+}
+
+# Lock the entire transaction, not just the init subprocess after UCI/cert writes.
+# rpcd launches a new shell per request; JSON fields cannot assert lock ownership.
+case "${1:-}:${2:-}" in
+call:set_enabled|call:set_settings|call:add_user|call:del_user|call:set_user_ip|call:provision|call:upload_certs)
+	. /usr/share/homevpn/service-lock.sh || err "service lock unavailable"
+	hv_with_lock hv_rpc_dispatch "$@" || err "HomeVPN service is busy or transaction failed; retry shortly."
+	;;
+*) hv_rpc_dispatch "$@";;
 esac

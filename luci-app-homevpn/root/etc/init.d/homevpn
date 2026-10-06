@@ -74,12 +74,12 @@ fw_add_rule() {
 	# fw_add_rule <name> <uci options...>
 	local name="$1"; shift
 	uci -q get "firewall.$name" >/dev/null 2>&1 && return 0
-	uci set "firewall.$name=rule"
+	uci set "firewall.$name=rule" || return 1
 	while [ $# -gt 0 ]; do
-		uci set "firewall.$name.$1"
+		uci set "firewall.$name.$1" || return 1
 		shift
 	done
-	uci -q commit firewall
+	uci -q commit firewall || return 1
 	FW_ADDED=1
 	logger_tag "firewall: added rule $name"
 }
@@ -90,11 +90,11 @@ ensure_firewall() {
 	# NOTE: uci commit alone does NOT make rules live — fw4 only reads its
 	# config on reload. Reload whenever we added something.
 	FW_ADDED=0
-	fw_add_rule homevpn_isakmp "src=wan" "proto=udp" "dest_port=500" "target=ACCEPT" "name=homevpn-ISAKMP"
-	fw_add_rule homevpn_nat_t   "src=wan" "proto=udp" "dest_port=4500" "target=ACCEPT" "name=homevpn-NAT-T"
-	fw_add_rule homevpn_esp     "src=wan" "proto=esp" "target=ACCEPT" "name=homevpn-ESP"
+	fw_add_rule homevpn_isakmp "src=wan" "proto=udp" "dest_port=500" "target=ACCEPT" "name=homevpn-ISAKMP" || return 1
+	fw_add_rule homevpn_nat_t   "src=wan" "proto=udp" "dest_port=4500" "target=ACCEPT" "name=homevpn-NAT-T" || return 1
+	fw_add_rule homevpn_esp     "src=wan" "proto=esp" "target=ACCEPT" "name=homevpn-ESP" || return 1
 	if [ "$FW_ADDED" = 1 ]; then
-		/etc/init.d/firewall reload >/dev/null 2>&1
+		/etc/init.d/firewall reload >/dev/null 2>&1 || return 1
 		logger_tag "firewall: reloaded to activate homevpn INPUT rules"
 	fi
 }
@@ -102,17 +102,17 @@ ensure_firewall() {
 # Self-signed PKI: CA (RSA 3072) + server cert (SAN=$1, EKU serverAuth).
 gen_selfsigned_pki() {
 	local san="$1" cn="${2:-$1}"
-	mkdir -p "$CA_DIR" "$X509_DIR" "$KEY_DIR"
+	mkdir -p "$CA_DIR" "$X509_DIR" "$KEY_DIR" || return 1
 
 	# CA
 	if [ ! -s "$CA_DIR/homevpn-ca.crt" ] || [ ! -s "$KEY_DIR/homevpn-ca.key" ]; then
-		openssl genrsa -out "$KEY_DIR/homevpn-ca.key" 3072 2>/dev/null
+		openssl genrsa -out "$KEY_DIR/homevpn-ca.key" 3072 2>/dev/null || return 1
 		openssl req -x509 -new -sha256 -days 3650 \
 			-key "$KEY_DIR/homevpn-ca.key" \
 			-out "$CA_DIR/homevpn-ca.crt" \
 			-subj "/CN=HomeVPN Root CA" \
 			-addext "basicConstraints=critical,CA:TRUE" \
-			-addext "keyUsage=critical,keyCertSign,cRLSign" 2>/dev/null
+			-addext "keyUsage=critical,keyCertSign,cRLSign" 2>/dev/null || return 1
 		logger_tag "PKI: generated self-signed CA (RSA 3072, 10y)"
 	fi
 
@@ -120,15 +120,15 @@ gen_selfsigned_pki() {
 	if [ ! -s "$X509_DIR/homevpn-server.crt" ] || [ ! -s "$KEY_DIR/homevpn-server.key" ]; then
 		openssl req -new -sha256 \
 			-key "$KEY_DIR/homevpn-server.key" 2>/dev/null >/dev/null || \
-		openssl genrsa -out "$KEY_DIR/homevpn-server.key" 2048 2>/dev/null
+		openssl genrsa -out "$KEY_DIR/homevpn-server.key" 2048 2>/dev/null || return 1
 		openssl req -new -sha256 \
 			-key "$KEY_DIR/homevpn-server.key" \
 			-out /tmp/homevpn-server.csr \
-			-subj "/CN=$cn" 2>/dev/null
+			-subj "/CN=$cn" 2>/dev/null || return 1
 		# SAN may be an IP address — detect and use IP: form.
 		local sanfmt="DNS:$san"
 		echo "$san" | grep -qE '^[0-9]+\.[0-9]+\.[0-9]+\.[0-9]+$' && sanfmt="IP:$san"
-		cat > /tmp/homevpn-ext.cnf <<EOF
+		cat > /tmp/homevpn-ext.cnf <<EOF || return 1
 basicConstraints=CA:FALSE
 keyUsage=digitalSignature,keyEncipherment
 extendedKeyUsage=serverAuth
@@ -140,8 +140,8 @@ EOF
 			-CAkey "$KEY_DIR/homevpn-ca.key" \
 			-CAcreateserial \
 			-out "$X509_DIR/homevpn-server.crt" \
-			-extfile /tmp/homevpn-ext.cnf 2>/dev/null
-		rm -f /tmp/homevpn-server.csr /tmp/homevpn-ext.cnf "$CA_DIR/homevpn-ca.srl"
+			-extfile /tmp/homevpn-ext.cnf 2>/dev/null || return 1
+		rm -f /tmp/homevpn-server.csr /tmp/homevpn-ext.cnf "$CA_DIR/homevpn-ca.srl" || return 1
 		logger_tag "PKI: issued server cert SAN=$san (RSA 2048, 825d)"
 	fi
 	chmod 600 "$KEY_DIR"/*.key 2>/dev/null
@@ -200,26 +200,26 @@ sync_acme_certs() {
 	# install: stage + rename so charon never reads a half-written file
 	local T
 	T="$(mktemp -d /tmp/homevpn-acme.XXXXXX)" || return 1
-	mkdir -p "$X509_DIR" "$KEY_DIR" "$CA_DIR"
+	mkdir -p "$X509_DIR" "$KEY_DIR" "$CA_DIR" || { rm -rf "$T"; return 1; }
 	# x509/ gets the LEAF ONLY: swanctl --load-creds loads only the FIRST
 	# certificate of a multi-PEM file (VICI load-cert parses one cert), so a
 	# fullchain in x509/ silently drops every intermediate — the server then
 	# answers IKE_AUTH with a bare leaf no client can chain to its trust
 	# anchor (iOS drops silently, "deleting half open IKE_SA after timeout").
-	cp "$src_crt" "$T/server.crt"
-	cp "$src_key" "$T/server.key"
-	chmod 600 "$T/server.key"
+	cp "$src_crt" "$T/server.crt" || { rm -rf "$T"; return 1; }
+	cp "$src_key" "$T/server.key" || { rm -rf "$T"; return 1; }
+	chmod 600 "$T/server.key" || { rm -rf "$T"; return 1; }
 	# strip the chain: keep only the first PEM block (the leaf)
-	awk '/BEGIN CERT/{n++} n==1{print} /END CERT/ && n==1{exit}' "$T/server.crt" > "$T/leaf.crt"
+	awk '/BEGIN CERT/{n++} n==1{print} /END CERT/ && n==1{exit}' "$T/server.crt" > "$T/leaf.crt" || { rm -rf "$T"; return 1; }
 	[ -s "$T/leaf.crt" ] || { logger_tag "ACME: leaf extraction failed for '$domain'"; rm -rf "$T"; return 1; }
-	mv "$T/leaf.crt" "$T/server.crt"
+	mv "$T/leaf.crt" "$T/server.crt" || { rm -rf "$T"; return 1; }
 	# x509ca/ gets every NON-leaf cert of the chain, one file each: charon
 	# assembles the certificate chain it sends from its CA store — separate
 	# files are the only layout it fully loads (one cert per file).
 	install_acme_chain "$src_crt" "$T" || { rm -rf "$T"; return 1; }
-	mv "$T/server.crt" "$X509_DIR/homevpn-server.crt"
-	mv "$T/server.key" "$KEY_DIR/homevpn-server.key"
-	rm -rf "$T"
+	mv "$T/server.crt" "$X509_DIR/homevpn-server.crt" || { rm -rf "$T"; return 1; }
+	mv "$T/server.key" "$KEY_DIR/homevpn-server.key" || { rm -rf "$T"; return 1; }
+	rm -rf "$T" || return 1
 	logger_tag "ACME: synced certificate for $domain (leaf → x509/, chain tail → x509ca/homevpn-acme-NN.crt)"
 }
 
@@ -238,28 +238,28 @@ install_acme_chain() {
 	# tail itself IS needed so iOS/Windows can close the chain to their
 	# preinstalled anchor (ISRG Root X1/X2 ship with the OS).
 	while :; do
-		f="$(extract_chain_cert "$src" "$((i + 1))")"
+		f="$(extract_chain_cert "$src" "$((i + 1))")" || return 1
 		[ -n "$f" ] || break
 		i=$((i + 1))
-		printf '%s\n' "$f" > "$T/homevpn-acme-$(printf '%02d' $i).crt.new"
+		printf '%s\n' "$f" > "$T/homevpn-acme-$(printf '%02d' $i).crt.new" || return 1
 	done
 	n="$i"
 	if [ "$n" -eq 0 ]; then
 		logger_tag "ACME: no chain certificates found in '$src' (leaf only) — keeping whatever is deployed in x509ca/"
-		rm -f "$T"/homevpn-acme-*.crt.new
+		rm -f "$T"/homevpn-acme-*.crt.new || return 1
 		return 0
 	fi
 	# publish: atomic renames, then drop stale files (longer previous chain,
 	# leftovers from an interrupted run, and the pre-r22 single-file layout)
 	i=1
 	while [ "$i" -le "$n" ]; do
-		mv "$T/homevpn-acme-$(printf '%02d' $i).crt.new" "$CA_DIR/homevpn-acme-$(printf '%02d' $i).crt"
+		mv "$T/homevpn-acme-$(printf '%02d' $i).crt.new" "$CA_DIR/homevpn-acme-$(printf '%02d' $i).crt" || return 1
 		i=$((i + 1))
 	done
-	rm -f "$T"/homevpn-acme-*.crt.new
-	rm -f "$CA_DIR/homevpn-acme.crt"
+	rm -f "$T"/homevpn-acme-*.crt.new || return 1
+	rm -f "$CA_DIR/homevpn-acme.crt" || return 1
 	while [ -e "$CA_DIR/homevpn-acme-$(printf '%02d' $((n + 1))).crt" ]; do
-		rm -f "$CA_DIR/homevpn-acme-$(printf '%02d' $((n + 1))).crt"
+		rm -f "$CA_DIR/homevpn-acme-$(printf '%02d' $((n + 1))).crt" || return 1
 		n=$((n + 1))
 	done
 	return 0
@@ -385,17 +385,18 @@ precheck() {
 fw_rule_set() { # <name> <key=value>... — create or update, reload on change
 	local name="$1" key val cur changed=0
 	shift
-	uci -q get "firewall.$name" >/dev/null 2>&1 || { uci set "firewall.$name=rule"; changed=1; }
+	uci -q get "firewall.$name" >/dev/null 2>&1 || { uci set "firewall.$name=rule" || return 1; changed=1; }
 	for kv in "$@"; do
 		key="${kv%%=*}"; val="${kv#*=}"
 		cur="$(uci -q get "firewall.$name.$key")"
-		[ "$cur" = "$val" ] || { uci set "firewall.$name.$kv"; changed=1; }
+		[ "$cur" = "$val" ] || { uci set "firewall.$name.$kv" || return 1; changed=1; }
 	done
-	uci -q commit firewall
-	[ "$changed" = 1 ] && {
-		/etc/init.d/firewall reload >/dev/null 2>&1
+	uci -q commit firewall || return 1
+	if [ "$changed" = 1 ]; then
+		/etc/init.d/firewall reload >/dev/null 2>&1 || return 1
 		logger_tag "firewall: updated rule $name"
-	}
+	fi
+	return 0
 }
 
 apply_client_rules() {
@@ -403,23 +404,32 @@ apply_client_rules() {
 	# has no ipsec/xfrm matching, so client rules are scoped by source IP
 	# only. (The forward rule is belt-and-braces; the include below
 	# additionally short-circuits fw4's flow-offload rule for the same range.)
-	fw_rule_set homevpn_client_input "src=wan" "src_ip=$CLIENT_SRC" "family=ipv4" "target=ACCEPT" "name=homevpn-client-input"
+	fw_rule_set homevpn_client_input "src=wan" "src_ip=$CLIENT_SRC" "family=ipv4" "target=ACCEPT" "name=homevpn-client-input" || return 1
 	fw_rule_set homevpn_client_fwd "src=wan" "src_ip=$CLIENT_SRC" "dest=lan" "family=ipv4" "target=ACCEPT" "name=homevpn-client-fwd"
 }
 
 nft_purge_fw4_forward() {
-	local h
-	for h in $(nft -a list chain inet fw4 forward 2>/dev/null | grep 'comment "homevpn' | sed -n 's/.*handle \([0-9]*\).*/\1/p'); do
-		nft delete rule inet fw4 forward handle "$h" 2>/dev/null
+	local h rules failed=0
+	rules="$(nft -a list chain inet fw4 forward 2>/dev/null)" || return 1
+	for h in $(printf '%s\n' "$rules" | grep 'comment "homevpn' | sed -n 's/.*handle \([0-9]*\).*/\1/p'); do
+		nft delete rule inet fw4 forward handle "$h" 2>/dev/null || failed=1
 	done
+	return "$failed"
 }
 
 drop_client_include() {
-	uci -q delete firewall.homevpn_include
-	uci -q commit firewall
-	nft_purge_fw4_forward
-	nft delete table inet "$NFT_TBL" 2>/dev/null
-	rm -f "$INCLUDE_FILE"
+	local failed=0 tables
+	if uci -q get firewall.homevpn_include >/dev/null; then
+		uci -q delete firewall.homevpn_include || failed=1
+	fi
+	uci -q commit firewall || failed=1
+	nft_purge_fw4_forward || failed=1
+	tables="$(nft list tables 2>/dev/null)" || failed=1
+	if printf '%s\n' "$tables" | grep -q "^table inet $NFT_TBL$"; then
+		nft delete table inet "$NFT_TBL" 2>/dev/null || failed=1
+	fi
+	rm -f "$INCLUDE_FILE" || failed=1
+	return "$failed"
 }
 
 apply_include() { # offload guard (+ masq fallback in subnet mode)
@@ -435,11 +445,11 @@ apply_include() { # offload guard (+ masq fallback in subnet mode)
 		# no offload guard possible for unknown client IPs; the precheck
 		# already refused dhcp mode while flow-offloading is enabled
 		drop_client_include
-		return 0
+		return $?
 	fi
-	mkdir -p /var/etc
+	mkdir -p /var/etc || return 1
 	if [ "$WANT_MASQ" = 1 ]; then
-		cat > "$INCLUDE_FILE" <<EOF
+		cat > "$INCLUDE_FILE" <<EOF || return 1
 #!/bin/sh
 # Auto-generated by homevpn — do not edit by hand.
 # (1) Offload guard: accept VPN pool traffic early in fw4's forward chain so
@@ -449,23 +459,27 @@ apply_include() { # offload guard (+ masq fallback in subnet mode)
 #     take the suggested static route): NAT pool sources to this router.
 # NOTE: rules go in via 'nft -f -' heredoc — the CLI word-splits quoted
 # comments ("homevpn client-src" would arrive as two bare words and fail).
-for h in \$(nft -a list chain inet fw4 forward 2>/dev/null | grep 'comment "homevpn' | sed -n 's/.*handle \([0-9]*\).*/\1/p'); do
-	nft delete rule inet fw4 forward handle "\$h" 2>/dev/null
+rules="\$(nft -a list chain inet fw4 forward 2>/dev/null)" || exit 1
+for h in \$(printf '%s\n' "\$rules" | grep 'comment "homevpn' | sed -n 's/.*handle \([0-9]*\).*/\1/p'); do
+	nft delete rule inet fw4 forward handle "\$h" 2>/dev/null || exit 1
 done
-nft -f - <<'NFT'
+nft -f - <<'NFT' || exit 1
 insert rule inet fw4 forward ip saddr $CLIENT_SRC counter accept comment "homevpn client-src"
 insert rule inet fw4 forward ip daddr $CLIENT_SRC counter accept comment "homevpn client-dst"
 NFT
-nft list table inet $NFT_TBL >/dev/null 2>&1 || {
-	nft add table inet $NFT_TBL
-	nft add chain inet $NFT_TBL postrouting '{ type nat hook postrouting priority srcnat; policy accept; }'
-}
-nft list chain inet $NFT_TBL postrouting 2>/dev/null | grep -q "saddr $POOL_SUBNET" || \\
-	nft add rule inet $NFT_TBL postrouting ip saddr $POOL_SUBNET oifname != "lo" counter masquerade
+tables="\$(nft list tables 2>/dev/null)" || exit 1
+if ! printf '%s\n' "\$tables" | grep -q "^table inet $NFT_TBL\$"; then
+	nft add table inet $NFT_TBL || exit 1
+	nft add chain inet $NFT_TBL postrouting '{ type nat hook postrouting priority srcnat; policy accept; }' || exit 1
+fi
+rules="\$(nft list chain inet $NFT_TBL postrouting 2>/dev/null)" || exit 1
+if ! printf '%s\n' "\$rules" | grep -q "saddr $POOL_SUBNET"; then
+	nft add rule inet $NFT_TBL postrouting ip saddr $POOL_SUBNET oifname != "lo" counter masquerade || exit 1
+fi
 exit 0
 EOF
 	else
-		cat > "$INCLUDE_FILE" <<EOF
+		cat > "$INCLUDE_FILE" <<EOF || return 1
 #!/bin/sh
 # Auto-generated by homevpn — do not edit by hand.
 # Offload guard: accept VPN pool traffic early in fw4's forward chain so it
@@ -473,49 +487,62 @@ EOF
 # policies and blackhole IPsec traffic after the first packets.
 # NOTE: rules go in via 'nft -f -' heredoc — the CLI word-splits quoted
 # comments ("homevpn client-src" would arrive as two bare words and fail).
-for h in \$(nft -a list chain inet fw4 forward 2>/dev/null | grep 'comment "homevpn' | sed -n 's/.*handle \([0-9]*\).*/\1/p'); do
-	nft delete rule inet fw4 forward handle "\$h" 2>/dev/null
+rules="\$(nft -a list chain inet fw4 forward 2>/dev/null)" || exit 1
+for h in \$(printf '%s\n' "\$rules" | grep 'comment "homevpn' | sed -n 's/.*handle \([0-9]*\).*/\1/p'); do
+	nft delete rule inet fw4 forward handle "\$h" 2>/dev/null || exit 1
 done
-nft -f - <<'NFT'
+nft -f - <<'NFT' || exit 1
 insert rule inet fw4 forward ip saddr $CLIENT_SRC counter accept comment "homevpn client-src"
 insert rule inet fw4 forward ip daddr $CLIENT_SRC counter accept comment "homevpn client-dst"
 NFT
 # no masquerade — pool clients keep their real source IPs (the main router
 # has, or gets, the suggested static route)
-nft delete table inet $NFT_TBL 2>/dev/null
+tables="\$(nft list tables 2>/dev/null)" || exit 1
+if printf '%s\n' "\$tables" | grep -q "^table inet $NFT_TBL\$"; then
+	nft delete table inet $NFT_TBL 2>/dev/null || exit 1
+fi
 exit 0
 EOF
 	fi
-	chmod 755 "$INCLUDE_FILE"
+	chmod 755 "$INCLUDE_FILE" || return 1
 	if [ "$(uci -q get firewall.homevpn_include.path)" != "$INCLUDE_FILE" ]; then
-		uci set firewall.homevpn_include=include
-		uci set firewall.homevpn_include.type=script
-		uci set firewall.homevpn_include.path="$INCLUDE_FILE"
-		uci -q delete firewall.homevpn_include.reload
-		uci -q commit firewall
+		uci set firewall.homevpn_include=include || return 1
+		uci set firewall.homevpn_include.type=script || return 1
+		uci set firewall.homevpn_include.path="$INCLUDE_FILE" || return 1
+		if uci -q get firewall.homevpn_include.reload >/dev/null; then
+			uci -q delete firewall.homevpn_include.reload || return 1
+		fi
+		uci -q commit firewall || return 1
 	fi
-	out="$(sh "$INCLUDE_FILE" 2>&1)"
+	out="$(sh "$INCLUDE_FILE" 2>&1)" || { logger_tag "include failed: $out"; return 1; }
 	[ -n "$out" ] && logger_tag "include: $out"
 	if [ "$old_masq" != "$WANT_MASQ" ]; then
 		[ "$WANT_MASQ" = 1 ] && logger_tag "masq fallback ENABLED for $POOL_SUBNET (LAN hosts will see this router's IP as source)"
 		[ "$WANT_MASQ" = 0 ] && logger_tag "masq fallback disabled"
 	fi
+	return 0
 }
 
 apply_subnet_routes() {
-	local old_mode old_pool
+	local old_mode old_pool routes
 	old_mode="$(state_get mode)"; old_pool="$(state_get pool)"
-	# drop a stale pool route from a previous subnet-mode config
+	routes="$(ip route show dev lo 2>/dev/null)" || return 1
+	# Missing stale routes are a legitimate no-op, not a delete error.
 	if [ "$old_mode" = subnet ] && [ -n "$old_pool" ]; then
 		if [ "$MODE" != subnet ] || [ "$old_pool" != "$POOL_SUBNET" ]; then
-			ip route del "$old_pool" dev lo 2>/dev/null && logger_tag "route: removed stale pool route $old_pool dev lo"
+			if printf '%s\n' "$routes" | awk -v p="$old_pool" '$1==p { found=1 } END { exit !found }'; then
+				ip route del "$old_pool" dev lo 2>/dev/null || return 1
+				logger_tag "route: removed stale pool route $old_pool dev lo"
+			fi
 		fi
 	fi
 	if [ "$MODE" = subnet ]; then
-		ip route show dev lo 2>/dev/null | grep -q "^$POOL_SUBNET " || {
-			ip route replace "$POOL_SUBNET" dev lo && logger_tag "route: $POOL_SUBNET dev lo (pool handled locally)"
-		}
+		if ! printf '%s\n' "$routes" | awk -v p="$POOL_SUBNET" '$1==p { found=1 } END { exit !found }'; then
+			ip route replace "$POOL_SUBNET" dev lo || return 1
+			logger_tag "route: $POOL_SUBNET dev lo (pool handled locally)"
+		fi
 	fi
+	return 0
 }
 
 # user-fixed IPs (dhcp mode): render per-user dhcp-host bindings for the local
@@ -537,14 +564,14 @@ render_user_bindings() {
 		done
 	fi
 	if [ "$new" != "$(cat "$DHCPHOST_FILE" 2>/dev/null)" ]; then
-		mkdir -p /tmp/dnsmasq.d
+		mkdir -p /tmp/dnsmasq.d || return 1
 		# out-of-range IPs are fine (verified: dnsmasq hands static
 		# dhcp-host IPs even outside dhcp-range); an occupied / in-use IP
 		# would have been rejected by set_user_ip at config time — if the
 		# network changed under us since, dnsmasq refuses the config on
 		# start (conflict) and logread shows it, fail-fast visible.
-		printf '%s' "$new" > "$DHCPHOST_FILE"
-		/etc/init.d/dnsmasq restart 2>/dev/null
+		printf '%s' "$new" > "$DHCPHOST_FILE" || return 1
+		/etc/init.d/dnsmasq restart 2>/dev/null || return 1
 		logger_tag "dnsmasq bindings: $(grep -c '^dhcp-host' "$DHCPHOST_FILE") user-fixed IP(s) — dnsmasq restarted"
 	fi
 }
@@ -579,8 +606,8 @@ render_plugin_conf() { # sets PLUGIN_RESTART=1 when the dhcp plugin conf changed
 # NOTE: this file is included INSIDE charon.plugins{} (see /etc/strongswan.conf)."
 	fi
 	if [ ! -f "$PLUGIN_FILE" ] || [ "$(cat "$PLUGIN_FILE" 2>/dev/null)" != "$new" ]; then
-		mkdir -p /etc/strongswan.d/charon
-		printf '%s\n' "$new" > "$PLUGIN_FILE"
+		mkdir -p /etc/strongswan.d/charon || return 1
+		printf '%s\n' "$new" > "$PLUGIN_FILE" || return 1
 		PLUGIN_RESTART=1
 	else
 		PLUGIN_RESTART=0
@@ -618,9 +645,9 @@ render_conf() {
 		pools_block=""
 		;;
 	esac
-	mkdir -p "$SWANCTL_DIR/conf.d"
+	mkdir -p "$SWANCTL_DIR/conf.d" || return 1
 	{
-		cat <<EOF
+		cat <<EOF || return 1
 # Auto-generated by homevpn — do not edit by hand.
 # mode=$MODE pool=$POOL_SPEC
 connections {
@@ -656,24 +683,24 @@ connections {
     }
 }
 EOF
-		[ -n "$pools_block" ] && printf '%s\n' "$pools_block"
+		if [ -n "$pools_block" ]; then printf '%s\n' "$pools_block" || return 1; fi
 	} > "$CONN_FILE"
 }
 
 regen_secrets() {
-	mkdir -p "$(dirname "$SECRETS_FILE")"
+	mkdir -p "$(dirname "$SECRETS_FILE")" || return 1
 	{
-		echo "# auto-generated by homevpn — do not edit by hand"
-		echo "secrets {"
+		echo "# auto-generated by homevpn — do not edit by hand" || return 1
+		echo "secrets {" || return 1
 		local i=0 name pw
 		while uci -q get "$CFG.@user[$i]" >/dev/null 2>&1; do
 			name="$(uci -q get "$CFG.@user[$i].name")"
 			pw="$(uci -q get "$CFG.@user[$i].password")"
-			[ -n "$name" ] && [ -n "$pw" ] && printf '    eap-%s {\n        id = %s\n        secret = "%s"\n    }\n' "$name" "$name" "$pw"
+			if [ -n "$name" ] && [ -n "$pw" ]; then printf '    eap-%s {\n        id = %s\n        secret = "%s"\n    }\n' "$name" "$name" "$pw" || return 1; fi
 			i=$((i+1))
 		done
-		echo "}"
-	} > "$SECRETS_FILE"
+		echo "}" || return 1
+	} > "$SECRETS_FILE" || return 1
 	chmod 600 "$SECRETS_FILE"
 }
 
@@ -692,8 +719,8 @@ provision_certs() {
 			# (a previously synced/imported cert keeps serving) and say so.
 			logger_tag "ACME sync failed — keeping the deployed certificate (none deployed yet: issue it in Services → Let's Encrypt and re-provision)"
 			# provision/reboot path: signal the failure to the caller (the
-			# rpcd provision handler surfaces it in the UI); boot tolerates
-			# it and keeps serving with whatever is deployed.
+			# rpcd provision handler surfaces it in the UI). Boot/reload also
+			# fail without claiming a successful apply.
 			ACME_SYNC_FAILED=1
 			return 1
 		fi
@@ -703,7 +730,7 @@ provision_certs() {
 		[ -s "$X509_DIR/homevpn-server.crt" ] || logger_tag "import mode: no server cert present yet"
 		;;
 	selfsigned)
-		gen_selfsigned_pki "$(effective_remote)"
+		gen_selfsigned_pki "$(effective_remote)" || return 1
 		;;
 	*)
 		logger_tag "cert_mode '$mode' unknown — no certificate provisioned (set selfsigned/import/acme)"
@@ -739,14 +766,13 @@ refuse_no_lan() {
 }
 
 apply_config() { # $1 = "start" (restart charon) or "regen" (surgical reload)
+	[ "$(hv_get enabled)" != 0 ] || return 0
 	if ! precheck; then
 		# Refused: the last-applied conf stays live, but fresh EAP secrets
 		# must still reach charon (user add/del while a precheck refuses).
-		regen_secrets
-		if [ "$1" = start ]; then
-			/etc/init.d/swanctl restart >/dev/null 2>&1
-		else
-			swanctl --load-all >/tmp/homevpn-load.log 2>&1 || logger_tag "swanctl load-all failed: $(tail -1 /tmp/homevpn-load.log)"
+		regen_secrets || return 1
+		if [ "$1" != start ]; then
+			swanctl --load-all >/tmp/homevpn-load.log 2>&1 || logger_tag "swanctl load-all failed"
 		fi
 		return 1
 	fi
@@ -754,33 +780,35 @@ apply_config() { # $1 = "start" (restart charon) or "regen" (surgical reload)
 	# apply_config regen. Without rewriting the secrets file here, charon kept
 	# the previous (possibly empty) file and the new user failed EAP with
 	# "no EAP key found" — the client reports "wrong password" and drops.
-	regen_secrets
-	render_plugin_conf
-	render_user_bindings
-	render_conf
-	apply_include
-	apply_client_rules
-	apply_subnet_routes
+	regen_secrets || { hv_error "regen_secrets failed"; return 1; }
+	render_plugin_conf || { hv_error "render_plugin_conf failed"; return 1; }
+	render_user_bindings || { hv_error "render_user_bindings failed"; return 1; }
+	render_conf || { hv_error "render_conf failed"; return 1; }
+	apply_include || { hv_error "apply_include failed"; return 1; }
+	apply_client_rules || { hv_error "apply_client_rules failed"; return 1; }
+	apply_subnet_routes || { hv_error "apply_subnet_routes failed"; return 1; }
 	if [ "$1" = start ] || [ "$PLUGIN_RESTART" = 1 ]; then
-		/etc/init.d/swanctl restart >/dev/null 2>&1
+		/etc/init.d/swanctl restart >/dev/null 2>&1 || { hv_error "strongSwan start failed"; return 1; }
 		[ "$PLUGIN_RESTART" = 1 ] && [ "$1" != start ] && logger_tag "dhcp plugin config changed — charon restarted (connected clients reconnect)"
 	else
 		# swanctl --load-all reloads conns+secrets+pools in place;
 		# existing SAs survive.
-		swanctl --load-all >/tmp/homevpn-load.log 2>&1 || logger_tag "swanctl load-all failed: $(tail -1 /tmp/homevpn-load.log)"
+		swanctl --load-all >/tmp/homevpn-load.log 2>&1 || { hv_error "strongSwan configuration load failed"; return 1; }
 	fi
-	hv_state "result=ok" "mode=$MODE" "pool=$POOL_SPEC" "masq=$WANT_MASQ" "lan_net=$LAN_NET" "suggest=$SUGGEST"
+	hv_state "result=ok" "mode=$MODE" "pool=$POOL_SPEC" "masq=$WANT_MASQ" "lan_net=$LAN_NET" "suggest=$SUGGEST" || return 1
 	logger_tag "applied: mode=$MODE pool=$POOL_SPEC masq=$WANT_MASQ"
 	return 0
 }
 
-start_service() {
+hv_start() {
+	[ "$(hv_get enabled)" != 0 ] || return 0
+	hv_exclusive || return 1
 	# Guard: refuse to start before the config exists.
 	[ -s /etc/config/$CFG ] || { logger_tag "no /etc/config/$CFG — refusing to start" ; return 1; }
 	load_env
 	[ -n "$LAN_ADDR" ] || { refuse_no_lan; return 1; }
-	ensure_firewall
-	provision_certs
+	ensure_firewall || { hv_error "INPUT firewall apply failed"; return 1; }
+	provision_certs || return 1
 	# regen_secrets lives inside apply_config now (single source of truth,
 	# runs on both refused and success paths).
 	apply_config start
@@ -791,31 +819,31 @@ service_triggers() {
 	# homevpn config changes are NOT hooked: the LuCI backend regenerates
 	# explicitly — a procd trigger here would full-restart charon (dropping
 	# every client) on each EAP-user add/del or settings save.
+	[ "$(hv_get enabled)" != 0 ] || return 0
 	procd_add_reload_trigger "network"
 }
 
 extra_command "provision" "Run full provisioning now (PKI + conf + secrets + firewall)"
 provision() {
-	ACME_SYNC_FAILED=0
 	start_service
-	if [ "$ACME_SYNC_FAILED" = 1 ]; then
-		echo "homevpn: ACME sync FAILED — the previously deployed certificate (if any) keeps serving; issue the certificate in Services → Let's Encrypt first" >&2
-		return 1
-	fi
 }
 
 extra_command "regen" "Regenerate + precheck + apply config (keeps charon running when possible)"
-regen() {
+hv_regen() {
+	[ "$(hv_get enabled)" != 0 ] || return 0
+	hv_exclusive || return 1
 	load_env
 	[ -n "$LAN_ADDR" ] || { refuse_no_lan; return 1; }
 	# provision_certs: a cert_mode change flows through set_settings → regen;
 	# without the sync here a switch to ACME never copied the certificate.
-	provision_certs
+	provision_certs || return 1
 	apply_config regen
 }
 
 extra_command "sync-acme" "Re-sync the ACME certificate into swanctl and hot-reload credentials (for the acme hotplug hook)"
-sync-acme() {
+hv_sync_acme() {
+	[ "$(hv_get enabled)" != 0 ] || return 0
+	hv_exclusive || return 1
 	load_env
 	# Only meaningful in ACME mode — the hook fires for EVERY domain the
 	# Let's Encrypt app manages; other domains are not ours to sync.
@@ -836,14 +864,11 @@ reload_service() {
 	start_service
 }
 
-stop_service() {
-	# nothing to stop — charon belongs to the strongswan service
-	:
-}
-
 boot() {
 	start_service
 }
+
+. /usr/share/homevpn/service-control.sh
 
 extra_command "status" "Show provisioning status"
 status() {

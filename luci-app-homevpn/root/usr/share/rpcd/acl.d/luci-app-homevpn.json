@@ -9,7 +9,7 @@
 		},
 		"write": {
 			"ubus": {
-				"homevpn": [ "add_user", "del_user", "set_user_ip", "set_settings", "provision", "upload_certs" ]
+				"homevpn": [ "set_enabled", "add_user", "del_user", "set_user_ip", "set_settings", "provision", "upload_certs" ]
 			},
 			"uci": [ "homevpn" ],
 			"file": {

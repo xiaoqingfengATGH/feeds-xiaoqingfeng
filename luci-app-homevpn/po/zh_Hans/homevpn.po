@@ -1,0 +1,1056 @@
+msgid ""
+msgstr ""
+"Project-Id-Version: HomeVPN 2.1.0\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"PO-Revision-Date: 2026-10-05 00:00+0800\n"
+"Last-Translator: HomeLede\n"
+"Language-Team: Simplified Chinese\n"
+"Language: zh_Hans\n"
+"Plural-Forms: nplurals=1; plural=0;\n"
+
+#: htdocs/luci-static/resources/view/homevpn/overview.js
+#, c-format
+msgid "%s (not applied — IP mode is not DHCP)"
+msgstr "%s（未生效——IP 分配模式不是 DHCP）"
+
+#: htdocs/luci-static/resources/view/homevpn/overview.js
+#, c-format
+msgid "%s answers ping — already occupied by a LAN host"
+msgstr "%s 响应 ping，已被局域网设备占用"
+
+#: htdocs/luci-static/resources/view/homevpn/overview.js
+#, c-format
+msgid "%s failed: %s"
+msgstr "%s失败：%s"
+
+#: htdocs/luci-static/resources/view/homevpn/overview.js
+#, c-format
+msgid "%s is in an active DHCP lease"
+msgstr "%s 已被有效的 DHCP 租约占用"
+
+#: htdocs/luci-static/resources/view/homevpn/overview.js
+#, c-format
+msgid "%s is outside the LAN subnet (%s on %s) — the pool must be carved from the LAN subnet"
+msgstr "%s 不在局域网子网内（%s，接口 %s），地址池必须从局域网子网中划出"
+
+#: htdocs/luci-static/resources/view/homevpn/overview.js
+#, c-format
+msgid "%s: not a PEM text file — export Base64 PEM (a .p12/.der needs converting first)."
+msgstr "%s：不是 PEM 文本文件——请导出为 Base64 PEM 格式（.p12/.der 文件需先转换）。"
+
+#: htdocs/luci-static/resources/view/homevpn/overview.js
+#, c-format
+msgid "%s; keeping previous settings"
+msgstr "%s；保留之前的设置"
+
+#: htdocs/luci-static/resources/view/homevpn/overview.js
+#, c-format
+msgid "Example: %s"
+msgstr "示例：%s"
+
+#: htdocs/luci-static/resources/view/homevpn/overview.js
+msgid "(none deployed)"
+msgstr "（尚未部署）"
+
+#: htdocs/luci-static/resources/view/homevpn/overview.js
+msgid "(none)"
+msgstr "（无）"
+
+#: htdocs/luci-static/resources/view/homevpn/overview.js
+msgid "(not deployed)"
+msgstr "（尚未部署）"
+
+#: htdocs/luci-static/resources/view/homevpn/overview.js
+msgid "(not set — WAN IP will be used)"
+msgstr "（未设置——将使用 WAN IP）"
+
+#: htdocs/luci-static/resources/view/homevpn/overview.js
+msgid "A single available key type is selected automatically. If both exist, choose RSA or ECC. Source: /etc/acme, then /etc/ssl/acme."
+msgstr "只有一种可用密钥类型时会自动选择；两种类型均存在时，请选择 RSA 或 ECC。依次查找 /etc/acme 和 /etc/ssl/acme。"
+
+#: htdocs/luci-static/resources/view/homevpn/overview.js
+msgid "ACME (Let's Encrypt)"
+msgstr "使用ACME管理的证书"
+
+#: htdocs/luci-static/resources/view/homevpn/overview.js
+msgid "ACME / Let's Encrypt"
+msgstr "ACME / Let's Encrypt"
+
+#: htdocs/luci-static/resources/view/homevpn/overview.js
+msgid "ACME certificate not found"
+msgstr "未找到 ACME 证书"
+
+#: htdocs/luci-static/resources/view/homevpn/overview.js
+msgid "ACME domain"
+msgstr "ACME 域名"
+
+#: htdocs/luci-static/resources/view/homevpn/overview.js
+msgid "ACME domain is empty — set it to the domain issued in Services → Let's Encrypt"
+msgstr "ACME 域名为空，请填写“服务 → Let's Encrypt”中已签发证书的域名"
+
+#: htdocs/luci-static/resources/view/homevpn/overview.js
+msgid "Add"
+msgstr "添加"
+
+#: htdocs/luci-static/resources/view/homevpn/overview.js
+msgid "Add user"
+msgstr "添加用户"
+
+#: htdocs/luci-static/resources/view/homevpn/overview.js
+#, c-format
+msgid "Added \"%s\"."
+msgstr "已添加“%s”。"
+
+#: htdocs/luci-static/resources/view/homevpn/overview.js
+msgid "Android .sswan"
+msgstr "Android .sswan"
+
+#: htdocs/luci-static/resources/view/homevpn/overview.js
+#, c-format
+msgid "Applied. Mode: %s, pool: %s"
+msgstr "已应用。模式：%s，地址池：%s"
+
+#: htdocs/luci-static/resources/view/homevpn/overview.js
+msgid "Apply"
+msgstr "应用"
+
+#: htdocs/luci-static/resources/view/homevpn/overview.js
+msgid "Apply IP settings"
+msgstr "应用VPN客户端IP分配模式"
+
+#: htdocs/luci-static/resources/view/homevpn/overview.js
+msgid "Applying re-runs the prechecks and (re)loads the swanctl config; existing VPN connections survive whenever possible."
+msgstr "应用时会重新执行预检查并加载 swanctl 配置，尽可能保留现有 VPN 连接。"
+
+#: htdocs/luci-static/resources/view/homevpn/overview.js
+msgid "CA (for client profiles)"
+msgstr "CA（用于客户端配置文件）"
+
+#: htdocs/luci-static/resources/view/homevpn/overview.js
+msgid "CA certificate"
+msgstr "CA 证书"
+
+#: htdocs/luci-static/resources/view/homevpn/overview.js
+msgid "CA certificate (PEM)"
+msgstr "CA 证书（PEM）"
+
+#: htdocs/luci-static/resources/view/homevpn/overview.js
+msgid "CA certificate (for clients)"
+msgstr "CA 证书（供客户端使用）"
+
+#: htdocs/luci-static/resources/view/homevpn/overview.js
+msgid "CA certificate does not sign the server certificate — import the issuer CA, or leave the CA field empty to keep the current one"
+msgstr "CA 证书并非服务器证书的签发者，请导入签发 CA，或留空 CA 字段以保留当前 CA"
+
+#: htdocs/luci-static/resources/view/homevpn/overview.js
+#, c-format
+msgid "CA certificate: not a valid PEM certificate — %s"
+msgstr "CA 证书不是有效的 PEM 证书：%s"
+
+#: htdocs/luci-static/resources/view/homevpn/overview.js
+msgid "CA installed — client profiles will embed it."
+msgstr "CA 已安装，将嵌入客户端配置文件。"
+
+#: htdocs/luci-static/resources/view/homevpn/overview.js
+msgid "CA not found — run provisioning first"
+msgstr "未找到 CA，请先配置服务器"
+
+#: htdocs/luci-static/resources/view/homevpn/overview.js
+msgid "Certificate SAN matches server address"
+msgstr "证书 SAN 与服务器地址匹配"
+
+#: htdocs/luci-static/resources/view/homevpn/overview.js
+#, c-format
+msgid "Certificate imported: %s — SAN %s, expires %s."
+msgstr "证书已导入：%s——SAN：%s，到期时间：%s。"
+
+#: htdocs/luci-static/resources/view/homevpn/overview.js
+msgid "Certificate mode"
+msgstr "证书模式"
+
+#: htdocs/luci-static/resources/view/homevpn/overview.js
+msgid "Certificate query failed. Edit the domain or retry; this does not mean no certificate was found."
+msgstr "证书查询失败。请修改域名或重试；这并不表示未找到证书。"
+
+#: htdocs/luci-static/resources/view/homevpn/overview.js
+msgid "Check again"
+msgstr "重新检查"
+
+#: htdocs/luci-static/resources/view/homevpn/overview.js
+msgid "Checking local certificates…"
+msgstr "正在检查本地证书…"
+
+#: htdocs/luci-static/resources/view/homevpn/overview.js
+msgid "Clear"
+msgstr "清除"
+
+#: htdocs/luci-static/resources/view/homevpn/overview.js
+msgid "Clear fixed IP"
+msgstr "清除固定 IP"
+
+#: htdocs/luci-static/resources/view/homevpn/overview.js
+msgid "Client IP allocation"
+msgstr "VPN客户端IP分配模式"
+
+#: htdocs/luci-static/resources/view/homevpn/overview.js
+msgid "Client config + actions"
+msgstr "客户端配置及操作"
+
+#: htdocs/luci-static/resources/view/homevpn/overview.js
+msgid "Obtain addresses via local DHCP so VPN clients share the same subnet as local devices. This mode requires local dnsmasq and is only available when this device provides DHCP service for the LAN. Supports mDNS/AirPlay. To assign fixed IPs to VPN users, use the \"Fixed IP (DHCP mode)\" column in the \"EAP accounts\" section. This mode is unavailable when firewall flow offloading is enabled."
+msgstr "通过本机DHCP获取地址，VPN客户端获得与本地设备相同网段的IP，此模式依赖本机dnsmasq，本机负责局域网DHCP服务时才可以使用。支持 mDNS/AirPlay。此模式支持为VPN用户分配固定 IP，在\"EAP 账户\"区域\"固定 IP（DHCP 模式）\"列设置。当防火墙开启流量卸载时此模式不可用。"
+
+#: htdocs/luci-static/resources/view/homevpn/overview.js
+msgid "Clients use a subnet separate from the local LAN; recommended when this device is the main LAN router. When this device is a side router, expand the main-router static route guidance below after applying so local LAN devices can reach VPN users (VPN users can still access local LAN devices without it); enable \"Masquerade fallback\" only if a static route cannot be added on the main router"
+msgstr "客户端使用独立于本地局域网的网段，本机作为局域网主路由时推荐使用。本机用于旁路由时，需在主路由上添加独立地址池子网的静态路由（应用后可在下方展开“主路由静态路由（旁路由场景）”查看建议命令）才可实现本地局域网设备访问VPN用户（VPN用户访问本地局域网设备不受影响）；如果无法在主路由添加静态路由，才开启“后备地址伪装”"
+
+#: htdocs/luci-static/resources/view/homevpn/overview.js
+msgid "Configuration check refused:"
+msgstr "配置检查未通过："
+
+#: htdocs/luci-static/resources/view/homevpn/overview.js
+msgid "Connected clients"
+msgstr "已连接客户端"
+
+#: htdocs/luci-static/resources/view/homevpn/overview.js
+msgid "Connection loaded in charon"
+msgstr "charon 中的连接配置"
+
+#: htdocs/luci-static/resources/view/homevpn/overview.js
+msgid "DHCP (local dnsmasq)"
+msgstr "DHCP（本机 dnsmasq）"
+
+#: htdocs/luci-static/resources/view/homevpn/overview.js
+msgid "Obtain an address via local DHCP"
+msgstr "通过本机DHCP获取地址"
+
+#: htdocs/luci-static/resources/view/homevpn/overview.js
+msgid "Delete"
+msgstr "删除"
+
+#: htdocs/luci-static/resources/view/homevpn/overview.js
+#, c-format
+msgid "Delete user \"%s\"? They will no longer be able to connect."
+msgstr "确定删除用户“%s”吗？删除后该用户将无法连接。"
+
+#: htdocs/luci-static/resources/view/homevpn/overview.js
+msgid "Download CA"
+msgstr "下载 CA"
+
+#: htdocs/luci-static/resources/view/homevpn/overview.js
+msgid "Download CA certificate"
+msgstr "下载 CA 证书"
+
+#: htdocs/luci-static/resources/view/homevpn/overview.js
+msgid "EAP accounts"
+msgstr "EAP 账户"
+
+#: htdocs/luci-static/resources/view/homevpn/overview.js
+msgid "ECC (ECDSA)"
+msgstr "ECC (ECDSA)"
+
+#: htdocs/luci-static/resources/view/homevpn/overview.js
+msgid "EXPIRED"
+msgstr "已过期"
+
+#: htdocs/luci-static/resources/view/homevpn/overview.js
+msgid "Enter a username and password."
+msgstr "请输入用户名和密码。"
+
+#: htdocs/luci-static/resources/view/homevpn/overview.js
+msgid "Enter the domain to look for local certificates."
+msgstr "输入域名以查找本地证书。"
+
+#: htdocs/luci-static/resources/view/homevpn/overview.js
+msgid "Firewall INPUT rules (500/4500/ESP)"
+msgstr "防火墙 INPUT 规则（500/4500/ESP）"
+
+#: htdocs/luci-static/resources/view/homevpn/overview.js
+msgid "Fixed IP (DHCP mode)"
+msgstr "固定 IP（DHCP 模式）"
+
+#: htdocs/luci-static/resources/view/homevpn/overview.js
+#, c-format
+msgid "Fixed IP for \"%s\" cleared — dynamic allocation again."
+msgstr "已清除“%s”的固定 IP，恢复动态分配。"
+
+#: htdocs/luci-static/resources/view/homevpn/overview.js
+#, c-format
+msgid "Fixed IP for \"%s\": %s — applies on the next dial-in."
+msgstr "“%s”的固定 IP：%s——下次连接时生效。"
+
+#: htdocs/luci-static/resources/view/homevpn/overview.js
+msgid "Generate profile"
+msgstr "生成配置文件"
+
+#: htdocs/luci-static/resources/view/homevpn/overview.js
+msgid "DHCP (real LAN leases via local dnsmasq)"
+msgstr "DHCP（通过本机 dnsmasq 获取真实局域网租约）"
+
+msgid "Applying service state…"
+msgstr "正在应用服务状态…"
+
+msgid "Service state unavailable. Refresh before trying again."
+msgstr "无法获取服务状态，请刷新后重试。"
+
+msgid "Enable HomeVPN"
+msgstr "启用 HomeVPN"
+
+msgid "Disable HomeVPN"
+msgstr "关闭 HomeVPN"
+
+msgid "Disabled, but strongSwan is still running — retry or check the conflict."
+msgstr "已禁用，但 strongSwan 仍在运行，请重试或检查冲突。"
+
+msgid "Disabled — strongSwan stopped"
+msgstr "已关闭 — strongSwan 已停止"
+
+msgid "Enabled — HomeVPN connection loaded"
+msgstr "已启用 — HomeVPN 连接已加载"
+
+msgid "Enabled, but HomeVPN is not ready"
+msgstr "已启用，但 HomeVPN 尚未就绪"
+
+msgid "HomeVPN service"
+msgstr "HomeVPN 服务"
+
+msgid "Disabling disconnects VPN clients and stops strongSwan. HomeVPN requires exclusive use of strongSwan."
+msgstr "关闭将断开 VPN 连接并停止 strongSwan。HomeVPN 需要独占 strongSwan。"
+
+msgid "HomeVPN"
+msgstr "HomeVPN"
+
+#: htdocs/luci-static/resources/view/homevpn/overview.js
+#, c-format
+msgid "HomeVPN configuration refused: %s"
+msgstr "HomeVPN 配置被拒绝：%s"
+
+#: htdocs/luci-static/resources/view/homevpn/overview.js
+msgid "Homelede customized IKEv2 + EAP-MSCHAPv2 VPN server, supporting the default clients on iOS, Android, Windows and MacOS for convenient device access to your home network."
+msgstr "Homelede 定制的 IKEv2＋EAP-MSCHAPv2 VPN服务器，支持iOS、Android、Windows、MacOS默认客户端接入，实现设备便捷接入家庭网络。"
+
+#: htdocs/luci-static/resources/view/homevpn/overview.js
+msgid "How VPN clients get their virtual IP. Every mode is prechecked before applying (pool occupancy on the LAN, DHCP availability, subnet conflicts) — a failed check refuses the change and keeps the last working configuration, with the reason shown in the status banner above."
+msgstr "设置 VPN 客户端获取虚拟 IP 的方式。应用前会检查局域网地址池占用、DHCP 可用性和子网冲突；检查失败时拒绝更改，保留上一次可用配置，并在上方状态提示中显示原因。"
+
+#: htdocs/luci-static/resources/view/homevpn/overview.js
+#, c-format
+msgid "IP %s already pinned to user '%s'"
+msgstr "IP %s 已绑定到用户“%s”"
+
+#: htdocs/luci-static/resources/view/homevpn/overview.js
+msgid "IP allocation mode"
+msgstr "IP 分配模式"
+
+#: htdocs/luci-static/resources/view/homevpn/overview.js
+msgid "IP allocation mode (applied)"
+msgstr "VPN客户端IP分配模式"
+
+#: htdocs/luci-static/resources/view/homevpn/overview.js
+msgid "IP equals the router LAN address"
+msgstr "IP 与路由器局域网地址相同"
+
+#: htdocs/luci-static/resources/view/homevpn/overview.js
+#, c-format
+msgid "IP must be in the LAN subnet (%s expected)"
+msgstr "IP 必须位于局域网子网中（应为 %s）"
+
+#: htdocs/luci-static/resources/view/homevpn/overview.js
+msgid "Import certificate"
+msgstr "导入证书"
+
+#: htdocs/luci-static/resources/view/homevpn/overview.js
+msgid "Import own certificate"
+msgstr "导入自有证书"
+
+#: htdocs/luci-static/resources/view/homevpn/overview.js
+msgid "Import own certificate (PEM)"
+msgstr "导入自有证书（PEM）"
+
+#: htdocs/luci-static/resources/view/homevpn/overview.js
+msgid "Imported"
+msgstr "已导入"
+
+#: htdocs/luci-static/resources/view/homevpn/overview.js
+msgid "Imported certificate"
+msgstr "已导入的证书"
+
+#: htdocs/luci-static/resources/view/homevpn/overview.js
+msgid "Independent subnet"
+msgstr "独立子网"
+
+#: htdocs/luci-static/resources/view/homevpn/overview.js
+msgid "Issuer"
+msgstr "签发者"
+
+#: htdocs/luci-static/resources/view/homevpn/overview.js
+msgid "LAN subnet pool + ARP proxy"
+msgstr "局域网子网地址池 + ARP 代理"
+
+#: htdocs/luci-static/resources/view/homevpn/overview.js
+msgid "Listening (500/4500)"
+msgstr "端口监听（500/4500）"
+
+#: htdocs/luci-static/resources/view/homevpn/overview.js
+msgid "Local certificate found. The server address will be checked against its SAN when saving."
+msgstr "已找到本地证书。保存时将检查服务器地址是否与证书 SAN 匹配。"
+
+#: htdocs/luci-static/resources/view/homevpn/overview.js
+msgid "MISMATCH — server address must be an exact SAN (wildcards never match)"
+msgstr "不匹配——服务器地址必须与某个 SAN 完全一致（不支持通配符匹配）"
+
+#: htdocs/luci-static/resources/view/homevpn/overview.js
+msgid "Manual client setup (no profile)"
+msgstr "手动配置客户端（不使用配置文件）"
+
+#: htdocs/luci-static/resources/view/homevpn/overview.js
+msgid "Masquerade fallback"
+msgstr "后备地址伪装"
+
+#: htdocs/luci-static/resources/view/homevpn/overview.js
+msgid "No CA uploaded — the deployed CA (if any) keeps serving client profiles."
+msgstr "未上传 CA，将继续使用已部署的 CA（如有）生成客户端配置文件。"
+
+#: htdocs/luci-static/resources/view/homevpn/overview.js
+msgid "No certificate deployed yet. Upload the server certificate, its private key, and the CA certificate clients should trust (e.g. your NAS/ACME issuer CA)."
+msgstr "尚未部署证书。请上传服务器证书、对应私钥，以及客户端应信任的 CA 证书（例如 NAS/ACME 的签发 CA）。"
+
+#: htdocs/luci-static/resources/view/homevpn/overview.js
+msgid "No usable local certificate found for this domain. Issue a certificate in Services → Let's Encrypt first."
+msgstr "未找到此域名的可用本地证书。请先在“服务 → Let's Encrypt”中签发证书。"
+
+#: htdocs/luci-static/resources/view/homevpn/overview.js
+msgid "No users yet."
+msgstr "尚无用户。"
+
+#: htdocs/luci-static/resources/view/homevpn/overview.js
+msgid "Off (static route preferred)"
+msgstr "关闭（优先使用静态路由）"
+
+#: htdocs/luci-static/resources/view/homevpn/overview.js
+msgid "On (fallback: main router cannot route)"
+msgstr "开启（后备方案：主路由无法配置路由）"
+
+#: htdocs/luci-static/resources/view/homevpn/overview.js
+msgid "Pool carved from the LAN subnet (default .50-.99) — suitable for side routers where the main router provides DHCP; keep the main router DHCP allocation range clear of the addresses reserved on this device for VPN clients"
+msgstr "从局域网子网划出地址池（默认 .50-.99）—— 适合旁路由使用，此时DHCP是主路由负责，注意让主路由DHCP分配IP范围避开本机为VPN客户端预留的范围"
+
+#: htdocs/luci-static/resources/view/homevpn/overview.js
+msgid "Pool end"
+msgstr "地址池结束地址"
+
+#: htdocs/luci-static/resources/view/homevpn/overview.js
+msgid "Pool end is not a valid IP address."
+msgstr "地址池结束地址不是有效的 IP 地址。"
+
+#: htdocs/luci-static/resources/view/homevpn/overview.js
+msgid "Pool start"
+msgstr "地址池起始地址"
+
+#: htdocs/luci-static/resources/view/homevpn/overview.js
+msgid "Pool start is not a valid IP address."
+msgstr "地址池起始地址不是有效的 IP 地址。"
+
+#: htdocs/luci-static/resources/view/homevpn/overview.js
+msgid "Pool subnet (CIDR)"
+msgstr "地址池子网（CIDR）"
+
+#: htdocs/luci-static/resources/view/homevpn/overview.js
+msgid "Pool subnet is required in independent subnet mode. Enter a CIDR such as 10.100.1.0/24."
+msgstr "独立子网模式必须填写子网 CIDR，例如 10.100.1.0/24。"
+
+msgid "Enter a valid IPv4 CIDR with a prefix from /8 to /30, such as 10.100.1.0/24."
+msgstr "请输入有效的 IPv4 子网 CIDR，前缀长度须为 /8 至 /30，例如 10.100.1.0/24。"
+
+msgid "Settings saved, but application failed."
+msgstr "设置已保存，但应用失败。"
+
+msgid "Save settings failed"
+msgstr "保存设置失败"
+
+msgid "Unable to save settings: %s"
+msgstr "无法保存设置：%s"
+
+msgid "Close"
+msgstr "关闭"
+
+#: htdocs/luci-static/resources/view/homevpn/overview.js
+msgid "Private key"
+msgstr "私钥"
+
+#: htdocs/luci-static/resources/view/homevpn/overview.js
+msgid "Private key (unencrypted)"
+msgstr "私钥（未加密）"
+
+#: htdocs/luci-static/resources/view/homevpn/overview.js
+msgid "Provision"
+msgstr "配置服务器"
+
+#: htdocs/luci-static/resources/view/homevpn/overview.js
+#, c-format
+msgid "Provisioning FAILED: %s"
+msgstr "服务器配置失败：%s"
+
+#: htdocs/luci-static/resources/view/homevpn/overview.js
+#, c-format
+msgid "Provisioning output: %s"
+msgstr "服务器配置输出：%s"
+
+#: htdocs/luci-static/resources/view/homevpn/overview.js
+msgid "RSA (recommended for iPhone)"
+msgstr "RSA（推荐 iPhone 使用）"
+
+#: htdocs/luci-static/resources/view/homevpn/overview.js
+msgid "Random"
+msgstr "随机生成"
+
+#: htdocs/luci-static/resources/view/homevpn/overview.js
+msgid "Re-provision now"
+msgstr "立即重新配置"
+
+#: htdocs/luci-static/resources/view/homevpn/overview.js
+#, c-format
+msgid "Refused: %s — the last working configuration stays active."
+msgstr "已拒绝：%s——上一次可用配置仍在生效。"
+
+#: htdocs/luci-static/resources/view/homevpn/overview.js
+msgid "Remote IP"
+msgstr "远端 IP"
+
+#: htdocs/luci-static/resources/view/homevpn/overview.js
+msgid "Replace certificate…"
+msgstr "替换证书…"
+
+#: htdocs/luci-static/resources/view/homevpn/overview.js
+msgid "SAN"
+msgstr "SAN"
+
+#: htdocs/luci-static/resources/view/homevpn/overview.js
+#, c-format
+msgid "Save refused: %s"
+msgstr "保存被拒绝：%s"
+
+#: htdocs/luci-static/resources/view/homevpn/overview.js
+msgid "Save settings"
+msgstr "保存设置"
+
+#: htdocs/luci-static/resources/view/homevpn/overview.js
+msgid "Saved. Server re-provisioned."
+msgstr "已保存并重新配置服务器。"
+
+#: htdocs/luci-static/resources/view/homevpn/overview.js
+#, c-format
+msgid "Selected %s is NOT applied — the precheck refused it (reason below). The highlighted mode is what clients get right now."
+msgstr "所选的%s尚未生效——预检查已拒绝此配置（原因见下方）。突出显示的模式是客户端当前实际使用的模式。"
+
+#: htdocs/luci-static/resources/view/homevpn/overview.js
+msgid "Self-signed"
+msgstr "自签名"
+
+#: htdocs/luci-static/resources/view/homevpn/overview.js
+msgid "Self-signed (auto-generated)"
+msgstr "自签名（自动生成）"
+
+#: htdocs/luci-static/resources/view/homevpn/overview.js
+msgid "Server address (DDNS/IP)"
+msgstr "服务器地址（DDNS/IP）"
+
+#: htdocs/luci-static/resources/view/homevpn/overview.js
+msgid "Server address (clients dial)"
+msgstr "服务器地址（客户端连接地址）"
+
+#: htdocs/luci-static/resources/view/homevpn/overview.js
+msgid "Server address is the domain name or public IP that clients connect to and must exactly match one SAN in the certificate. Home broadband IP addresses change, so you must use a domain name and this firmware's DDNS to update its address dynamically. Modern devices require the VPN server they connect to to have a certificate. This service only supports single-domain certificates; do not use wildcard certificates (for example, a certificate whose SAN is *.example.com). Three certificate modes are supported: self-signed, where HomeVPN generates a CA and server certificate on first startup; import, which uses the certificate files you upload; and ACME, which uses a certificate obtained through ACME (recommended; for iOS compatibility, request an RSA certificate)."
+msgstr "服务器地址是客户端连接的域名或公网 IP，必须与证书中的某个 SAN 完全一致。家庭宽带IP会变，所以必须使用域名，结合本固件的DDNS实现动态更新域名地址。现代设备要求连接的VPN服务器必须有证书，本服务仅支持单一域名证书，不要使用通配符证书( 例如证书的 SAN 为 *.example.com）。证书模式支持三种：自签名证书，HomeVPN在首次启动时生成 CA 和服务器证书；导入，使用您上传的证书文件；ACME ，使用ACME申请的证书（推荐，兼容iOS设备要求使用RSA格式证书，申请时请注意）。"
+
+#: htdocs/luci-static/resources/view/homevpn/overview.js
+msgid "Server certificate"
+msgstr "服务器证书"
+
+#: htdocs/luci-static/resources/view/homevpn/overview.js
+msgid "Server certificate / CA"
+msgstr "服务器证书 / CA"
+
+#: htdocs/luci-static/resources/view/homevpn/overview.js
+msgid "Server certificate and private key must be uploaded together."
+msgstr "服务器证书和私钥必须同时上传。"
+
+#: htdocs/luci-static/resources/view/homevpn/overview.js
+msgid "Server settings"
+msgstr "服务器设置"
+
+#: htdocs/luci-static/resources/view/homevpn/overview.js
+msgid "Server status"
+msgstr "服务器状态"
+
+#: htdocs/luci-static/resources/view/homevpn/overview.js
+msgid "Set"
+msgstr "设置"
+
+#: htdocs/luci-static/resources/view/homevpn/overview.js
+msgid "Set fixed IP"
+msgstr "设置固定 IP"
+
+#: htdocs/luci-static/resources/view/homevpn/overview.js
+msgid "The last working configuration stays active. Fix the issue above, then apply again."
+msgstr "上一次可用配置仍在生效。请修复上述问题后重新应用。"
+
+#: htdocs/luci-static/resources/view/homevpn/overview.js
+msgid "Upload & apply"
+msgstr "上传并应用"
+
+#: htdocs/luci-static/resources/view/homevpn/overview.js
+msgid "Upload the replacement set (server certificate + private key, CA optional) — the old files are replaced only after all checks pass."
+msgstr "上传替换文件（服务器证书 + 私钥，CA 可选）；仅在所有检查通过后才替换旧文件。"
+
+#: htdocs/luci-static/resources/view/homevpn/overview.js
+msgid "User"
+msgstr "用户"
+
+#: htdocs/luci-static/resources/view/homevpn/overview.js
+msgid "Username"
+msgstr "用户名"
+
+#: htdocs/luci-static/resources/view/homevpn/overview.js
+msgid "VPN IP"
+msgstr "VPN IP"
+
+#: htdocs/luci-static/resources/view/homevpn/overview.js
+msgid "VPN display name"
+msgstr "VPN 显示名称"
+
+#: htdocs/luci-static/resources/view/homevpn/overview.js
+msgid "Valid until"
+msgstr "有效期至"
+
+#: htdocs/luci-static/resources/view/homevpn/overview.js
+msgid "Validated before anything is written: PEM parse, expiry, SAN present, server address must be an EXACT SAN (wildcard SANs never match in strongSwan), key↔certificate pair, CA signs the certificate. On any error nothing is changed."
+msgstr "写入前会检查：PEM 格式、有效期、SAN 是否存在、服务器地址是否与某个 SAN 完全一致（strongSwan 不支持通配符 SAN 匹配）、私钥与证书是否配对，以及 CA 是否签发了该证书。任何检查失败都不会更改文件。"
+
+#: htdocs/luci-static/resources/view/homevpn/overview.js
+msgid "Wait for a successful local certificate query and select an available type before saving."
+msgstr "请等待本地证书查询成功，并选择可用类型后再保存。"
+
+#: htdocs/luci-static/resources/view/homevpn/overview.js
+msgid "automatic"
+msgstr "自动"
+
+#: htdocs/luci-static/resources/view/homevpn/overview.js
+#, c-format
+msgid "cannot probe routing for %s — no route?"
+msgstr "无法探测 %s 的路由，请检查是否存在可用路由"
+
+#: htdocs/luci-static/resources/view/homevpn/overview.js
+msgid "certificate query unavailable: openssl missing"
+msgstr "无法查询证书：缺少 openssl"
+
+#: htdocs/luci-static/resources/view/homevpn/overview.js
+msgid "certificate query unavailable: resolver missing"
+msgstr "无法查询证书：缺少证书查找组件"
+
+#: htdocs/luci-static/resources/view/homevpn/overview.js
+msgid "deployed CA does not sign the uploaded server certificate — clients that trust this CA will reject it"
+msgstr "已部署的 CA 并非上传服务器证书的签发者，信任此 CA 的客户端会拒绝连接"
+
+#: htdocs/luci-static/resources/view/homevpn/overview.js
+msgid "dhcp mode needs the strongswan-mod-dhcp plugin (not installed)"
+msgstr "DHCP 模式需要 strongswan-mod-dhcp 插件（尚未安装）"
+
+#: htdocs/luci-static/resources/view/homevpn/overview.js
+#, c-format
+msgid "dhcp mode requires THIS router's dnsmasq to serve DHCP on %s (no dhcp-range found) — enable LAN DHCP here, or use lansubnet mode"
+msgstr "DHCP 模式需要本路由器的 dnsmasq 在 %s 上提供 DHCP 服务（未找到 dhcp-range），请启用本机局域网 DHCP，或使用局域网子网地址池模式"
+
+#: htdocs/luci-static/resources/view/homevpn/overview.js
+msgid "dhcp mode together with firewall flow-offloading: offloaded flows bypass the IPsec policies (traffic blackholes after the first packets) — disable flow offloading or use lansubnet mode"
+msgstr "DHCP 模式与防火墙流量卸载同时启用时，卸载的流量会绕过 IPsec 策略（首批数据包后流量中断）。请关闭流量卸载，或使用局域网子网地址池模式"
+
+#: htdocs/luci-static/resources/view/homevpn/overview.js
+msgid "domain from Services → Let's Encrypt"
+msgstr "“服务 → Let's Encrypt”中签发证书的域名"
+
+#: htdocs/luci-static/resources/view/homevpn/overview.js
+msgid "dynamic"
+msgstr "动态分配"
+
+#: htdocs/luci-static/resources/view/homevpn/overview.js
+msgid "e.g. alice, iphone"
+msgstr "例如 alice、iphone"
+
+#: htdocs/luci-static/resources/view/homevpn/overview.js
+msgid "exact match"
+msgstr "完全匹配"
+
+#: htdocs/luci-static/resources/view/homevpn/overview.js
+msgid "expiring soon"
+msgstr "即将过期"
+
+#: htdocs/luci-static/resources/view/homevpn/overview.js
+msgid "homevpn: ACME sync FAILED — the previously deployed certificate (if any) keeps serving; issue the certificate in Services → Let's Encrypt first"
+msgstr "HomeVPN：ACME 同步失败，将继续使用之前部署的证书（如有）；请先在“服务 → Let's Encrypt”中签发证书"
+
+#: htdocs/luci-static/resources/view/homevpn/overview.js
+msgid "iOS/macOS profile"
+msgstr "iOS/macOS 配置文件"
+
+#: htdocs/luci-static/resources/view/homevpn/overview.js
+msgid "incomplete set: server certificate + private key required (upload both, or deploy the missing part first)"
+msgstr "文件不完整：需要服务器证书及私钥（请同时上传，或先部署缺失的文件）"
+
+#: htdocs/luci-static/resources/view/homevpn/overview.js
+msgid "invalid ACME key type (use rsa or ecc)"
+msgstr "ACME 密钥类型无效（请使用 rsa 或 ecc）"
+
+#: htdocs/luci-static/resources/view/homevpn/overview.js
+#, c-format
+msgid "invalid IP '%s'"
+msgstr "IP 地址“%s”无效"
+
+#: htdocs/luci-static/resources/view/homevpn/overview.js
+msgid "invalid domain"
+msgstr "域名无效"
+
+#: htdocs/luci-static/resources/view/homevpn/overview.js
+msgid "invalid key type (use rsa or ecc)"
+msgstr "密钥类型无效（请使用 rsa 或 ecc）"
+
+#: htdocs/luci-static/resources/view/homevpn/overview.js
+msgid "invalid name (A-Z a-z 0-9 . _ - max 32)"
+msgstr "用户名无效（仅允许 A-Z、a-z、0-9、.、_、-，最多 32 个字符）"
+
+#: htdocs/luci-static/resources/view/homevpn/overview.js
+msgid "loaded"
+msgstr "已加载"
+
+#: htdocs/luci-static/resources/view/homevpn/overview.js
+msgid "missing"
+msgstr "缺失"
+
+#: htdocs/luci-static/resources/view/homevpn/overview.js
+msgid "mktemp failed"
+msgstr "创建临时目录失败"
+
+#: htdocs/luci-static/resources/view/homevpn/overview.js
+msgid "network.lan.ipaddr is not set"
+msgstr "未设置 network.lan.ipaddr"
+
+#: htdocs/luci-static/resources/view/homevpn/overview.js
+msgid "network.lan.ipaddr not set"
+msgstr "未设置 network.lan.ipaddr"
+
+#: htdocs/luci-static/resources/view/homevpn/overview.js
+msgid "no"
+msgstr "否"
+
+#: htdocs/luci-static/resources/view/homevpn/overview.js
+msgid "no CA deployed — client profiles embed the CA, so upload one or the generated profiles cannot verify the server"
+msgstr "尚未部署 CA。客户端配置文件需要嵌入 CA，请上传 CA，否则生成的配置文件无法验证服务器"
+
+#: htdocs/luci-static/resources/view/homevpn/overview.js
+#, c-format
+msgid "no valid matching %s certificate/key for %s in %s or %s"
+msgstr "未找到有效匹配的 %s 证书/私钥，域名为 %s，查找位置为 %s 或 %s"
+
+#: htdocs/luci-static/resources/view/homevpn/overview.js
+msgid "not loaded"
+msgstr "未加载"
+
+#: htdocs/luci-static/resources/view/homevpn/overview.js
+msgid "nothing to upload — pick at least one file"
+msgstr "没有可上传的文件，请至少选择一个文件"
+
+#: htdocs/luci-static/resources/view/homevpn/overview.js
+msgid "password"
+msgstr "密码"
+
+#: htdocs/luci-static/resources/view/homevpn/overview.js
+msgid "password required"
+msgstr "必须填写密码"
+
+#: htdocs/luci-static/resources/view/homevpn/overview.js
+#, c-format
+msgid "pool addresses already in use on the LAN (ARP probe answered): %s — pick a free range"
+msgstr "地址池中的地址已被局域网设备占用（ARP 探测收到回应）：%s，请选择空闲地址范围"
+
+#: htdocs/luci-static/resources/view/homevpn/overview.js
+msgid "pool must fit inside a single /24 — start and end are in different subnets"
+msgstr "地址池必须位于同一个 /24 子网内，当前起始和结束地址位于不同子网"
+
+#: htdocs/luci-static/resources/view/homevpn/overview.js
+#, c-format
+msgid "pool must not include the broadcast address %s"
+msgstr "地址池不能包含广播地址 %s"
+
+#: htdocs/luci-static/resources/view/homevpn/overview.js
+#, c-format
+msgid "pool must not include the network address %s"
+msgstr "地址池不能包含网络地址 %s"
+
+#: htdocs/luci-static/resources/view/homevpn/overview.js
+#, c-format
+msgid "pool range includes this router's own address %s"
+msgstr "地址池包含本路由器的地址 %s"
+
+#: htdocs/luci-static/resources/view/homevpn/overview.js
+#, c-format
+msgid "pool range too large (%s addresses, max 200)"
+msgstr "地址池范围过大（%s 个地址，最多 200 个）"
+
+#: htdocs/luci-static/resources/view/homevpn/overview.js
+#, c-format
+msgid "pool_end '%s' is not a valid IPv4 address"
+msgstr "地址池结束地址“%s”不是有效的 IPv4 地址"
+
+#: htdocs/luci-static/resources/view/homevpn/overview.js
+#, c-format
+msgid "pool_start '%s' is not a valid IPv4 address"
+msgstr "地址池起始地址“%s”不是有效的 IPv4 地址"
+
+#: htdocs/luci-static/resources/view/homevpn/overview.js
+#, c-format
+msgid "pool_start (%s) is greater than pool_end (%s)"
+msgstr "地址池起始地址（%s）大于结束地址（%s）"
+
+#: htdocs/luci-static/resources/view/homevpn/overview.js
+#, c-format
+msgid "pool_subnet %s overlaps an existing local network: %s — pick an unused subnet"
+msgstr "地址池子网 %s 与现有本地网络重叠：%s，请选择未使用的子网"
+
+#: htdocs/luci-static/resources/view/homevpn/overview.js
+#, c-format
+msgid "pool_subnet '%s' is not a valid subnet"
+msgstr "pool_subnet“%s”不是有效的子网"
+
+#: htdocs/luci-static/resources/view/homevpn/overview.js
+#, c-format
+msgid "pool_subnet must be in CIDR form a.b.c.d/N (got '%s')"
+msgstr "pool_subnet 必须使用 CIDR 格式 a.b.c.d/N（当前为“%s”）"
+
+#: htdocs/luci-static/resources/view/homevpn/overview.js
+#, c-format
+msgid "pool_subnet prefix '%s' is not a number"
+msgstr "pool_subnet 前缀“%s”不是数字"
+
+#: htdocs/luci-static/resources/view/homevpn/overview.js
+#, c-format
+msgid "pool_subnet prefix must be between /8 and /30 (got /%s)"
+msgstr "pool_subnet 前缀必须介于 /8 和 /30 之间（当前为 /%s）"
+
+#: htdocs/luci-static/resources/view/homevpn/overview.js
+msgid "precheck failed"
+msgstr "预检查失败"
+
+#: htdocs/luci-static/resources/view/homevpn/overview.js
+msgid "present"
+msgstr "已存在"
+
+#: htdocs/luci-static/resources/view/homevpn/overview.js
+msgid "private key"
+msgstr "私钥"
+
+#: htdocs/luci-static/resources/view/homevpn/overview.js
+msgid "private key does not match the server certificate (public keys differ)"
+msgstr "私钥与服务器证书不匹配（公钥不同）"
+
+#: htdocs/luci-static/resources/view/homevpn/overview.js
+#, c-format
+msgid "private key: not a valid unencrypted PEM key — %s (export WITHOUT a passphrase)"
+msgstr "私钥不是有效的未加密 PEM 私钥：%s（请导出不带密码的私钥）"
+
+#: htdocs/luci-static/resources/view/homevpn/overview.js
+msgid "regen failed"
+msgstr "重新生成配置失败"
+
+#: htdocs/luci-static/resources/view/homevpn/overview.js
+msgid "running"
+msgstr "运行中"
+
+#: htdocs/luci-static/resources/view/homevpn/overview.js
+#, c-format
+msgid "server address '%s' is not an exact SAN of the ACME certificate for '%s' (SANs: %s) — strongSwan never matches wildcard SANs; staying in '%s' mode"
+msgstr "服务器地址“%s”与“%s”的 ACME 证书 SAN 不完全匹配（SAN：%s）。strongSwan 不支持通配符 SAN 匹配，继续保持“%s”模式"
+
+#: htdocs/luci-static/resources/view/homevpn/overview.js
+#, c-format
+msgid "server address '%s' is not an exact SAN of the uploaded certificate (SANs: %s) — strongSwan never matches wildcard SANs: set the server address to an exact SAN of the certificate, or reissue it with the server address as SAN"
+msgstr "服务器地址“%s”与上传证书的 SAN 不完全匹配（SAN：%s）。strongSwan 不支持通配符 SAN 匹配，请将服务器地址设为证书中的确切 SAN，或重新签发以服务器地址为 SAN 的证书"
+
+#: htdocs/luci-static/resources/view/homevpn/overview.js
+msgid "server address not set — set it in Settings first"
+msgstr "未设置服务器地址，请先在服务器设置中填写"
+
+#: htdocs/luci-static/resources/view/homevpn/overview.js
+msgid "server certificate"
+msgstr "服务器证书"
+
+#: htdocs/luci-static/resources/view/homevpn/overview.js
+#, c-format
+msgid "server certificate expired on %s"
+msgstr "服务器证书已于 %s 过期"
+
+#: htdocs/luci-static/resources/view/homevpn/overview.js
+msgid "server certificate has no Subject Alternative Name — clients cannot match it (reissue with SAN)"
+msgstr "服务器证书没有主题备用名称，客户端无法匹配（请重新签发包含 SAN 的证书）"
+
+#: htdocs/luci-static/resources/view/homevpn/overview.js
+#, c-format
+msgid "server certificate: not a valid PEM certificate — %s"
+msgstr "服务器证书不是有效的 PEM 证书：%s"
+
+#: htdocs/luci-static/resources/view/homevpn/overview.js
+msgid "stopped"
+msgstr "已停止"
+
+#: htdocs/luci-static/resources/view/homevpn/overview.js
+msgid "strongSwan (charon)"
+msgstr "VPN Server 服务进程(charon)"
+
+#: htdocs/luci-static/resources/view/homevpn/overview.js
+msgid "subnet mode requires pool_subnet (e.g. 10.100.1.0/24)"
+msgstr "独立子网模式需要设置 pool_subnet（例如 10.100.1.0/24）"
+
+#: htdocs/luci-static/resources/view/homevpn/overview.js
+#, c-format
+msgid "unknown download type: %s"
+msgstr "未知下载类型：%s"
+
+#: htdocs/luci-static/resources/view/homevpn/overview.js
+msgid "unknown error"
+msgstr "未知错误"
+
+#: htdocs/luci-static/resources/view/homevpn/overview.js
+#, c-format
+msgid "unknown ip_mode '%s' (expected lansubnet, dhcp or subnet)"
+msgstr "未知 IP 分配模式“%s”（应为 lansubnet、dhcp 或 subnet）"
+
+#: htdocs/luci-static/resources/view/homevpn/overview.js
+#, c-format
+msgid "unknown method: %s"
+msgstr "未知方法：%s"
+
+#: htdocs/luci-static/resources/view/homevpn/overview.js
+msgid "unknown reason"
+msgstr "未知原因"
+
+#: htdocs/luci-static/resources/view/homevpn/overview.js
+#, c-format
+msgid "user '%s' already exists"
+msgstr "用户“%s”已存在"
+
+#: htdocs/luci-static/resources/view/homevpn/overview.js
+#, c-format
+msgid "user '%s' not found"
+msgstr "未找到用户“%s”"
+
+#: htdocs/luci-static/resources/view/homevpn/overview.js
+msgid "valid"
+msgstr "有效"
+
+#: htdocs/luci-static/resources/view/homevpn/overview.js
+msgid "vpn.example.com or public IP"
+msgstr "vpn.example.com 或公网 IP"
+
+#: htdocs/luci-static/resources/view/homevpn/overview.js
+msgid "x.x.x.1-9 reserved for the router"
+msgstr "x.x.x.1-9 为路由器保留地址"
+
+#: htdocs/luci-static/resources/view/homevpn/overview.js
+msgid "yes"
+msgstr "是"
+
+#: htdocs/luci-static/resources/view/homevpn/overview.js
+msgid "✓ matches the certificate"
+msgstr "✓ 与证书匹配"
+
+#: htdocs/luci-static/resources/view/homevpn/overview.js
+msgid "✗ does NOT match the certificate"
+msgstr "✗ 与证书不匹配"
+
+msgid "Get main-router static route command (side-router mode only)"
+msgstr "获取主路由静态路由命令(仅旁路由模式需要)"
+
+msgid "Hide main-router static route"
+msgstr "收起主路由静态路由"
+
+msgid "Run this command on the main router, not on this device. It is temporary and is lost after reboot; configure a permanent static route on the main router for persistence."
+msgstr "请在主路由而不是本机执行此命令。该命令为临时配置，重启后失效；如需长期生效，请在主路由中配置永久静态路由。"
+
+msgid "Currently applied destination:"
+msgstr "当前已生效目标网段："
+
+msgid "Currently applied next hop:"
+msgstr "当前已生效下一跳："
+
+msgid "Copy command"
+msgstr "复制命令"
+
+msgid "Copied."
+msgstr "已复制。"
+
+msgid "Clipboard API is unavailable; the command is selected for manual copying."
+msgstr "剪贴板 API 不可用，命令已选中，请手动复制。"
+
+msgid "No route command is available from the applied snapshot."
+msgstr "当前已生效快照中没有可用的路由命令。"
+
+msgid "unavailable"
+msgstr "不可用"
+
+msgid "Apply the IP allocation settings first."
+msgstr "请先应用 IP 分配设置。"
+
+#: htdocs/luci-static/resources/view/homevpn/overview.js
+msgid "Fixed IP: only effective in DHCP mode. When set, dnsmasq assigns a fixed IP to the VPN user by username; leave empty for dynamic allocation. Changes apply on the next connection. The fixed IP must be within the LAN subnet and must not conflict with other devices."
+msgstr "固定 IP：仅在 DHCP 模式下生效。填写后，dnsmasq 将按用户名为 VPN 用户分配固定 IP；留空则动态分配，修改在下次连接时生效。固定 IP 应位于局域网网段内，并避免与其他设备地址冲突。"
+
+#: htdocs/luci-static/resources/view/homevpn/overview.js
+msgid "Client connection guide"
+msgstr "客户端连接指南"
+
+#: htdocs/luci-static/resources/view/homevpn/overview.js
+msgid "For manual IKEv2 setup, enter the server domain, matching remote identifier, EAP username and password. Install the CA first for self-signed certificates; usually this is unnecessary with ACME certificates. See the client connection guide in EAP accounts for device-specific instructions."
+msgstr "手动配置 IKEv2 时，填写服务器域名、与其相同的远程标识、EAP 用户名和密码。使用自签名证书时需先安装 CA；使用 ACME 证书时通常无需安装。各设备的具体说明请展开 EAP 账户区域的客户端连接指南。"
+
+msgid "Connection steps depend on the \"Certificate mode\" in \"Server settings\":"
+msgstr "根据\"服务器设置\"中\"证书模式\"的不同，接入的步骤如下："
+
+msgid "Certificate mode: ACME (recommended)"
+msgstr "证书模式： ACME （推荐）"
+
+msgid "The CA for an ACME certificate is trusted by mainstream clients, so no CA certificate installation is needed on the client."
+msgstr "ACME申请的证书的CA是主流客户端信任CA之一，因此无需在客户端安装 CA 证书。"
+
+msgid "To connect, use the device built-in IKEv2 client (phone or operating system) and enter the server domain, remote identifier (the same as the server domain), EAP username and password."
+msgstr "接入时，使用设备自带的 IKEv2 客户端（手机或系统内置），手动填写服务器域名、远程标识（与服务器域名相同）、EAP 用户名和密码即可连接。"
+
+msgid "You can also download and import a profile (one per VPN user): .mobileconfig for Apple devices and .sswan for Android. Android system client support varies by device; the strongSwan App is recommended."
+msgstr "也可下载配置文件导入（每个VPN用户一个配置）：苹果系列下载 .mobileconfig 安卓提供.sswan，不同 Android 设备的系统客户端支持情况可能不同，建议使用 strongSwan App。"
+
+msgid "Reminder: for iPhone/iPad compatibility, when requesting an ACME certificate, select an option starting with RSA in the \"Key length\" dropdown under certificate \"Advanced settings\" to generate an RSA certificate."
+msgstr "再次提示：为兼容 iPhone/iPad 设备，使用ACME申请证书时候，请在证书\"高级设置\"中\"密钥长度\"下拉框中选择 RSA开头的选项，即可生成RSA证书。"
+
+msgid "Certificate mode: self-signed (automatically generated)"
+msgstr "证书模式：自签名（自动生成）"
+
+msgid "In this mode, HomeVPN generates a certificate and signs it with the generated CA certificate. Mainstream clients do not trust self-signed certificates, so import and trust the HomeVPN CA certificate on the client before connecting."
+msgstr "此模式下，HomeVPN会为您生成证书，并使用生成的CA证书自签名。由于自签名证书不会被主流客户端信任，因此在连接前需要在客户端导入并信任 HomeVPN 的 CA 证书。"
+
+msgid "The profiles provided on this page are recommended (one per VPN user; download using the button after the username)."
+msgstr "推荐使用本页面提供的配置文件（每个VPN用户一个配置，点击用户名后面的按钮下载）"
+
+msgid "Apple devices (iPhone/iPad example): download the .mobileconfig file, transfer it to the device using WeChat or another method, and save it in \"Files\". Open it in \"Files\"; the system will prompt you to enable trust in \"Settings\"."
+msgstr "苹果设备(以iPhone/iPad为例)：下载，用微信或者其他方式传输到设备，保存到\"文件\"中，然后在\"文件\"中点击下载的.mobileconfig文件，系统会提示到\"设置\"中开启信任。"
+
+msgid "Then go to Settings → General → About → Certificate Trust Settings and trust the self-signed CA certificate. This VPN connection will appear in the system VPN settings, where you can connect."
+msgstr "随后请进入“设置 → 通用 → 关于本机 → 证书信任设置”，信任自签名的CA证书。本VPN连接信息会出现在系统VPN中，在这里连接即可。"
+
+msgid "Android: download the .sswan file and import it with the strongSwan App. The CA is imported into the App with the profile; no separate installation in the system certificate store is needed. Enter the account password when importing or connecting; if the file cannot be opened directly, use the App file picker."
+msgstr "Android：下载 .sswan 文件并使用 strongSwan App 导入，CA 将随配置导入 App，无需额外安装到系统证书存储。导入或连接时输入账户密码；若无法直接打开文件，请使用 App 内的文件选择器。"
+
+msgid "Other clients: download and install the CA certificate, trust it, then manually configure an IKEv2 connection."
+msgstr "其他客户端：先下载并安装 CA 证书，并信任证书，再手动配置 IKEv2 连接。"
+
+msgid "ACME certificates are recommended: they are free, quick to obtain, and avoid extra trust steps."
+msgstr "推荐使用ACME申请证书，免费迅速，还可以规避额外的信任步骤。"

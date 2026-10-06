@@ -7,18 +7,17 @@ include $(TOPDIR)/rules.mk
 # then can't inject view/rpc/ui/E globals and every button on the page dies.
 LUCI_MINIFY_JS:=0
 
-LUCI_TITLE:=Turnkey strongSwan IKEv2 VPN server (EAP users, certs, provisioning)
-LUCI_DESCRIPTION:=Provisions a router-local strongSwan IKEv2 EAP-MSCHAPv2 server on first boot: \
-	swanctl connection DHCP-pool client addressing + farp, self-signed PKI, \
-	INPUT firewall rules for 500/4500/ESP, EAP user management and iOS/Android \
-	client profiles. Certificate modes: self-signed / import / ACME sync.
+LUCI_TITLE:=HomeVPN
+LUCI_DESCRIPTION:=Homelede customized IKEv2 + EAP-MSCHAPv2 VPN server, supporting the default clients on iOS, Android, Windows and MacOS for convenient device access to your home network.
 LUCI_DEPENDS:=+strongswan-swanctl +strongswan-mod-eap-mschapv2 +strongswan-mod-gcm \
 	+strongswan-mod-openssl +strongswan-mod-curve25519 +strongswan-mod-pkcs8 \
 	+strongswan-mod-dhcp +strongswan-mod-farp +openssl-util +libopenssl-legacy \
 	+iputils-arping
 LUCI_PKGARCH:=all
 PKG_VERSION:=2.1.0
-PKG_RELEASE:=23
+PKG_RELEASE:=27
+# Keep the translation package upgradeable before its first git revision.
+PKG_PO_VERSION:=$(PKG_VERSION)-r$(PKG_RELEASE)
 PKG_LICENSE:=MIT
 PKG_MAINTAINER:=xiaoqingfeng <xiaoqingfengatgm@gmail.com>
 

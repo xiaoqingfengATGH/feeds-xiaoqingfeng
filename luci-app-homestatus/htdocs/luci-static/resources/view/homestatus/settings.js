@@ -135,6 +135,7 @@ function importServices(map) {
 							uci.set('homestatus', sec, 'init', s.name);
 							/* present in every existing entry - keep rows uniform */
 							uci.set('homestatus', sec, 'enabled', '1');
+							uci.set('homestatus', sec, 'critical', '1');
 
 							if (s.probe_guess === 'cmd')
 								uci.set('homestatus', sec, 'match', s.name);
@@ -222,10 +223,35 @@ return view.extend({
 		s.rowcolors = true;
 		s.modaltitle = _('编辑监视项');
 		s.nodescriptions = true;
+		/* Stock GridSection silently catches validation failures. Show the
+		 * first invalid field explicitly instead of leaving Save inert. */
+		s.handleModalSave = function(modalMap, ev) {
+			var modalNode = this.getActiveModalMap();
+			if (modalNode) {
+				modalNode.querySelectorAll('input, select, textarea').forEach(function(el) {
+					el.dispatchEvent(new Event('blur'));
+				});
+				var invalid = modalNode.querySelector('.cbi-input-invalid');
+				if (invalid) {
+					var row = invalid.closest('.cbi-value');
+					var label = row && row.querySelector('.cbi-value-title');
+					ui.addNotification(null, E('p', {}, [
+						_('未保存：%s — %s').format(label ? label.textContent.trim() : _('字段校验失败'),
+							invalid.getAttribute('data-tooltip') || _('请检查填写内容'))
+					]), 'error');
+					invalid.focus();
+					return Promise.resolve();
+				}
+			}
+			return form.GridSection.prototype.handleModalSave.call(this, modalMap, ev);
+		};
 
 		o = s.option(form.Value, 'id', _('标识'));
 		o.rmempty = false;
 		o.modalonly = true;
+		o.cfgvalue = function(section_id) {
+			return form.Value.prototype.cfgvalue.call(this, section_id) ?? section_id;
+		};
 		o.validate = function(section_id, value) {
 			if (!ID_RE.test(value))
 				return _('只能包含字母、数字、下划线、点与连字符');
@@ -236,6 +262,10 @@ return view.extend({
 		o.rmempty = false;
 
 		o = s.option(form.Flag, 'enabled', _('启用'));
+		o.default = '1';
+		o.editable = true;
+
+		o = s.option(form.Flag, 'critical', _('影响整体健康摘要'));
 		o.default = '1';
 		o.editable = true;
 

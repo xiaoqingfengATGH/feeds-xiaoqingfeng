@@ -717,10 +717,8 @@ function build_apps(cfg) {
 		const c = cursor();
 		c.load(UCI_PKG);
 		c.foreach(UCI_PKG, 'app', (s) => {
-			if (s.enabled == '0' || s.enabled == 'false')
-				return;
-
 			push(entries, {
+				enabled: !(s.enabled == '0' || s.enabled == 'false'),
 				// Prefer an explicit `id` option. The section name is only a
 				// fallback: a GridSection with addremove generates names like
 				// cfg0a1b2c, which would leak into the UI and into the
@@ -734,7 +732,8 @@ function build_apps(cfg) {
 				path: s.path,
 				note: s.note,
 				uci: s.uci,
-				order: int(s.order ?? 999)
+				order: int(s.order ?? 999),
+				critical: !(s.critical == '0' || s.critical == 'false')
 			});
 		});
 	}
@@ -742,15 +741,14 @@ function build_apps(cfg) {
 		return [ { error: `${e}` } ];
 	}
 
-	// stable order: explicit order first, then id
-	entries = sort(entries, (a, b) => (a.order - b.order) || (a.id < b.id ? -1 : 1));
+	// UCI foreach preserves file order, including disabled entries.
 
 	// warm the process table once so per-app lookups are pure array filters
 	scan_procs();
 
 	for (let a in entries) {
 		const name = a.init ?? a.id;
-		const pr = probe_app(a, null);
+		const pr = a.enabled ? probe_app(a, null) : { running: false };
 		const auto = autostart(name);
 
 		// 'switch' answers a different question than 'running': "starts at boot"
@@ -784,7 +782,9 @@ function build_apps(cfg) {
 		}
 
 		let state = 'unknown';
-		if (pr.running === true)
+		if (!a.enabled)
+			state = 'disabled';
+		else if (pr.running === true)
 			state = 'running';
 		else if (pr.running === false)
 			state = (sw === false) ? 'disabled' : 'stopped';
@@ -798,6 +798,7 @@ function build_apps(cfg) {
 			probe: a.probe,
 			detail: pr.detail ?? null,
 			note: a.note ?? null,
+			critical: a.critical,
 			restartable: access(`/etc/init.d/${name}`) === true
 		});
 	}

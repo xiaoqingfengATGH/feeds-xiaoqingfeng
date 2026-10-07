@@ -570,6 +570,8 @@ render_conf() {
 	subnet) local_ts="$LAN_NET, $POOL_SUBNET" ;;
 	*) local_ts="$LAN_NET" ;;
 	esac
+	# Missing/unknown values in legacy UCI remain split-tunnel LAN-only.
+	[ "$(hv_get traffic_scope)" = full ] && local_ts="0.0.0.0/0"
 	case "$MODE" in
 	lansubnet)
 		pools_block="pools {

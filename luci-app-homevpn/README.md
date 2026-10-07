@@ -47,6 +47,16 @@ remove the lock or retry writes until the entire transaction is quiescent.
   - swanctl connection `homevpn-eap`: IKEv2 + EAP-MSCHAPv2, MOBIKE,
     fragmentation, split tunnel (`local_ts` = LAN subnet, re-rendered on
     network change via procd reload trigger)
+  - **Client traffic scope** (`homevpn.config.traffic_scope`): `lan` (default,
+    also used when absent in older configurations) retains the existing LAN
+    selectors, including the independent pool subnet in `subnet` mode. `full`
+    advertises `local_ts = 0.0.0.0/0` to clients for all IPv4 traffic. This is
+    a global server setting, not a per-user profile setting. IPv6 is not routed
+    through the tunnel. Client reconnect may be needed after changing scope.
+    The selector alone does not install a default-route NAT/forwarding policy:
+    ensure the router can forward VPN client traffic to WAN and return traffic
+    can reach the client pool (or configure appropriate NAT). In particular,
+    side routers and LAN-subnet pools may need additional network setup.
   - **DHCP pool addressing**: VPN clients get real LAN leases from dnsmasq
     (dhcp plugin), and the farp plugin answers ARP for them — LAN peers can
     initiate toward VPN clients (Samba/mDNS/peer-to-peer both ways)

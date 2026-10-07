@@ -18,6 +18,7 @@ SRV_CERT="$SWANCTL/x509/homevpn-server.crt"
 ACME_RESOLVER="/usr/share/homevpn/acme-resolve.sh"
 
 cfg() { uci -q get "${CFG}.config.$1"; }
+scope() { [ "$(cfg traffic_scope)" = full ] && echo full || echo lan; }
 
 # shared ACME resolver (same code as the init script — single source of truth)
 . "$ACME_RESOLVER" || { echo "homevpn-rpcd: missing $ACME_RESOLVER" >&2; }
@@ -122,7 +123,7 @@ list)
 	json_add_object "set_user_ip";  json_add_string name ""; json_add_string ip ""; json_close_object
 	json_add_object "discover_acme"; json_add_string domain ""; json_close_object
 	json_add_object "get_settings"; json_close_object
-	json_add_object "set_settings"; json_add_string remote ""; json_add_string vpn_name ""; json_add_string cert_mode ""; json_add_string acme_domain ""; json_add_string acme_key_type ""; json_add_string ip_mode ""; json_add_string pool_start ""; json_add_string pool_end ""; json_add_string pool_subnet ""; json_add_string masq ""; json_close_object
+	json_add_object "set_settings"; json_add_string remote ""; json_add_string vpn_name ""; json_add_string cert_mode ""; json_add_string acme_domain ""; json_add_string acme_key_type ""; json_add_string ip_mode ""; json_add_string pool_start ""; json_add_string pool_end ""; json_add_string pool_subnet ""; json_add_string masq ""; json_add_string traffic_scope ""; json_close_object
 	json_add_object "ensure_selfsigned_ca"; json_add_boolean replace 0; json_add_string fingerprint ""; json_close_object
 	json_add_object "provision";    json_close_object
 	json_add_object "upload_certs"; json_add_string server ""; json_add_string key ""; json_add_string ca ""; json_close_object
@@ -218,6 +219,7 @@ call)
 		# precheck state (written by init.d apply_config) + applied config
 		state_get() { sed -n "s/^$1=//p" /tmp/homevpn.state 2>/dev/null | head -1; }
 		json_add_string  ip_mode "$(cfg ip_mode)"
+		json_add_string  traffic_scope "$(scope)"
 		json_add_string  applied_mode "$(state_get mode)"
 		json_add_string  applied_pool "$(state_get pool)"
 		json_add_string  applied_masq "$(state_get masq)"
@@ -339,6 +341,7 @@ set_user_ip)
 		json_add_string ike_int "$(cfg ike_int)"
 		json_add_string ike_dh "$(cfg ike_dh)"
 		json_add_string ip_mode "$(cfg ip_mode)"
+		json_add_string traffic_scope "$(scope)"
 		json_add_string pool_start "$(cfg pool_start)"
 		json_add_string pool_end "$(cfg pool_end)"
 		json_add_string pool_subnet "$(cfg pool_subnet)"
@@ -355,6 +358,14 @@ set_user_ip)
 		json_get_var v_ipmode ip_mode; json_get_var v_ps pool_start
 		json_get_var v_pe pool_end; json_get_var v_pc pool_subnet
 		json_get_var v_masq masq
+		json_get_type scope_type traffic_scope
+		json_get_var v_scope traffic_scope
+		if [ "$scope_type" = string ]; then
+			case "$v_scope" in lan|full) ;; *) err "invalid traffic scope (use lan or full)";; esac
+		else
+			v_scope="$(cfg traffic_scope)"
+			case "$v_scope" in full) ;; *) v_scope=lan;; esac
+		fi
 		case "$v_mode" in selfsigned|import|acme) ;; *) v_mode="";; esac
 		case "$v_ipmode" in lansubnet|dhcp|subnet) ;; *) v_ipmode="";; esac
 		# Validate before ANY UCI write, including the unrelated server fields.
@@ -412,6 +423,7 @@ set_user_ip)
 		uci -q set "${CFG}.config.pool_end=${v_pe}"
 		uci -q set "${CFG}.config.pool_subnet=${v_pc}"
 		case "$v_masq" in 1|0) uci -q set "${CFG}.config.masq=${v_masq}" ;; esac
+		uci -q set "${CFG}.config.traffic_scope=${v_scope}" || err "Failed to save settings"
 		# Saving and applying are separate outcomes: regen may refuse after commit.
 		uci -q commit "$CFG" || err "Failed to save settings"
 		if [ -z "$v_remote" ]; then

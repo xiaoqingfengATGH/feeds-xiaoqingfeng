@@ -8,7 +8,7 @@ var callStatus      = rpc.declare({ object: 'homevpn', method: 'status' });
 var callListUsers   = rpc.declare({ object: 'homevpn', method: 'list_users' });
 var callDiscoverAcme = rpc.declare({ object: 'homevpn', method: 'discover_acme', params: [ 'domain' ] });
 var callGetSettings = rpc.declare({ object: 'homevpn', method: 'get_settings' });
-var callSetSettings = rpc.declare({ object: 'homevpn', method: 'set_settings', params: [ 'remote', 'vpn_name', 'cert_mode', 'acme_domain', 'acme_key_type', 'ip_mode', 'pool_start', 'pool_end', 'pool_subnet', 'masq' ] });
+var callSetSettings = rpc.declare({ object: 'homevpn', method: 'set_settings', params: [ 'remote', 'vpn_name', 'cert_mode', 'acme_domain', 'acme_key_type', 'ip_mode', 'pool_start', 'pool_end', 'pool_subnet', 'masq', 'traffic_scope' ] });
 var callAddUser     = rpc.declare({ object: 'homevpn', method: 'add_user', params: [ 'name', 'password' ] });
 var callDelUser     = rpc.declare({ object: 'homevpn', method: 'del_user', params: [ 'name' ] });
 var callSetUserIp   = rpc.declare({ object: 'homevpn', method: 'set_user_ip', params: [ 'name', 'ip' ] });
@@ -338,6 +338,10 @@ return view.extend({
 			E('option', { 'value': 'dhcp', 'selected': (set.ip_mode === 'dhcp') ? 'selected' : null }, modeLabels.dhcp),
 			E('option', { 'value': 'subnet', 'selected': (set.ip_mode === 'subnet') ? 'selected' : null }, modeLabels.subnet)
 		]);
+		var sTrafficScope = E('select', { 'id': 'homevpn-traffic-scope', 'style': 'width:22em' }, [
+			E('option', { 'value': 'lan', 'selected': set.traffic_scope === 'full' ? null : 'selected' }, _('Home LAN only (split tunnel)')),
+			E('option', { 'value': 'full', 'selected': set.traffic_scope === 'full' ? 'selected' : null }, _('All IPv4 traffic (full tunnel)'))
+		]);
 		// Use only a validated /24 LAN network for examples; never change saved pool values.
 		var poolLan = String(st.lan_net || '').match(/^(\d{1,3})\.(\d{1,3})\.(\d{1,3})\.(\d{1,3})\/24$/);
 		var poolPrefix = poolLan && poolLan.slice(1).every(function(o) { return +o <= 255; }) ? poolLan.slice(1, 4).join('.') : '192.168.1';
@@ -389,6 +393,7 @@ return view.extend({
 			E('h3', {}, _('Client IP allocation')),
 			E('p', { 'class': 'cbi-section-descr' }, _('How VPN clients get their virtual IP. Every mode is prechecked before applying (pool occupancy on the LAN, DHCP availability, subnet conflicts) — a failed check refuses the change and keeps the last working configuration, with the reason shown in the status banner above.')),
 			E('div', { 'class': 'cbi-value' }, [ E('label', { 'class': 'cbi-value-title' }, _('IP allocation mode')), E('div', { 'class': 'cbi-value-field' }, [ sIpMode, modeHint ]) ]),
+			E('div', { 'class': 'cbi-value' }, [ E('label', { 'class': 'cbi-value-title' }, _('Client traffic scope')), E('div', { 'class': 'cbi-value-field' }, [ sTrafficScope, E('p', { 'class': 'cbi-section-descr' }, _('Home LAN only keeps other traffic on the client network. All IPv4 traffic requests a default route through this VPN; internet access also requires working forwarding and NAT on the server router. Existing client profiles may need to be reconnected or updated. IPv6 is not tunneled.')) ]) ]),
 			E('div', { 'class': 'cbi-value' }, [ E('label', { 'class': 'cbi-value-title' }, _('Pool start')), E('div', { 'class': 'cbi-value-field' }, sPs) ]),
 			E('div', { 'class': 'cbi-value' }, [ E('label', { 'class': 'cbi-value-title' }, _('Pool end')), E('div', { 'class': 'cbi-value-field' }, sPe) ]),
 			E('div', { 'class': 'cbi-value' }, [ E('label', { 'class': 'cbi-value-title' }, _('Pool subnet (CIDR)')), E('div', { 'class': 'cbi-value-field' }, [ sPc, cidrError ]) ]),
@@ -512,12 +517,12 @@ return view.extend({
 				ui.addNotification(null, E('p', _('Wait for a successful local certificate query and select an available type before saving.')), 'warning');
 				return Promise.resolve();
 			}
-			var payload = [ sRemote.value.trim(), sName.value, sMode.value, domain, acme.selected || set.acme_key_type || 'rsa', sIpMode.value, ps, pe, pc, sMasq.value ];
+			var payload = [ sRemote.value.trim(), sName.value, sMode.value, domain, acme.selected || set.acme_key_type || 'rsa', sIpMode.value, ps, pe, pc, sMasq.value, sTrafficScope.value ];
 			settingsSaving = true; paintPkiDraft();
 			function submit(yes) {
 				if (!yes) return;
 				return callSetSettings.apply(null, payload).then(function(r) {
-					if (r && (r.ok || r.saved)) set = Object.assign({}, set, {remote:payload[0],vpn_name:payload[1],cert_mode:payload[2],acme_domain:payload[3],acme_key_type:payload[4],ip_mode:payload[5],pool_start:payload[6],pool_end:payload[7],pool_subnet:payload[8],masq:payload[9]});
+					if (r && (r.ok || r.saved)) set = Object.assign({}, set, {remote:payload[0],vpn_name:payload[1],cert_mode:payload[2],acme_domain:payload[3],acme_key_type:payload[4],ip_mode:payload[5],pool_start:payload[6],pool_end:payload[7],pool_subnet:payload[8],masq:payload[9],traffic_scope:payload[10]});
 					if (!r || !r.ok) {
 						settingsError(r && r.saved ? _('Settings saved, but application failed.') : (backendMessage(r && r.error) || _('unknown error')), backendMessage(r && (r.output || r.precheck_reason)));
 						return;
@@ -559,7 +564,8 @@ return view.extend({
 				sMode.value !== (set.cert_mode || 'selfsigned') || sAcme.value.trim() !== (set.acme_domain || '') ||
 				(acme.selected || set.acme_key_type || 'rsa') !== (set.acme_key_type || 'rsa') ||
 				sIpMode.value !== (set.ip_mode || 'lansubnet') || sPs.value.trim() !== (set.pool_start || '') ||
-				sPe.value.trim() !== (set.pool_end || '') || sPc.value.trim() !== (set.pool_subnet || '') || sMasq.value !== (set.masq || '0');
+				sPe.value.trim() !== (set.pool_end || '') || sPc.value.trim() !== (set.pool_subnet || '') || sMasq.value !== (set.masq || '0') ||
+				sTrafficScope.value !== (set.traffic_scope === 'full' ? 'full' : 'lan');
 		}
 		var maintenanceDraft = E('p', { 'id': 'homevpn-maintenance-draft', 'role': 'status', 'style': 'display:none' }, _('Unsaved changes. Save and apply first.'));
 		function paintPkiDraft() {
@@ -615,7 +621,7 @@ return view.extend({
 				.catch(function(e) { settingsError(String(e.message || e)); }).finally(function() { settingsSaving = false; paintPkiDraft(); });
 		} }, _('Reapply saved settings'));
 		[ sRemote, sName, sAcme, sPs, sPe, sPc ].forEach(function(field) { field.addEventListener('input', paintPkiDraft); });
-		[ sIpMode, sMasq, sAcmeType ].forEach(function(field) { field.addEventListener('change', paintPkiDraft); });
+		[ sIpMode, sMasq, sTrafficScope, sAcmeType ].forEach(function(field) { field.addEventListener('change', paintPkiDraft); });
 		sMode.addEventListener('change', paintPki);
 		paintPki();
 

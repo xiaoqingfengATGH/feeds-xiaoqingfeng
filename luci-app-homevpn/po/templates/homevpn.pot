@@ -968,3 +968,15 @@ msgstr ""
 
 msgid "✗ does NOT match the certificate"
 msgstr ""
+
+msgid "Client traffic scope"
+msgstr ""
+
+msgid "Home LAN only (split tunnel)"
+msgstr ""
+
+msgid "All IPv4 traffic (full tunnel)"
+msgstr ""
+
+msgid "Home LAN only keeps other traffic on the client network. All IPv4 traffic requests a default route through this VPN; internet access also requires working forwarding and NAT on the server router. Existing client profiles may need to be reconnected or updated. IPv6 is not tunneled."
+msgstr ""

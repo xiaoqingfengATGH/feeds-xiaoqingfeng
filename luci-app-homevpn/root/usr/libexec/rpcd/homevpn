@@ -194,6 +194,8 @@ call)
 		# deployed certificate details (import-mode info panel)
 		if [ -s "$SRV_CERT" ]; then
 			json_add_object cert
+			json_add_string source "$(hv_pki_cert_source)"
+			json_add_string fingerprint "$(hv_pki_cert_fingerprint "$SRV_CERT")"
 			json_add_string subject "$(openssl x509 -in "$SRV_CERT" -noout -subject 2>/dev/null | sed 's/^subject=//')"
 			json_add_string issuer "$(openssl x509 -in "$SRV_CERT" -noout -issuer 2>/dev/null | sed 's/^issuer=//')"
 			json_add_string san "$(openssl x509 -in "$SRV_CERT" -noout -ext subjectAltName 2>/dev/null | tail -n +2 | tr -d ' ' | tr '\n' ',' | sed 's/,$//')"
@@ -516,17 +518,25 @@ set_user_ip)
 			ca_warn="no CA deployed — client profiles embed the CA, so upload one or the generated profiles cannot verify the server"
 		fi
 
-		# ---- all checks passed: install atomically (same-name replace) ----
-		cp "$T/x509/server.crt" "$SWANCTL/x509/homevpn-server.crt"
-		cp "$T/private/server.key" "$SWANCTL/private/homevpn-server.key"
-		chmod 600 "$SWANCTL/private/homevpn-server.key"
-		rm -f "$SWANCTL/x509/homevpn-server.key"   # stray key beside the cert confuses nobody but cleanup is cheap
+		# Publish leaf/key/optional CA and receipt in the same undo journal.
+		# CA-only uploads retain the current leaf's provenance (including unknown).
+		cp "$T/x509/server.crt" "$T/homevpn-server.crt" || err pki_publish_failed
+		cp "$T/private/server.key" "$T/homevpn-server.key" || err pki_publish_failed
+		chmod 600 "$T/homevpn-server.key" || err pki_publish_failed
+		set -- "$SWANCTL/x509/homevpn-server.crt" "$SWANCTL/private/homevpn-server.key"
 		ca_installed=0
 		if [ -s "$T/x509ca/ca.crt" ]; then
-			cp "$T/x509ca/ca.crt" "$SWANCTL/x509ca/homevpn-ca.crt"
-			# ca_file() prefers the ACME chain/root — remove it so the imported CA wins
-			rm -f "$SWANCTL"/x509ca/homevpn-acme*.crt
+			cp "$T/x509ca/ca.crt" "$T/homevpn-ca.crt" || err pki_publish_failed
+			set -- "$@" "$SWANCTL/x509ca/homevpn-ca.crt"
 			ca_installed=1
+		fi
+		if [ -n "$up_server" ]; then
+			hv_pki_publish_cert "$T" import "$@" || err "$HV_PKI_ERROR"
+		else
+			hv_pki_publish "$T" "$@" || err "$HV_PKI_ERROR"
+		fi
+		if [ "$ca_installed" = 1 ]; then
+			rm -f "$SWANCTL"/x509ca/homevpn-acme*.crt
 		fi
 		# switch to import mode (idempotent) so the app never overwrites these files
 		[ "$(cfg cert_mode)" = "import" ] || { uci -q set "${CFG}.config.cert_mode=import"; uci -q commit "$CFG"; }

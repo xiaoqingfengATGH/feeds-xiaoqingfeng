@@ -26,7 +26,7 @@ async function run(mode='selfsigned'){
 (async()=>{
  let h=await run();assert(h.id('homevpn-pki-details').querySelectorAll('button').every(b=>!b.disabled),'CA actions must be enabled after preparation (real DOM disabled attribute semantics)');assert.match(text(h.id('homevpn-selfsigned')),/address|Address/);
  const remote=h.id('homevpn-remote'),hint=h.id('homevpn-pki-draft'),mode=h.id('homevpn-cert-mode');
- remote.value='vpn.example.com';remote.listeners.input();assert.match(text(hint),/not saved/);
+ remote.value='vpn.example.com';remote.listeners.input();assert.match(text(hint),/unsaved changes/);
  assert.equal(h.calls.filter(x=>x[0]==='set_settings').length,0,'typing cannot mutate');
  const save=h.nodes.find(n=>n.tag==='button'&&n.children.includes('Save and apply'));
  const apply=h.nodes.find(n=>n.tag==='button'&&n.children.includes('Apply IP settings'));
@@ -37,7 +37,7 @@ async function run(mode='selfsigned'){
  remote.value='new.example.com';remote.listeners.input();await apply.listeners.click();assert.equal(h.saves.length,1);assert.equal(h.saves[0][0],'vpn.example.com');
  h.setActual({...h.actual,remote:'vpn.example.com',pki_ready:true,selfsigned:{ca_valid:true,leaf_state:'ready',fingerprint:'AA'}});
  h.finishSave({ok:true,precheck_ok:true,saved:true,applied:true});await pending;
- assert.equal(remote.value,'new.example.com');assert.match(text(hint),/not saved/);assert.equal(h.id('homevpn-provision').disabled,true);
+ assert.equal(remote.value,'new.example.com');assert.match(text(hint),/unsaved changes/);assert.equal(h.id('homevpn-provision').disabled,true);
  // Unsaved mode changes do not create trust assets.
  h=await run('import');mode.value='import';const m=h.id('homevpn-cert-mode');m.value='selfsigned';m.listeners.change();await tick();assert.equal(h.calls.filter(x=>x[0]==='ensure_selfsigned_ca').length,0);
  console.log('PASS: saved-mode-only CA initialization, draft/deployment split, both-save validation, snapshot, duplicate suppression, no reload and disabled provision');

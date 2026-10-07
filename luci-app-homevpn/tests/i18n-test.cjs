@@ -23,7 +23,7 @@ assert.match(src, /E\('h2', \{\}, _\('HomeVPN'\)\),\s*E\('div', \{ 'class': 'cbi
 assert.equal((src.match(/class': 'cbi-map-descr'/g)||[]).length, 1, 'Exactly one page description');
 assert.equal(po['HomeVPN'], 'HomeVPN');
 const serverDescription = "The server address must exactly match a certificate SAN; wildcard certificates are not supported. Self-signed mode prepares a local root CA and issues the server certificate only after an address is saved. Import uses your uploaded files. ACME uses a locally issued certificate (RSA is recommended for iOS).";
-assert.equal(po[serverDescription], "服务器地址必须与证书 SAN 完全一致，不支持通配符证书。自签模式准备本地根 CA，只有保存地址后才签发服务器证书；导入模式使用上传的文件；ACME 使用本地已签发的证书（iOS 推荐 RSA）。");
+assert.equal(po[serverDescription], "服务器地址是客户端连接的域名或公网 IP，必须与证书中的某个 SAN 完全一致。家庭宽带IP会变，所以必须使用域名，结合本固件的DDNS实现动态更新域名地址。现代设备要求连接的VPN服务器必须有证书，本服务仅支持单一域名证书，不要使用通配符证书( 例如证书的 SAN 为 *.example.com）。证书模式支持三种：自签名证书，HomeVPN生成 CA 和服务器证书；导入，使用您上传的证书文件；ACME ，使用ACME申请的证书（推荐，兼容iOS设备要求使用RSA格式证书，申请时请注意）。");
 const serverSection = src.slice(src.indexOf("_('Server settings')"));
 const serverLiteral = serverSection.match(/E\('p', \{ 'class': 'cbi-section-descr' \},\s*_\('((?:\\.|[^'\\])*)'\)/)[1];
 assert.equal(vm.runInNewContext("'" + serverLiteral + "'"), serverDescription);

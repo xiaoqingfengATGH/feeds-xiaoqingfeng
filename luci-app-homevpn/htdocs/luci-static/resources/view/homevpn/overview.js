@@ -230,7 +230,7 @@ return view.extend({
 			while (statusPanel.firstChild) statusPanel.removeChild(statusPanel.firstChild);
 			while (routeCard.firstChild) routeCard.removeChild(routeCard.firstChild);
 			/* ---- server status + readiness ---- */
-			var modeLabel = { selfsigned: _('Self-signed'), import: _('Imported'), acme: _('ACME (Let\u0027s Encrypt)') };
+			var modeLabel = { selfsigned: _('Self-signed'), import: _('Import mode'), acme: _('ACME (Let\u0027s Encrypt)') };
 			var appliedCell = st.applied_mode === 'dhcp'
 				? _('Obtain an address via local DHCP')
 				: (modeLabels[st.applied_mode] || st.applied_mode || '—') + (st.applied_pool ? ' — ' + backendMessage(st.applied_pool) : '');
@@ -397,7 +397,7 @@ return view.extend({
 			/* This label-free action row must not inherit the theme's half-width field column. */
 			E('div', { 'class': 'cbi-value' }, [ E('div', { 'id': 'homevpn-ip-actions', 'class': 'cbi-value-field', 'style': 'width:100%;max-width:100%' }, [
 				E('button', {
-					'class': 'btn cbi-button cbi-button-apply',
+					'class': 'btn cbi-button cbi-button-neutral',
 					'click': ui.createHandlerFn(this, function() {
 						var ps = (sPs.value || '').trim(), pe = (sPe.value || '').trim(), pc = (sPc.value || '').trim();
 						if (sIpMode.value === 'lansubnet' && ps && !/^\d+\.\d+\.\d+\.\d+$/.test(ps)) { ui.addNotification(null, E('p', _('Pool start is not a valid IP address.')), 'warning'); return; }
@@ -450,6 +450,7 @@ return view.extend({
 			else if (ready) { text = _('Local certificate found. The server address will be checked against its SAN when saving.'); kind = 'ok'; }
 			acmeHint.textContent = text;
 			acmeHint.setAttribute('style', 'margin:.25em 0 0' + (kind ? ';' + hintColors(kind) : ''));
+			paintPkiDraft();
 		}
 		function queryAcme(delay) {
 			clearTimeout(acmeTimer);
@@ -481,6 +482,7 @@ return view.extend({
 		queryAcme(0);
 		var acmeRow = E('div', { 'class': 'cbi-value' }, [ E('label', { 'class': 'cbi-value-title' }, _('ACME domain')), E('div', { 'class': 'cbi-value-field' }, [
 			sAcme,
+			E('p', { 'id': 'homevpn-acme-candidate-hint' }, _('ACME candidates are not deployed certificates. Only a successful certificate installation changes deployment; current deployment is shown separately below.')),
 			E('div', {}, [ sAcmeType, acmeSingle ]),
 			E('div', { 'class': 'cbi-section-descr' }, _('A single available key type is selected automatically. If both exist, choose RSA or ECC. Source: /etc/acme, then /etc/ssl/acme.')),
 			acmeHint,
@@ -515,11 +517,12 @@ return view.extend({
 			function submit(yes) {
 				if (!yes) return;
 				return callSetSettings.apply(null, payload).then(function(r) {
+					if (r && (r.ok || r.saved)) set = Object.assign({}, set, {remote:payload[0],vpn_name:payload[1],cert_mode:payload[2],acme_domain:payload[3],acme_key_type:payload[4],ip_mode:payload[5],pool_start:payload[6],pool_end:payload[7],pool_subnet:payload[8],masq:payload[9]});
 					if (!r || !r.ok) {
 						settingsError(r && r.saved ? _('Settings saved, but application failed.') : (backendMessage(r && r.error) || _('unknown error')), backendMessage(r && (r.output || r.precheck_reason)));
 						return;
 					}
-					set = Object.assign({}, set, {remote:payload[0],vpn_name:payload[1],cert_mode:payload[2],acme_domain:payload[3],acme_key_type:payload[4],ip_mode:payload[5],pool_start:payload[6],pool_end:payload[7],pool_subnet:payload[8],masq:payload[9]});
+
 					return callStatus().then(function(actual) {
 						if (!actual || actual.ok === false) throw new Error(_('Certificate query failed.'));
 						refreshState(actual);
@@ -550,15 +553,24 @@ return view.extend({
 			if (!valid) { sRemote.focus(); remoteError.scrollIntoView({block:'center',behavior:'instant'}); }
 			return valid;
 		}
-		function pkiDirty() { return sRemote.value.trim() !== (set.remote || '') || sMode.value !== (set.cert_mode || 'selfsigned'); }
+		// Match every field sent by the shared IP/server save path, including hidden drafts.
+		function pkiDirty() {
+			return sRemote.value.trim() !== (set.remote || '') || sName.value !== (set.vpn_name || 'Home VPN') ||
+				sMode.value !== (set.cert_mode || 'selfsigned') || sAcme.value.trim() !== (set.acme_domain || '') ||
+				(acme.selected || set.acme_key_type || 'rsa') !== (set.acme_key_type || 'rsa') ||
+				sIpMode.value !== (set.ip_mode || 'lansubnet') || sPs.value.trim() !== (set.pool_start || '') ||
+				sPe.value.trim() !== (set.pool_end || '') || sPc.value.trim() !== (set.pool_subnet || '') || sMasq.value !== (set.masq || '0');
+		}
+		var maintenanceDraft = E('p', { 'id': 'homevpn-maintenance-draft', 'role': 'status', 'style': 'display:none' }, _('Unsaved changes. Save and apply first.'));
 		function paintPkiDraft() {
 			if (!pkiDraft) return;
-			pkiDraft.textContent = pkiDirty() ? _('New address or certificate mode is not saved. Save and apply to issue or re-sign; deployed certificate details below remain unchanged.') : '';
-			pkiDraft.setAttribute('style', 'margin:.5em 0;padding:.5em .75em;' + hintColors('warn'));
+			maintenanceDraft.style.display = pkiDirty() ? '' : 'none';
+			pkiDraft.textContent = pkiDirty() ? _('Settings have unsaved changes. Save and apply first; deployed certificate details remain unchanged.') : '';
+			pkiDraft.setAttribute('style', pkiDirty() ? 'margin:.5em 0;padding:.5em .75em;' + hintColors('warn') : 'display:none');
 			if (profileButtons) profileButtons.forEach(function(b) { b.disabled = !st.pki_ready; });
 			var caButtons = pkiDetails.querySelectorAll ? pkiDetails.querySelectorAll('button') : [];
-			Array.prototype.forEach.call(caButtons, function(b, i) { b.disabled = caBusy || settingsSaving || switchBusy || (i === 0 && !(st.selfsigned || {}).ca_valid); });
-			if (provisionButton) { provisionButton.disabled = settingsSaving || caBusy || switchBusy || !stateKnown || pkiDirty(); provisionButton.textContent = sMode.value === 'selfsigned' ? _('Check and apply') : _('Re-provision now'); }
+			Array.prototype.forEach.call(caButtons, function(b) { b.disabled = caBusy || settingsSaving || switchBusy; });
+			if (provisionButton) provisionButton.disabled = settingsSaving || caBusy || switchBusy || !stateKnown || pkiDirty();
 		}
 		function paintPki() {
 			if (!pkiDetails) return;
@@ -574,12 +586,10 @@ return view.extend({
 				if (pk.ca_expiring) pkiDetails.appendChild(E('p', { 'style': hintColors('warn') }, _('Root CA expires soon. Renewing a leaf does not change client trust; replacing the CA does.')));
 				pkiDetails.appendChild(E('p', {}, !st.remote ? _('Server certificate: waiting for a saved address.') : pk.leaf_state === 'ready' ? _('Server certificate is ready and reusable.') : _('Server certificate needs issuance or re-signing: %s').format(backendMessage(pk.leaf_state))));
 				pkiDetails.appendChild(E('p', {}, _('Saved server address') + ': ' + (st.remote || '—')));
-				pkiDetails.appendChild(E('p', {}, _('Deployed certificate SAN') + ': ' + ((st.cert || {}).san || '—')));
-				pkiDetails.appendChild(E('p', {}, _('Valid until') + ': ' + ((st.cert || {}).notafter || '—')));
+				// Deployed leaf details are shown once in the shared certificate panel.
+
 				pkiDetails.appendChild(E('p', {}, _('Address changes require updating client connection settings. Leaf renewal under the same CA normally does not require installing the CA again.')));
-				pkiDetails.appendChild(E('button', { 'class':'btn cbi-button cbi-button-neutral', 'click': function() {
-					return callDownload('', 'ca').then(function(r) { if (ok(r, _('Download CA'))) saveBlob(r.ca, 'homevpn-ca.crt', 'application/x-x509-ca-cert'); });
-				} }, _('Download root CA')));
+				pkiDetails.appendChild(E('p', {}, _('For manual client configuration, download and install the CA certificate below.')));
 				pkiDetails.appendChild(E('button', { 'class':'btn cbi-button cbi-button-neutral', 'click': function() {
 					if (caBusy || settingsSaving || switchBusy) return;
 					return confirmPki(_('Replace root CA?'), _('Existing clients must install the new CA or re-import their profiles, otherwise they cannot verify the new server certificate. Certificates are replaced only after validation. Stop HomeVPN before replacing its CA.')).then(function(yes) { if (yes) return ensureCA(true); });
@@ -598,13 +608,14 @@ return view.extend({
 			}).catch(function(e) { caError = true; caMessage = String(e.message || e); })
 				.finally(function() { caBusy = false; paintPki(); });
 		}
-		var provisionButton = E('button', { 'id':'homevpn-provision', 'class':'btn cbi-button cbi-button-action', 'click': function() {
+		var provisionButton = E('button', { 'id':'homevpn-provision', 'class':'btn cbi-button cbi-button-neutral', 'click': function() {
 			if (settingsSaving || caBusy || switchBusy || !stateKnown || pkiDirty()) return Promise.resolve();
 			settingsSaving = true; paintPkiDraft();
 			return callProvision().then(function(r) { if (!ok(r, _('Provision'))) return; return callStatus().then(refreshState); })
 				.catch(function(e) { settingsError(String(e.message || e)); }).finally(function() { settingsSaving = false; paintPkiDraft(); });
-		} }, _('Check and apply'));
-		sRemote.addEventListener('input', paintPkiDraft);
+		} }, _('Reapply saved settings'));
+		[ sRemote, sName, sAcme, sPs, sPe, sPc ].forEach(function(field) { field.addEventListener('input', paintPkiDraft); });
+		[ sIpMode, sMasq, sAcmeType ].forEach(function(field) { field.addEventListener('change', paintPkiDraft); });
 		sMode.addEventListener('change', paintPki);
 		paintPki();
 
@@ -618,10 +629,12 @@ return view.extend({
 				keyCell = E('span', { 'style': 'color:' + CLR.ok.txt }, _('✓ matches the certificate'));
 			else if (ct && ct.key_matches === false)
 				keyCell = E('span', { 'style': 'color:' + CLR.error.txt }, _('✗ does NOT match the certificate'));
-			if (ct) {
+			if (ct && ct.subject) {
 				var expColor = (ct.expiry === 'expired') ? CLR.error.txt : ((ct.expiry === 'soon') ? CLR.warn.txt : CLR.ok.txt);
 				var expText = (ct.expiry === 'expired') ? _('EXPIRED') : ((ct.expiry === 'soon') ? _('expiring soon') : _('valid'));
 				certRows = [
+					E('tr', { 'class': 'tr' }, [ E('td', { 'class': 'td left' }, _('Certificate source')), E('td', { 'class': 'td left' }, ({ selfsigned: _('HomeVPN self-signed'), import: _('User import'), acme: _('ACME') })[ct.source] || _('Unknown')) ]),
+					E('tr', { 'class': 'tr' }, [ E('td', { 'class': 'td left' }, _('SHA-256 fingerprint')), E('td', { 'class': 'td left', 'style': 'overflow-wrap:anywhere' }, ct.fingerprint || '—') ]),
 					E('tr', { 'class': 'tr' }, [ E('td', { 'class': 'td left', 'width': '33%' }, _('Server certificate')), E('td', { 'class': 'td left' }, ct.subject || '?') ]),
 					E('tr', { 'class': 'tr' }, [ E('td', { 'class': 'td left' }, _('Issuer')), E('td', { 'class': 'td left' }, ct.issuer || '?') ]),
 					E('tr', { 'class': 'tr' }, [ E('td', { 'class': 'td left' }, _('SAN')), E('td', { 'class': 'td left' }, ct.san || _('(none)')) ]),
@@ -632,18 +645,23 @@ return view.extend({
 				];
 			}
 			while (certTable.firstChild) certTable.removeChild(certTable.firstChild);
+			if (!ct || !ct.subject) certRows.push(E('p', { 'role': 'status' }, _('No certificate deployed yet.')));
 			certRows.forEach(function(row) { certTable.appendChild(row); });
 		}
 		paintCertificate();
-		var certInfo = E('div', { 'style': 'margin:.3em 0 .3em' }, [
-			E('strong', {}, _('Imported certificate')),
+		var importSourceHint = E('p', { 'id': 'homevpn-import-source-hint', 'role': 'status' });
+		var importReplace = E('div', { 'id': 'homevpn-import-replace', 'style': 'margin-top:.4em' }, [
+			E('button', { 'class': 'btn cbi-button cbi-button-neutral', 'click': function() {
+				if (sMode.value !== 'import') return;
+				importBox.style.display = '';
+				if (upServer.focus) upServer.focus();
+			} }, _('Replace certificate…'))
+		]);
+		var certInfo = E('div', { 'id': 'homevpn-deployed-certificate', 'style': 'margin:.3em 0 .3em' }, [
+			E('strong', {}, _('Currently deployed certificate')),
+			importSourceHint,
 			certTable,
-			E('div', { 'style': 'margin-top:.4em' }, [
-				E('button', { 'class': 'btn cbi-button cbi-button-neutral', 'click': function() {
-					importBox.style.display = '';
-					certInfo.style.display = 'none';
-				} }, _('Replace certificate…'))
-			])
+			importReplace
 		]);
 		function readPem(file) {
 			/* frontend sanity: reject non-text uploads early (DER/PKCS#12) —
@@ -664,7 +682,7 @@ return view.extend({
 		var upCa     = E('input', { 'type': 'file', 'accept': '.crt,.cer,.pem' });
 		[ upServer, upKey, upCa ].forEach(function(el) { el.style.width = '16em'; });
 		var upHint = E('p', { 'class': 'cbi-section-descr' });
-		var importBox = E('div', { 'style': 'border:1px dashed #888;padding:.6em .9em;margin:.3em 0 .3em' }, [
+		var importBox = E('div', { 'id': 'homevpn-import-upload', 'style': 'border:1px dashed #888;padding:.6em .9em;margin:.3em 0 .3em' }, [
 			E('strong', {}, _('Import own certificate (PEM)')),
 			upHint,
 			E('div', { 'class': 'cbi-value' }, [ E('label', { 'class': 'cbi-value-title' }, _('Server certificate')), E('div', { 'class': 'cbi-value-field' }, upServer) ]),
@@ -708,9 +726,16 @@ return view.extend({
 		function updImportBox() {
 			var show = (sMode.value === 'import');
 			acmeRow.style.display = (sMode.value === 'acme') ? '' : 'none';
-			var hasCert = !!(st.cert && st.cert.subject);
-			importBox.style.display = (show && !hasCert) ? '' : 'none';
-			certInfo.style.display = (show && hasCert) ? '' : 'none';
+			var hasCert = !!(st.cert && st.cert.subject), source = (st.cert || {}).source;
+			importBox.style.display = (show && source !== 'import') ? '' : 'none';
+			certInfo.style.display = '';
+			importSourceHint.style.display = (show && hasCert) ? '' : 'none';
+			importReplace.style.display = show && hasCert ? '' : 'none';
+			importSourceHint.textContent = source === 'selfsigned'
+				? _('The current server certificate was generated by HomeVPN. Selecting import mode does not replace it; upload the certificate and private key.')
+				: source === 'acme' ? _('The current server certificate comes from ACME, not a user import. Selecting import mode does not replace it; upload the certificate and private key.')
+				: source === 'import' ? _('The current server certificate was uploaded by the user. Upload a replacement only when needed.')
+				: _('The current certificate source is unknown. Selecting import mode does not mean a certificate has been imported; upload the certificate and private key.');
 			if (show && !hasCert) {
 				upHint.textContent = _('No certificate deployed yet. Upload the server certificate, its private key, and the CA certificate clients should trust (e.g. your NAS/ACME issuer CA).');
 			}
@@ -742,9 +767,14 @@ return view.extend({
 							else { flash(_('Save refused: %s').format(backendMessage(r && r.error) || _('unknown error')), 'error'); reload(); }
 						});
 					})
-				}, _('Save and apply')), ' ',
-				provisionButton
-			]) ])
+				}, _('Save and apply'))
+			]) ]),
+			E('details', { 'id': 'homevpn-maintenance' }, [
+				E('summary', {}, _('Maintenance operations')),
+				E('p', {}, _('Does not save current input. Checks certificates and reapplies saved settings to retry after an application failure.')),
+				provisionButton,
+				maintenanceDraft
+			])
 		]));
 
 		/* ---- EAP users ---- */

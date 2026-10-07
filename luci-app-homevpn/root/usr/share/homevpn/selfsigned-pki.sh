@@ -49,6 +49,37 @@ hv_pki_leaf_valid() {
  printf '%s' "$text" | grep -q 'Digital Signature' || { hv_pki_fail leaf_usage_invalid; return 1; }
  openssl verify -purpose sslserver -CAfile "$CA_DIR/homevpn-ca.crt" "$cert" >/dev/null 2>&1 || { hv_pki_fail leaf_chain_invalid; return 1; }
 }
+# Provenance is an explicit publication receipt bound to the leaf DER SHA-256.
+# Never infer origin from selected mode, issuer names or local CA verification.
+hv_pki_cert_fingerprint() {
+ local fp
+ fp="$(openssl x509 -in "$1" -noout -fingerprint -sha256 2>/dev/null)" || return 1
+ fp="${fp#*=}"
+ [ "${#fp}" = 95 ] || return 1
+ printf '%s\n' "$fp"
+}
+hv_pki_source_file() {
+ # CA replacement builds a complete flat candidate set in a private directory.
+ if [ "$CA_DIR" = "$X509_DIR" ]; then printf '%s/.homevpn-cert-source\n' "$X509_DIR"; else printf '%s/.homevpn-cert-source\n' "$(dirname "$CA_DIR")"; fi
+}
+hv_pki_cert_source() {
+ local source recorded extra actual
+ actual="$(hv_pki_cert_fingerprint "$X509_DIR/homevpn-server.crt")" || { echo unknown; return; }
+ if [ -f "$(hv_pki_source_file)" ] && read -r source recorded extra < "$(hv_pki_source_file)"; then
+  case "$source" in selfsigned|import|acme)
+   [ -z "$extra" ] && [ "$actual" = "$recorded" ] && { echo "$source"; return; };;
+  esac
+ fi
+ echo unknown
+}
+hv_pki_publish_cert() {
+ local stage="$1" source="$2" fp
+ shift 2
+ case "$source" in selfsigned|import|acme) ;; *) return 1;; esac
+ fp="$(hv_pki_cert_fingerprint "$stage/homevpn-server.crt")" || return 1
+ (umask 077; printf '%s %s\n' "$source" "$fp" > "$stage/.homevpn-cert-source") || return 1
+ hv_pki_publish "$stage" "$@" "$(hv_pki_source_file)"
+}
 # Durable undo journal. Callers hold the transaction lock, including readers.
 # A crash or persistent I/O failure keeps backups on the destination filesystem;
 # subsequent consumers must recover successfully before reading/loading assets.
@@ -122,7 +153,7 @@ hv_pki_ensure_ca() {
  )
  rc=$?
  if [ "$rc" = 0 ]; then
-  if [ -n "${2:-}" ]; then hv_pki_publish "$T" "$oldca/homevpn-ca.crt" "$oldkey/homevpn-ca.key" "$oldcert/homevpn-server.crt" "$oldkey/homevpn-server.key"; else hv_pki_publish "$T" "$oldca/homevpn-ca.crt" "$oldkey/homevpn-ca.key"; fi
+  if [ -n "${2:-}" ]; then hv_pki_publish_cert "$T" selfsigned "$oldca/homevpn-ca.crt" "$oldkey/homevpn-ca.key" "$oldcert/homevpn-server.crt" "$oldkey/homevpn-server.key"; else hv_pki_publish "$T" "$oldca/homevpn-ca.crt" "$oldkey/homevpn-ca.key"; fi
   rc=$?
  fi
  rm -rf "$T"
@@ -155,7 +186,7 @@ hv_pki_sync_leaf() {
   hv_pki_pair "$T/homevpn-server.crt" "$T/homevpn-server.key" && hv_pki_san "$1" "$T/homevpn-server.crt" && openssl verify -purpose sslserver -CAfile "$CA_DIR/homevpn-ca.crt" "$T/homevpn-server.crt" >/dev/null 2>&1
  )
  rc=$?
- [ "$rc" != 0 ] || { hv_pki_publish "$T" "$X509_DIR/homevpn-server.crt" "$KEY_DIR/homevpn-server.key"; rc=$?; }
+ [ "$rc" != 0 ] || { hv_pki_publish_cert "$T" selfsigned "$X509_DIR/homevpn-server.crt" "$KEY_DIR/homevpn-server.key"; rc=$?; }
  rm -rf "$T"
  [ "$rc" = 0 ] || { hv_pki_fail leaf_signing_failed; return 1; }
  HV_PKI_LEAF_CHANGED=1; HV_PKI_ERROR=

@@ -164,8 +164,8 @@ sync_acme_certs() {
 	# assembles the certificate chain it sends from its CA store — separate
 	# files are the only layout it fully loads (one cert per file).
 	install_acme_chain "$src_crt" "$T" || { rm -rf "$T"; return 1; }
-	mv "$T/server.crt" "$X509_DIR/homevpn-server.crt" || { rm -rf "$T"; return 1; }
-	mv "$T/server.key" "$KEY_DIR/homevpn-server.key" || { rm -rf "$T"; return 1; }
+	mv "$T/server.crt" "$T/homevpn-server.crt" && mv "$T/server.key" "$T/homevpn-server.key" || { rm -rf "$T"; return 1; }
+	hv_pki_publish_cert "$T" acme "$X509_DIR/homevpn-server.crt" "$KEY_DIR/homevpn-server.key" || { rm -rf "$T"; return 1; }
 	rm -rf "$T" || return 1
 	logger_tag "ACME: synced certificate for $domain (leaf → x509/, chain tail → x509ca/homevpn-acme-NN.crt)"
 }

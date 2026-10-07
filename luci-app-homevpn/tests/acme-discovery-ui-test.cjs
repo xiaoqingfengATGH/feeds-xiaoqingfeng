@@ -12,7 +12,7 @@ class Node {
  }
  appendChild(k) { this.children.push(k); if (k && typeof k === 'object') k.parent = this; return k; }
  setAttribute(k,v) { this.attrs[k] = v; }
- addEventListener(k,fn) { this.listeners[k] = fn; }
+ addEventListener(k,fn) { const old=this.listeners[k]; this.listeners[k]=old?function(...args){old(...args);return fn(...args);}:fn; }
  closest() { return this.parent; }
  get firstChild() { return this.children[0]; }
  removeChild(k) { this.children.splice(this.children.indexOf(k),1); }

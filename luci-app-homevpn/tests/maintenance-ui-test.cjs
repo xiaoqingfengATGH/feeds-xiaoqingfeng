@@ -1,0 +1,50 @@
+const fs=require('fs'),assert=require('assert/strict');
+const harness=fs.readFileSync(__dirname+'/ca-download-ui-test.cjs','utf8').split('(async()=>{')[0];
+const {run,text}=new Function('require','process',harness+';return {run,text};')(require,process);
+const hidden=n=>Object.prototype.hasOwnProperty.call(n.style,'display')?n.style.display==='none':/display:\s*none/.test(n.attrs.style||'');
+(async()=>{
+ const h=await run();
+ assert(hidden(h.id('homevpn-pki-draft')),'clean draft must be display:none (no blank warning stripe)');
+ const remote=h.id('homevpn-remote');remote.value='vpn.example.com';remote.listeners.input();
+ assert(!hidden(h.id('homevpn-pki-draft')),'dirty draft must be visible');
+ assert(text(h.id('homevpn-pki-draft')).length>0);
+ const save=h.nodes.find(n=>n.tag==='button'&&text(n)==='Save and apply');
+ const saving=save.listeners.click();h.finishSave({ok:true});await saving;
+ assert(hidden(h.id('homevpn-pki-draft')),'successful save must hide draft');
+ console.log('PASS: clean hidden, dirty visible, successful save hidden');
+ const maintenance=h.id('homevpn-maintenance');
+ assert(maintenance&&maintenance.tag==='details'&&!maintenance.attrs.open,'maintenance collapsed by default');
+ assert.match(text(maintenance),/Does not save current input/);
+ const retry=h.id('homevpn-provision');
+ assert.equal(text(retry),'Reapply saved settings');
+ assert.match(retry.attrs.class,/cbi-button-neutral/,'maintenance is a secondary action');
+ for(const label of ['VPN display name','IP allocation mode','Pool start','Pool end','Pool subnet (CIDR)','Masquerade fallback','ACME domain']){
+  const row=h.nodes.find(n=>n.tag==='label'&&text(n)===label).parent;
+  const field=row.children[1].children.find(n=>n&&['input','select'].includes(n.tag));
+  const value=field.value;field.value=value==='0'?'1':value+'changed';
+  const event=field.tag==='select'?'change':'input';field.listeners[event]();
+  assert(retry.disabled,label+' must block maintenance');
+  const count=h.calls.length;await retry.listeners.click();assert.equal(h.calls.length,count,'dirty click cannot send RPC');
+  field.value=value;field.listeners[event]();assert.equal(retry.disabled,false,label+' restored');
+ }
+ const type=h.id('homevpn-acme-type');type.value='ecc';type.listeners.change();assert(retry.disabled,'ACME key type dirty');type.value='rsa';type.listeners.change();assert.equal(retry.disabled,false);
+ const ipApply=h.nodes.find(n=>n.tag==='button'&&text(n)==='Apply IP settings');assert(!/cbi-button-apply|cbi-button-save/.test(ipApply.attrs.class),'IP shortcut must not compete as a primary action');
+ const nameRow=h.nodes.find(n=>n.tag==='label'&&text(n)==='VPN display name').parent;
+ const name=nameRow.children[1].children[0];name.value+='changed';name.listeners.input();
+ const task=save.listeners.click();assert(retry.disabled,'save busy disables maintenance');
+ const before=h.calls.length;await retry.listeners.click();assert.equal(h.calls.length,before,'busy retry gate');
+ h.finishSave({ok:true});await task;
+ name.value+='retry';name.listeners.input();
+ const failed=save.listeners.click();h.finishSave({ok:false,saved:true,output:'apply failed'});await failed;
+ assert.equal(retry.disabled,false,'persisted settings with failed apply must allow retry');
+ assert(hidden(h.id('homevpn-pki-draft')),'persisted failure has no unsaved draft');
+ const retryTask=retry.listeners.click();assert(retry.disabled,'maintenance busy');
+ const before2=h.calls.length;await save.listeners.click();await retry.listeners.click();assert.equal(h.calls.length,before2,'maintenance blocks save and duplicate retry');
+ await retryTask;
+ assert.equal(h.saves.length,3,'maintenance never saves drafts');
+ for(const mode of ['import','acme']){const m=await run(mode);assert.equal(text(m.id('homevpn-provision')),'Reapply saved settings');assert(hidden(m.id('homevpn-selfsigned')));}
+ const automatic=await run('acme',{acme_domain:'saved.example',acme_key_type:'ecc'},{ok:true,domain:'saved.example',types:['rsa']});
+ await new Promise(r=>setTimeout(r,10));assert(automatic.id('homevpn-provision').disabled,'automatic ACME key selection is an unsaved setting');
+ assert(!hidden(automatic.id('homevpn-maintenance-draft')),'automatic ACME draft repaint');
+ console.log('PASS: collapsed maintenance, cross-field dirty guards, no-save retry and operation concurrency');
+})().catch(e=>{console.error(e);process.exitCode=1;});

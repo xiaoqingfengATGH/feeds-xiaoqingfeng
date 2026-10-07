@@ -35,6 +35,7 @@ hv_get() { [ "$1" != acme_key_type ] || echo ecc; }
 effective_remote() { echo test.example; }
 logger_tag() { :; }
 sync_acme_certs test.example || fail 'sync ECC'
+[ "$(hv_pki_cert_source)" = acme ] || fail 'ACME publication provenance'
 cmp "$X509_DIR/homevpn-server.crt" "$T/ecc.crt" || fail 'init must honor selected ECC'
 echo 'PASS: init honors configured key type'
 # A renewed certificate may reuse its key. Compare the entire leaf, not pubkey.

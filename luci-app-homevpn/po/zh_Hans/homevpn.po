@@ -436,7 +436,7 @@ msgid "Masquerade fallback"
 msgstr "后备地址伪装"
 
 msgid "Settings have unsaved changes. Save and apply first; deployed certificate details remain unchanged."
-msgstr "设置存在未保存修改，请先保存并应用；已部署证书信息保持不变。"
+msgstr "设置已修改，点击\"保存并应用\"保存，证书操作耗时较长（大概10秒），点击后请稍等页面刷新；已部署证书信息保持不变。"
 
 msgid "No CA uploaded — the deployed CA (if any) keeps serving client profiles."
 msgstr "未上传 CA，将继续使用已部署的 CA（如有）生成客户端配置文件。"

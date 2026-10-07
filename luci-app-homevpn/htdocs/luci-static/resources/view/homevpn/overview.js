@@ -362,8 +362,8 @@ return view.extend({
 			return !message;
 		}
 		var sMasq = E('select', { 'style': 'width:16em' }, [
-			E('option', { 'value': '0', 'selected': (set.masq === '1') ? null : 'selected' }, _('Off (static route preferred)')),
-			E('option', { 'value': '1', 'selected': (set.masq === '1') ? 'selected' : null }, _('On (fallback: main router cannot route)'))
+			E('option', { 'value': '0', 'selected': (set.masq === '1') ? null : 'selected' }, _('Off (VPN subnet return route required)')),
+			E('option', { 'value': '1', 'selected': (set.masq === '1') ? 'selected' : null }, _('On (when the main router cannot add a static route)'))
 		]);
 		var modeHint = E('p', { 'class': 'cbi-section-descr' });
 		function updModeHint() {
@@ -372,7 +372,7 @@ return view.extend({
 			var hints = {
 				lansubnet: _('Pool carved from the LAN subnet (default .50-.99) — suitable for side routers where the main router provides DHCP; keep the main router DHCP allocation range clear of the addresses reserved on this device for VPN clients'),
 				dhcp: _('Obtain addresses via local DHCP so VPN clients share the same subnet as local devices. This mode requires local dnsmasq and is only available when this device provides DHCP service for the LAN. Supports mDNS/AirPlay. To assign fixed IPs to VPN users, use the "Fixed IP (DHCP mode)" column in the "EAP accounts" section. This mode is unavailable when firewall flow offloading is enabled.'),
-				subnet: _('Clients use a subnet separate from the local LAN; recommended when this device is the main LAN router. When this device is a side router, expand the main-router static route guidance below after applying so local LAN devices can reach VPN users (VPN users can still access local LAN devices without it); enable "Masquerade fallback" only if a static route cannot be added on the main router')
+				subnet: _('Clients use a subnet separate from the home LAN. When this device is the main router, VPN clients and home LAN devices can naturally access each other in both directions; when this device is a side router, add a static route for the VPN subnet via this device on the main router to enable access in both directions. If the main router cannot add a static route, enable "NAT masquerade" so VPN clients can initiate access to home LAN devices; in that case, LAN devices cannot initiate access to VPN clients.')
 			};
 			modeHint.textContent = hints[m] || '';
 			[ sPs, sPe ].forEach(function(el) {
@@ -392,7 +392,7 @@ return view.extend({
 			E('div', { 'class': 'cbi-value' }, [ E('label', { 'class': 'cbi-value-title' }, _('Pool start')), E('div', { 'class': 'cbi-value-field' }, sPs) ]),
 			E('div', { 'class': 'cbi-value' }, [ E('label', { 'class': 'cbi-value-title' }, _('Pool end')), E('div', { 'class': 'cbi-value-field' }, sPe) ]),
 			E('div', { 'class': 'cbi-value' }, [ E('label', { 'class': 'cbi-value-title' }, _('Pool subnet (CIDR)')), E('div', { 'class': 'cbi-value-field' }, [ sPc, cidrError ]) ]),
-			E('div', { 'class': 'cbi-value' }, [ E('label', { 'class': 'cbi-value-title' }, _('Masquerade fallback')), E('div', { 'cbi-value-field': null, 'class': 'cbi-value-field' }, sMasq) ]),
+			E('div', { 'class': 'cbi-value' }, [ E('label', { 'class': 'cbi-value-title' }, _('NAT masquerade (side-router compatibility)')), E('div', { 'class': 'cbi-value-field' }, [ sMasq, E('p', { 'class': 'cbi-section-descr' }, _('Only effective in independent subnet mode. Translates the source address of VPN clients accessing the home LAN to this device’s address, so the main router does not need a static route for the VPN subnet. LAN devices cannot see the clients’ real IP addresses or initiate access to VPN clients through this feature alone.')) ]) ]),
 			routeCard,
 			/* This label-free action row must not inherit the theme's half-width field column. */
 			E('div', { 'class': 'cbi-value' }, [ E('div', { 'id': 'homevpn-ip-actions', 'class': 'cbi-value-field', 'style': 'width:100%;max-width:100%' }, [

@@ -18,7 +18,7 @@ const hidden=n=>Object.prototype.hasOwnProperty.call(n.style,'display')?n.style.
  const retry=h.id('homevpn-provision');
  assert.equal(text(retry),'Reapply saved settings');
  assert.match(retry.attrs.class,/cbi-button-neutral/,'maintenance is a secondary action');
- for(const label of ['VPN display name','IP allocation mode','Pool start','Pool end','Pool subnet (CIDR)','Masquerade fallback','ACME domain']){
+ for(const label of ['VPN display name','IP allocation mode','Pool start','Pool end','Pool subnet (CIDR)','NAT masquerade (side-router compatibility)','ACME domain']){
   const row=h.nodes.find(n=>n.tag==='label'&&text(n)===label).parent;
   const field=row.children[1].children.find(n=>n&&['input','select'].includes(n.tag));
   const value=field.value;field.value=value==='0'?'1':value+'changed';

@@ -179,7 +179,7 @@ msgstr ""
 msgid "Client connection guide"
 msgstr ""
 
-msgid "Clients use a subnet separate from the local LAN; recommended when this device is the main LAN router. When this device is a side router, expand the main-router static route guidance below after applying so local LAN devices can reach VPN users (VPN users can still access local LAN devices without it); enable \"Masquerade fallback\" only if a static route cannot be added on the main router"
+msgid "Clients use a subnet separate from the home LAN. When this device is the main router, VPN clients and home LAN devices can naturally access each other in both directions; when this device is a side router, add a static route for the VPN subnet via this device on the main router to enable access in both directions. If the main router cannot add a static route, enable \"NAT masquerade\" so VPN clients can initiate access to home LAN devices; in that case, LAN devices cannot initiate access to VPN clients."
 msgstr ""
 
 msgid "Clipboard API is unavailable; the command is selected for manual copying."
@@ -423,7 +423,10 @@ msgstr ""
 msgid "Manual client setup (no profile)"
 msgstr ""
 
-msgid "Masquerade fallback"
+msgid "NAT masquerade (side-router compatibility)"
+msgstr ""
+
+msgid "Only effective in independent subnet mode. Translates the source address of VPN clients accessing the home LAN to this device’s address, so the main router does not need a static route for the VPN subnet. LAN devices cannot see the clients’ real IP addresses or initiate access to VPN clients through this feature alone."
 msgstr ""
 
 msgid "Settings have unsaved changes. Save and apply first; deployed certificate details remain unchanged."
@@ -453,10 +456,10 @@ msgstr ""
 msgid "Obtain an address via local DHCP"
 msgstr ""
 
-msgid "Off (static route preferred)"
+msgid "Off (VPN subnet return route required)"
 msgstr ""
 
-msgid "On (fallback: main router cannot route)"
+msgid "On (when the main router cannot add a static route)"
 msgstr ""
 
 msgid "Other clients: download and install the CA certificate, trust it, then manually configure an IKEv2 connection."

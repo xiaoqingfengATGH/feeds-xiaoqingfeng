@@ -4,7 +4,7 @@ const root=path.resolve(__dirname,'..'),src=fs.readFileSync(path.join(root,'htdo
 const code="var routeCard = E('div');\n"+src.slice(src.indexOf('/* The route guidance'),src.indexOf('\n\t\t\trouteCard.appendChild(routeContent);'))+"\nrouteCard.appendChild(routeContent);\n";
 const hint=src.slice(src.indexOf('\t\tfunction updModeHint()'),src.indexOf('\t\tsIpMode.addEventListener'));
 assert.ok(!/call\w+\(|saveSettings|regen|innerHTML/.test(code));
-assert.ok(src.indexOf('\n\t\t\trouteCard,')>src.indexOf("_('Masquerade fallback')), E("));
+assert.ok(src.indexOf('\n\t\t\trouteCard,')>src.indexOf("_('NAT masquerade (side-router compatibility)')), E("));
 function E(tag,attrs={},children=[]){if(typeof attrs==='string'){children=attrs;attrs={};}return {tag,attrs,children:Array.isArray(children)?children:[children],style:{display:attrs.style?.includes('display:none')?'none':''},appendChild(c){this.children.push(c)},focus(){this.focused=true},select(){this.selected=true}};}
 const text=n=>typeof n==='string'?n:(n.children||[]).map(text).join('');
 async function main(){

@@ -187,8 +187,8 @@ msgstr "客户端配置及操作"
 msgid "Client connection guide"
 msgstr "客户端连接指南"
 
-msgid "Clients use a subnet separate from the local LAN; recommended when this device is the main LAN router. When this device is a side router, expand the main-router static route guidance below after applying so local LAN devices can reach VPN users (VPN users can still access local LAN devices without it); enable \"Masquerade fallback\" only if a static route cannot be added on the main router"
-msgstr "客户端使用独立于本地局域网的网段，本机作为局域网主路由时推荐使用。本机用于旁路由时，需在主路由上添加独立地址池子网的静态路由（应用后可在下方展开“主路由静态路由（旁路由场景）”查看建议命令）才可实现本地局域网设备访问VPN用户（VPN用户访问本地局域网设备不受影响）；如果无法在主路由添加静态路由，才开启“后备地址伪装”"
+msgid "Clients use a subnet separate from the home LAN. When this device is the main router, VPN clients and home LAN devices can naturally access each other in both directions; when this device is a side router, add a static route for the VPN subnet via this device on the main router to enable access in both directions. If the main router cannot add a static route, enable \"NAT masquerade\" so VPN clients can initiate access to home LAN devices; in that case, LAN devices cannot initiate access to VPN clients."
+msgstr "客户端使用独立于家庭局域网的子网。 本机作为主路由时，天然允许 VPN 客户端与家庭局域网设备双向访问；本机作为旁路由时，需要在主路由上添加指向本机的 VPN 子网静态路由，才可以实现 VPN 客户端与家庭局域网设备双向访问。若主路由无法添加静态路由，请开启“NAT 伪装”，才可以实现 VPN 客户端主动访问家庭局域网设备，此时局域网设备无法主动访问 VPN 客户端。"
 
 msgid "Clipboard API is unavailable; the command is selected for manual copying."
 msgstr "剪贴板 API 不可用，命令已选中，请手动复制。"
@@ -432,8 +432,11 @@ msgstr "不匹配——服务器地址必须与某个 SAN 完全一致（不支�
 msgid "Manual client setup (no profile)"
 msgstr "手动配置客户端（不使用配置文件）"
 
-msgid "Masquerade fallback"
-msgstr "后备地址伪装"
+msgid "NAT masquerade (side-router compatibility)"
+msgstr "NAT 伪装（旁路由兼容）"
+
+msgid "Only effective in independent subnet mode. Translates the source address of VPN clients accessing the home LAN to this device’s address, so the main router does not need a static route for the VPN subnet. LAN devices cannot see the clients’ real IP addresses or initiate access to VPN clients through this feature alone."
+msgstr "仅在独立子网模式下生效。将 VPN 客户端访问局域网时的源地址转换为本机地址，无需在主路由上添加 VPN 子网静态路由。局域网设备将无法识别客户端真实 IP，也不能仅凭此功能主动访问 VPN 客户端。"
 
 msgid "Settings have unsaved changes. Save and apply first; deployed certificate details remain unchanged."
 msgstr "设置已修改，点击\"保存并应用\"保存，证书操作耗时较长（大概10秒），点击后请稍等页面刷新；已部署证书信息保持不变。"
@@ -462,11 +465,11 @@ msgstr "通过本机DHCP获取地址，VPN客户端获得与本地设备相同�
 msgid "Obtain an address via local DHCP"
 msgstr "通过本机DHCP获取地址"
 
-msgid "Off (static route preferred)"
-msgstr "关闭（优先使用静态路由）"
+msgid "Off (VPN subnet return route required)"
+msgstr "关闭（需确保 VPN 子网回程路由）"
 
-msgid "On (fallback: main router cannot route)"
-msgstr "开启（后备方案：主路由无法配置路由）"
+msgid "On (when the main router cannot add a static route)"
+msgstr "开启（主路由无法添加静态路由时使用）"
 
 msgid "Other clients: download and install the CA certificate, trust it, then manually configure an IKEv2 connection."
 msgstr "其他客户端：先下载并安装 CA 证书，并信任证书，再手动配置 IKEv2 连接。"

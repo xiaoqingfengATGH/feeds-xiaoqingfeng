@@ -83,10 +83,19 @@ return view.extend({
 			return wrap;
 		};
 
-		o = s.option(form.Value, 'service', _('Service URL'),
+		var service = s.option(form.Value, 'service', _('Service URL'),
 			_('cloudflared service syntax, e.g. <code>http://192.168.1.10:5000</code>, <code>ssh://192.168.1.10:22</code>, <code>tcp://…</code>'));
-		o.placeholder = 'http://192.168.1.10:5000';
-		o.rmempty = false;
+		service.placeholder = 'http://192.168.1.10:5000';
+		service.rmempty = false;
+		service.onchange = function (ev, sid, value) {
+			var host = document.getElementById('widget.cbid.hometunnel.' + sid + '.http_host_header');
+			if (!host) return;
+			var origin = '';
+			if (/^https?:\/\//.test(value)) {
+				try { origin = new URL(value).hostname; } catch (e) {}
+			}
+			host.placeholder = origin || 'nas.local';
+		};
 
 		o = s.option(form.Value, 'path', _('Path regex'),
 			_('Optional. Only forward matching paths, e.g. <code>^/api(/.*)?$</code>'));
@@ -94,9 +103,12 @@ return view.extend({
 		o.rmempty = true;
 
 		o = s.option(form.Value, 'http_host_header', _('Origin Host header'),
-			_('Optional. Rewrite the Host header sent to the origin (needed behind a name-based reverse proxy).'));
+			_('Defaults to the HTTP(S) service URL hostname. Change it if the origin expects a different virtual host.'));
 		o.placeholder = 'nas.local';
 		o.rmempty = true;
+		o.cfgvalue = function (sid) {
+			return uci.get('hometunnel', sid, 'http_host_header') || '';
+		};
 
 		o = s.option(form.Flag, 'no_tls_verify', _('Skip TLS verify'),
 			_('Skip certificate verification for https origins (self-signed certs).'));

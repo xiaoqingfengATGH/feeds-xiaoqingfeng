@@ -94,7 +94,16 @@ cmd_set() {
 		ctl_hostname)
 			# 开关子域名: 部署前可改（向导⑦冲突后换名重试），
 			# 部署后不可变（Worker 自定义域绑定派生自它）
-			if [ -f "$RUNDIR/worker-deployed" ]; then
+			# Bound even if health timed out or tmpfs was reset on reboot.
+			local binding_rc=1
+			if [ -s "$ETC/worker-bound" ] || [ -f "$RUNDIR/worker-deployed" ]; then
+				binding_rc=0
+			elif [ -n "$(get_ domain '')" ] && [ -f "$OAUTH_JSON" ]; then
+				binding_rc=0
+				deploy_binding_state || binding_rc=$?
+			fi
+			[ "$binding_rc" -ne 2 ] || die "cannot confirm switch domain ownership; refusing hostname change"
+			if [ "$binding_rc" -eq 0 ]; then
 				cur=$(get_ ctl_hostname ctl)
 				[ "$val" = "$cur" ] && { msg "OK: ctl_hostname unchanged"; return 0; }
 				die "ctl_hostname already deployed as '$cur' — run 'hometunnel.sh cleanup' to unbind first"
@@ -563,7 +572,7 @@ cmd_unbind() {
 	# 5) 清本地
 	rm -f "$ETC/config.yml" "$KEY_FILE"
 	rm -f "$ETC/.cloudflared/"*.json
-	rm -f "$RUNDIR/dns-routed" "$RUNDIR/worker-verified" "$RUNDIR/worker-deployed"
+	rm -f "$RUNDIR/dns-routed" "$RUNDIR/worker-verified" "$RUNDIR/worker-deployed" "$ETC/worker-bound" "$ETC/worker-bound.tmp" "$ETC/worker-health" "$ETC/worker-health.tmp" "$ETC/worker-ready" "$ETC/worker-ready.tmp" "$ETC/worker-complete" "$ETC/worker-complete.tmp"
 	uci -q delete "$UCI_CONF.global.tunnel_id"
 	uci -q delete "$UCI_CONF.global.domain"
 	uci commit "$UCI_CONF"
@@ -608,7 +617,7 @@ cmd_apply_mode() {
 		ondemand)
 			# 数据面不 enable（只被守护拉起），控制面守护启用
 			/etc/init.d/hometunnel-ctl enable
-			/etc/init.d/hometunnel-ctl restart 2>/dev/null || true
+			/etc/init.d/hometunnel-ctl restart 2>/dev/null || die "ctl daemon failed to start"
 			# 刻意不 stop 数据面——由守护按控制面状态决定（避免误杀使用中会话）
 			msg "OK: ondemand mode applied (ctl daemon enabled)"
 			;;
@@ -761,7 +770,7 @@ ctl_domain_check() {
 	local tok="$1" acct="$2" hostn="$3" zone_id="$4" resp i h s found rectype
 	# a) custom domain 绑定表（账号级，一次查全）
 	resp=$(curl -fsS --max-time 15 -H "Authorization: Bearer $tok" \
-		"https://api.cloudflare.com/client/v4/accounts/$acct/workers/domains?per_page=100" 2>/dev/null) || return 0
+		"https://api.cloudflare.com/client/v4/accounts/$acct/workers/domains?per_page=100" 2>/dev/null) || { echo 'error:worker-domain lookup failed'; return 2; }
 	# jsonfilter 逐行输出 hostname 与 service（同序）——配对找 hostn
 	i=0; found=''
 	while IFS= read -r h; do
@@ -778,7 +787,7 @@ EOF
 	ztok=$(cert_api_token)
 	if [ -n "$ztok" ] && [ -n "$zone_id" ]; then
 		resp=$(curl -fsS --max-time 15 -H "Authorization: Bearer $ztok" \
-			"https://api.cloudflare.com/client/v4/zones/$zone_id/dns_records?name=$hostn&per_page=5" 2>/dev/null) || return 0
+			"https://api.cloudflare.com/client/v4/zones/$zone_id/dns_records?name=$hostn&per_page=5" 2>/dev/null) || { echo 'error:dns-record lookup failed'; return 2; }
 		rectype=$(jsonfilter -s "$resp" -e '@.result[0].type' 2>/dev/null)
 		[ -n "$rectype" ] && { echo "dns:$rectype"; return 1; }
 	fi
@@ -903,9 +912,9 @@ cmd_probe() {
 cmd_route_and_regen() {
 	local rc=0
 	if [ -n "$(get_ tunnel_id '')" ] && [ -n "$(get_ domain '')" ]; then
-		cmd_route || rc=1
+		( cmd_route ) || rc=1
 	fi
-	cmd_regen || rc=1
+	( cmd_regen ) || rc=1
 	# TTL 漂移检测（改 max/renew 后自动重部署 Worker；详见 cmd_ttl_sync 注释）
 	ttl_sync_check || true
 	return "$rc"
@@ -939,7 +948,11 @@ check_dns_all() {
 cmd_deploy_check() {
 	local tok acct domain ctl_host zone_id occ
 	domain=$(get_ domain '')
-	ctl_host=$(get_ ctl_hostname ctl)
+	ctl_host="${1:-$(get_ ctl_hostname ctl)}"
+	case "$ctl_host" in
+		''|*[!a-z0-9-]*|-*|*-) msg '{"state":"error","error":"invalid switch subdomain"}'; return 0 ;;
+	esac
+	[ "${#ctl_host}" -le 63 ] || { msg '{"state":"error","error":"switch subdomain too long"}'; return 0; }
 	[ -n "$domain" ] || { msg '{"state":"error","error":"domain empty (wizard step 3)"}'; return 0; }
 	tok=$(oauth_valid_token)
 	[ -n "$tok" ] || { msg '{"state":"error","error":"not authorized (wizard step 4)"}'; return 0; }
@@ -947,15 +960,129 @@ cmd_deploy_check() {
 	[ -n "$acct" ] || { acct=$(oauth_query_account_id "$tok") || acct=''; }
 	[ -n "$acct" ] || { msg '{"state":"error","error":"cannot resolve account_id"}'; return 0; }
 	zone_id=$(cf_zone_id "$tok" "$domain") || zone_id=''
+	[ -n "$zone_id" ] || { msg '{"state":"error","error":"zone lookup failed"}'; return 0; }
 	occ=$(ctl_domain_check "$tok" "$acct" "$ctl_host.$domain" "$zone_id")
 	case "$occ" in
 		clean) msg '{"state":"clean"}' ;;
 		worker:hometunnel-ctl) msg '{"state":"clean"}' ;;
 		worker:*) msg '{"state":"conflict","kind":"worker","by":"'${occ#worker:}'"}' ;;
 		dns:*) msg '{"state":"conflict","kind":"dns","by":"'${occ#dns:}'"}' ;;
-		*) msg '{"state":"clean"}' ;;
+		error:*) msg '{"state":"error","error":"domain lookup failed"}' ;;
+		*) msg '{"state":"error","error":"domain check returned an unknown result"}' ;;
 	esac
 	return 0
+}
+
+# Persist the bound hostname before health polling. Atomic rename avoids a torn
+# marker after power loss; a restored config can recover it from remote ownership.
+save_worker_binding() {
+	local host
+	host="$(get_ ctl_hostname ctl).$(get_ domain '')"
+	[ -n "$(get_ domain '')" ] || return 1
+	printf '%s\n' "$host" > "$ETC/worker-bound.tmp" || return 1
+	mv -f "$ETC/worker-bound.tmp" "$ETC/worker-bound"
+}
+
+# 0 bound to us, 1 not bound, 2 uncertain. No Worker script upload or PUT.
+deploy_binding_state() {
+	local host tok acct zone_id occ recorded
+	host="$(get_ ctl_hostname ctl).$(get_ domain '')"
+	[ -n "$(get_ domain '')" ] || return 1
+	if [ -s "$ETC/worker-bound" ]; then
+		IFS= read -r recorded < "$ETC/worker-bound"
+		[ "$recorded" = "$host" ] || return 2
+	fi
+	tok=$(oauth_valid_token 2>/dev/null) || return 2
+	acct=$(grep -oE '"account_id":"[^"]+"' "$OAUTH_JSON" 2>/dev/null | cut -d'"' -f4)
+	[ -n "$acct" ] || { acct=$(oauth_query_account_id "$tok") || return 2; }
+	zone_id=$(cf_zone_id "$tok" "$(get_ domain '')") || return 2
+	occ=$(ctl_domain_check "$tok" "$acct" "$host" "$zone_id")
+	case "$occ" in
+		worker:$WORKER_NAME) [ -s "$ETC/worker-bound" ] || save_worker_binding || return 2; return 0 ;;
+		clean|dns:*) [ -s "$ETC/worker-bound" ] && return 2; return 1 ;;
+		*) return 2 ;;
+	esac
+}
+
+cmd_deploy_state() {
+	local rc=0 host dns recorded
+	host="$(get_ ctl_hostname ctl).$(get_ domain '')"
+	# Completion was written only after authenticated Worker verification,
+	# DNS/config readback and mode application. Keep the wizard's hot path local;
+	# remote drift belongs to probe/status diagnostics, not initial rendering.
+	if [ -n "$host" ] && [ -s "$ETC/worker-bound" ] && [ -s "$ETC/worker-health" ] && \
+		[ -s "$ETC/worker-ready" ] && [ -s "$ETC/worker-complete" ] && [ -s "$ETC/config.yml" ]; then
+		for recorded in "$ETC/worker-bound" "$ETC/worker-health" "$ETC/worker-ready" "$ETC/worker-complete"; do
+			[ "$(cat "$recorded")" = "$host" ] || break
+		done
+		[ "$recorded" = "$ETC/worker-complete" ] && [ "$(cat "$recorded")" = "$host" ] && {
+			msg '{"state":"complete"}'
+			return 0
+		}
+	fi
+	deploy_binding_state || rc=$?
+	case "$rc" in
+		0)
+			if [ -s "$ETC/worker-ready" ] && [ "$(cat "$ETC/worker-ready")" = "$host" ] && [ -s "$ETC/config.yml" ]; then
+				dns=$(check_dns_all)
+				if [ "$dns" = ok ] || [ "$dns" = none ]; then
+					if [ -s "$ETC/worker-complete" ] && [ "$(cat "$ETC/worker-complete")" = "$host" ]; then
+						msg '{"state":"complete"}'
+					else
+						msg '{"state":"ready"}'
+					fi
+					return 0
+				fi
+			fi
+			if [ -s "$ETC/worker-health" ] && [ "$(cat "$ETC/worker-health")" = "$host" ]; then
+				msg '{"state":"verified"}'
+			else
+				msg '{"state":"pending"}'
+			fi ;;
+		1) msg '{"state":"unbound"}' ;;
+		*) msg '{"state":"error","error":"Cannot confirm switch domain ownership"}' ;;
+	esac
+	return 0
+}
+
+cmd_deploy_verify() {
+	deploy_binding_state || die "custom domain not bound to this Worker (or ownership unknown)"
+	# /cmd is authenticated with ctl.key; healthz alone is insufficient.
+	cmd_verify || die "authenticated Worker verification failed"
+	printf '%s\n' "$(get_ ctl_hostname ctl).$(get_ domain '')" > "$ETC/worker-health.tmp" || die "cannot record verified domain"
+	mv -f "$ETC/worker-health.tmp" "$ETC/worker-health" || die "cannot record verified domain"
+}
+
+cmd_deploy_finish() {
+	local host dns
+	deploy_binding_state || die "custom domain not bound to this Worker"
+	host="$(get_ ctl_hostname ctl).$(get_ domain '')"
+	[ -s "$ETC/worker-health" ] && [ "$(cat "$ETC/worker-health")" = "$host" ] || die "run deploy-verify first"
+	if [ -s "$ETC/worker-ready" ] && [ "$(cat "$ETC/worker-ready")" = "$host" ] && [ -s "$ETC/config.yml" ]; then
+		dns=$(check_dns_all)
+		[ "$dns" != ok ] && [ "$dns" != none ] || { msg 'already ready'; return 0; }
+	fi
+	cmd_route_and_regen || die "DNS publish or config regeneration failed"
+	[ -s "$ETC/config.yml" ] || die "config.yml missing after regeneration"
+	dns=$(check_dns_all)
+	[ "$dns" = ok ] || [ "$dns" = none ] || die "DNS records not ready ($dns)"
+	printf '%s\n' "$host" > "$ETC/worker-ready.tmp" || die "cannot record ready state"
+	mv -f "$ETC/worker-ready.tmp" "$ETC/worker-ready" || die "cannot record ready state"
+	cmd_mark dns-routed
+	cmd_mark worker-deployed
+}
+
+cmd_deploy_complete() {
+	local host state
+	state=$(cmd_deploy_state)
+	[ "$state" = '{"state":"ready"}' ] || [ "$state" = '{"state":"complete"}' ] || die "deployment not ready"
+	# The final gate rechecks the authenticated endpoint, not only a past marker.
+	cmd_verify || die "switch verification failed"
+	cmd_apply_mode || die "could not apply tunnel mode"
+	host="$(get_ ctl_hostname ctl).$(get_ domain '')"
+	printf '%s\n' "$host" > "$ETC/worker-complete.tmp" || die "cannot record completion"
+	mv -f "$ETC/worker-complete.tmp" "$ETC/worker-complete" || die "cannot record completion"
+	cmd_mark worker-verified
 }
 
 cmd_deploy() {
@@ -1006,9 +1133,8 @@ cmd_deploy() {
 			# 100117 场景: 该主机名已有普通 DNS 记录（用户手工建过）
 			die "hostname '$ctl_host.$domain' has an existing ${occ#dns:} DNS record. Delete it first (DNS app in the Cloudflare dashboard), or change the switch hostname in Settings."
 			;;
-		*)
-			# 查询失败等 — PUT 会给出权威错误，继续
-			;;
+		error:*) die "switch domain precheck failed: ${occ#error:}" ;;
+		*) die "switch domain precheck returned an unknown result" ;;
 	esac
 
 	# 2) 上传 Worker（multipart: metadata + worker.js）
@@ -1023,14 +1149,20 @@ cmd_deploy() {
 		|| die "workers/domains PUT failed: $resp"
 	echo "$resp" | grep -q '"success": *true' || die "workers/domains unexpected: $resp"
 	msg "OK: custom domain bound ($ctl_host.$domain)"
-
-	# 4) 验证（healthz 轮询，证书签发需几秒）
-	verify_worker_http
-	msg "OK: deployed and verified"
-
-	# 5) TTL 快照：记录本次烤进 Worker 的 TTL 三元组
-	#    （ttl_sync_worker 据此检测 UCI 改动 → 自动重部署，无需用户感知）
+	save_worker_binding || die "cannot persist custom domain binding"
 	write_ttl_snapshot
+
+	# 4) A delayed edge certificate is a pending deployment, not a failed bind.
+	if ( verify_worker_http ); then
+		if ( cmd_deploy_verify ); then
+			msg "OK: deployed and verified"
+		else
+			msg "PENDING: domain bound; authenticated verification is not ready (retry verification)"
+		fi
+	else
+		msg "PENDING: domain bound; healthz not ready (retry verification later)"
+	fi
+	return 0
 }
 
 # ---- TTL 配置同步（自动重部署）----
@@ -1226,7 +1358,11 @@ case "${1:-}" in
 	oauth-status) cmd_oauth_status ;;
 	oauth-clear)  cmd_oauth_clear ;;
 	deploy)       shift; cmd_deploy "$@" ;;
-	deploy-check) cmd_deploy_check ;;
+	deploy-state) cmd_deploy_state ;;
+	deploy-verify) cmd_deploy_verify ;;
+	deploy-complete) cmd_deploy_complete ;;
+	deploy-finish) cmd_deploy_finish ;;
+	deploy-check) shift; cmd_deploy_check "$@" ;;
 	oauth-deploy) shift; cmd_oauth_deploy "$@" ;;
 	*)
 		cat <<'EOF'
@@ -1253,6 +1389,9 @@ usage: hometunnel.sh <command>
   oauth-status          poll OAuth device flow state
   oauth-clear           clear saved OAuth credentials
   deploy [takeover]     deploy control-plane Worker via API (needs oauth)
+  deploy-state          bound | unbound | error (recovers remote binding)
+  deploy-verify         authenticated healthz + /cmd; mark verified
+  deploy-finish         publish DNS + regenerate config; mark complete
   ttl-sync              redeploy worker after TTL values change (auto, job)
   deploy-check          pre-check switch domain conflicts (wizard step 7)
   oauth-deploy          wait for oauth + deploy (wizard one-shot job)

@@ -44,44 +44,50 @@ return view.extend({
 
 	render: function () {
 		var self = this;
+		var root = E('div', { 'class': 'cbi-section' }, [
+			E('div', { 'class': 'spinning' }, _('Checking access status…'))
+		]);
 
-		return this.probeState().then(function () {
-			return self.renderInner();
+		this.probeState().then(function () {
+			root.innerHTML = '';
+			root.appendChild(self.renderInner());
+		}).catch(function (err) {
+			root.innerHTML = '';
+			root.appendChild(E('div', { 'class': 'alert-message error' },
+				err.message || _('Could not read access status. Refresh to retry.')));
 		});
+		return root;
 	},
 
 	probeState: function () {
 		var self = this;
-		return fs.stat('/etc/hometunnel/.cloudflared cert.pem'.replace(' cert.pem', '/cert.pem')).then(function (st) {
-			self.certOk = !!(st && st.size > 0);
-		}).catch(function () { self.certOk = false; }).then(function () {
-			self.ingressCount = uci.sections('hometunnel', 'ingress').filter(function (s) {
-				return s.enabled !== '0';
-			}).length;
-			/* bound = 隧道+域名+开关服务全部就位（向导走完的判定）。
-			   dnsOk/ingressCount 保留给锁定态概览（规则健康用） */
-			return fs.stat(RUNDIR + '/dns-routed');
-		}).then(function (st) {
-			self.dnsOk = !!(st && st.size > 0);
-		}).catch(function () { self.dnsOk = false; }).then(function () {
-			return fs.stat(OAUTH_JSON);
-		}).then(function (st) {
-			self.oauthOk = !!(st && st.size > 0);
-		}).catch(function () { self.oauthOk = false; }).then(function () {
-			return fs.stat(RUNDIR + '/worker-deployed');
-		}).then(function (st) {
-			self.workerOk = !!(st && st.size > 0);
-		}).catch(function () { self.workerOk = false }).then(function () {
-			return fs.stat(RUNDIR + '/worker-verified');
-		}).then(function (st) {
-			self.verifiedOk = !!(st && st.size > 0);
-		}).catch(function () { self.verifiedOk = false; }).then(function () {
-			/* bound = 向导走完（verifiedOk）。锁定态渲染总览而非步骤。
-			   domain+worker-deployed 在但 verified 缺失 = 半程态（仍走⑥验证） */
+		self.ingressCount = uci.sections('hometunnel', 'ingress').filter(function (s) {
+			return s.enabled !== '0';
+		}).length;
+		return Promise.all([
+			fs.stat('/etc/hometunnel/.cloudflared/cert.pem').then(function (st) { return !!(st && st.size > 0); }).catch(function () { return false; }),
+			fs.stat(RUNDIR + '/dns-routed').then(function (st) { return !!(st && st.size > 0); }).catch(function () { return false; }),
+			fs.stat(OAUTH_JSON).then(function (st) { return !!(st && st.size > 0); }).catch(function () { return false; }),
+			fs.stat(RUNDIR + '/worker-deployed').then(function (st) { return !!(st && st.size > 0); }).catch(function () { return false; }),
+			fs.stat(RUNDIR + '/worker-verified').then(function (st) { return !!(st && st.size > 0); }).catch(function () { return false; }),
+			fs.exec(HT, ['deploy-state']).then(function (res) {
+				if (res.code !== 0) throw new Error('deploy-state failed');
+				var st = JSON.parse((res.stdout || '').trim());
+				if (['unbound', 'pending', 'verified', 'ready', 'complete', 'error'].indexOf(st.state) < 0)
+					throw new Error('invalid deploy state');
+				return st;
+			}).catch(function () { return { state: 'error', error: _('Could not read deployment state. Retry after refreshing the page.') }; })
+		]).then(function (state) {
+			self.certOk = state[0];
+			self.dnsOk = state[1];
+			self.oauthOk = state[2];
+			self.workerOk = state[3];
+			self.verifiedOk = state[4];
+			self.deployState = state[5];
 			self.bound = !!(self.certOk
 				&& uci.get('hometunnel', 'global', 'tunnel_id')
 				&& uci.get('hometunnel', 'global', 'domain')
-				&& self.verifiedOk);
+				&& self.deployState.state === 'complete');
 		});
 	},
 
@@ -90,7 +96,7 @@ return view.extend({
 		if (!uci.get('hometunnel', 'global', 'tunnel_id')) return 2;
 		if (!uci.get('hometunnel', 'global', 'domain')) return 3;
 		if (!this.oauthOk) return 4;
-		if (!this.workerOk) return 5;
+		if (!this.deployState || ['ready', 'complete'].indexOf(this.deployState.state) < 0) return 5;
 		return 6;
 	},
 
@@ -651,6 +657,23 @@ return view.extend({
 			_('The switch service controls starting and stopping the intranet-exposure tunnel. It will create a subdomain under the current domain: enter the subdomain the switch service should use, then click "Deploy Now".')
 		]));
 
+		/* Server state is authoritative after reload: never re-upload a bound Worker. */
+		var phase = this.deployState && this.deployState.state;
+		if (phase === 'pending' || phase === 'verified' || phase === 'error') {
+			var status = E('div', { 'class': 'alert-message warning' },
+				phase === 'pending' ? _('Switch service bound; health check pending. Retry verification without deploying again.')
+					: phase === 'verified' ? _('Switch service verified; publishing routes…')
+					: (this.deployState.error || _('Deployment state unavailable. Refresh to retry.')));
+			body.appendChild(status);
+			if (phase === 'error') return;
+			var retry = E('button', { 'class': 'btn cbi-button cbi-button-apply important' },
+				phase === 'pending' ? _('Retry Verification') : _('Retry Publishing'));
+			body.appendChild(retry);
+			retry.addEventListener('click', function (ev) { ev.preventDefault(); self.resumeDeploy(status, retry); });
+			if (phase === 'verified') self.resumeDeploy(status, retry);
+			return;
+		}
+
 		/* 子域名输入 + 完整域名实时预览（msgid 不带尾空格——LuCI 翻译查找会修剪，
 		   尾空格导致哈希不匹配；整句 %s 翻译同时避免 .format(element) 陷阱） */
 		var preview = E('div', { 'style': 'margin:4px 0 10px 0' },
@@ -670,14 +693,18 @@ return view.extend({
 		var out = E('pre', { 'style': 'max-height:220px;overflow:auto;font-size:12px' }, '');
 		var warn = E('div', { 'class': 'alert-message warning', 'style': 'display:none' });
 
+		var normalizedHost = function () {
+			return input.value.trim().toLowerCase().replace(/[^a-z0-9-]/g, '') || 'ctl';
+		};
 		/* 保存子域名后部署（值未变时 set 幂等成功） */
-		var saveAndDeploy = function (args) {
-			var host = input.value.trim().toLowerCase().replace(/[^a-z0-9-]/g, '');
-			if (!host) host = 'ctl';
-			fs.exec(HT, ['set', 'ctl_hostname', host]).then(function () {
+		var saveAndDeploy = function (args, candidate) {
+			var host = candidate || normalizedHost();
+			fs.exec(HT, ['set', 'ctl_hostname', host]).then(function (res) {
+				if (res.code !== 0) throw new Error((res.stderr || '').trim() || _('Could not save switch subdomain.'));
 				startDeploy(args);
-			}).catch(function () {
-				startDeploy(args);
+			}).catch(function (err) {
+				out.textContent = err.message || _('Could not save switch subdomain.');
+				btn.disabled = false;
 			});
 		};
 
@@ -685,18 +712,22 @@ return view.extend({
 			btn.disabled = true;
 			warn.style.display = 'none';
 			out.textContent = 'deploying…';
-			fs.exec(HT, ['job', 'oauth-deploy', HT, 'oauth-deploy'].concat(args || [])).then(function () {
+			fs.exec(HT, ['job', 'oauth-deploy', HT, 'oauth-deploy'].concat(args || [])).then(function (res) {
+				if (res.code !== 0) throw new Error((res.stderr || '').trim() || _('Could not start deployment. Retry.'));
 				poll.add(L.bind(self.watchDeploy, self, out, btn), 2);
+			}).catch(function (err) {
+				out.textContent = err.message || _('Could not start deployment. Retry.');
+				btn.disabled = false;
 			});
 		};
 
 		/* 冲突（挂在其他 Worker）: 可改子域名重试，或确认强制接管 */
-		var showConflict = function (st) {
+		var showConflict = function (st, candidate) {
 			out.textContent = '';
 			warn.innerHTML = '';
 			warn.style.display = '';
 			warn.appendChild(E('div', {}, [
-				_('The switch domain %s is already taken by another service (Worker “%s”).').format(preview.textContent, st.by)
+				_('The switch domain %s is already taken by another service (Worker “%s”).').format(candidate + '.' + domain, st.by)
 			]));
 			warn.appendChild(E('div', { 'style': 'margin-top:6px' },
 				_('You can type a different subdomain above and retry, or take over the domain (this removes it from that service).')));
@@ -706,7 +737,13 @@ return view.extend({
 				_('Cancel'));
 			yes.addEventListener('click', function (ev2) {
 				ev2.preventDefault();
-				saveAndDeploy(['takeover']);
+				if (normalizedHost() !== candidate) {
+					warn.style.display = 'none';
+					out.textContent = _('Subdomain changed during the check; retry deployment.');
+					btn.disabled = false;
+					return;
+				}
+				saveAndDeploy(['takeover'], candidate);
 			});
 			no.addEventListener('click', function (ev2) {
 				ev2.preventDefault();
@@ -717,12 +754,12 @@ return view.extend({
 		};
 
 		/* 冲突（已有普通 DNS 记录）: 改子域名，或去 dashboard 删记录 */
-		var showDnsConflict = function (st) {
+		var showDnsConflict = function (st, candidate) {
 			out.textContent = '';
 			warn.innerHTML = '';
 			warn.style.display = '';
 			warn.appendChild(E('div', {}, [
-				_('The switch domain %s already has a %s DNS record.').format(preview.textContent, st.by)
+				_('The switch domain %s already has a %s DNS record.').format(candidate + '.' + domain, st.by)
 			]));
 			warn.appendChild(E('div', { 'style': 'margin-top:6px' },
 				_('Pick a different subdomain above and retry, or delete that record in the Cloudflare dashboard (DNS app) first.')));
@@ -741,21 +778,33 @@ return view.extend({
 			btn.disabled = true;
 			out.textContent = 'checking…';
 			/* 预检: 冲突 → 提示（可改子域名或强制接管）；干净 → 保存后直接部署 */
-			fs.exec(HT, ['deploy-check']).then(function (res) {
+			var candidate = normalizedHost();
+			/* 预检必须使用输入框当前值；UCI 中仍是上次保存的域名。 */
+			fs.exec(HT, ['deploy-check', candidate]).then(function (res) {
 				var st = null;
 				try { st = JSON.parse((res.stdout || '').trim()); } catch (e) {}
+				if (normalizedHost() !== candidate) {
+					out.textContent = _('Subdomain changed during the check; retry deployment.');
+					btn.disabled = false;
+					return;
+				}
 				if (st && st.state === 'conflict' && st.kind === 'worker') {
-					showConflict(st);
+					showConflict(st, candidate);
 					return;
 				}
 				if (st && st.state === 'conflict' && st.kind === 'dns') {
-					showDnsConflict(st);
+					showDnsConflict(st, candidate);
 					return;
 				}
-				/* clean / 预检失败（后端会给出权威错误）→ 保存子域名后部署 */
-				saveAndDeploy([]);
+				if (st && st.state === 'clean') {
+					saveAndDeploy([], candidate);
+					return;
+				}
+				out.textContent = st && st.error || _('Domain check failed; retry deployment.');
+				btn.disabled = false;
 			}).catch(function () {
-				saveAndDeploy([]);
+				out.textContent = _('Domain check failed; retry deployment.');
+				btn.disabled = false;
 			});
 		});
 		body.appendChild(E('div', { 'style': 'margin:10px 0' }, [btn]));
@@ -764,25 +813,84 @@ return view.extend({
 
 			},
 	watchDeploy: function (outEl, btn) {
+		var self = this;
 		return jobPoll('oauth-deploy').then(function (st) {
 			return jobOut('oauth-deploy').then(function (text) {
 				outEl.textContent = text || '';
-				if (st.state === 'done') {
-					if (st.rc === 0) {
-						fs.exec(HT, ['mark', 'worker-deployed']);
-						/* 首次部署顺带发布已有规则的 DNS CNAME（原向导⑥职责并入，
-						   后台执行不阻塞推进；规则页保存也会增量发布） */
-						fs.exec(HT, ['job', 'route-regen', HT, 'route-and-regen']);
-						fs.exec(HT, ['mark', 'dns-routed']);
-						outEl.appendChild(E('div', { 'class': 'alert-message success' }, _('Deployed! Publishing DNS records…')));
-						window.setTimeout(function () { location.reload(); }, 1500);
-					} else {
-						outEl.appendChild(E('div', { 'class': 'alert-message error' }, _('Deploy failed — check output above')));
-						btn.disabled = false;
-					}
-					return Promise.reject('done');
+				if (st.state === 'running') return;
+				if (st.state === 'done' && st.rc === 0) {
+					/* A successful job binds the Worker; health can still be pending. */
+					return self.resumeDeploy(outEl, btn).then(function () {
+						if (self.deployState && (self.deployState.state === 'pending' || self.deployState.state === 'verified')) {
+							btn.style.display = 'none';
+							var retry = E('button', { 'class': 'btn cbi-button cbi-button-apply important' },
+								self.deployState.state === 'pending' ? _('Retry Verification') : _('Retry Publishing'));
+							retry.addEventListener('click', function (ev) { ev.preventDefault(); self.resumeDeploy(outEl, retry); });
+							outEl.parentNode.appendChild(retry);
+						}
+						return Promise.reject('done');
+					});
 				}
+				return self.readDeployState().then(function (phase) {
+					if (phase.state === 'pending' || phase.state === 'verified' || phase.state === 'ready' || phase.state === 'complete') {
+						outEl.textContent = _('Switch service bound. Refresh to resume without deploying again.');
+						window.setTimeout(function () { location.reload(); }, 1000);
+						return Promise.reject('done');
+					}
+					outEl.appendChild(E('div', { 'class': 'alert-message error' },
+						st.state === 'missing' ? _('Deployment progress unavailable. Refresh to recover.') : _('Deploy failed — check output above')));
+					btn.disabled = false;
+					return Promise.reject('done');
+				}).catch(function (err) {
+					if (err === 'done') return Promise.reject(err);
+					outEl.textContent = _('Deployment progress unavailable. Refresh to recover.');
+					btn.disabled = false;
+					return Promise.reject('done');
+				});
 			});
+		});
+	},
+
+	readDeployState: function () {
+		var self = this;
+		return fs.exec(HT, ['deploy-state']).then(function (res) {
+			if (res.code !== 0) throw new Error((res.stderr || '').trim() || _('Could not read deployment state.'));
+			var st = JSON.parse((res.stdout || '').trim());
+			if (['unbound', 'pending', 'verified', 'ready', 'error'].indexOf(st.state) < 0) throw new Error(_('Invalid deployment state.'));
+			self.deployState = st;
+			return st;
+		});
+	},
+
+	resumeDeploy: function (outEl, btn) {
+		var self = this;
+		btn.disabled = true;
+		var phase;
+		return this.readDeployState().then(function (st) {
+			phase = st.state;
+			if (phase === 'pending') {
+				outEl.textContent = _('Checking switch service health…');
+				return fs.exec(HT, ['deploy-verify']).then(function (res) {
+					if (res.code !== 0) throw new Error((res.stderr || '').trim() || _('Health check pending. Retry verification.'));
+					return self.readDeployState();
+				}).then(function (next) { phase = next.state; });
+			}
+		}).then(function () {
+			if (phase === 'ready') return;
+			if (phase !== 'verified') throw new Error(self.deployState.error || _('Deployment is not ready; refresh to retry.'));
+			outEl.textContent = _('Publishing routes and regenerating configuration…');
+			return fs.exec(HT, ['deploy-finish']).then(function (res) {
+				if (res.code !== 0) throw new Error((res.stderr || '').trim() || _('Publishing routes failed. Retry publishing.'));
+				return self.readDeployState();
+			}).then(function (next) {
+				if (next.state !== 'ready') throw new Error(next.error || _('Publishing routes is not complete. Retry publishing.'));
+			});
+		}).then(function () {
+			outEl.textContent = _('Deployment ready. Loading next step…');
+			window.setTimeout(function () { location.reload(); }, 1000);
+		}).catch(function (err) {
+			outEl.textContent = err.message || _('Deployment progress unavailable. Refresh to recover.');
+			btn.disabled = false;
 		});
 	},
 
@@ -811,19 +919,18 @@ return view.extend({
 			out.textContent = 'verifying…';
 			fs.exec(HT, ['verify']).then(function (res) {
 				out.textContent = (res.stdout || '') + (res.stderr || '');
-				if (res.code === 0) {
-					fs.exec(HT, ['mark', 'worker-verified']).then(function () {
-						return fs.exec(HT, ['apply-mode']);
-					}).then(function () {
-						out.appendChild(E('div', { 'class': 'alert-message success' },
-							_('All checks passed. Daemon enabled. Opening status page…')));
-						window.setTimeout(function () {
-							location.href = L.url('admin', 'services', 'hometunnel', 'status');
-						}, 1500);
-					});
-				} else {
-					btn.disabled = false;
-				}
+				if (res.code !== 0) throw new Error((res.stderr || '').trim() || _('Verification failed. Retry.'));
+				return fs.exec(HT, ['deploy-complete']);
+			}).then(function (res) {
+				if (res.code !== 0) throw new Error((res.stderr || '').trim() || _('Could not apply tunnel mode. Retry.'));
+				out.appendChild(E('div', { 'class': 'alert-message success' },
+					_('All checks passed. Daemon enabled. Opening status page…')));
+				window.setTimeout(function () {
+					location.href = L.url('admin', 'services', 'hometunnel', 'status');
+				}, 1500);
+			}).catch(function (err) {
+				out.textContent = err.message || _('Verification failed. Retry.');
+				btn.disabled = false;
 			});
 		});
 		body.appendChild(E('div', { 'style': 'margin:10px 0' }, [btn]));

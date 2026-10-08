@@ -55,6 +55,22 @@ while uci -q show hometunnel 2>/dev/null | grep -q "^hometunnel.@ingress\[$i\]="
 		service=$(uci -q get "hometunnel.@ingress[$i].service" || echo '')
 		path=$(uci -q get "hometunnel.@ingress[$i].path" || echo '')
 		hhh=$(uci -q get "hometunnel.@ingress[$i].http_host_header" || echo '')
+		# HTTP(S) 源站默认使用服务 URL 的主机名；显式 Host 始终优先。
+		# 不要把公网入口 hostname 透传给只识别内网 Host 的源站。
+		if [ -z "$hhh" ]; then
+			case "$service" in
+				http://*|https://*)
+					origin=${service#*://}
+					origin=${origin%%/*}
+					origin=${origin%%\?*}
+					origin=${origin##*@}
+					case "$origin" in
+						\[*\]*) hhh="${origin%%]*}]" ;;
+						*) hhh=${origin%%:*} ;;
+					esac
+					;;
+			esac
+		fi
 		ntv=$(uci -q get "hometunnel.@ingress[$i].no_tls_verify" || echo 0)
 		ct=$(uci -q get "hometunnel.@ingress[$i].connect_timeout" || echo 30)
 

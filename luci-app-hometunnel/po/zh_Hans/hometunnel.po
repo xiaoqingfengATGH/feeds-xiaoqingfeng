@@ -361,8 +361,8 @@ msgstr "可选。仅转发匹配的路径，如 <code>^/api(/.*)?$</code>"
 msgid "Origin Host header"
 msgstr "回源 Host 头"
 
-msgid "Optional. Rewrite the Host header sent to the origin (needed behind a name-based reverse proxy)."
-msgstr "可选。改写发往源站的 Host 头（源站在基于域名的反代后面时需要）。"
+msgid "Defaults to the HTTP(S) service URL hostname. Change it if the origin expects a different virtual host."
+msgstr "HTTP(S) 服务默认使用服务地址中的主机名作为回源 Host；源站要求其他虚拟主机名时可修改。"
 
 msgid "Skip TLS verify"
 msgstr "跳过 TLS 校验"
@@ -814,3 +814,75 @@ msgstr "创建内网穿透隧道，需要你在Cloudflare中授权。点击“�
 
 msgid "The service that starts and stops the intranet-exposure tunnel (a Cloudflare Worker) is about to be deployed. Click \"Start Authorization\" to generate an authorization link; it opens Cloudflare. When done, come back to the HomeTunnel wizard page. See the notes below for details."
 msgstr "即将部署内网穿透隧道启停控制服务（基于Cloudflare Worker），点击“开始授权”后，会生成授权链接，点击后会跳转Cloudflare，完毕后请回到Hometunnel配置向导页面。具体参考页面下方说明。"
+
+msgid "Subdomain changed during the check; retry deployment."
+msgstr "检查期间子域名已改变，请重新部署。"
+
+msgid "Could not save switch subdomain."
+msgstr "无法保存开关服务子域名。"
+
+msgid "Domain check failed; retry deployment."
+msgstr "域名占用检查失败，请重试部署。"
+
+msgid "Switch service bound. Refresh to resume without deploying again."
+msgstr "开关服务已绑定。刷新页面即可继续，无需重复部署。"
+
+msgid "Switch service bound; health check pending. Retry verification without deploying again."
+msgstr "开关服务已绑定；健康检查尚未通过。无需重新部署，请重试验证。"
+
+msgid "Switch service verified; publishing routes…"
+msgstr "开关服务已验证；正在发布路由…"
+
+msgid "Deployment state unavailable. Refresh to retry."
+msgstr "无法获取部署状态。请刷新后重试。"
+
+msgid "Retry Verification"
+msgstr "重试验证"
+
+msgid "Retry Publishing"
+msgstr "重试发布"
+
+msgid "Deployment progress unavailable. Refresh to recover."
+msgstr "无法获取部署进度。请刷新页面恢复。"
+
+msgid "Could not read deployment state."
+msgstr "无法读取部署状态。"
+
+msgid "Invalid deployment state."
+msgstr "部署状态无效。"
+
+msgid "Checking switch service health…"
+msgstr "正在检查开关服务健康状态…"
+
+msgid "Health check pending. Retry verification."
+msgstr "健康检查尚未通过。请重试验证。"
+
+msgid "Deployment is not ready; refresh to retry."
+msgstr "部署尚未就绪；请刷新后重试。"
+
+msgid "Publishing routes and regenerating configuration…"
+msgstr "正在发布路由并重新生成配置…"
+
+msgid "Publishing routes failed. Retry publishing."
+msgstr "发布路由失败。请重试发布。"
+
+msgid "Publishing routes is not complete. Retry publishing."
+msgstr "路由发布尚未完成。请重试发布。"
+
+msgid "Deployment ready. Loading next step…"
+msgstr "部署已就绪。正在加载下一步…"
+
+msgid "Verification failed. Retry."
+msgstr "验证失败。请重试。"
+
+msgid "Could not apply tunnel mode. Retry."
+msgstr "无法应用隧道模式。请重试。"
+
+msgid "Could not record completion. Retry."
+msgstr "无法记录完成状态。请重试。"
+
+msgid "Could not start deployment. Retry."
+msgstr "无法启动部署。请重试。"
+
+msgid "Could not read deployment state. Retry after refreshing the page."
+msgstr "无法读取部署状态。请刷新页面后重试。"

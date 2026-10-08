@@ -359,7 +359,7 @@ msgstr ""
 msgid "Origin Host header"
 msgstr ""
 
-msgid "Optional. Rewrite the Host header sent to the origin (needed behind a name-based reverse proxy)."
+msgid "Defaults to the HTTP(S) service URL hostname. Change it if the origin expects a different virtual host."
 msgstr ""
 
 msgid "Skip TLS verify"
@@ -801,4 +801,76 @@ msgid "Creating the intranet-exposure tunnel needs a one-time authorization in C
 msgstr ""
 
 msgid "The service that starts and stops the intranet-exposure tunnel (a Cloudflare Worker) is about to be deployed. Click \"Start Authorization\" to generate an authorization link; it opens Cloudflare. When done, come back to the HomeTunnel wizard page. See the notes below for details."
+msgstr ""
+
+msgid "Subdomain changed during the check; retry deployment."
+msgstr ""
+
+msgid "Could not save switch subdomain."
+msgstr ""
+
+msgid "Domain check failed; retry deployment."
+msgstr ""
+
+msgid "Switch service bound. Refresh to resume without deploying again."
+msgstr ""
+
+msgid "Switch service bound; health check pending. Retry verification without deploying again."
+msgstr ""
+
+msgid "Switch service verified; publishing routes…"
+msgstr ""
+
+msgid "Deployment state unavailable. Refresh to retry."
+msgstr ""
+
+msgid "Retry Verification"
+msgstr ""
+
+msgid "Retry Publishing"
+msgstr ""
+
+msgid "Deployment progress unavailable. Refresh to recover."
+msgstr ""
+
+msgid "Could not read deployment state."
+msgstr ""
+
+msgid "Invalid deployment state."
+msgstr ""
+
+msgid "Checking switch service health…"
+msgstr ""
+
+msgid "Health check pending. Retry verification."
+msgstr ""
+
+msgid "Deployment is not ready; refresh to retry."
+msgstr ""
+
+msgid "Publishing routes and regenerating configuration…"
+msgstr ""
+
+msgid "Publishing routes failed. Retry publishing."
+msgstr ""
+
+msgid "Publishing routes is not complete. Retry publishing."
+msgstr ""
+
+msgid "Deployment ready. Loading next step…"
+msgstr ""
+
+msgid "Verification failed. Retry."
+msgstr ""
+
+msgid "Could not apply tunnel mode. Retry."
+msgstr ""
+
+msgid "Could not record completion. Retry."
+msgstr ""
+
+msgid "Could not start deployment. Retry."
+msgstr ""
+
+msgid "Could not read deployment state. Retry after refreshing the page."
 msgstr ""

@@ -753,7 +753,7 @@ msgstr ""
 msgid "dhcp mode needs the strongswan-mod-dhcp plugin (not installed)"
 msgstr ""
 
-msgid "dhcp mode requires THIS router's dnsmasq to serve DHCP on %s (no dhcp-range found) — enable LAN DHCP here, or use lansubnet mode"
+msgid "dhcp mode requires running local dnsmasq with an active dynamic IPv4 DHCP range on %s — check LAN DHCP settings or another DHCP server causing dnsmasq to back off"
 msgstr ""
 
 msgid "dhcp mode together with firewall flow-offloading: offloaded flows bypass the IPsec policies (traffic blackholes after the first packets) — disable flow offloading or use lansubnet mode"

@@ -50,7 +50,29 @@ ip_key() { local IFS='.'; set -- $1; printf '%03d%03d%03d%03d' "$1" "$2" "$3" "$
 ip_last_octet() { local IFS='.'; set -- $1; echo "$4"; }
 ip_prefix3() { local IFS='.'; set -- $1; echo "$1.$2.$3"; }
 
-route_get() { ip route get "$1" 2>/dev/null | head -1; }
+route_get() {
+	local target="$1" route line prefix best=-1 candidate net mask
+	# strongSwan installs a VIP policy route in table 220.  For pool validation
+	# inspect the connected/main route instead, so an active client does not
+	# make its own LAN address appear to be reachable via the upstream gateway.
+	route=$(ip route show table local match "$target" 2>/dev/null)
+	[ -z "$route" ] || { printf '%s\n' "$route" | head -1; return 0; }
+	route=$(ip route show table main match "$target" 2>/dev/null)
+	while IFS= read -r line; do
+		set -- $line
+		case "$1" in
+			default) prefix=0 ;;
+			local|broadcast|unreachable|prohibit|blackhole|throw) continue ;;
+			*/*) prefix=${1#*/} ;;
+			*) prefix=32 ;;
+		esac
+		case "$prefix" in *[!0-9]*|'') continue ;; esac
+		if [ "$prefix" -gt "$best" ]; then best=$prefix; candidate=$line; fi
+	done <<EOF
+$route
+EOF
+	[ -n "$candidate" ] && printf '%s\n' "$candidate"
+}
 
 # last address of base/prefix — probes subnet overlap at both ends
 subnet_last() { # $1 = base ip, $2 = prefix length
@@ -229,6 +251,47 @@ refuse() { # $1 = human-readable reason
 	echo "homevpn: refusing to render: $1" >&2
 }
 
+dhcp_lan_ready() {
+	local pidfile pid instance conf args line range start end rt
+	[ "$(uci -q get dhcp.lan.interface)" = lan ] || return 1
+	[ "$(uci -q get dhcp.lan.ignore)" != 1 ] || return 1
+	[ "$(uci -q get dhcp.lan.dhcpv4)" != disabled ] || return 1
+	[ "$(uci -q get dhcp.lan.dynamicdhcp)" != 0 ] || return 1
+	for pidfile in /var/run/dnsmasq/dnsmasq.*.pid; do
+		[ -s "$pidfile" ] || continue
+		pid=$(cat "$pidfile")
+		case "$pid" in ''|*[!0-9]*) continue ;; esac
+		kill -0 "$pid" 2>/dev/null || continue
+		instance=${pidfile##*/dnsmasq.}; instance=${instance%.pid}
+		conf="/var/etc/dnsmasq.conf.$instance"
+		[ -r "$conf" ] && [ -r "/proc/$pid/cmdline" ] || continue
+		args=$(tr '\000' '\n' < "/proc/$pid/cmdline")
+		printf '%s\n' "$args" | grep -Fxq /usr/sbin/dnsmasq || continue
+		printf '%s\n' "$args" | grep -Fxq "$conf" || continue
+		while IFS= read -r line; do
+			case "$line" in dhcp-range=*) range=${line#dhcp-range=} ;; *) continue ;; esac
+			# dnsmasq supports optional set:/tag: prefixes before the IPv4 range.
+			while :; do
+				start=${range%%,*}
+				valid_ip "$start" && break
+				[ "$range" != "${range#*,}" ] || break
+				range=${range#*,}
+			done
+			valid_ip "$start" || continue
+			range=${range#*,}; end=${range%%,*}
+			valid_ip "$end" || continue
+			rt=$(route_get "$start")
+			case "$rt" in *" dev $LAN_IF"*) ;; *) continue ;; esac
+			case "$rt" in *' via '*) continue ;; esac
+			rt=$(route_get "$end")
+			case "$rt" in *" dev $LAN_IF"*) ;; *) continue ;; esac
+			case "$rt" in *' via '*) continue ;; esac
+			return 0
+		done < "$conf"
+	done
+	return 1
+}
+
 precheck() {
 	local ip rt occ occ_file o3 i ps pe n pc base pfx last
 	MODE="$(hv_get ip_mode)"
@@ -284,8 +347,8 @@ precheck() {
 		;;
 	dhcp)
 		[ -f /usr/lib/ipsec/plugins/libstrongswan-dhcp.so ] || { refuse "dhcp mode needs the strongswan-mod-dhcp plugin (not installed)"; return 1; }
-		grep -hs '^dhcp-range' /var/etc/dnsmasq.conf.* /tmp/dnsmasq.d/*.conf /etc/dnsmasq.conf 2>/dev/null | grep -q . || {
-			refuse "dhcp mode requires THIS router's dnsmasq to serve DHCP on $LAN_IF (no dhcp-range found) — enable LAN DHCP here, or use lansubnet mode"
+		dhcp_lan_ready || {
+			refuse "dhcp mode requires running local dnsmasq with an active dynamic IPv4 DHCP range on $LAN_IF — check LAN DHCP settings or another DHCP server causing dnsmasq to back off"
 			return 1
 		}
 		[ "$(uci -q get firewall.@defaults[0].flow_offloading)" = "1" ] && {
@@ -577,6 +640,7 @@ render_conf() {
 		pools_block="pools {
     homevpn {
         addrs = $POOL_SPEC
+        dns = $LAN_ADDR
     }
 }"
 		;;
@@ -584,6 +648,7 @@ render_conf() {
 		pools_block="pools {
     homevpn {
         addrs = $POOL_SUBNET
+        dns = $LAN_ADDR
     }
 }"
 		;;

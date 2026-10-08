@@ -762,8 +762,8 @@ msgstr "已部署的 CA 并非上传服务器证书的签发者，信任此 CA �
 msgid "dhcp mode needs the strongswan-mod-dhcp plugin (not installed)"
 msgstr "DHCP 模式需要 strongswan-mod-dhcp 插件（尚未安装）"
 
-msgid "dhcp mode requires THIS router's dnsmasq to serve DHCP on %s (no dhcp-range found) — enable LAN DHCP here, or use lansubnet mode"
-msgstr "DHCP 模式需要本路由器的 dnsmasq 在 %s 上提供 DHCP 服务（未找到 dhcp-range），请启用本机局域网 DHCP，或使用局域网子网地址池模式"
+msgid "dhcp mode requires running local dnsmasq with an active dynamic IPv4 DHCP range on %s — check LAN DHCP settings or another DHCP server causing dnsmasq to back off"
+msgstr "DHCP 模式要求本机 dnsmasq 正在 %s 上提供可动态分配的 IPv4 DHCP 地址范围；请检查局域网 DHCP 设置，以及是否因其他 DHCP 服务器而退避"
 
 msgid "dhcp mode together with firewall flow-offloading: offloaded flows bypass the IPsec policies (traffic blackholes after the first packets) — disable flow offloading or use lansubnet mode"
 msgstr "DHCP 模式与防火墙流量卸载同时启用时，卸载的流量会绕过 IPsec 策略（首批数据包后流量中断）。请关闭流量卸载，或使用局域网子网地址池模式"

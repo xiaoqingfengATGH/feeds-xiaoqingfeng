@@ -1,0 +1,47 @@
+✖ Save stages then commits homestun only and refreshes committed status (2.1086ms)
+✖ failed save or commit cannot claim refreshed committed status (0.845ms)
+ℹ tests 2
+ℹ suites 0
+ℹ pass 0
+ℹ fail 2
+ℹ cancelled 0
+ℹ skipped 0
+ℹ todo 0
+ℹ duration_ms 81.4751
+
+✖ failing tests:
+
+test at luci-app-homestun\tests\save.test.cjs:11:1
+✖ Save stages then commits homestun only and refreshes committed status (2.1086ms)
+  AssertionError [ERR_ASSERTION]: Expected values to be strictly equal:
+  + actual - expected
+  
+  + 'undefined'
+  - 'function'
+  
+      at TestContext.<anonymous> (D:\DevPortal\homelede\feeds-xiaoqingfeng-homestun\luci-app-homestun\tests\save.test.cjs:12:41)
+      at Test.runInAsyncScope (node:async_hooks:226:14)
+      at Test.run (node:internal/test_runner/test:1397:25)
+      at Test.start (node:internal/test_runner/test:1257:17)
+      at startSubtestAfterBootstrap (node:internal/test_runner/harness:387:17) {
+    generatedMessage: true,
+    code: 'ERR_ASSERTION',
+    actual: 'undefined',
+    expected: 'function',
+    operator: 'strictEqual',
+    diff: 'simple'
+  }
+
+test at luci-app-homestun\tests\save.test.cjs:15:1
+✖ failed save or commit cannot claim refreshed committed status (0.845ms)
+  TypeError: view.handleSave is not a function
+      at D:\DevPortal\homelede\feeds-xiaoqingfeng-homestun\luci-app-homestun\tests\save.test.cjs:16:111
+      at waitForActual (node:assert:601:21)
+      at strict.rejects (node:assert:738:31)
+      at TestContext.<anonymous> (D:\DevPortal\homelede\feeds-xiaoqingfeng-homestun\luci-app-homestun\tests\save.test.cjs:16:94)
+      at Test.runInAsyncScope (node:async_hooks:226:14)
+      at Test.run (node:internal/test_runner/test:1397:25)
+      at Test.processPendingSubtests (node:internal/test_runner/test:969:18)
+      at Test.postRun (node:internal/test_runner/test:1537:19)
+      at Test.run (node:internal/test_runner/test:1462:12)
+      at async startSubtestAfterBootstrap (node:internal/test_runner/harness:387:3)

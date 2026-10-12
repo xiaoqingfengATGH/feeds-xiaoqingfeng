@@ -28,11 +28,11 @@ test('settings render disabled flags, safe fields, honest status and no activati
  assert(fs.existsSync(file),'HomeSTUN settings view exists');
  const src=fs.readFileSync(file,'utf8'),options=[];
  const E=(tag,attrs,children)=>({tag,attrs,children});
- const form={Map:class {section(){return {option(type,name,label,description){const o={type,name,label,description};options.push(o);return o;}};}render(){return Promise.resolve(E('form',{},[]));}},NamedSection:'named',TypedSection:'typed',Flag:'flag',Value:'value',DummyValue:'dummy'};
+ const form={Map:class {section(){return {option(type,name,label,description){const o={type,name,label,description,depends(){}};options.push(o);return o;}};}render(){return Promise.resolve(E('form',{},[]));}},NamedSection:'named',TypedSection:'typed',Flag:'flag',Value:'value',DummyValue:'dummy'};
  const calls=[];const rpc={declare(d){calls.push(d);return ()=>Promise.resolve({state:'disabled',publication:'disabled',mapped:'unknown',reachable:'unverified'});}};
  const v=new Function('view','form','rpc','uci','schema','E','_',src)({extend:v=>v},form,rpc,{load:()=>Promise.resolve()},schema(),E,x=>x);
  const node=await v.render(await v.load());
- assert.deepEqual(calls,[{object:'homestun',method:'status',expect:{}}]);
+ assert.deepEqual(calls,[{object:'homestun',method:'status',expect:{}},{object:'uci',method:'commit',params:['config'],reject:true}]);
  const text=JSON.stringify(node);assert.match(text,/unknown/);assert.match(text,/unverified/);assert.match(text,/not observed/);
  for(const key of ['enabled','exposure_approved','publication_enabled'])assert.equal(options.find(o=>o.name===key).default,'0');
  for(const key of ['name','upstream','ttl','bind_port','port','stun_server','http_server'])assert(options.find(o=>o.name===key),key);

@@ -1,0 +1,2 @@
+const {chromium}=require('C:/Users/xiaoq/AppData/Local/hermes/profiles/ta/cache/scratch/homestun-browser/node_modules/playwright');
+(async()=>{const browser=await chromium.launch({channel:'chrome',headless:true});const page=await browser.newPage();page.on('pageerror',e=>console.log('PAGEERROR',e.message));await page.goto('http://127.0.0.1:18991/');await page.waitForFunction(()=>window.result?.loader);const result=await page.evaluate(()=>window.result);console.log(JSON.stringify(result));await browser.close();if(result.loader!=='PASS')process.exitCode=1;})();

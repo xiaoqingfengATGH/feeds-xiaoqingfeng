@@ -1,0 +1,39 @@
+{
+	
+}
+Active Internet connections (only servers)
+Proto Recv-Q Send-Q Local Address           Foreign Address         State       
+tcp        0      0 192.168.1.2:53          0.0.0.0:*               LISTEN      
+tcp        0      0 0.0.0.0:443             0.0.0.0:*               LISTEN      
+tcp        0      0 192.168.1.2:22          0.0.0.0:*               LISTEN      
+tcp        0      0 172.17.0.1:2004         0.0.0.0:*               LISTEN      
+tcp        0      0 192.168.1.2:139         0.0.0.0:*               LISTEN      
+tcp        0      0 0.0.0.0:5355            0.0.0.0:*               LISTEN      
+tcp        0      0 127.0.0.1:53            0.0.0.0:*               LISTEN      
+tcp        0      0 0.0.0.0:80              0.0.0.0:*               LISTEN      
+tcp        0      0 192.168.1.2:445         0.0.0.0:*               LISTEN      
+tcp        0      0 0.0.0.0:1026            0.0.0.0:*               LISTEN      
+tcp        0      0 0.0.0.0:21              0.0.0.0:*               LISTEN      
+tcp        0      0 192.168.1.2:7681        0.0.0.0:*               LISTEN      
+tcp        0      0 127.0.0.1:2002          0.0.0.0:*               LISTEN      
+tcp        0      0 127.0.0.1:2003          0.0.0.0:*               LISTEN      
+tcp        0      0 127.0.0.1:2004          0.0.0.0:*               LISTEN      
+tcp        0      0 172.17.0.1:53           0.0.0.0:*               LISTEN      
+tcp        0      0 0.0.0.0:60000           0.0.0.0:*               LISTEN      
+tcp        0      0 0.0.0.0:3702            0.0.0.0:*               LISTEN      
+tcp        0      0 192.168.1.2:2004        0.0.0.0:*               LISTEN      
+tcp        0      0 fd89:878e:a47f::1:22    :::*                    LISTEN      
+tcp        0      0 ::1:2004                :::*                    LISTEN      
+tcp        0      0 fd89:878e:a47f::1:53    :::*                    LISTEN      
+tcp        0      0 :::5355                 :::*                    LISTEN      
+tcp        0      0 :::80                   :::*                    LISTEN      
+tcp        0      0 :::1070                 :::*                    LISTEN      
+tcp        0      0 fe80::290:a6ff:fee0:382c:53 :::*                    LISTEN      
+tcp        0      0 fe80::290:a6ff:fee0:382c:2004 :::*                    LISTEN      
+tcp        0      0 :::2001                 :::*                    LISTEN      
+tcp        0      0 :::9876                 :::*                    LISTEN      
+tcp        0      0 :::3702                 :::*                    LISTEN      
+tcp        0      0 fd89:878e:a47f::1:2004  :::*                    LISTEN      
+tcp        0      0 ::1:53                  :::*                    LISTEN      
+fixture-absent-final
+Mon Oct 12 10:57:42 CST 2026

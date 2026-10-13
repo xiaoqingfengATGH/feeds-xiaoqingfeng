@@ -1,0 +1,8 @@
+540b98eb8be0ed039d9f8bb19b52d287f1b5c7d594321b397e3d8783e50072a4  /tmp/homestun-sdk-abi/homestun-lease
+3a4335115659ee98cb332f8bffe2804f7fcb3e4491645f2d9ec0b9960cb5f998  /tmp/homestun-sdk-abi/homestun-publish
+PASS SDK lease helper metadata ABI
+PASS SDK lease helper symlink fail-closed
+PASS SDK publisher ABI invalid-token begin rejected without session mutation
+PASS SDK publisher invalid-token callback rejected without sequence mutation
+PASS fixture cleanup
+TARGET_FIXTURE_ABSENT

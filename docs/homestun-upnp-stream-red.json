@@ -1,0 +1,27 @@
+{
+  "mode": "legacy",
+  "scope": "WSL loopback only; no UPnP",
+  "ports": [
+    45637,
+    46331,
+    45685
+  ],
+  "nginx_version": "nginx version: nginx/1.26.1 (x86_64-pc-linux-gnu)",
+  "raw_http": {
+    "headers": null,
+    "ticks": [],
+    "bytes": 0,
+    "outcome": "socket_timeout",
+    "elapsed": 3.0039379030000077
+  },
+  "status": "FAIL",
+  "error": "No HTTP response headers (zero-byte hold)",
+  "nginx_error": "",
+  "cleanup": {
+    "process_exited": true,
+    "45637_closed": true,
+    "46331_closed": true,
+    "45685_closed": true,
+    "fixture_directory_removed": true
+  }
+}

@@ -1,0 +1,11 @@
+{
+  "stage": "finished; real callback observed but independent ingress timeout; fixture cleaned; see homestun-real-natmap-result.json and homestun-real-natmap-summary.md",
+  "timestamp": "2026-10-12T08:14:10.775481+00:00",
+  "generation": "realnat-20261012T081410Z",
+  "scope": "temporary synthetic HTTPS only; ports18443/18444/backend18081; TTL<=120; no firewall/DNS/install/persistent configuration",
+  "local_egress": "61.148.12.162",
+  "remote_https_egress": "67.230.168.23",
+  "egress_note": "HTTPS path may traverse transparent household proxy; mapped STUN must be separately captured",
+  "remote_route": "192.168.1.2 via192.168.1.1 br-lan",
+  "cleanup": "native controller+guardian monotonic TTL; no auto-renew; final SSH readback; fixture removed only after processes absent"
+}

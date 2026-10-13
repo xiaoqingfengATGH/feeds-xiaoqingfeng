@@ -1,0 +1,5 @@
+Traceback (most recent call last):
+  File "D:\DevPortal\homelede\feeds-xiaoqingfeng-homestun\docs\homestun-luci-discovery-test.py", line 6, in <module>
+    assert re.search(r'call (Build/DefaultTargets|BuildPackage|KernelPackage)',recipe), 'SDK scan.mk excludes recipe: missing OpenWrt buildroot signature'
+           ~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+AssertionError: SDK scan.mk excludes recipe: missing OpenWrt buildroot signature

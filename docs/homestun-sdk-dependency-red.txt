@@ -1,0 +1,5 @@
+Traceback (most recent call last):
+  File "/mnt/d/DevPortal/homelede/feeds-xiaoqingfeng-homestun/docs/homestun-sdk-inspect.py", line 50, in <module>
+    assert runtime_providers[library] in dependencies, f'{name}: {library} requires explicit Depends: {runtime_providers[library]}'
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+AssertionError: homestun-lease: libgcc_s.so.1 requires explicit Depends: libgcc1

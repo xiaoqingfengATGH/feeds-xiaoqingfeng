@@ -1,0 +1,959 @@
+Updating feed 'luci' from '/home/eric/homestun-sdk-check/upstream/luci-d88390be4ec9722cb427fee03368fc8c8582627d' ...
+Create index file './feeds/luci.index' 
+Updating feed 'homestunlocal' from '/home/eric/homestun-sdk-check/source-feed' ...
+Create index file './feeds/homestunlocal.index' 
+[MCollecting package info: feeds/homestunlocal/homestun[MCollecting package info: feeds/homestunlocal/luci-app-homestun[MCollecting package info: merging...[MCollecting package info: done
+[MCollecting target info: merging...[MCollecting target info: done
+WARNING: Makefile 'package/kernel/linux/Makefile' has a dependency on 'eip197-mini-firmware', which does not exist
+WARNING: Makefile 'package/kernel/linux/Makefile' has a dependency on 'airoha-en8811h-firmware', which does not exist
+WARNING: Makefile 'package/kernel/linux/Makefile' has a dependency on 'r8169-firmware', which does not exist
+WARNING: Makefile 'package/kernel/linux/Makefile' has a dependency on 'e100-firmware', which does not exist
+WARNING: Makefile 'package/kernel/linux/Makefile' has a dependency on 'bnx2-firmware', which does not exist
+WARNING: Makefile 'package/kernel/linux/Makefile' has a dependency on 'bnx2x-firmware', which does not exist
+WARNING: Makefile 'package/kernel/linux/Makefile' has a dependency on 'ar3k-firmware', which does not exist
+WARNING: Makefile 'package/kernel/linux/Makefile' has a dependency on 'mwifiex-sdio-firmware', which does not exist
+WARNING: Makefile 'package/kernel/linux/Makefile' has a dependency on 'kmod-phy-bcm-ns-usb2', which does not exist
+WARNING: Makefile 'package/kernel/linux/Makefile' has a dependency on 'edgeport-firmware', which does not exist
+WARNING: Makefile 'package/kernel/linux/Makefile' has a dependency on 'r8152-firmware', which does not exist
+WARNING: Makefile 'package/kernel/linux/Makefile' has a dependency on 'kmod-phy-bcm-ns-usb3', which does not exist
+WARNING: Makefile 'package/kernel/linux/Makefile' has a dependency on 'amdgpu-firmware', which does not exist
+WARNING: Makefile 'package/kernel/linux/Makefile' has a dependency on 'i915-firmware-dmc', which does not exist
+WARNING: Makefile 'package/kernel/linux/Makefile' has a dependency on 'radeon-firmware', which does not exist
+WARNING: Makefile 'package/kernel/linux/Makefile' has a dependency on 'kmod-gpio-button-hotplug', which does not exist
+WARNING: Makefile 'package/kernel/linux/Makefile' has a dependency on 'nu801', which does not exist
+WARNING: Makefile 'package/kernel/linux/Makefile' has a dependency on 'eip197-mini-firmware', which does not exist
+WARNING: Makefile 'package/kernel/linux/Makefile' has a dependency on 'airoha-en8811h-firmware', which does not exist
+WARNING: Makefile 'package/kernel/linux/Makefile' has a dependency on 'r8169-firmware', which does not exist
+WARNING: Makefile 'package/kernel/linux/Makefile' has a dependency on 'e100-firmware', which does not exist
+WARNING: Makefile 'package/kernel/linux/Makefile' has a dependency on 'bnx2-firmware', which does not exist
+WARNING: Makefile 'package/kernel/linux/Makefile' has a dependency on 'bnx2x-firmware', which does not exist
+WARNING: Makefile 'package/kernel/linux/Makefile' has a dependency on 'ar3k-firmware', which does not exist
+WARNING: Makefile 'package/kernel/linux/Makefile' has a dependency on 'mwifiex-sdio-firmware', which does not exist
+WARNING: Makefile 'package/kernel/linux/Makefile' has a dependency on 'kmod-phy-bcm-ns-usb2', which does not exist
+WARNING: Makefile 'package/kernel/linux/Makefile' has a dependency on 'edgeport-firmware', which does not exist
+WARNING: Makefile 'package/kernel/linux/Makefile' has a dependency on 'r8152-firmware', which does not exist
+WARNING: Makefile 'package/kernel/linux/Makefile' has a dependency on 'kmod-phy-bcm-ns-usb3', which does not exist
+WARNING: Makefile 'package/kernel/linux/Makefile' has a dependency on 'amdgpu-firmware', which does not exist
+WARNING: Makefile 'package/kernel/linux/Makefile' has a dependency on 'i915-firmware-dmc', which does not exist
+WARNING: Makefile 'package/kernel/linux/Makefile' has a dependency on 'radeon-firmware', which does not exist
+WARNING: Makefile 'package/kernel/linux/Makefile' has a dependency on 'kmod-gpio-button-hotplug', which does not exist
+WARNING: Makefile 'package/kernel/linux/Makefile' has a dependency on 'nu801', which does not exist
+tmp/.config-package.in:7:warning: ignoring type redefinition of 'PACKAGE_ca-bundle' from 'bool' to 'tristate'
+tmp/.config-package.in:82:warning: ignoring type redefinition of 'PACKAGE_libc' from 'bool' to 'tristate'
+tmp/.config-package.in:109:warning: ignoring type redefinition of 'PACKAGE_libgcc' from 'bool' to 'tristate'
+tmp/.config-package.in:223:warning: ignoring type redefinition of 'PACKAGE_libpthread' from 'bool' to 'tristate'
+tmp/.config-package.in:278:warning: ignoring type redefinition of 'PACKAGE_librt' from 'bool' to 'tristate'
+tmp/.config-package.in:425:warning: ignoring type redefinition of 'PACKAGE_rpcd' from 'bool' to 'tristate'
+tmp/.config-package.in:439:warning: ignoring type redefinition of 'PACKAGE_rpcd-mod-file' from 'bool' to 'tristate'
+tmp/.config-package.in:450:warning: ignoring type redefinition of 'PACKAGE_rpcd-mod-iwinfo' from 'bool' to 'tristate'
+tmp/.config-package.in:473:warning: ignoring type redefinition of 'PACKAGE_rpcd-mod-ucode' from 'bool' to 'tristate'
+tmp/.config-package.in:485:warning: ignoring type redefinition of 'PACKAGE_ubus' from 'bool' to 'tristate'
+tmp/.config-package.in:496:warning: ignoring type redefinition of 'PACKAGE_ubusd' from 'bool' to 'tristate'
+tmp/.config-package.in:506:warning: ignoring type redefinition of 'PACKAGE_uci' from 'bool' to 'tristate'
+tmp/.config-package.in:567:warning: ignoring type redefinition of 'PACKAGE_libiwinfo-data' from 'bool' to 'tristate'
+tmp/.config-package.in:2053:warning: ignoring type redefinition of 'PACKAGE_ucode' from 'bool' to 'tristate'
+tmp/.config-package.in:2083:warning: ignoring type redefinition of 'PACKAGE_ucode-mod-fs' from 'bool' to 'tristate'
+tmp/.config-package.in:2102:warning: ignoring type redefinition of 'PACKAGE_ucode-mod-math' from 'bool' to 'tristate'
+tmp/.config-package.in:2160:warning: ignoring type redefinition of 'PACKAGE_ucode-mod-ubus' from 'bool' to 'tristate'
+tmp/.config-package.in:2171:warning: ignoring type redefinition of 'PACKAGE_ucode-mod-uci' from 'bool' to 'tristate'
+tmp/.config-package.in:2346:warning: ignoring type redefinition of 'PACKAGE_libmbedtls' from 'bool' to 'tristate'
+tmp/.config-package.in:2561:warning: ignoring type redefinition of 'PACKAGE_libblkid' from 'bool' to 'tristate'
+tmp/.config-package.in:2573:warning: ignoring type redefinition of 'PACKAGE_libblobmsg-json' from 'bool' to 'tristate'
+tmp/.config-package.in:2890:warning: ignoring type redefinition of 'PACKAGE_libiwinfo' from 'bool' to 'tristate'
+tmp/.config-package.in:2903:warning: ignoring type redefinition of 'PACKAGE_libjson-c' from 'bool' to 'tristate'
+tmp/.config-package.in:2930:warning: ignoring type redefinition of 'PACKAGE_liblucihttp' from 'bool' to 'tristate'
+tmp/.config-package.in:2948:warning: ignoring type redefinition of 'PACKAGE_liblucihttp-ucode' from 'bool' to 'tristate'
+tmp/.config-package.in:2977:warning: ignoring type redefinition of 'PACKAGE_libmnl' from 'bool' to 'tristate'
+tmp/.config-package.in:3062:warning: ignoring type redefinition of 'PACKAGE_libnl-tiny' from 'bool' to 'tristate'
+tmp/.config-package.in:3151:warning: ignoring type redefinition of 'PACKAGE_libsmartcols' from 'bool' to 'tristate'
+tmp/.config-package.in:3217:warning: ignoring type redefinition of 'PACKAGE_libubox' from 'bool' to 'tristate'
+tmp/.config-package.in:3235:warning: ignoring type redefinition of 'PACKAGE_libubus' from 'bool' to 'tristate'
+tmp/.config-package.in:3254:warning: ignoring type redefinition of 'PACKAGE_libuci' from 'bool' to 'tristate'
+tmp/.config-package.in:3273:warning: ignoring type redefinition of 'PACKAGE_libucode' from 'bool' to 'tristate'
+tmp/.config-package.in:3291:warning: ignoring type redefinition of 'PACKAGE_libuuid' from 'bool' to 'tristate'
+tmp/.config-package.in:3372:warning: ignoring type redefinition of 'PACKAGE_rpcd-mod-luci' from 'bool' to 'tristate'
+tmp/.config-package.in:3409:warning: ignoring type redefinition of 'PACKAGE_luci-base' from 'bool' to 'tristate'
+tmp/.config-package.in:3444:warning: ignoring type redefinition of 'LUCI_LANG_ar' from 'bool' to 'tristate'
+tmp/.config-package.in:3447:warning: ignoring type redefinition of 'LUCI_LANG_bg' from 'bool' to 'tristate'
+tmp/.config-package.in:3450:warning: ignoring type redefinition of 'LUCI_LANG_bn_BD' from 'bool' to 'tristate'
+tmp/.config-package.in:3453:warning: ignoring type redefinition of 'LUCI_LANG_ca' from 'bool' to 'tristate'
+tmp/.config-package.in:3456:warning: ignoring type redefinition of 'LUCI_LANG_cs' from 'bool' to 'tristate'
+tmp/.config-package.in:3459:warning: ignoring type redefinition of 'LUCI_LANG_da' from 'bool' to 'tristate'
+tmp/.config-package.in:3462:warning: ignoring type redefinition of 'LUCI_LANG_de' from 'bool' to 'tristate'
+tmp/.config-package.in:3465:warning: ignoring type redefinition of 'LUCI_LANG_el' from 'bool' to 'tristate'
+tmp/.config-package.in:3468:warning: ignoring type redefinition of 'LUCI_LANG_es' from 'bool' to 'tristate'
+tmp/.config-package.in:3471:warning: ignoring type redefinition of 'LUCI_LANG_fa' from 'bool' to 'tristate'
+tmp/.config-package.in:3474:warning: ignoring type redefinition of 'LUCI_LANG_fi' from 'bool' to 'tristate'
+tmp/.config-package.in:3477:warning: ignoring type redefinition of 'LUCI_LANG_fil' from 'bool' to 'tristate'
+tmp/.config-package.in:3480:warning: ignoring type redefinition of 'LUCI_LANG_fr' from 'bool' to 'tristate'
+tmp/.config-package.in:3483:warning: ignoring type redefinition of 'LUCI_LANG_ga' from 'bool' to 'tristate'
+tmp/.config-package.in:3486:warning: ignoring type redefinition of 'LUCI_LANG_he' from 'bool' to 'tristate'
+tmp/.config-package.in:3489:warning: ignoring type redefinition of 'LUCI_LANG_hi' from 'bool' to 'tristate'
+tmp/.config-package.in:3492:warning: ignoring type redefinition of 'LUCI_LANG_hu' from 'bool' to 'tristate'
+tmp/.config-package.in:3495:warning: ignoring type redefinition of 'LUCI_LANG_it' from 'bool' to 'tristate'
+tmp/.config-package.in:3498:warning: ignoring type redefinition of 'LUCI_LANG_ja' from 'bool' to 'tristate'
+tmp/.config-package.in:3501:warning: ignoring type redefinition of 'LUCI_LANG_ko' from 'bool' to 'tristate'
+tmp/.config-package.in:3504:warning: ignoring type redefinition of 'LUCI_LANG_lt' from 'bool' to 'tristate'
+tmp/.config-package.in:3507:warning: ignoring type redefinition of 'LUCI_LANG_mr' from 'bool' to 'tristate'
+tmp/.config-package.in:3510:warning: ignoring type redefinition of 'LUCI_LANG_ms' from 'bool' to 'tristate'
+tmp/.config-package.in:3513:warning: ignoring type redefinition of 'LUCI_LANG_nb_NO' from 'bool' to 'tristate'
+tmp/.config-package.in:3516:warning: ignoring type redefinition of 'LUCI_LANG_nl' from 'bool' to 'tristate'
+tmp/.config-package.in:3519:warning: ignoring type redefinition of 'LUCI_LANG_pl' from 'bool' to 'tristate'
+tmp/.config-package.in:3522:warning: ignoring type redefinition of 'LUCI_LANG_pt' from 'bool' to 'tristate'
+tmp/.config-package.in:3525:warning: ignoring type redefinition of 'LUCI_LANG_pt_BR' from 'bool' to 'tristate'
+tmp/.config-package.in:3528:warning: ignoring type redefinition of 'LUCI_LANG_ro' from 'bool' to 'tristate'
+tmp/.config-package.in:3531:warning: ignoring type redefinition of 'LUCI_LANG_ru' from 'bool' to 'tristate'
+tmp/.config-package.in:3534:warning: ignoring type redefinition of 'LUCI_LANG_sk' from 'bool' to 'tristate'
+tmp/.config-package.in:3537:warning: ignoring type redefinition of 'LUCI_LANG_sv' from 'bool' to 'tristate'
+tmp/.config-package.in:3540:warning: ignoring type redefinition of 'LUCI_LANG_tr' from 'bool' to 'tristate'
+tmp/.config-package.in:3543:warning: ignoring type redefinition of 'LUCI_LANG_uk' from 'bool' to 'tristate'
+tmp/.config-package.in:3546:warning: ignoring type redefinition of 'LUCI_LANG_vi' from 'bool' to 'tristate'
+tmp/.config-package.in:3549:warning: ignoring type redefinition of 'LUCI_LANG_yua' from 'bool' to 'tristate'
+tmp/.config-package.in:3552:warning: ignoring type redefinition of 'LUCI_LANG_zh_Hans' from 'bool' to 'tristate'
+tmp/.config-package.in:3555:warning: ignoring type redefinition of 'LUCI_LANG_zh_Hant' from 'bool' to 'tristate'
+tmp/.config-package.in:4064:warning: ignoring type redefinition of 'PACKAGE_cgi-io' from 'bool' to 'tristate'
+tmp/.config-package.in:4597:warning: ignoring type redefinition of 'PACKAGE_partx-utils' from 'bool' to 'tristate'
+tmp/.config-package.in:4921:warning: ignoring type redefinition of 'PACKAGE_jshn' from 'bool' to 'tristate'
+tmp/.config-package.in:4986:warning: ignoring type redefinition of 'PACKAGE_libjson-script' from 'bool' to 'tristate'
+tmp/.config-package.in:5179:warning: ignoring type redefinition of 'PACKAGE_ucode-mod-html' from 'bool' to 'tristate'
+Config-build.in:1247:warning: defaults for choice values not supported
+Config-build.in:1251:warning: defaults for choice values not supported
+Config-build.in:1255:warning: defaults for choice values not supported
+#
+# configuration written to .config
+#
+WARNING: Makefile 'package/kernel/linux/Makefile' has a dependency on 'eip197-mini-firmware', which does not exist
+WARNING: Makefile 'package/kernel/linux/Makefile' has a dependency on 'airoha-en8811h-firmware', which does not exist
+WARNING: Makefile 'package/kernel/linux/Makefile' has a dependency on 'r8169-firmware', which does not exist
+WARNING: Makefile 'package/kernel/linux/Makefile' has a dependency on 'e100-firmware', which does not exist
+WARNING: Makefile 'package/kernel/linux/Makefile' has a dependency on 'bnx2-firmware', which does not exist
+WARNING: Makefile 'package/kernel/linux/Makefile' has a dependency on 'bnx2x-firmware', which does not exist
+WARNING: Makefile 'package/kernel/linux/Makefile' has a dependency on 'ar3k-firmware', which does not exist
+WARNING: Makefile 'package/kernel/linux/Makefile' has a dependency on 'mwifiex-sdio-firmware', which does not exist
+WARNING: Makefile 'package/kernel/linux/Makefile' has a dependency on 'kmod-phy-bcm-ns-usb2', which does not exist
+WARNING: Makefile 'package/kernel/linux/Makefile' has a dependency on 'edgeport-firmware', which does not exist
+WARNING: Makefile 'package/kernel/linux/Makefile' has a dependency on 'r8152-firmware', which does not exist
+WARNING: Makefile 'package/kernel/linux/Makefile' has a dependency on 'kmod-phy-bcm-ns-usb3', which does not exist
+WARNING: Makefile 'package/kernel/linux/Makefile' has a dependency on 'amdgpu-firmware', which does not exist
+WARNING: Makefile 'package/kernel/linux/Makefile' has a dependency on 'i915-firmware-dmc', which does not exist
+WARNING: Makefile 'package/kernel/linux/Makefile' has a dependency on 'radeon-firmware', which does not exist
+WARNING: Makefile 'package/kernel/linux/Makefile' has a dependency on 'kmod-gpio-button-hotplug', which does not exist
+WARNING: Makefile 'package/kernel/linux/Makefile' has a dependency on 'nu801', which does not exist
+make[2]: Entering directory '/home/eric/homestun-sdk-check/openwrt-sdk-24.10.5-x86-64_gcc-13.3.0_musl.Linux-x86_64/scripts/config'
+make[2]: 'conf' is up to date.
+make[2]: Leaving directory '/home/eric/homestun-sdk-check/openwrt-sdk-24.10.5-x86-64_gcc-13.3.0_musl.Linux-x86_64/scripts/config'
+tmp/.config-package.in:7:warning: ignoring type redefinition of 'PACKAGE_ca-bundle' from 'bool' to 'tristate'
+tmp/.config-package.in:82:warning: ignoring type redefinition of 'PACKAGE_libc' from 'bool' to 'tristate'
+tmp/.config-package.in:109:warning: ignoring type redefinition of 'PACKAGE_libgcc' from 'bool' to 'tristate'
+tmp/.config-package.in:223:warning: ignoring type redefinition of 'PACKAGE_libpthread' from 'bool' to 'tristate'
+tmp/.config-package.in:278:warning: ignoring type redefinition of 'PACKAGE_librt' from 'bool' to 'tristate'
+tmp/.config-package.in:425:warning: ignoring type redefinition of 'PACKAGE_rpcd' from 'bool' to 'tristate'
+tmp/.config-package.in:439:warning: ignoring type redefinition of 'PACKAGE_rpcd-mod-file' from 'bool' to 'tristate'
+tmp/.config-package.in:450:warning: ignoring type redefinition of 'PACKAGE_rpcd-mod-iwinfo' from 'bool' to 'tristate'
+tmp/.config-package.in:473:warning: ignoring type redefinition of 'PACKAGE_rpcd-mod-ucode' from 'bool' to 'tristate'
+tmp/.config-package.in:485:warning: ignoring type redefinition of 'PACKAGE_ubus' from 'bool' to 'tristate'
+tmp/.config-package.in:496:warning: ignoring type redefinition of 'PACKAGE_ubusd' from 'bool' to 'tristate'
+tmp/.config-package.in:506:warning: ignoring type redefinition of 'PACKAGE_uci' from 'bool' to 'tristate'
+tmp/.config-package.in:567:warning: ignoring type redefinition of 'PACKAGE_libiwinfo-data' from 'bool' to 'tristate'
+tmp/.config-package.in:2053:warning: ignoring type redefinition of 'PACKAGE_ucode' from 'bool' to 'tristate'
+tmp/.config-package.in:2083:warning: ignoring type redefinition of 'PACKAGE_ucode-mod-fs' from 'bool' to 'tristate'
+tmp/.config-package.in:2102:warning: ignoring type redefinition of 'PACKAGE_ucode-mod-math' from 'bool' to 'tristate'
+tmp/.config-package.in:2160:warning: ignoring type redefinition of 'PACKAGE_ucode-mod-ubus' from 'bool' to 'tristate'
+tmp/.config-package.in:2171:warning: ignoring type redefinition of 'PACKAGE_ucode-mod-uci' from 'bool' to 'tristate'
+tmp/.config-package.in:2346:warning: ignoring type redefinition of 'PACKAGE_libmbedtls' from 'bool' to 'tristate'
+tmp/.config-package.in:2561:warning: ignoring type redefinition of 'PACKAGE_libblkid' from 'bool' to 'tristate'
+tmp/.config-package.in:2573:warning: ignoring type redefinition of 'PACKAGE_libblobmsg-json' from 'bool' to 'tristate'
+tmp/.config-package.in:2890:warning: ignoring type redefinition of 'PACKAGE_libiwinfo' from 'bool' to 'tristate'
+tmp/.config-package.in:2903:warning: ignoring type redefinition of 'PACKAGE_libjson-c' from 'bool' to 'tristate'
+tmp/.config-package.in:2930:warning: ignoring type redefinition of 'PACKAGE_liblucihttp' from 'bool' to 'tristate'
+tmp/.config-package.in:2948:warning: ignoring type redefinition of 'PACKAGE_liblucihttp-ucode' from 'bool' to 'tristate'
+tmp/.config-package.in:2977:warning: ignoring type redefinition of 'PACKAGE_libmnl' from 'bool' to 'tristate'
+tmp/.config-package.in:3062:warning: ignoring type redefinition of 'PACKAGE_libnl-tiny' from 'bool' to 'tristate'
+tmp/.config-package.in:3151:warning: ignoring type redefinition of 'PACKAGE_libsmartcols' from 'bool' to 'tristate'
+tmp/.config-package.in:3217:warning: ignoring type redefinition of 'PACKAGE_libubox' from 'bool' to 'tristate'
+tmp/.config-package.in:3235:warning: ignoring type redefinition of 'PACKAGE_libubus' from 'bool' to 'tristate'
+tmp/.config-package.in:3254:warning: ignoring type redefinition of 'PACKAGE_libuci' from 'bool' to 'tristate'
+tmp/.config-package.in:3273:warning: ignoring type redefinition of 'PACKAGE_libucode' from 'bool' to 'tristate'
+tmp/.config-package.in:3291:warning: ignoring type redefinition of 'PACKAGE_libuuid' from 'bool' to 'tristate'
+tmp/.config-package.in:3372:warning: ignoring type redefinition of 'PACKAGE_rpcd-mod-luci' from 'bool' to 'tristate'
+tmp/.config-package.in:3409:warning: ignoring type redefinition of 'PACKAGE_luci-base' from 'bool' to 'tristate'
+tmp/.config-package.in:3444:warning: ignoring type redefinition of 'LUCI_LANG_ar' from 'bool' to 'tristate'
+tmp/.config-package.in:3447:warning: ignoring type redefinition of 'LUCI_LANG_bg' from 'bool' to 'tristate'
+tmp/.config-package.in:3450:warning: ignoring type redefinition of 'LUCI_LANG_bn_BD' from 'bool' to 'tristate'
+tmp/.config-package.in:3453:warning: ignoring type redefinition of 'LUCI_LANG_ca' from 'bool' to 'tristate'
+tmp/.config-package.in:3456:warning: ignoring type redefinition of 'LUCI_LANG_cs' from 'bool' to 'tristate'
+tmp/.config-package.in:3459:warning: ignoring type redefinition of 'LUCI_LANG_da' from 'bool' to 'tristate'
+tmp/.config-package.in:3462:warning: ignoring type redefinition of 'LUCI_LANG_de' from 'bool' to 'tristate'
+tmp/.config-package.in:3465:warning: ignoring type redefinition of 'LUCI_LANG_el' from 'bool' to 'tristate'
+tmp/.config-package.in:3468:warning: ignoring type redefinition of 'LUCI_LANG_es' from 'bool' to 'tristate'
+tmp/.config-package.in:3471:warning: ignoring type redefinition of 'LUCI_LANG_fa' from 'bool' to 'tristate'
+tmp/.config-package.in:3474:warning: ignoring type redefinition of 'LUCI_LANG_fi' from 'bool' to 'tristate'
+tmp/.config-package.in:3477:warning: ignoring type redefinition of 'LUCI_LANG_fil' from 'bool' to 'tristate'
+tmp/.config-package.in:3480:warning: ignoring type redefinition of 'LUCI_LANG_fr' from 'bool' to 'tristate'
+tmp/.config-package.in:3483:warning: ignoring type redefinition of 'LUCI_LANG_ga' from 'bool' to 'tristate'
+tmp/.config-package.in:3486:warning: ignoring type redefinition of 'LUCI_LANG_he' from 'bool' to 'tristate'
+tmp/.config-package.in:3489:warning: ignoring type redefinition of 'LUCI_LANG_hi' from 'bool' to 'tristate'
+tmp/.config-package.in:3492:warning: ignoring type redefinition of 'LUCI_LANG_hu' from 'bool' to 'tristate'
+tmp/.config-package.in:3495:warning: ignoring type redefinition of 'LUCI_LANG_it' from 'bool' to 'tristate'
+tmp/.config-package.in:3498:warning: ignoring type redefinition of 'LUCI_LANG_ja' from 'bool' to 'tristate'
+tmp/.config-package.in:3501:warning: ignoring type redefinition of 'LUCI_LANG_ko' from 'bool' to 'tristate'
+tmp/.config-package.in:3504:warning: ignoring type redefinition of 'LUCI_LANG_lt' from 'bool' to 'tristate'
+tmp/.config-package.in:3507:warning: ignoring type redefinition of 'LUCI_LANG_mr' from 'bool' to 'tristate'
+tmp/.config-package.in:3510:warning: ignoring type redefinition of 'LUCI_LANG_ms' from 'bool' to 'tristate'
+tmp/.config-package.in:3513:warning: ignoring type redefinition of 'LUCI_LANG_nb_NO' from 'bool' to 'tristate'
+tmp/.config-package.in:3516:warning: ignoring type redefinition of 'LUCI_LANG_nl' from 'bool' to 'tristate'
+tmp/.config-package.in:3519:warning: ignoring type redefinition of 'LUCI_LANG_pl' from 'bool' to 'tristate'
+tmp/.config-package.in:3522:warning: ignoring type redefinition of 'LUCI_LANG_pt' from 'bool' to 'tristate'
+tmp/.config-package.in:3525:warning: ignoring type redefinition of 'LUCI_LANG_pt_BR' from 'bool' to 'tristate'
+tmp/.config-package.in:3528:warning: ignoring type redefinition of 'LUCI_LANG_ro' from 'bool' to 'tristate'
+tmp/.config-package.in:3531:warning: ignoring type redefinition of 'LUCI_LANG_ru' from 'bool' to 'tristate'
+tmp/.config-package.in:3534:warning: ignoring type redefinition of 'LUCI_LANG_sk' from 'bool' to 'tristate'
+tmp/.config-package.in:3537:warning: ignoring type redefinition of 'LUCI_LANG_sv' from 'bool' to 'tristate'
+tmp/.config-package.in:3540:warning: ignoring type redefinition of 'LUCI_LANG_tr' from 'bool' to 'tristate'
+tmp/.config-package.in:3543:warning: ignoring type redefinition of 'LUCI_LANG_uk' from 'bool' to 'tristate'
+tmp/.config-package.in:3546:warning: ignoring type redefinition of 'LUCI_LANG_vi' from 'bool' to 'tristate'
+tmp/.config-package.in:3549:warning: ignoring type redefinition of 'LUCI_LANG_yua' from 'bool' to 'tristate'
+tmp/.config-package.in:3552:warning: ignoring type redefinition of 'LUCI_LANG_zh_Hans' from 'bool' to 'tristate'
+tmp/.config-package.in:3555:warning: ignoring type redefinition of 'LUCI_LANG_zh_Hant' from 'bool' to 'tristate'
+tmp/.config-package.in:4064:warning: ignoring type redefinition of 'PACKAGE_cgi-io' from 'bool' to 'tristate'
+tmp/.config-package.in:4597:warning: ignoring type redefinition of 'PACKAGE_partx-utils' from 'bool' to 'tristate'
+tmp/.config-package.in:4921:warning: ignoring type redefinition of 'PACKAGE_jshn' from 'bool' to 'tristate'
+tmp/.config-package.in:4986:warning: ignoring type redefinition of 'PACKAGE_libjson-script' from 'bool' to 'tristate'
+tmp/.config-package.in:5179:warning: ignoring type redefinition of 'PACKAGE_ucode-mod-html' from 'bool' to 'tristate'
+Config-build.in:1247:warning: defaults for choice values not supported
+Config-build.in:1251:warning: defaults for choice values not supported
+Config-build.in:1255:warning: defaults for choice values not supported
+#
+# No change to .config
+#
+make[1]: Entering directory '/home/eric/homestun-sdk-check/openwrt-sdk-24.10.5-x86-64_gcc-13.3.0_musl.Linux-x86_64'
+make[2]: Entering directory '/home/eric/homestun-sdk-check/source-feed/luci-app-homestun'
+rm -rf /home/eric/homestun-sdk-check/openwrt-sdk-24.10.5-x86-64_gcc-13.3.0_musl.Linux-x86_64/build_dir/target-x86_64_musl/luci-app-homestun
+/home/eric/homestun-sdk-check/openwrt-sdk-24.10.5-x86-64_gcc-13.3.0_musl.Linux-x86_64/scripts/ipkg-remove luci-app-homestun /home/eric/homestun-sdk-check/openwrt-sdk-24.10.5-x86-64_gcc-13.3.0_musl.Linux-x86_64/bin/packages/x86_64/homestunlocal/luci-app-homestun_0.1.0-r1_all.ipk
+removed '/home/eric/homestun-sdk-check/openwrt-sdk-24.10.5-x86-64_gcc-13.3.0_musl.Linux-x86_64/bin/packages/x86_64/homestunlocal/luci-app-homestun_0.1.0-r1_all.ipk'
+rm -f /home/eric/homestun-sdk-check/openwrt-sdk-24.10.5-x86-64_gcc-13.3.0_musl.Linux-x86_64/staging_dir/target-x86_64_musl/stamp/.luci-app-homestun_installed
+rm -f /home/eric/homestun-sdk-check/openwrt-sdk-24.10.5-x86-64_gcc-13.3.0_musl.Linux-x86_64/staging_dir/target-x86_64_musl/packages/luci-app-homestun.list
+make[2]: Leaving directory '/home/eric/homestun-sdk-check/source-feed/luci-app-homestun'
+time: package/feeds/homestunlocal/luci-app-homestun/clean#0.11#0.07#0.42
+make[1]: Leaving directory '/home/eric/homestun-sdk-check/openwrt-sdk-24.10.5-x86-64_gcc-13.3.0_musl.Linux-x86_64'
+WARNING: Makefile 'package/kernel/linux/Makefile' has a dependency on 'eip197-mini-firmware', which does not exist
+WARNING: Makefile 'package/kernel/linux/Makefile' has a dependency on 'airoha-en8811h-firmware', which does not exist
+WARNING: Makefile 'package/kernel/linux/Makefile' has a dependency on 'r8169-firmware', which does not exist
+WARNING: Makefile 'package/kernel/linux/Makefile' has a dependency on 'e100-firmware', which does not exist
+WARNING: Makefile 'package/kernel/linux/Makefile' has a dependency on 'bnx2-firmware', which does not exist
+WARNING: Makefile 'package/kernel/linux/Makefile' has a dependency on 'bnx2x-firmware', which does not exist
+WARNING: Makefile 'package/kernel/linux/Makefile' has a dependency on 'ar3k-firmware', which does not exist
+WARNING: Makefile 'package/kernel/linux/Makefile' has a dependency on 'mwifiex-sdio-firmware', which does not exist
+WARNING: Makefile 'package/kernel/linux/Makefile' has a dependency on 'kmod-phy-bcm-ns-usb2', which does not exist
+WARNING: Makefile 'package/kernel/linux/Makefile' has a dependency on 'edgeport-firmware', which does not exist
+WARNING: Makefile 'package/kernel/linux/Makefile' has a dependency on 'r8152-firmware', which does not exist
+WARNING: Makefile 'package/kernel/linux/Makefile' has a dependency on 'kmod-phy-bcm-ns-usb3', which does not exist
+WARNING: Makefile 'package/kernel/linux/Makefile' has a dependency on 'amdgpu-firmware', which does not exist
+WARNING: Makefile 'package/kernel/linux/Makefile' has a dependency on 'i915-firmware-dmc', which does not exist
+WARNING: Makefile 'package/kernel/linux/Makefile' has a dependency on 'radeon-firmware', which does not exist
+WARNING: Makefile 'package/kernel/linux/Makefile' has a dependency on 'kmod-gpio-button-hotplug', which does not exist
+WARNING: Makefile 'package/kernel/linux/Makefile' has a dependency on 'nu801', which does not exist
+make[2]: Entering directory '/home/eric/homestun-sdk-check/openwrt-sdk-24.10.5-x86-64_gcc-13.3.0_musl.Linux-x86_64/scripts/config'
+make[2]: 'conf' is up to date.
+make[2]: Leaving directory '/home/eric/homestun-sdk-check/openwrt-sdk-24.10.5-x86-64_gcc-13.3.0_musl.Linux-x86_64/scripts/config'
+tmp/.config-package.in:7:warning: ignoring type redefinition of 'PACKAGE_ca-bundle' from 'bool' to 'tristate'
+tmp/.config-package.in:82:warning: ignoring type redefinition of 'PACKAGE_libc' from 'bool' to 'tristate'
+tmp/.config-package.in:109:warning: ignoring type redefinition of 'PACKAGE_libgcc' from 'bool' to 'tristate'
+tmp/.config-package.in:223:warning: ignoring type redefinition of 'PACKAGE_libpthread' from 'bool' to 'tristate'
+tmp/.config-package.in:278:warning: ignoring type redefinition of 'PACKAGE_librt' from 'bool' to 'tristate'
+tmp/.config-package.in:425:warning: ignoring type redefinition of 'PACKAGE_rpcd' from 'bool' to 'tristate'
+tmp/.config-package.in:439:warning: ignoring type redefinition of 'PACKAGE_rpcd-mod-file' from 'bool' to 'tristate'
+tmp/.config-package.in:450:warning: ignoring type redefinition of 'PACKAGE_rpcd-mod-iwinfo' from 'bool' to 'tristate'
+tmp/.config-package.in:473:warning: ignoring type redefinition of 'PACKAGE_rpcd-mod-ucode' from 'bool' to 'tristate'
+tmp/.config-package.in:485:warning: ignoring type redefinition of 'PACKAGE_ubus' from 'bool' to 'tristate'
+tmp/.config-package.in:496:warning: ignoring type redefinition of 'PACKAGE_ubusd' from 'bool' to 'tristate'
+tmp/.config-package.in:506:warning: ignoring type redefinition of 'PACKAGE_uci' from 'bool' to 'tristate'
+tmp/.config-package.in:567:warning: ignoring type redefinition of 'PACKAGE_libiwinfo-data' from 'bool' to 'tristate'
+tmp/.config-package.in:2053:warning: ignoring type redefinition of 'PACKAGE_ucode' from 'bool' to 'tristate'
+tmp/.config-package.in:2083:warning: ignoring type redefinition of 'PACKAGE_ucode-mod-fs' from 'bool' to 'tristate'
+tmp/.config-package.in:2102:warning: ignoring type redefinition of 'PACKAGE_ucode-mod-math' from 'bool' to 'tristate'
+tmp/.config-package.in:2160:warning: ignoring type redefinition of 'PACKAGE_ucode-mod-ubus' from 'bool' to 'tristate'
+tmp/.config-package.in:2171:warning: ignoring type redefinition of 'PACKAGE_ucode-mod-uci' from 'bool' to 'tristate'
+tmp/.config-package.in:2346:warning: ignoring type redefinition of 'PACKAGE_libmbedtls' from 'bool' to 'tristate'
+tmp/.config-package.in:2561:warning: ignoring type redefinition of 'PACKAGE_libblkid' from 'bool' to 'tristate'
+tmp/.config-package.in:2573:warning: ignoring type redefinition of 'PACKAGE_libblobmsg-json' from 'bool' to 'tristate'
+tmp/.config-package.in:2890:warning: ignoring type redefinition of 'PACKAGE_libiwinfo' from 'bool' to 'tristate'
+tmp/.config-package.in:2903:warning: ignoring type redefinition of 'PACKAGE_libjson-c' from 'bool' to 'tristate'
+tmp/.config-package.in:2930:warning: ignoring type redefinition of 'PACKAGE_liblucihttp' from 'bool' to 'tristate'
+tmp/.config-package.in:2948:warning: ignoring type redefinition of 'PACKAGE_liblucihttp-ucode' from 'bool' to 'tristate'
+tmp/.config-package.in:2977:warning: ignoring type redefinition of 'PACKAGE_libmnl' from 'bool' to 'tristate'
+tmp/.config-package.in:3062:warning: ignoring type redefinition of 'PACKAGE_libnl-tiny' from 'bool' to 'tristate'
+tmp/.config-package.in:3151:warning: ignoring type redefinition of 'PACKAGE_libsmartcols' from 'bool' to 'tristate'
+tmp/.config-package.in:3217:warning: ignoring type redefinition of 'PACKAGE_libubox' from 'bool' to 'tristate'
+tmp/.config-package.in:3235:warning: ignoring type redefinition of 'PACKAGE_libubus' from 'bool' to 'tristate'
+tmp/.config-package.in:3254:warning: ignoring type redefinition of 'PACKAGE_libuci' from 'bool' to 'tristate'
+tmp/.config-package.in:3273:warning: ignoring type redefinition of 'PACKAGE_libucode' from 'bool' to 'tristate'
+tmp/.config-package.in:3291:warning: ignoring type redefinition of 'PACKAGE_libuuid' from 'bool' to 'tristate'
+tmp/.config-package.in:3372:warning: ignoring type redefinition of 'PACKAGE_rpcd-mod-luci' from 'bool' to 'tristate'
+tmp/.config-package.in:3409:warning: ignoring type redefinition of 'PACKAGE_luci-base' from 'bool' to 'tristate'
+tmp/.config-package.in:3444:warning: ignoring type redefinition of 'LUCI_LANG_ar' from 'bool' to 'tristate'
+tmp/.config-package.in:3447:warning: ignoring type redefinition of 'LUCI_LANG_bg' from 'bool' to 'tristate'
+tmp/.config-package.in:3450:warning: ignoring type redefinition of 'LUCI_LANG_bn_BD' from 'bool' to 'tristate'
+tmp/.config-package.in:3453:warning: ignoring type redefinition of 'LUCI_LANG_ca' from 'bool' to 'tristate'
+tmp/.config-package.in:3456:warning: ignoring type redefinition of 'LUCI_LANG_cs' from 'bool' to 'tristate'
+tmp/.config-package.in:3459:warning: ignoring type redefinition of 'LUCI_LANG_da' from 'bool' to 'tristate'
+tmp/.config-package.in:3462:warning: ignoring type redefinition of 'LUCI_LANG_de' from 'bool' to 'tristate'
+tmp/.config-package.in:3465:warning: ignoring type redefinition of 'LUCI_LANG_el' from 'bool' to 'tristate'
+tmp/.config-package.in:3468:warning: ignoring type redefinition of 'LUCI_LANG_es' from 'bool' to 'tristate'
+tmp/.config-package.in:3471:warning: ignoring type redefinition of 'LUCI_LANG_fa' from 'bool' to 'tristate'
+tmp/.config-package.in:3474:warning: ignoring type redefinition of 'LUCI_LANG_fi' from 'bool' to 'tristate'
+tmp/.config-package.in:3477:warning: ignoring type redefinition of 'LUCI_LANG_fil' from 'bool' to 'tristate'
+tmp/.config-package.in:3480:warning: ignoring type redefinition of 'LUCI_LANG_fr' from 'bool' to 'tristate'
+tmp/.config-package.in:3483:warning: ignoring type redefinition of 'LUCI_LANG_ga' from 'bool' to 'tristate'
+tmp/.config-package.in:3486:warning: ignoring type redefinition of 'LUCI_LANG_he' from 'bool' to 'tristate'
+tmp/.config-package.in:3489:warning: ignoring type redefinition of 'LUCI_LANG_hi' from 'bool' to 'tristate'
+tmp/.config-package.in:3492:warning: ignoring type redefinition of 'LUCI_LANG_hu' from 'bool' to 'tristate'
+tmp/.config-package.in:3495:warning: ignoring type redefinition of 'LUCI_LANG_it' from 'bool' to 'tristate'
+tmp/.config-package.in:3498:warning: ignoring type redefinition of 'LUCI_LANG_ja' from 'bool' to 'tristate'
+tmp/.config-package.in:3501:warning: ignoring type redefinition of 'LUCI_LANG_ko' from 'bool' to 'tristate'
+tmp/.config-package.in:3504:warning: ignoring type redefinition of 'LUCI_LANG_lt' from 'bool' to 'tristate'
+tmp/.config-package.in:3507:warning: ignoring type redefinition of 'LUCI_LANG_mr' from 'bool' to 'tristate'
+tmp/.config-package.in:3510:warning: ignoring type redefinition of 'LUCI_LANG_ms' from 'bool' to 'tristate'
+tmp/.config-package.in:3513:warning: ignoring type redefinition of 'LUCI_LANG_nb_NO' from 'bool' to 'tristate'
+tmp/.config-package.in:3516:warning: ignoring type redefinition of 'LUCI_LANG_nl' from 'bool' to 'tristate'
+tmp/.config-package.in:3519:warning: ignoring type redefinition of 'LUCI_LANG_pl' from 'bool' to 'tristate'
+tmp/.config-package.in:3522:warning: ignoring type redefinition of 'LUCI_LANG_pt' from 'bool' to 'tristate'
+tmp/.config-package.in:3525:warning: ignoring type redefinition of 'LUCI_LANG_pt_BR' from 'bool' to 'tristate'
+tmp/.config-package.in:3528:warning: ignoring type redefinition of 'LUCI_LANG_ro' from 'bool' to 'tristate'
+tmp/.config-package.in:3531:warning: ignoring type redefinition of 'LUCI_LANG_ru' from 'bool' to 'tristate'
+tmp/.config-package.in:3534:warning: ignoring type redefinition of 'LUCI_LANG_sk' from 'bool' to 'tristate'
+tmp/.config-package.in:3537:warning: ignoring type redefinition of 'LUCI_LANG_sv' from 'bool' to 'tristate'
+tmp/.config-package.in:3540:warning: ignoring type redefinition of 'LUCI_LANG_tr' from 'bool' to 'tristate'
+tmp/.config-package.in:3543:warning: ignoring type redefinition of 'LUCI_LANG_uk' from 'bool' to 'tristate'
+tmp/.config-package.in:3546:warning: ignoring type redefinition of 'LUCI_LANG_vi' from 'bool' to 'tristate'
+tmp/.config-package.in:3549:warning: ignoring type redefinition of 'LUCI_LANG_yua' from 'bool' to 'tristate'
+tmp/.config-package.in:3552:warning: ignoring type redefinition of 'LUCI_LANG_zh_Hans' from 'bool' to 'tristate'
+tmp/.config-package.in:3555:warning: ignoring type redefinition of 'LUCI_LANG_zh_Hant' from 'bool' to 'tristate'
+tmp/.config-package.in:4064:warning: ignoring type redefinition of 'PACKAGE_cgi-io' from 'bool' to 'tristate'
+tmp/.config-package.in:4597:warning: ignoring type redefinition of 'PACKAGE_partx-utils' from 'bool' to 'tristate'
+tmp/.config-package.in:4921:warning: ignoring type redefinition of 'PACKAGE_jshn' from 'bool' to 'tristate'
+tmp/.config-package.in:4986:warning: ignoring type redefinition of 'PACKAGE_libjson-script' from 'bool' to 'tristate'
+tmp/.config-package.in:5179:warning: ignoring type redefinition of 'PACKAGE_ucode-mod-html' from 'bool' to 'tristate'
+Config-build.in:1247:warning: defaults for choice values not supported
+Config-build.in:1251:warning: defaults for choice values not supported
+Config-build.in:1255:warning: defaults for choice values not supported
+#
+# No change to .config
+#
+make[1]: Entering directory '/home/eric/homestun-sdk-check/openwrt-sdk-24.10.5-x86-64_gcc-13.3.0_musl.Linux-x86_64'
+make[2]: Entering directory '/home/eric/homestun-sdk-check/upstream/openwrt-24.10.5/package/utils/lua'
+make[2]: Entering directory '/home/eric/homestun-sdk-check/openwrt-sdk-24.10.5-x86-64_gcc-13.3.0_musl.Linux-x86_64/package/toolchain'
+find /home/eric/homestun-sdk-check/openwrt-sdk-24.10.5-x86-64_gcc-13.3.0_musl.Linux-x86_64/build_dir/hostpkg/lua-5.1.5 -mindepth 1 -maxdepth 1 -not '(' -type f -and -name '.*' -and -size 0 ')' -print0 | xargs -r -0 rm -rf
+make[2]: Leaving directory '/home/eric/homestun-sdk-check/upstream/openwrt-24.10.5/package/utils/lua'
+time: package/feeds/base/lua/host-compile#0.23#0.19#0.89
+make[2]: Entering directory '/home/eric/homestun-sdk-check/upstream/openwrt-24.10.5/package/libs/ncurses'
+Makefile:789: WARNING: skipping libgomp -- package has no install section
+echo "libc" >> /home/eric/homestun-sdk-check/openwrt-sdk-24.10.5-x86-64_gcc-13.3.0_musl.Linux-x86_64/staging_dir/target-x86_64_musl/pkginfo/toolchain.default.install
+echo "libgcc" >> /home/eric/homestun-sdk-check/openwrt-sdk-24.10.5-x86-64_gcc-13.3.0_musl.Linux-x86_64/staging_dir/target-x86_64_musl/pkginfo/toolchain.default.install
+echo "libpthread" >> /home/eric/homestun-sdk-check/openwrt-sdk-24.10.5-x86-64_gcc-13.3.0_musl.Linux-x86_64/staging_dir/target-x86_64_musl/pkginfo/toolchain.default.install
+echo "librt" >> /home/eric/homestun-sdk-check/openwrt-sdk-24.10.5-x86-64_gcc-13.3.0_musl.Linux-x86_64/staging_dir/target-x86_64_musl/pkginfo/toolchain.default.install
+touch -r /home/eric/homestun-sdk-check/openwrt-sdk-24.10.5-x86-64_gcc-13.3.0_musl.Linux-x86_64/build_dir/target-x86_64_musl/toolchain/.built /home/eric/homestun-sdk-check/openwrt-sdk-24.10.5-x86-64_gcc-13.3.0_musl.Linux-x86_64/build_dir/target-x86_64_musl/toolchain/.autoremove 2>/dev/null >/dev/null
+find /home/eric/homestun-sdk-check/openwrt-sdk-24.10.5-x86-64_gcc-13.3.0_musl.Linux-x86_64/build_dir/target-x86_64_musl/toolchain -mindepth 1 -maxdepth 1 -not '(' -type f -and -name '.*' -and -size 0 ')' -and -not -name '.pkgdir'  -print0 | xargs -r -0 rm -rf
+make[2]: Leaving directory '/home/eric/homestun-sdk-check/openwrt-sdk-24.10.5-x86-64_gcc-13.3.0_musl.Linux-x86_64/package/toolchain'
+time: package/toolchain/compile#0.18#0.10#0.51
+find /home/eric/homestun-sdk-check/openwrt-sdk-24.10.5-x86-64_gcc-13.3.0_musl.Linux-x86_64/build_dir/hostpkg/ncurses-6.4 -mindepth 1 -maxdepth 1 -not '(' -type f -and -name '.*' -and -size 0 ')' -print0 | xargs -r -0 rm -rf
+make[2]: Leaving directory '/home/eric/homestun-sdk-check/upstream/openwrt-24.10.5/package/libs/ncurses'
+time: package/feeds/base/ncurses/host-compile#0.25#0.27#1.05
+make[2]: Entering directory '/home/eric/homestun-sdk-check/upstream/packages-953b6d47b4e9f0ad3c39547c6d3f9a828f10e206/libs/gdbm'
+touch -r /home/eric/homestun-sdk-check/openwrt-sdk-24.10.5-x86-64_gcc-13.3.0_musl.Linux-x86_64/build_dir/target-x86_64_musl/gdbm-1.23/.built /home/eric/homestun-sdk-check/openwrt-sdk-24.10.5-x86-64_gcc-13.3.0_musl.Linux-x86_64/build_dir/target-x86_64_musl/gdbm-1.23/.autoremove 2>/dev/null >/dev/null
+find /home/eric/homestun-sdk-check/openwrt-sdk-24.10.5-x86-64_gcc-13.3.0_musl.Linux-x86_64/build_dir/target-x86_64_musl/gdbm-1.23 -mindepth 1 -maxdepth 1 -not '(' -type f -and -name '.*' -and -size 0 ')' -and -not -name '.pkgdir'  -print0 | xargs -r -0 rm -rf
+make[2]: Leaving directory '/home/eric/homestun-sdk-check/upstream/packages-953b6d47b4e9f0ad3c39547c6d3f9a828f10e206/libs/gdbm'
+time: package/feeds/packages/gdbm/compile#0.21#0.14#0.57
+make[2]: Entering directory '/home/eric/homestun-sdk-check/upstream/openwrt-24.10.5/package/utils/bzip2'
+find /home/eric/homestun-sdk-check/openwrt-sdk-24.10.5-x86-64_gcc-13.3.0_musl.Linux-x86_64/build_dir/hostpkg/bzip2-1.0.8 -mindepth 1 -maxdepth 1 -not '(' -type f -and -name '.*' -and -size 0 ')' -print0 | xargs -r -0 rm -rf
+make[2]: Leaving directory '/home/eric/homestun-sdk-check/upstream/openwrt-24.10.5/package/utils/bzip2'
+time: package/feeds/base/bzip2/host-compile#0.35#0.26#1.22
+make[2]: Entering directory '/home/eric/homestun-sdk-check/upstream/openwrt-24.10.5/package/libs/readline'
+find /home/eric/homestun-sdk-check/openwrt-sdk-24.10.5-x86-64_gcc-13.3.0_musl.Linux-x86_64/build_dir/hostpkg/readline-8.2 -mindepth 1 -maxdepth 1 -not '(' -type f -and -name '.*' -and -size 0 ')' -print0 | xargs -r -0 rm -rf
+make[2]: Leaving directory '/home/eric/homestun-sdk-check/upstream/openwrt-24.10.5/package/libs/readline'
+time: package/feeds/base/readline/host-compile#0.32#0.27#1.39
+make[2]: Entering directory '/home/eric/homestun-sdk-check/upstream/packages-953b6d47b4e9f0ad3c39547c6d3f9a828f10e206/libs/libffi'
+make[2]: Entering directory '/home/eric/homestun-sdk-check/openwrt-sdk-24.10.5-x86-64_gcc-13.3.0_musl.Linux-x86_64/package/kernel/linux'
+find /home/eric/homestun-sdk-check/openwrt-sdk-24.10.5-x86-64_gcc-13.3.0_musl.Linux-x86_64/build_dir/hostpkg/libffi-3.4.7 -mindepth 1 -maxdepth 1 -not '(' -type f -and -name '.*' -and -size 0 ')' -print0 | xargs -r -0 rm -rf
+make[2]: Leaving directory '/home/eric/homestun-sdk-check/upstream/packages-953b6d47b4e9f0ad3c39547c6d3f9a828f10e206/libs/libffi'
+time: package/feeds/packages/libffi/host-compile#0.33#0.34#1.33
+make[2]: Entering directory '/home/eric/homestun-sdk-check/upstream/packages-953b6d47b4e9f0ad3c39547c6d3f9a828f10e206/utils/xz'
+echo "kernel" >> /home/eric/homestun-sdk-check/openwrt-sdk-24.10.5-x86-64_gcc-13.3.0_musl.Linux-x86_64/staging_dir/target-x86_64_musl/pkginfo/linux.default.install
+WARNING: kmod-block2mtd is not available in the kernel config - generating empty package
+echo "kmod-crypto-acompress" >> /home/eric/homestun-sdk-check/openwrt-sdk-24.10.5-x86-64_gcc-13.3.0_musl.Linux-x86_64/staging_dir/target-x86_64_musl/pkginfo/linux.default.install
+echo "kmod-crypto-crc32c" >> /home/eric/homestun-sdk-check/openwrt-sdk-24.10.5-x86-64_gcc-13.3.0_musl.Linux-x86_64/staging_dir/target-x86_64_musl/pkginfo/linux.default.install
+WARNING: kmod-crypto-engine is not available in the kernel config - generating empty package
+echo "kmod-crypto-hash" >> /home/eric/homestun-sdk-check/openwrt-sdk-24.10.5-x86-64_gcc-13.3.0_musl.Linux-x86_64/staging_dir/target-x86_64_musl/pkginfo/linux.default.install
+WARNING: kmod-crypto-hw-hifn-795x is not available in the kernel config - generating empty package
+echo "kmod-fs-vfat" >> /home/eric/homestun-sdk-check/openwrt-sdk-24.10.5-x86-64_gcc-13.3.0_musl.Linux-x86_64/staging_dir/target-x86_64_musl/pkginfo/linux.default.install
+WARNING: kmod-gpio-nxp-74hc164 is not available in the kernel config - generating empty package
+WARNING: kmod-hwmon-gsc is not available in the kernel config - generating empty package
+WARNING: kmod-hwmon-gpiofan is not available in the kernel config - generating empty package
+WARNING: kmod-hwmon-max6642 is not available in the kernel config - generating empty package
+WARNING: kmod-hwmon-pwmfan is not available in the kernel config - generating empty package
+WARNING: kmod-i2c-pxa is not available in the kernel config - generating empty package
+echo "kmod-input-core" >> /home/eric/homestun-sdk-check/openwrt-sdk-24.10.5-x86-64_gcc-13.3.0_musl.Linux-x86_64/staging_dir/target-x86_64_musl/pkginfo/linux.default.install
+WARNING: kmod-ledtrig-gpio is not available in the kernel config - generating empty package
+WARNING: kmod-leds-lp55xx-common is not available in the kernel config - generating empty package
+WARNING: kmod-leds-lp5523 is not available in the kernel config - generating empty package
+WARNING: kmod-leds-lp5562 is not available in the kernel config - generating empty package
+echo "kmod-lib-crc-ccitt" >> /home/eric/homestun-sdk-check/openwrt-sdk-24.10.5-x86-64_gcc-13.3.0_musl.Linux-x86_64/staging_dir/target-x86_64_musl/pkginfo/linux.default.install
+echo "kmod-lib-crc32c" >> /home/eric/homestun-sdk-check/openwrt-sdk-24.10.5-x86-64_gcc-13.3.0_musl.Linux-x86_64/staging_dir/target-x86_64_musl/pkginfo/linux.default.install
+echo "kmod-lib-lzo" >> /home/eric/homestun-sdk-check/openwrt-sdk-24.10.5-x86-64_gcc-13.3.0_musl.Linux-x86_64/staging_dir/target-x86_64_musl/pkginfo/linux.default.install
+WARNING: kmod-asn1-encoder is not available in the kernel config - generating empty package
+WARNING: kmod-ag71xx is not available in the kernel config - generating empty package
+WARNING: kmod-phy-at803x is not available in the kernel config - generating empty package
+WARNING: kmod-dm9000 is not available in the kernel config - generating empty package
+echo "kmod-nf-reject" >> /home/eric/homestun-sdk-check/openwrt-sdk-24.10.5-x86-64_gcc-13.3.0_musl.Linux-x86_64/staging_dir/target-x86_64_musl/pkginfo/linux.default.install
+touch -r /home/eric/homestun-sdk-check/openwrt-sdk-24.10.5-x86-64_gcc-13.3.0_musl.Linux-x86_64/build_dir/target-x86_64_musl/xz-5.6.2/.built /home/eric/homestun-sdk-check/openwrt-sdk-24.10.5-x86-64_gcc-13.3.0_musl.Linux-x86_64/build_dir/target-x86_64_musl/xz-5.6.2/.autoremove 2>/dev/null >/dev/null
+echo "kmod-nf-reject6" >> /home/eric/homestun-sdk-check/openwrt-sdk-24.10.5-x86-64_gcc-13.3.0_musl.Linux-x86_64/staging_dir/target-x86_64_musl/pkginfo/linux.default.install
+echo "kmod-nf-conntrack" >> /home/eric/homestun-sdk-check/openwrt-sdk-24.10.5-x86-64_gcc-13.3.0_musl.Linux-x86_64/staging_dir/target-x86_64_musl/pkginfo/linux.default.install
+find /home/eric/homestun-sdk-check/openwrt-sdk-24.10.5-x86-64_gcc-13.3.0_musl.Linux-x86_64/build_dir/target-x86_64_musl/xz-5.6.2 -mindepth 1 -maxdepth 1 -not '(' -type f -and -name '.*' -and -size 0 ')' -and -not -name '.pkgdir'  -print0 | xargs -r -0 rm -rf
+echo "kmod-nf-conntrack6" >> /home/eric/homestun-sdk-check/openwrt-sdk-24.10.5-x86-64_gcc-13.3.0_musl.Linux-x86_64/staging_dir/target-x86_64_musl/pkginfo/linux.default.install
+echo "kmod-nf-log" >> /home/eric/homestun-sdk-check/openwrt-sdk-24.10.5-x86-64_gcc-13.3.0_musl.Linux-x86_64/staging_dir/target-x86_64_musl/pkginfo/linux.default.install
+echo "kmod-nf-log6" >> /home/eric/homestun-sdk-check/openwrt-sdk-24.10.5-x86-64_gcc-13.3.0_musl.Linux-x86_64/staging_dir/target-x86_64_musl/pkginfo/linux.default.install
+echo "kmod-nf-nat" >> /home/eric/homestun-sdk-check/openwrt-sdk-24.10.5-x86-64_gcc-13.3.0_musl.Linux-x86_64/staging_dir/target-x86_64_musl/pkginfo/linux.default.install
+echo "kmod-nf-flow" >> /home/eric/homestun-sdk-check/openwrt-sdk-24.10.5-x86-64_gcc-13.3.0_musl.Linux-x86_64/staging_dir/target-x86_64_musl/pkginfo/linux.default.install
+make[2]: Leaving directory '/home/eric/homestun-sdk-check/upstream/packages-953b6d47b4e9f0ad3c39547c6d3f9a828f10e206/utils/xz'
+time: package/feeds/packages/xz/compile#0.22#0.19#0.67
+echo "kmod-nfnetlink" >> /home/eric/homestun-sdk-check/openwrt-sdk-24.10.5-x86-64_gcc-13.3.0_musl.Linux-x86_64/staging_dir/target-x86_64_musl/pkginfo/linux.default.install
+echo "kmod-nft-core" >> /home/eric/homestun-sdk-check/openwrt-sdk-24.10.5-x86-64_gcc-13.3.0_musl.Linux-x86_64/staging_dir/target-x86_64_musl/pkginfo/linux.default.install
+echo "kmod-nft-nat" >> /home/eric/homestun-sdk-check/openwrt-sdk-24.10.5-x86-64_gcc-13.3.0_musl.Linux-x86_64/staging_dir/target-x86_64_musl/pkginfo/linux.default.install
+echo "kmod-nft-offload" >> /home/eric/homestun-sdk-check/openwrt-sdk-24.10.5-x86-64_gcc-13.3.0_musl.Linux-x86_64/staging_dir/target-x86_64_musl/pkginfo/linux.default.install
+echo "kmod-nft-fib" >> /home/eric/homestun-sdk-check/openwrt-sdk-24.10.5-x86-64_gcc-13.3.0_musl.Linux-x86_64/staging_dir/target-x86_64_musl/pkginfo/linux.default.install
+echo "kmod-slhc" >> /home/eric/homestun-sdk-check/openwrt-sdk-24.10.5-x86-64_gcc-13.3.0_musl.Linux-x86_64/staging_dir/target-x86_64_musl/pkginfo/linux.default.install
+echo "kmod-ppp" >> /home/eric/homestun-sdk-check/openwrt-sdk-24.10.5-x86-64_gcc-13.3.0_musl.Linux-x86_64/staging_dir/target-x86_64_musl/pkginfo/linux.default.install
+echo "kmod-pppox" >> /home/eric/homestun-sdk-check/openwrt-sdk-24.10.5-x86-64_gcc-13.3.0_musl.Linux-x86_64/staging_dir/target-x86_64_musl/pkginfo/linux.default.install
+echo "kmod-pppoe" >> /home/eric/homestun-sdk-check/openwrt-sdk-24.10.5-x86-64_gcc-13.3.0_musl.Linux-x86_64/staging_dir/target-x86_64_musl/pkginfo/linux.default.install
+echo "kmod-nls-base" >> /home/eric/homestun-sdk-check/openwrt-sdk-24.10.5-x86-64_gcc-13.3.0_musl.Linux-x86_64/staging_dir/target-x86_64_musl/pkginfo/linux.default.install
+echo "kmod-nls-cp437" >> /home/eric/homestun-sdk-check/openwrt-sdk-24.10.5-x86-64_gcc-13.3.0_musl.Linux-x86_64/staging_dir/target-x86_64_musl/pkginfo/linux.default.install
+echo "kmod-nls-iso8859-1" >> /home/eric/homestun-sdk-check/openwrt-sdk-24.10.5-x86-64_gcc-13.3.0_musl.Linux-x86_64/staging_dir/target-x86_64_musl/pkginfo/linux.default.install
+echo "kmod-nls-utf8" >> /home/eric/homestun-sdk-check/openwrt-sdk-24.10.5-x86-64_gcc-13.3.0_musl.Linux-x86_64/staging_dir/target-x86_64_musl/pkginfo/linux.default.install
+WARNING: kmod-mtdtests is not available in the kernel config - generating empty package
+WARNING: kmod-mtdoops is not available in the kernel config - generating empty package
+WARNING: kmod-mtdram is not available in the kernel config - generating empty package
+WARNING: kmod-thermal is not available in the kernel config - generating empty package
+WARNING: kmod-rtc-mv is not available in the kernel config - generating empty package
+WARNING: kmod-rtc-r7301 is not available in the kernel config - generating empty package
+WARNING: kmod-backlight-pwm is not available in the kernel config - generating empty package
+WARNING: kmod-video-async is not available in the kernel config - generating empty package
+WARNING: kmod-video-fwnode is not available in the kernel config - generating empty package
+WARNING: kmod-video-cpia2 is not available in the kernel config - generating empty package
+touch -r /home/eric/homestun-sdk-check/openwrt-sdk-24.10.5-x86-64_gcc-13.3.0_musl.Linux-x86_64/build_dir/target-x86_64_musl/linux-x86_64/packages/.built /home/eric/homestun-sdk-check/openwrt-sdk-24.10.5-x86-64_gcc-13.3.0_musl.Linux-x86_64/build_dir/target-x86_64_musl/linux-x86_64/packages/.autoremove 2>/dev/null >/dev/null
+find /home/eric/homestun-sdk-check/openwrt-sdk-24.10.5-x86-64_gcc-13.3.0_musl.Linux-x86_64/build_dir/target-x86_64_musl/linux-x86_64/packages -mindepth 1 -maxdepth 1 -not '(' -type f -and -name '.*' -and -size 0 ')' -and -not -name '.pkgdir'  -print0 | xargs -r -0 rm -rf
+make[2]: [Makefile:74: compile] Error 1 (ignored)
+make[2]: Leaving directory '/home/eric/homestun-sdk-check/openwrt-sdk-24.10.5-x86-64_gcc-13.3.0_musl.Linux-x86_64/package/kernel/linux'
+time: package/kernel/linux/compile#2.84#0.27#3.24
+make[2]: Entering directory '/home/eric/homestun-sdk-check/upstream/openwrt-24.10.5/package/libs/libnl-tiny'
+make[2]: Entering directory '/home/eric/homestun-sdk-check/upstream/openwrt-24.10.5/package/libs/libmd'
+echo "libnl-tiny" >> /home/eric/homestun-sdk-check/openwrt-sdk-24.10.5-x86-64_gcc-13.3.0_musl.Linux-x86_64/staging_dir/target-x86_64_musl/pkginfo/libnl-tiny.default.install
+touch -r /home/eric/homestun-sdk-check/openwrt-sdk-24.10.5-x86-64_gcc-13.3.0_musl.Linux-x86_64/build_dir/target-x86_64_musl/libnl-tiny-2025.03.19~c0df580a/.built /home/eric/homestun-sdk-check/openwrt-sdk-24.10.5-x86-64_gcc-13.3.0_musl.Linux-x86_64/build_dir/target-x86_64_musl/libnl-tiny-2025.03.19~c0df580a/.autoremove 2>/dev/null >/dev/null
+touch -r /home/eric/homestun-sdk-check/openwrt-sdk-24.10.5-x86-64_gcc-13.3.0_musl.Linux-x86_64/build_dir/target-x86_64_musl/libmd-1.1.0/.built /home/eric/homestun-sdk-check/openwrt-sdk-24.10.5-x86-64_gcc-13.3.0_musl.Linux-x86_64/build_dir/target-x86_64_musl/libmd-1.1.0/.autoremove 2>/dev/null >/dev/null
+find /home/eric/homestun-sdk-check/openwrt-sdk-24.10.5-x86-64_gcc-13.3.0_musl.Linux-x86_64/build_dir/target-x86_64_musl/libnl-tiny-2025.03.19~c0df580a -mindepth 1 -maxdepth 1 -not '(' -type f -and -name '.*' -and -size 0 ')' -and -not -name '.pkgdir'  -print0 | xargs -r -0 rm -rf
+find /home/eric/homestun-sdk-check/openwrt-sdk-24.10.5-x86-64_gcc-13.3.0_musl.Linux-x86_64/build_dir/target-x86_64_musl/libmd-1.1.0 -mindepth 1 -maxdepth 1 -not '(' -type f -and -name '.*' -and -size 0 ')' -and -not -name '.pkgdir'  -print0 | xargs -r -0 rm -rf
+make[2]: Leaving directory '/home/eric/homestun-sdk-check/upstream/openwrt-24.10.5/package/libs/libnl-tiny'
+time: package/feeds/base/libnl-tiny/compile#0.28#0.19#0.57
+make[2]: Leaving directory '/home/eric/homestun-sdk-check/upstream/openwrt-24.10.5/package/libs/libmd'
+time: package/feeds/base/libmd/compile#0.25#0.19#0.55
+make[2]: Entering directory '/home/eric/homestun-sdk-check/upstream/luci-d88390be4ec9722cb427fee03368fc8c8582627d/modules/luci-base'
+make[2]: Entering directory '/home/eric/homestun-sdk-check/upstream/luci-d88390be4ec9722cb427fee03368fc8c8582627d/contrib/package/csstidy'
+find /home/eric/homestun-sdk-check/openwrt-sdk-24.10.5-x86-64_gcc-13.3.0_musl.Linux-x86_64/build_dir/hostpkg/csstidy-2021.06.13~707feaec -mindepth 1 -maxdepth 1 -not '(' -type f -and -name '.*' -and -size 0 ')' -print0 | xargs -r -0 rm -rf
+make[2]: Leaving directory '/home/eric/homestun-sdk-check/upstream/luci-d88390be4ec9722cb427fee03368fc8c8582627d/contrib/package/csstidy'
+time: package/feeds/luci/csstidy/host-compile#0.40#0.29#0.99
+make[2]: Entering directory '/home/eric/homestun-sdk-check/upstream/openwrt-24.10.5/package/system/ca-certificates'
+[ ! -d ./src/ ] || cp -fpR ./src/* /home/eric/homestun-sdk-check/openwrt-sdk-24.10.5-x86-64_gcc-13.3.0_musl.Linux-x86_64/build_dir/hostpkg/luci-base
+touch /home/eric/homestun-sdk-check/openwrt-sdk-24.10.5-x86-64_gcc-13.3.0_musl.Linux-x86_64/build_dir/hostpkg/luci-base/.prepareda184fca1b3c62c2ea433d21a17a5e9f6_18f1e190c5d53547fed41a3eaa76e9e9
+touch /home/eric/homestun-sdk-check/openwrt-sdk-24.10.5-x86-64_gcc-13.3.0_musl.Linux-x86_64/build_dir/hostpkg/luci-base/.configured
+make -C src/ clean po2lmo jsmin
+make[3]: Entering directory '/home/eric/homestun-sdk-check/upstream/luci-d88390be4ec9722cb427fee03368fc8c8582627d/modules/luci-base/src'
+rm -f contrib/lemon lib/*.o lib/plural_formula.c lib/plural_formula.h core.so version.uc
+cc -std=gnu17 -o contrib/lemon contrib/lemon.c
+echo "ca-bundle" >> /home/eric/homestun-sdk-check/openwrt-sdk-24.10.5-x86-64_gcc-13.3.0_musl.Linux-x86_64/staging_dir/target-x86_64_musl/pkginfo/ca-certificates.default.install
+touch -r /home/eric/homestun-sdk-check/openwrt-sdk-24.10.5-x86-64_gcc-13.3.0_musl.Linux-x86_64/build_dir/target-x86_64_musl/ca-certificates-20250419/.built /home/eric/homestun-sdk-check/openwrt-sdk-24.10.5-x86-64_gcc-13.3.0_musl.Linux-x86_64/build_dir/target-x86_64_musl/ca-certificates-20250419/.autoremove 2>/dev/null >/dev/null
+find /home/eric/homestun-sdk-check/openwrt-sdk-24.10.5-x86-64_gcc-13.3.0_musl.Linux-x86_64/build_dir/target-x86_64_musl/ca-certificates-20250419 -mindepth 1 -maxdepth 1 -not '(' -type f -and -name '.*' -and -size 0 ')' -and -not -name '.pkgdir'  -print0 | xargs -r -0 rm -rf
+make[2]: Leaving directory '/home/eric/homestun-sdk-check/upstream/openwrt-24.10.5/package/system/ca-certificates'
+time: package/feeds/base/ca-certificates/compile#0.24#0.16#0.69
+./contrib/lemon -q lib/plural_formula.y
+cc    -DNDEBUG -c -o lib/lmo.o lib/lmo.c
+cc    -DNDEBUG -c -o lib/plural_formula.o lib/plural_formula.c
+cc  -o po2lmo po2lmo.o lib/lmo.o lib/plural_formula.o
+make[3]: 'jsmin' is up to date.
+make[3]: Leaving directory '/home/eric/homestun-sdk-check/upstream/luci-d88390be4ec9722cb427fee03368fc8c8582627d/modules/luci-base/src'
+touch /home/eric/homestun-sdk-check/openwrt-sdk-24.10.5-x86-64_gcc-13.3.0_musl.Linux-x86_64/build_dir/hostpkg/luci-base/.built
+install -d -m0755 /home/eric/homestun-sdk-check/openwrt-sdk-24.10.5-x86-64_gcc-13.3.0_musl.Linux-x86_64/staging_dir/hostpkg/bin
+install -m0755 src/po2lmo /home/eric/homestun-sdk-check/openwrt-sdk-24.10.5-x86-64_gcc-13.3.0_musl.Linux-x86_64/staging_dir/hostpkg/bin/po2lmo
+install -m0755 src/jsmin /home/eric/homestun-sdk-check/openwrt-sdk-24.10.5-x86-64_gcc-13.3.0_musl.Linux-x86_64/staging_dir/hostpkg/bin/jsmin
+mkdir -p /home/eric/homestun-sdk-check/openwrt-sdk-24.10.5-x86-64_gcc-13.3.0_musl.Linux-x86_64/staging_dir/hostpkg/stamp
+touch /home/eric/homestun-sdk-check/openwrt-sdk-24.10.5-x86-64_gcc-13.3.0_musl.Linux-x86_64/build_dir/hostpkg/luci-base/.built
+touch /home/eric/homestun-sdk-check/openwrt-sdk-24.10.5-x86-64_gcc-13.3.0_musl.Linux-x86_64/staging_dir/hostpkg/stamp/.luci-base_installed 
+find /home/eric/homestun-sdk-check/openwrt-sdk-24.10.5-x86-64_gcc-13.3.0_musl.Linux-x86_64/build_dir/hostpkg/luci-base -mindepth 1 -maxdepth 1 -not '(' -type f -and -name '.*' -and -size 0 ')' -print0 | xargs -r -0 rm -rf
+make[2]: Leaving directory '/home/eric/homestun-sdk-check/upstream/luci-d88390be4ec9722cb427fee03368fc8c8582627d/modules/luci-base'
+time: package/feeds/luci/luci-base/host-compile#1.92#0.93#3.96
+make[2]: Entering directory '/home/eric/homestun-sdk-check/upstream/openwrt-24.10.5/package/utils/lua'
+make[2]: Entering directory '/home/eric/homestun-sdk-check/upstream/openwrt-24.10.5/package/libs/libjson-c'
+touch -r /home/eric/homestun-sdk-check/openwrt-sdk-24.10.5-x86-64_gcc-13.3.0_musl.Linux-x86_64/build_dir/target-x86_64_musl/lua-5.1.5/.built /home/eric/homestun-sdk-check/openwrt-sdk-24.10.5-x86-64_gcc-13.3.0_musl.Linux-x86_64/build_dir/target-x86_64_musl/lua-5.1.5/.autoremove 2>/dev/null >/dev/null
+find /home/eric/homestun-sdk-check/openwrt-sdk-24.10.5-x86-64_gcc-13.3.0_musl.Linux-x86_64/build_dir/target-x86_64_musl/lua-5.1.5 -mindepth 1 -maxdepth 1 -not '(' -type f -and -name '.*' -and -size 0 ')' -and -not -name '.pkgdir'  -print0 | xargs -r -0 rm -rf
+make[2]: Leaving directory '/home/eric/homestun-sdk-check/upstream/openwrt-24.10.5/package/utils/lua'
+time: package/feeds/base/lua/compile#0.37#0.37#1.41
+echo "libjson-c" >> /home/eric/homestun-sdk-check/openwrt-sdk-24.10.5-x86-64_gcc-13.3.0_musl.Linux-x86_64/staging_dir/target-x86_64_musl/pkginfo/libjson-c.default.install
+touch -r /home/eric/homestun-sdk-check/openwrt-sdk-24.10.5-x86-64_gcc-13.3.0_musl.Linux-x86_64/build_dir/target-x86_64_musl/json-c-0.18/.built /home/eric/homestun-sdk-check/openwrt-sdk-24.10.5-x86-64_gcc-13.3.0_musl.Linux-x86_64/build_dir/target-x86_64_musl/json-c-0.18/.autoremove 2>/dev/null >/dev/null
+find /home/eric/homestun-sdk-check/openwrt-sdk-24.10.5-x86-64_gcc-13.3.0_musl.Linux-x86_64/build_dir/target-x86_64_musl/json-c-0.18 -mindepth 1 -maxdepth 1 -not '(' -type f -and -name '.*' -and -size 0 ')' -and -not -name '.pkgdir'  -print0 | xargs -r -0 rm -rf
+make[2]: Leaving directory '/home/eric/homestun-sdk-check/upstream/openwrt-24.10.5/package/libs/libjson-c'
+time: package/feeds/base/libjson-c/compile#0.36#0.31#1.45
+make[2]: Entering directory '/home/eric/homestun-sdk-check/upstream/openwrt-24.10.5/package/libs/mbedtls'
+echo "libmbedtls" >> /home/eric/homestun-sdk-check/openwrt-sdk-24.10.5-x86-64_gcc-13.3.0_musl.Linux-x86_64/staging_dir/target-x86_64_musl/pkginfo/mbedtls.default.install
+touch -r /home/eric/homestun-sdk-check/openwrt-sdk-24.10.5-x86-64_gcc-13.3.0_musl.Linux-x86_64/build_dir/target-x86_64_musl/mbedtls-3.6.5/.built /home/eric/homestun-sdk-check/openwrt-sdk-24.10.5-x86-64_gcc-13.3.0_musl.Linux-x86_64/build_dir/target-x86_64_musl/mbedtls-3.6.5/.autoremove 2>/dev/null >/dev/null
+find /home/eric/homestun-sdk-check/openwrt-sdk-24.10.5-x86-64_gcc-13.3.0_musl.Linux-x86_64/build_dir/target-x86_64_musl/mbedtls-3.6.5 -mindepth 1 -maxdepth 1 -not '(' -type f -and -name '.*' -and -size 0 ')' -and -not -name '.pkgdir'  -print0 | xargs -r -0 rm -rf
+make[2]: Leaving directory '/home/eric/homestun-sdk-check/upstream/openwrt-24.10.5/package/libs/mbedtls'
+time: package/feeds/base/mbedtls/compile#0.26#0.16#0.63
+make[2]: Entering directory '/home/eric/homestun-sdk-check/upstream/packages-953b6d47b4e9f0ad3c39547c6d3f9a828f10e206/libs/nghttp2'
+touch -r /home/eric/homestun-sdk-check/openwrt-sdk-24.10.5-x86-64_gcc-13.3.0_musl.Linux-x86_64/build_dir/target-x86_64_musl/nghttp2-1.63.0/.built /home/eric/homestun-sdk-check/openwrt-sdk-24.10.5-x86-64_gcc-13.3.0_musl.Linux-x86_64/build_dir/target-x86_64_musl/nghttp2-1.63.0/.autoremove 2>/dev/null >/dev/null
+find /home/eric/homestun-sdk-check/openwrt-sdk-24.10.5-x86-64_gcc-13.3.0_musl.Linux-x86_64/build_dir/target-x86_64_musl/nghttp2-1.63.0 -mindepth 1 -maxdepth 1 -not '(' -type f -and -name '.*' -and -size 0 ')' -and -not -name '.pkgdir'  -print0 | xargs -r -0 rm -rf
+make[2]: Leaving directory '/home/eric/homestun-sdk-check/upstream/packages-953b6d47b4e9f0ad3c39547c6d3f9a828f10e206/libs/nghttp2'
+time: package/feeds/packages/nghttp2/compile#0.19#0.15#0.53
+make[2]: Entering directory '/home/eric/homestun-sdk-check/upstream/packages-953b6d47b4e9f0ad3c39547c6d3f9a828f10e206/net/natmap'
+touch -r /home/eric/homestun-sdk-check/openwrt-sdk-24.10.5-x86-64_gcc-13.3.0_musl.Linux-x86_64/build_dir/target-x86_64_musl/natmap-20250924/.built /home/eric/homestun-sdk-check/openwrt-sdk-24.10.5-x86-64_gcc-13.3.0_musl.Linux-x86_64/build_dir/target-x86_64_musl/natmap-20250924/.autoremove 2>/dev/null >/dev/null
+find /home/eric/homestun-sdk-check/openwrt-sdk-24.10.5-x86-64_gcc-13.3.0_musl.Linux-x86_64/build_dir/target-x86_64_musl/natmap-20250924 -mindepth 1 -maxdepth 1 -not '(' -type f -and -name '.*' -and -size 0 ')' -and -not -name '.pkgdir'  -print0 | xargs -r -0 rm -rf
+make[2]: Leaving directory '/home/eric/homestun-sdk-check/upstream/packages-953b6d47b4e9f0ad3c39547c6d3f9a828f10e206/net/natmap'
+time: package/feeds/packages/natmap/compile#0.17#0.11#0.49
+make[2]: Entering directory '/home/eric/homestun-sdk-check/upstream/openwrt-24.10.5/package/libs/zlib'
+touch -r /home/eric/homestun-sdk-check/openwrt-sdk-24.10.5-x86-64_gcc-13.3.0_musl.Linux-x86_64/build_dir/target-x86_64_musl/zlib-1.3.1/.built /home/eric/homestun-sdk-check/openwrt-sdk-24.10.5-x86-64_gcc-13.3.0_musl.Linux-x86_64/build_dir/target-x86_64_musl/zlib-1.3.1/.autoremove 2>/dev/null >/dev/null
+find /home/eric/homestun-sdk-check/openwrt-sdk-24.10.5-x86-64_gcc-13.3.0_musl.Linux-x86_64/build_dir/target-x86_64_musl/zlib-1.3.1 -mindepth 1 -maxdepth 1 -not '(' -type f -and -name '.*' -and -size 0 ')' -and -not -name '.pkgdir'  -print0 | xargs -r -0 rm -rf
+make[2]: Leaving directory '/home/eric/homestun-sdk-check/upstream/openwrt-24.10.5/package/libs/zlib'
+time: package/feeds/base/zlib/compile#0.18#0.09#0.48
+make[2]: Entering directory '/home/eric/homestun-sdk-check/upstream/openwrt-24.10.5/package/libs/openssl'
+Package/openssl/add-module 1='provider'; 2='legacy'; 3='/usr/lib/ossl-modules' 4=''
+MOD_TYPE='provider'; MOD_NAME='legacy'; MOD_DIR='/usr/lib/ossl-modules' OSSL_PKG='libopenssl-legacy'
+Package/openssl/add-module 1='engine'; 2='afalg'; 3='/usr/lib/engines-3' 4=''
+MOD_TYPE='engine'; MOD_NAME='afalg'; MOD_DIR='/usr/lib/engines-3' OSSL_PKG='libopenssl-afalg'
+Package/openssl/add-module 1='engine'; 2='devcrypto'; 3='/usr/lib/engines-3' 4=''
+MOD_TYPE='engine'; MOD_NAME='devcrypto'; MOD_DIR='/usr/lib/engines-3' OSSL_PKG='libopenssl-devcrypto'
+Package/openssl/add-module 1='engine'; 2='padlock'; 3='/usr/lib/engines-3' 4=''
+MOD_TYPE='engine'; MOD_NAME='padlock'; MOD_DIR='/usr/lib/engines-3' OSSL_PKG='libopenssl-padlock'
+touch -r /home/eric/homestun-sdk-check/openwrt-sdk-24.10.5-x86-64_gcc-13.3.0_musl.Linux-x86_64/build_dir/target-x86_64_musl/openssl-3.0.18/.built /home/eric/homestun-sdk-check/openwrt-sdk-24.10.5-x86-64_gcc-13.3.0_musl.Linux-x86_64/build_dir/target-x86_64_musl/openssl-3.0.18/.autoremove 2>/dev/null >/dev/null
+find /home/eric/homestun-sdk-check/openwrt-sdk-24.10.5-x86-64_gcc-13.3.0_musl.Linux-x86_64/build_dir/target-x86_64_musl/openssl-3.0.18 -mindepth 1 -maxdepth 1 -not '(' -type f -and -name '.*' -and -size 0 ')' -and -not -name '.pkgdir'  -print0 | xargs -r -0 rm -rf
+make[2]: Leaving directory '/home/eric/homestun-sdk-check/upstream/openwrt-24.10.5/package/libs/openssl'
+time: package/feeds/base/openssl/compile#0.23#0.10#0.53
+make[2]: Entering directory '/home/eric/homestun-sdk-check/upstream/packages-953b6d47b4e9f0ad3c39547c6d3f9a828f10e206/libs/libmaxminddb'
+touch -r /home/eric/homestun-sdk-check/openwrt-sdk-24.10.5-x86-64_gcc-13.3.0_musl.Linux-x86_64/build_dir/target-x86_64_musl/libmaxminddb-1.11.0/.built /home/eric/homestun-sdk-check/openwrt-sdk-24.10.5-x86-64_gcc-13.3.0_musl.Linux-x86_64/build_dir/target-x86_64_musl/libmaxminddb-1.11.0/.autoremove 2>/dev/null >/dev/null
+find /home/eric/homestun-sdk-check/openwrt-sdk-24.10.5-x86-64_gcc-13.3.0_musl.Linux-x86_64/build_dir/target-x86_64_musl/libmaxminddb-1.11.0 -mindepth 1 -maxdepth 1 -not '(' -type f -and -name '.*' -and -size 0 ')' -and -not -name '.pkgdir'  -print0 | xargs -r -0 rm -rf
+make[2]: Leaving directory '/home/eric/homestun-sdk-check/upstream/packages-953b6d47b4e9f0ad3c39547c6d3f9a828f10e206/libs/libmaxminddb'
+time: package/feeds/packages/libmaxminddb/compile#0.16#0.11#0.42
+make[2]: Entering directory '/home/eric/homestun-sdk-check/upstream/openwrt-24.10.5/package/libs/libcap'
+make[2]: Entering directory '/home/eric/homestun-sdk-check/upstream/packages-953b6d47b4e9f0ad3c39547c6d3f9a828f10e206/lang/luajit2'
+touch -r /home/eric/homestun-sdk-check/openwrt-sdk-24.10.5-x86-64_gcc-13.3.0_musl.Linux-x86_64/build_dir/target-x86_64_musl/libcap-2.69/.built /home/eric/homestun-sdk-check/openwrt-sdk-24.10.5-x86-64_gcc-13.3.0_musl.Linux-x86_64/build_dir/target-x86_64_musl/libcap-2.69/.autoremove 2>/dev/null >/dev/null
+find /home/eric/homestun-sdk-check/openwrt-sdk-24.10.5-x86-64_gcc-13.3.0_musl.Linux-x86_64/build_dir/target-x86_64_musl/libcap-2.69 -mindepth 1 -maxdepth 1 -not '(' -type f -and -name '.*' -and -size 0 ')' -and -not -name '.pkgdir'  -print0 | xargs -r -0 rm -rf
+make[2]: Leaving directory '/home/eric/homestun-sdk-check/upstream/openwrt-24.10.5/package/libs/libcap'
+time: package/feeds/base/libcap/compile#0.18#0.14#0.48
+touch -r /home/eric/homestun-sdk-check/openwrt-sdk-24.10.5-x86-64_gcc-13.3.0_musl.Linux-x86_64/build_dir/target-x86_64_musl/luajit2-2.1.2025.05.29/.built /home/eric/homestun-sdk-check/openwrt-sdk-24.10.5-x86-64_gcc-13.3.0_musl.Linux-x86_64/build_dir/target-x86_64_musl/luajit2-2.1.2025.05.29/.autoremove 2>/dev/null >/dev/null
+find /home/eric/homestun-sdk-check/openwrt-sdk-24.10.5-x86-64_gcc-13.3.0_musl.Linux-x86_64/build_dir/target-x86_64_musl/luajit2-2.1.2025.05.29 -mindepth 1 -maxdepth 1 -not '(' -type f -and -name '.*' -and -size 0 ')' -and -not -name '.pkgdir'  -print0 | xargs -r -0 rm -rf
+make[2]: Leaving directory '/home/eric/homestun-sdk-check/upstream/packages-953b6d47b4e9f0ad3c39547c6d3f9a828f10e206/lang/luajit2'
+time: package/feeds/packages/luajit2/compile#0.35#0.16#0.92
+make[2]: Entering directory '/home/eric/homestun-sdk-check/upstream/openwrt-24.10.5/package/libs/ncurses'
+make[2]: Entering directory '/home/eric/homestun-sdk-check/upstream/openwrt-24.10.5/package/utils/bzip2'
+touch -r /home/eric/homestun-sdk-check/openwrt-sdk-24.10.5-x86-64_gcc-13.3.0_musl.Linux-x86_64/build_dir/target-x86_64_musl/ncurses-6.4/.built /home/eric/homestun-sdk-check/openwrt-sdk-24.10.5-x86-64_gcc-13.3.0_musl.Linux-x86_64/build_dir/target-x86_64_musl/ncurses-6.4/.autoremove 2>/dev/null >/dev/null
+find /home/eric/homestun-sdk-check/openwrt-sdk-24.10.5-x86-64_gcc-13.3.0_musl.Linux-x86_64/build_dir/target-x86_64_musl/ncurses-6.4 -mindepth 1 -maxdepth 1 -not '(' -type f -and -name '.*' -and -size 0 ')' -and -not -name '.pkgdir'  -print0 | xargs -r -0 rm -rf
+make[2]: Leaving directory '/home/eric/homestun-sdk-check/upstream/openwrt-24.10.5/package/libs/ncurses'
+time: package/feeds/base/ncurses/compile#0.26#0.21#0.86
+make[2]: Entering directory '/home/eric/homestun-sdk-check/upstream/packages-953b6d47b4e9f0ad3c39547c6d3f9a828f10e206/libs/expat'
+touch -r /home/eric/homestun-sdk-check/openwrt-sdk-24.10.5-x86-64_gcc-13.3.0_musl.Linux-x86_64/build_dir/target-x86_64_musl/bzip2-1.0.8/.built /home/eric/homestun-sdk-check/openwrt-sdk-24.10.5-x86-64_gcc-13.3.0_musl.Linux-x86_64/build_dir/target-x86_64_musl/bzip2-1.0.8/.autoremove 2>/dev/null >/dev/null
+find /home/eric/homestun-sdk-check/openwrt-sdk-24.10.5-x86-64_gcc-13.3.0_musl.Linux-x86_64/build_dir/target-x86_64_musl/bzip2-1.0.8 -mindepth 1 -maxdepth 1 -not '(' -type f -and -name '.*' -and -size 0 ')' -and -not -name '.pkgdir'  -print0 | xargs -r -0 rm -rf
+make[2]: Leaving directory '/home/eric/homestun-sdk-check/upstream/openwrt-24.10.5/package/utils/bzip2'
+time: package/feeds/base/bzip2/compile#0.31#0.24#1.85
+touch -r /home/eric/homestun-sdk-check/openwrt-sdk-24.10.5-x86-64_gcc-13.3.0_musl.Linux-x86_64/build_dir/target-x86_64_musl/expat-2.7.1/.built /home/eric/homestun-sdk-check/openwrt-sdk-24.10.5-x86-64_gcc-13.3.0_musl.Linux-x86_64/build_dir/target-x86_64_musl/expat-2.7.1/.autoremove 2>/dev/null >/dev/null
+find /home/eric/homestun-sdk-check/openwrt-sdk-24.10.5-x86-64_gcc-13.3.0_musl.Linux-x86_64/build_dir/target-x86_64_musl/expat-2.7.1 -mindepth 1 -maxdepth 1 -not '(' -type f -and -name '.*' -and -size 0 ')' -and -not -name '.pkgdir'  -print0 | xargs -r -0 rm -rf
+make[2]: Leaving directory '/home/eric/homestun-sdk-check/upstream/packages-953b6d47b4e9f0ad3c39547c6d3f9a828f10e206/libs/expat'
+time: package/feeds/packages/expat/compile#0.21#0.15#0.54
+make[2]: Entering directory '/home/eric/homestun-sdk-check/upstream/packages-953b6d47b4e9f0ad3c39547c6d3f9a828f10e206/utils/attr'
+touch -r /home/eric/homestun-sdk-check/openwrt-sdk-24.10.5-x86-64_gcc-13.3.0_musl.Linux-x86_64/build_dir/target-x86_64_musl/attr-2.5.2/.built /home/eric/homestun-sdk-check/openwrt-sdk-24.10.5-x86-64_gcc-13.3.0_musl.Linux-x86_64/build_dir/target-x86_64_musl/attr-2.5.2/.autoremove 2>/dev/null >/dev/null
+find /home/eric/homestun-sdk-check/openwrt-sdk-24.10.5-x86-64_gcc-13.3.0_musl.Linux-x86_64/build_dir/target-x86_64_musl/attr-2.5.2 -mindepth 1 -maxdepth 1 -not '(' -type f -and -name '.*' -and -size 0 ')' -and -not -name '.pkgdir'  -print0 | xargs -r -0 rm -rf
+make[2]: Leaving directory '/home/eric/homestun-sdk-check/upstream/packages-953b6d47b4e9f0ad3c39547c6d3f9a828f10e206/utils/attr'
+time: package/feeds/packages/attr/compile#0.20#0.15#0.45
+make[2]: Entering directory '/home/eric/homestun-sdk-check/upstream/packages-953b6d47b4e9f0ad3c39547c6d3f9a828f10e206/libs/libical'
+make[2]: Entering directory '/home/eric/homestun-sdk-check/upstream/packages-953b6d47b4e9f0ad3c39547c6d3f9a828f10e206/libs/libffi'
+touch -r /home/eric/homestun-sdk-check/openwrt-sdk-24.10.5-x86-64_gcc-13.3.0_musl.Linux-x86_64/build_dir/target-x86_64_musl/libical-3.0.9/.built /home/eric/homestun-sdk-check/openwrt-sdk-24.10.5-x86-64_gcc-13.3.0_musl.Linux-x86_64/build_dir/target-x86_64_musl/libical-3.0.9/.autoremove 2>/dev/null >/dev/null
+find /home/eric/homestun-sdk-check/openwrt-sdk-24.10.5-x86-64_gcc-13.3.0_musl.Linux-x86_64/build_dir/target-x86_64_musl/libical-3.0.9 -mindepth 1 -maxdepth 1 -not '(' -type f -and -name '.*' -and -size 0 ')' -and -not -name '.pkgdir'  -print0 | xargs -r -0 rm -rf
+make[2]: Leaving directory '/home/eric/homestun-sdk-check/upstream/packages-953b6d47b4e9f0ad3c39547c6d3f9a828f10e206/libs/libical'
+time: package/feeds/packages/libical/compile#0.19#0.13#0.54
+make[2]: Entering directory '/home/eric/homestun-sdk-check/upstream/packages-953b6d47b4e9f0ad3c39547c6d3f9a828f10e206/lang/python/python3'
+touch -r /home/eric/homestun-sdk-check/openwrt-sdk-24.10.5-x86-64_gcc-13.3.0_musl.Linux-x86_64/build_dir/target-x86_64_musl/libffi-3.4.7/.built /home/eric/homestun-sdk-check/openwrt-sdk-24.10.5-x86-64_gcc-13.3.0_musl.Linux-x86_64/build_dir/target-x86_64_musl/libffi-3.4.7/.autoremove 2>/dev/null >/dev/null
+find /home/eric/homestun-sdk-check/openwrt-sdk-24.10.5-x86-64_gcc-13.3.0_musl.Linux-x86_64/build_dir/target-x86_64_musl/libffi-3.4.7 -mindepth 1 -maxdepth 1 -not '(' -type f -and -name '.*' -and -size 0 ')' -and -not -name '.pkgdir'  -print0 | xargs -r -0 rm -rf
+make[2]: Leaving directory '/home/eric/homestun-sdk-check/upstream/packages-953b6d47b4e9f0ad3c39547c6d3f9a828f10e206/libs/libffi'
+time: package/feeds/packages/libffi/compile#0.30#0.28#1.11
+find /home/eric/homestun-sdk-check/openwrt-sdk-24.10.5-x86-64_gcc-13.3.0_musl.Linux-x86_64/build_dir/hostpkg/Python-3.11.14 -mindepth 1 -maxdepth 1 -not '(' -type f -and -name '.*' -and -size 0 ')' -print0 | xargs -r -0 rm -rf
+make[2]: Leaving directory '/home/eric/homestun-sdk-check/upstream/packages-953b6d47b4e9f0ad3c39547c6d3f9a828f10e206/lang/python/python3'
+time: package/feeds/packages/python3/host-compile#0.48#0.26#1.22
+make[2]: Entering directory '/home/eric/homestun-sdk-check/upstream/packages-953b6d47b4e9f0ad3c39547c6d3f9a828f10e206/libs/sqlite3'
+touch -r /home/eric/homestun-sdk-check/openwrt-sdk-24.10.5-x86-64_gcc-13.3.0_musl.Linux-x86_64/build_dir/target-x86_64_musl/sqlite-autoconf-3510100/.built /home/eric/homestun-sdk-check/openwrt-sdk-24.10.5-x86-64_gcc-13.3.0_musl.Linux-x86_64/build_dir/target-x86_64_musl/sqlite-autoconf-3510100/.autoremove 2>/dev/null >/dev/null
+find /home/eric/homestun-sdk-check/openwrt-sdk-24.10.5-x86-64_gcc-13.3.0_musl.Linux-x86_64/build_dir/target-x86_64_musl/sqlite-autoconf-3510100 -mindepth 1 -maxdepth 1 -not '(' -type f -and -name '.*' -and -size 0 ')' -and -not -name '.pkgdir'  -print0 | xargs -r -0 rm -rf
+make[2]: Leaving directory '/home/eric/homestun-sdk-check/upstream/packages-953b6d47b4e9f0ad3c39547c6d3f9a828f10e206/libs/sqlite3'
+time: package/feeds/packages/sqlite3/compile#0.20#0.12#0.51
+make[2]: Entering directory '/home/eric/homestun-sdk-check/upstream/packages-953b6d47b4e9f0ad3c39547c6d3f9a828f10e206/net/curl'
+make[2]: Entering directory '/home/eric/homestun-sdk-check/upstream/openwrt-24.10.5/package/libs/libubox'
+touch -r /home/eric/homestun-sdk-check/openwrt-sdk-24.10.5-x86-64_gcc-13.3.0_musl.Linux-x86_64/build_dir/target-x86_64_musl/curl-8.12.1/.built /home/eric/homestun-sdk-check/openwrt-sdk-24.10.5-x86-64_gcc-13.3.0_musl.Linux-x86_64/build_dir/target-x86_64_musl/curl-8.12.1/.autoremove 2>/dev/null >/dev/null
+find /home/eric/homestun-sdk-check/openwrt-sdk-24.10.5-x86-64_gcc-13.3.0_musl.Linux-x86_64/build_dir/target-x86_64_musl/curl-8.12.1 -mindepth 1 -maxdepth 1 -not '(' -type f -and -name '.*' -and -size 0 ')' -and -not -name '.pkgdir'  -print0 | xargs -r -0 rm -rf
+make[2]: Leaving directory '/home/eric/homestun-sdk-check/upstream/packages-953b6d47b4e9f0ad3c39547c6d3f9a828f10e206/net/curl'
+time: package/feeds/packages/curl/compile#0.20#0.10#0.49
+echo "libubox" >> /home/eric/homestun-sdk-check/openwrt-sdk-24.10.5-x86-64_gcc-13.3.0_musl.Linux-x86_64/staging_dir/target-x86_64_musl/pkginfo/libubox.default.install
+echo "libblobmsg-json" >> /home/eric/homestun-sdk-check/openwrt-sdk-24.10.5-x86-64_gcc-13.3.0_musl.Linux-x86_64/staging_dir/target-x86_64_musl/pkginfo/libubox.default.install
+echo "jshn" >> /home/eric/homestun-sdk-check/openwrt-sdk-24.10.5-x86-64_gcc-13.3.0_musl.Linux-x86_64/staging_dir/target-x86_64_musl/pkginfo/libubox.default.install
+echo "libjson-script" >> /home/eric/homestun-sdk-check/openwrt-sdk-24.10.5-x86-64_gcc-13.3.0_musl.Linux-x86_64/staging_dir/target-x86_64_musl/pkginfo/libubox.default.install
+touch -r /home/eric/homestun-sdk-check/openwrt-sdk-24.10.5-x86-64_gcc-13.3.0_musl.Linux-x86_64/build_dir/target-x86_64_musl/libubox-2025.07.23~49056d17/.built /home/eric/homestun-sdk-check/openwrt-sdk-24.10.5-x86-64_gcc-13.3.0_musl.Linux-x86_64/build_dir/target-x86_64_musl/libubox-2025.07.23~49056d17/.autoremove 2>/dev/null >/dev/null
+find /home/eric/homestun-sdk-check/openwrt-sdk-24.10.5-x86-64_gcc-13.3.0_musl.Linux-x86_64/build_dir/target-x86_64_musl/libubox-2025.07.23~49056d17 -mindepth 1 -maxdepth 1 -not '(' -type f -and -name '.*' -and -size 0 ')' -and -not -name '.pkgdir'  -print0 | xargs -r -0 rm -rf
+make[2]: Leaving directory '/home/eric/homestun-sdk-check/upstream/openwrt-24.10.5/package/libs/libubox'
+time: package/feeds/base/libubox/compile#0.28#0.16#1.00
+make[2]: Entering directory '/home/eric/homestun-sdk-check/upstream/openwrt-24.10.5/package/libs/libxml2'
+make[2]: Entering directory '/home/eric/homestun-sdk-check/upstream/openwrt-24.10.5/package/libs/pcre2'
+touch -r /home/eric/homestun-sdk-check/openwrt-sdk-24.10.5-x86-64_gcc-13.3.0_musl.Linux-x86_64/build_dir/target-x86_64_musl/libxml2-2.14.5/.built /home/eric/homestun-sdk-check/openwrt-sdk-24.10.5-x86-64_gcc-13.3.0_musl.Linux-x86_64/build_dir/target-x86_64_musl/libxml2-2.14.5/.autoremove 2>/dev/null >/dev/null
+find /home/eric/homestun-sdk-check/openwrt-sdk-24.10.5-x86-64_gcc-13.3.0_musl.Linux-x86_64/build_dir/target-x86_64_musl/libxml2-2.14.5 -mindepth 1 -maxdepth 1 -not '(' -type f -and -name '.*' -and -size 0 ')' -and -not -name '.pkgdir'  -print0 | xargs -r -0 rm -rf
+make[2]: Leaving directory '/home/eric/homestun-sdk-check/upstream/openwrt-24.10.5/package/libs/libxml2'
+time: package/feeds/base/libxml2/compile#0.27#0.18#1.02
+touch -r /home/eric/homestun-sdk-check/openwrt-sdk-24.10.5-x86-64_gcc-13.3.0_musl.Linux-x86_64/build_dir/target-x86_64_musl/pcre2-10.42/.built /home/eric/homestun-sdk-check/openwrt-sdk-24.10.5-x86-64_gcc-13.3.0_musl.Linux-x86_64/build_dir/target-x86_64_musl/pcre2-10.42/.autoremove 2>/dev/null >/dev/null
+find /home/eric/homestun-sdk-check/openwrt-sdk-24.10.5-x86-64_gcc-13.3.0_musl.Linux-x86_64/build_dir/target-x86_64_musl/pcre2-10.42 -mindepth 1 -maxdepth 1 -not '(' -type f -and -name '.*' -and -size 0 ')' -and -not -name '.pkgdir'  -print0 | xargs -r -0 rm -rf
+make[2]: Leaving directory '/home/eric/homestun-sdk-check/upstream/openwrt-24.10.5/package/libs/pcre2'
+time: package/feeds/base/pcre2/compile#0.24#0.14#1.01
+make[2]: Entering directory '/home/eric/homestun-sdk-check/upstream/openwrt-24.10.5/package/system/ubus'
+echo "libubus" >> /home/eric/homestun-sdk-check/openwrt-sdk-24.10.5-x86-64_gcc-13.3.0_musl.Linux-x86_64/staging_dir/target-x86_64_musl/pkginfo/ubus.default.install
+echo "ubus" >> /home/eric/homestun-sdk-check/openwrt-sdk-24.10.5-x86-64_gcc-13.3.0_musl.Linux-x86_64/staging_dir/target-x86_64_musl/pkginfo/ubus.default.install
+echo "ubusd" >> /home/eric/homestun-sdk-check/openwrt-sdk-24.10.5-x86-64_gcc-13.3.0_musl.Linux-x86_64/staging_dir/target-x86_64_musl/pkginfo/ubus.default.install
+touch -r /home/eric/homestun-sdk-check/openwrt-sdk-24.10.5-x86-64_gcc-13.3.0_musl.Linux-x86_64/build_dir/target-x86_64_musl/ubus-2025.10.17~60e04048/.built /home/eric/homestun-sdk-check/openwrt-sdk-24.10.5-x86-64_gcc-13.3.0_musl.Linux-x86_64/build_dir/target-x86_64_musl/ubus-2025.10.17~60e04048/.autoremove 2>/dev/null >/dev/null
+find /home/eric/homestun-sdk-check/openwrt-sdk-24.10.5-x86-64_gcc-13.3.0_musl.Linux-x86_64/build_dir/target-x86_64_musl/ubus-2025.10.17~60e04048 -mindepth 1 -maxdepth 1 -not '(' -type f -and -name '.*' -and -size 0 ')' -and -not -name '.pkgdir'  -print0 | xargs -r -0 rm -rf
+make[2]: Leaving directory '/home/eric/homestun-sdk-check/upstream/openwrt-24.10.5/package/system/ubus'
+time: package/feeds/base/ubus/compile#0.17#0.11#0.43
+make[2]: Entering directory '/home/eric/homestun-sdk-check/upstream/openwrt-24.10.5/package/utils/util-linux'
+make[2]: Entering directory '/home/eric/homestun-sdk-check/upstream/packages-953b6d47b4e9f0ad3c39547c6d3f9a828f10e206/libs/libxslt'
+echo "libuuid" >> /home/eric/homestun-sdk-check/openwrt-sdk-24.10.5-x86-64_gcc-13.3.0_musl.Linux-x86_64/staging_dir/target-x86_64_musl/pkginfo/util-linux.default.install
+echo "libblkid" >> /home/eric/homestun-sdk-check/openwrt-sdk-24.10.5-x86-64_gcc-13.3.0_musl.Linux-x86_64/staging_dir/target-x86_64_musl/pkginfo/util-linux.default.install
+echo "libsmartcols" >> /home/eric/homestun-sdk-check/openwrt-sdk-24.10.5-x86-64_gcc-13.3.0_musl.Linux-x86_64/staging_dir/target-x86_64_musl/pkginfo/util-linux.default.install
+echo "partx-utils" >> /home/eric/homestun-sdk-check/openwrt-sdk-24.10.5-x86-64_gcc-13.3.0_musl.Linux-x86_64/staging_dir/target-x86_64_musl/pkginfo/util-linux.default.install
+touch -r /home/eric/homestun-sdk-check/openwrt-sdk-24.10.5-x86-64_gcc-13.3.0_musl.Linux-x86_64/build_dir/target-x86_64_musl/util-linux-2.40.2/.built /home/eric/homestun-sdk-check/openwrt-sdk-24.10.5-x86-64_gcc-13.3.0_musl.Linux-x86_64/build_dir/target-x86_64_musl/util-linux-2.40.2/.autoremove 2>/dev/null >/dev/null
+find /home/eric/homestun-sdk-check/openwrt-sdk-24.10.5-x86-64_gcc-13.3.0_musl.Linux-x86_64/build_dir/target-x86_64_musl/util-linux-2.40.2 -mindepth 1 -maxdepth 1 -not '(' -type f -and -name '.*' -and -size 0 ')' -and -not -name '.pkgdir'  -print0 | xargs -r -0 rm -rf
+make[2]: Leaving directory '/home/eric/homestun-sdk-check/upstream/openwrt-24.10.5/package/utils/util-linux'
+time: package/feeds/base/util-linux/compile#0.26#0.15#0.63
+touch -r /home/eric/homestun-sdk-check/openwrt-sdk-24.10.5-x86-64_gcc-13.3.0_musl.Linux-x86_64/build_dir/target-x86_64_musl/libxslt-1.1.42/.built /home/eric/homestun-sdk-check/openwrt-sdk-24.10.5-x86-64_gcc-13.3.0_musl.Linux-x86_64/build_dir/target-x86_64_musl/libxslt-1.1.42/.autoremove 2>/dev/null >/dev/null
+find /home/eric/homestun-sdk-check/openwrt-sdk-24.10.5-x86-64_gcc-13.3.0_musl.Linux-x86_64/build_dir/target-x86_64_musl/libxslt-1.1.42 -mindepth 1 -maxdepth 1 -not '(' -type f -and -name '.*' -and -size 0 ')' -and -not -name '.pkgdir'  -print0 | xargs -r -0 rm -rf
+make[2]: Leaving directory '/home/eric/homestun-sdk-check/upstream/packages-953b6d47b4e9f0ad3c39547c6d3f9a828f10e206/libs/libxslt'
+time: package/feeds/packages/libxslt/compile#0.29#0.23#1.15
+make[2]: Entering directory '/home/eric/homestun-sdk-check/upstream/packages-953b6d47b4e9f0ad3c39547c6d3f9a828f10e206/utils/dbus'
+make[2]: Entering directory '/home/eric/homestun-sdk-check/upstream/openwrt-24.10.5/package/libs/readline'
+touch -r /home/eric/homestun-sdk-check/openwrt-sdk-24.10.5-x86-64_gcc-13.3.0_musl.Linux-x86_64/build_dir/target-x86_64_musl/dbus-1.14.10/.built /home/eric/homestun-sdk-check/openwrt-sdk-24.10.5-x86-64_gcc-13.3.0_musl.Linux-x86_64/build_dir/target-x86_64_musl/dbus-1.14.10/.autoremove 2>/dev/null >/dev/null
+find /home/eric/homestun-sdk-check/openwrt-sdk-24.10.5-x86-64_gcc-13.3.0_musl.Linux-x86_64/build_dir/target-x86_64_musl/dbus-1.14.10 -mindepth 1 -maxdepth 1 -not '(' -type f -and -name '.*' -and -size 0 ')' -and -not -name '.pkgdir'  -print0 | xargs -r -0 rm -rf
+make[2]: Leaving directory '/home/eric/homestun-sdk-check/upstream/packages-953b6d47b4e9f0ad3c39547c6d3f9a828f10e206/utils/dbus'
+time: package/feeds/packages/dbus/compile#0.20#0.11#0.52
+touch -r /home/eric/homestun-sdk-check/openwrt-sdk-24.10.5-x86-64_gcc-13.3.0_musl.Linux-x86_64/build_dir/target-x86_64_musl/readline-8.2/.built /home/eric/homestun-sdk-check/openwrt-sdk-24.10.5-x86-64_gcc-13.3.0_musl.Linux-x86_64/build_dir/target-x86_64_musl/readline-8.2/.autoremove 2>/dev/null >/dev/null
+find /home/eric/homestun-sdk-check/openwrt-sdk-24.10.5-x86-64_gcc-13.3.0_musl.Linux-x86_64/build_dir/target-x86_64_musl/readline-8.2 -mindepth 1 -maxdepth 1 -not '(' -type f -and -name '.*' -and -size 0 ')' -and -not -name '.pkgdir'  -print0 | xargs -r -0 rm -rf
+make[2]: Leaving directory '/home/eric/homestun-sdk-check/upstream/openwrt-24.10.5/package/libs/readline'
+time: package/feeds/base/readline/compile#0.31#0.16#1.02
+make[2]: Entering directory '/home/eric/homestun-sdk-check/upstream/packages-953b6d47b4e9f0ad3c39547c6d3f9a828f10e206/lang/python/python-flit-core'
+find /home/eric/homestun-sdk-check/openwrt-sdk-24.10.5-x86-64_gcc-13.3.0_musl.Linux-x86_64/build_dir/hostpkg/pypi/flit_core-3.12.0 -mindepth 1 -maxdepth 1 -not '(' -type f -and -name '.*' -and -size 0 ')' -print0 | xargs -r -0 rm -rf
+make[2]: Leaving directory '/home/eric/homestun-sdk-check/upstream/packages-953b6d47b4e9f0ad3c39547c6d3f9a828f10e206/lang/python/python-flit-core'
+time: package/feeds/packages/python-flit-core/host-compile#0.14#0.09#0.76
+make[2]: Entering directory '/home/eric/homestun-sdk-check/upstream/packages-953b6d47b4e9f0ad3c39547c6d3f9a828f10e206/libs/glib2'
+make[2]: Entering directory '/home/eric/homestun-sdk-check/upstream/packages-953b6d47b4e9f0ad3c39547c6d3f9a828f10e206/net/cgi-io'
+echo "cgi-io" >> /home/eric/homestun-sdk-check/openwrt-sdk-24.10.5-x86-64_gcc-13.3.0_musl.Linux-x86_64/staging_dir/target-x86_64_musl/pkginfo/cgi-io.default.install
+touch -r /home/eric/homestun-sdk-check/openwrt-sdk-24.10.5-x86-64_gcc-13.3.0_musl.Linux-x86_64/build_dir/target-x86_64_musl/cgi-io-2022.08.10~901b0f04/.built /home/eric/homestun-sdk-check/openwrt-sdk-24.10.5-x86-64_gcc-13.3.0_musl.Linux-x86_64/build_dir/target-x86_64_musl/cgi-io-2022.08.10~901b0f04/.autoremove 2>/dev/null >/dev/null
+find /home/eric/homestun-sdk-check/openwrt-sdk-24.10.5-x86-64_gcc-13.3.0_musl.Linux-x86_64/build_dir/target-x86_64_musl/cgi-io-2022.08.10~901b0f04 -mindepth 1 -maxdepth 1 -not '(' -type f -and -name '.*' -and -size 0 ')' -and -not -name '.pkgdir'  -print0 | xargs -r -0 rm -rf
+touch -r /home/eric/homestun-sdk-check/openwrt-sdk-24.10.5-x86-64_gcc-13.3.0_musl.Linux-x86_64/build_dir/target-x86_64_musl/glib-2.82.0/.built /home/eric/homestun-sdk-check/openwrt-sdk-24.10.5-x86-64_gcc-13.3.0_musl.Linux-x86_64/build_dir/target-x86_64_musl/glib-2.82.0/.autoremove 2>/dev/null >/dev/null
+find /home/eric/homestun-sdk-check/openwrt-sdk-24.10.5-x86-64_gcc-13.3.0_musl.Linux-x86_64/build_dir/target-x86_64_musl/glib-2.82.0 -mindepth 1 -maxdepth 1 -not '(' -type f -and -name '.*' -and -size 0 ')' -and -not -name '.pkgdir'  -print0 | xargs -r -0 rm -rf
+make[2]: Leaving directory '/home/eric/homestun-sdk-check/upstream/packages-953b6d47b4e9f0ad3c39547c6d3f9a828f10e206/net/cgi-io'
+time: package/feeds/packages/cgi-io/compile#0.20#0.11#0.50
+make[2]: Leaving directory '/home/eric/homestun-sdk-check/upstream/packages-953b6d47b4e9f0ad3c39547c6d3f9a828f10e206/libs/glib2'
+time: package/feeds/packages/glib2/compile#0.29#0.19#1.10
+make[2]: Entering directory '/home/eric/homestun-sdk-check/upstream/packages-953b6d47b4e9f0ad3c39547c6d3f9a828f10e206/lang/python/python-installer'
+find /home/eric/homestun-sdk-check/openwrt-sdk-24.10.5-x86-64_gcc-13.3.0_musl.Linux-x86_64/build_dir/hostpkg/pypi/installer-0.7.0 -mindepth 1 -maxdepth 1 -not '(' -type f -and -name '.*' -and -size 0 ')' -print0 | xargs -r -0 rm -rf
+make[2]: Leaving directory '/home/eric/homestun-sdk-check/upstream/packages-953b6d47b4e9f0ad3c39547c6d3f9a828f10e206/lang/python/python-installer'
+time: package/feeds/packages/python-installer/host-compile#0.17#0.09#0.79
+make[2]: Entering directory '/home/eric/homestun-sdk-check/upstream/openwrt-24.10.5/package/system/uci'
+echo "libuci" >> /home/eric/homestun-sdk-check/openwrt-sdk-24.10.5-x86-64_gcc-13.3.0_musl.Linux-x86_64/staging_dir/target-x86_64_musl/pkginfo/uci.default.install
+echo "uci" >> /home/eric/homestun-sdk-check/openwrt-sdk-24.10.5-x86-64_gcc-13.3.0_musl.Linux-x86_64/staging_dir/target-x86_64_musl/pkginfo/uci.default.install
+touch -r /home/eric/homestun-sdk-check/openwrt-sdk-24.10.5-x86-64_gcc-13.3.0_musl.Linux-x86_64/build_dir/target-x86_64_musl/uci-2025.01.20~16ff0bad/.built /home/eric/homestun-sdk-check/openwrt-sdk-24.10.5-x86-64_gcc-13.3.0_musl.Linux-x86_64/build_dir/target-x86_64_musl/uci-2025.01.20~16ff0bad/.autoremove 2>/dev/null >/dev/null
+find /home/eric/homestun-sdk-check/openwrt-sdk-24.10.5-x86-64_gcc-13.3.0_musl.Linux-x86_64/build_dir/target-x86_64_musl/uci-2025.01.20~16ff0bad -mindepth 1 -maxdepth 1 -not '(' -type f -and -name '.*' -and -size 0 ')' -and -not -name '.pkgdir'  -print0 | xargs -r -0 rm -rf
+make[2]: Leaving directory '/home/eric/homestun-sdk-check/upstream/openwrt-24.10.5/package/system/uci'
+time: package/feeds/base/uci/compile#0.20#0.11#0.42
+make[2]: Entering directory '/home/eric/homestun-sdk-check/upstream/packages-953b6d47b4e9f0ad3c39547c6d3f9a828f10e206/lang/python/python-packaging'
+make[2]: Entering directory '/home/eric/homestun-sdk-check/upstream/packages-953b6d47b4e9f0ad3c39547c6d3f9a828f10e206/utils/bluez'
+touch -r /home/eric/homestun-sdk-check/openwrt-sdk-24.10.5-x86-64_gcc-13.3.0_musl.Linux-x86_64/build_dir/target-x86_64_musl/bluez-5.72/.built /home/eric/homestun-sdk-check/openwrt-sdk-24.10.5-x86-64_gcc-13.3.0_musl.Linux-x86_64/build_dir/target-x86_64_musl/bluez-5.72/.autoremove 2>/dev/null >/dev/null
+find /home/eric/homestun-sdk-check/openwrt-sdk-24.10.5-x86-64_gcc-13.3.0_musl.Linux-x86_64/build_dir/target-x86_64_musl/bluez-5.72 -mindepth 1 -maxdepth 1 -not '(' -type f -and -name '.*' -and -size 0 ')' -and -not -name '.pkgdir'  -print0 | xargs -r -0 rm -rf
+make[2]: Leaving directory '/home/eric/homestun-sdk-check/upstream/packages-953b6d47b4e9f0ad3c39547c6d3f9a828f10e206/utils/bluez'
+time: package/feeds/packages/bluez/compile#0.18#0.12#0.44
+make[2]: Entering directory '/home/eric/homestun-sdk-check/upstream/packages-953b6d47b4e9f0ad3c39547c6d3f9a828f10e206/lang/python/python-pyproject-hooks'
+find /home/eric/homestun-sdk-check/openwrt-sdk-24.10.5-x86-64_gcc-13.3.0_musl.Linux-x86_64/build_dir/hostpkg/pypi/packaging-25.0 -mindepth 1 -maxdepth 1 -not '(' -type f -and -name '.*' -and -size 0 ')' -print0 | xargs -r -0 rm -rf
+make[2]: Leaving directory '/home/eric/homestun-sdk-check/upstream/packages-953b6d47b4e9f0ad3c39547c6d3f9a828f10e206/lang/python/python-packaging'
+time: package/feeds/packages/python-packaging/host-compile#0.27#0.19#0.94
+find /home/eric/homestun-sdk-check/openwrt-sdk-24.10.5-x86-64_gcc-13.3.0_musl.Linux-x86_64/build_dir/hostpkg/pypi/pyproject_hooks-1.0.0 -mindepth 1 -maxdepth 1 -not '(' -type f -and -name '.*' -and -size 0 ')' -print0 | xargs -r -0 rm -rf
+make[2]: Leaving directory '/home/eric/homestun-sdk-check/upstream/packages-953b6d47b4e9f0ad3c39547c6d3f9a828f10e206/lang/python/python-pyproject-hooks'
+time: package/feeds/packages/python-pyproject-hooks/host-compile#0.15#0.08#0.86
+make[2]: Entering directory '/home/eric/homestun-sdk-check/upstream/openwrt-24.10.5/package/network/utils/iwinfo'
+echo "libiwinfo" >> /home/eric/homestun-sdk-check/openwrt-sdk-24.10.5-x86-64_gcc-13.3.0_musl.Linux-x86_64/staging_dir/target-x86_64_musl/pkginfo/iwinfo.default.install
+echo "libiwinfo-data" >> /home/eric/homestun-sdk-check/openwrt-sdk-24.10.5-x86-64_gcc-13.3.0_musl.Linux-x86_64/staging_dir/target-x86_64_musl/pkginfo/iwinfo.default.install
+touch -r /home/eric/homestun-sdk-check/openwrt-sdk-24.10.5-x86-64_gcc-13.3.0_musl.Linux-x86_64/build_dir/target-x86_64_musl/libiwinfo-2024.10.20~b94f066e/.built /home/eric/homestun-sdk-check/openwrt-sdk-24.10.5-x86-64_gcc-13.3.0_musl.Linux-x86_64/build_dir/target-x86_64_musl/libiwinfo-2024.10.20~b94f066e/.autoremove 2>/dev/null >/dev/null
+find /home/eric/homestun-sdk-check/openwrt-sdk-24.10.5-x86-64_gcc-13.3.0_musl.Linux-x86_64/build_dir/target-x86_64_musl/libiwinfo-2024.10.20~b94f066e -mindepth 1 -maxdepth 1 -not '(' -type f -and -name '.*' -and -size 0 ')' -and -not -name '.pkgdir'  -print0 | xargs -r -0 rm -rf
+make[2]: Leaving directory '/home/eric/homestun-sdk-check/upstream/openwrt-24.10.5/package/network/utils/iwinfo'
+time: package/feeds/base/iwinfo/compile#0.22#0.11#0.48
+make[2]: Entering directory '/home/eric/homestun-sdk-check/upstream/packages-953b6d47b4e9f0ad3c39547c6d3f9a828f10e206/net/nginx-util'
+touch -r /home/eric/homestun-sdk-check/openwrt-sdk-24.10.5-x86-64_gcc-13.3.0_musl.Linux-x86_64/build_dir/target-x86_64_musl/nginx-util-1.7/.built /home/eric/homestun-sdk-check/openwrt-sdk-24.10.5-x86-64_gcc-13.3.0_musl.Linux-x86_64/build_dir/target-x86_64_musl/nginx-util-1.7/.autoremove 2>/dev/null >/dev/null
+find /home/eric/homestun-sdk-check/openwrt-sdk-24.10.5-x86-64_gcc-13.3.0_musl.Linux-x86_64/build_dir/target-x86_64_musl/nginx-util-1.7 -mindepth 1 -maxdepth 1 -not '(' -type f -and -name '.*' -and -size 0 ')' -and -not -name '.pkgdir'  -print0 | xargs -r -0 rm -rf
+make[2]: Leaving directory '/home/eric/homestun-sdk-check/upstream/packages-953b6d47b4e9f0ad3c39547c6d3f9a828f10e206/net/nginx-util'
+time: package/feeds/packages/nginx-util/compile#0.18#0.10#0.35
+make[2]: Entering directory '/home/eric/homestun-sdk-check/upstream/packages-953b6d47b4e9f0ad3c39547c6d3f9a828f10e206/lang/python/python-build'
+make[2]: Entering directory '/home/eric/homestun-sdk-check/upstream/openwrt-24.10.5/package/utils/ucode'
+find /home/eric/homestun-sdk-check/openwrt-sdk-24.10.5-x86-64_gcc-13.3.0_musl.Linux-x86_64/build_dir/hostpkg/pypi/build-1.3.0 -mindepth 1 -maxdepth 1 -not '(' -type f -and -name '.*' -and -size 0 ')' -print0 | xargs -r -0 rm -rf
+make[2]: Leaving directory '/home/eric/homestun-sdk-check/upstream/packages-953b6d47b4e9f0ad3c39547c6d3f9a828f10e206/lang/python/python-build'
+time: package/feeds/packages/python-build/host-compile#0.14#0.08#0.63
+make[2]: Entering directory '/home/eric/homestun-sdk-check/upstream/packages-953b6d47b4e9f0ad3c39547c6d3f9a828f10e206/lang/python/python-wheel'
+echo "libucode" >> /home/eric/homestun-sdk-check/openwrt-sdk-24.10.5-x86-64_gcc-13.3.0_musl.Linux-x86_64/staging_dir/target-x86_64_musl/pkginfo/ucode.default.install
+echo "ucode" >> /home/eric/homestun-sdk-check/openwrt-sdk-24.10.5-x86-64_gcc-13.3.0_musl.Linux-x86_64/staging_dir/target-x86_64_musl/pkginfo/ucode.default.install
+echo "ucode-mod-fs" >> /home/eric/homestun-sdk-check/openwrt-sdk-24.10.5-x86-64_gcc-13.3.0_musl.Linux-x86_64/staging_dir/target-x86_64_musl/pkginfo/ucode.default.install
+echo "ucode-mod-math" >> /home/eric/homestun-sdk-check/openwrt-sdk-24.10.5-x86-64_gcc-13.3.0_musl.Linux-x86_64/staging_dir/target-x86_64_musl/pkginfo/ucode.default.install
+echo "ucode-mod-ubus" >> /home/eric/homestun-sdk-check/openwrt-sdk-24.10.5-x86-64_gcc-13.3.0_musl.Linux-x86_64/staging_dir/target-x86_64_musl/pkginfo/ucode.default.install
+echo "ucode-mod-uci" >> /home/eric/homestun-sdk-check/openwrt-sdk-24.10.5-x86-64_gcc-13.3.0_musl.Linux-x86_64/staging_dir/target-x86_64_musl/pkginfo/ucode.default.install
+touch -r /home/eric/homestun-sdk-check/openwrt-sdk-24.10.5-x86-64_gcc-13.3.0_musl.Linux-x86_64/build_dir/target-x86_64_musl/ucode-2025.07.18~3f64c808/.built /home/eric/homestun-sdk-check/openwrt-sdk-24.10.5-x86-64_gcc-13.3.0_musl.Linux-x86_64/build_dir/target-x86_64_musl/ucode-2025.07.18~3f64c808/.autoremove 2>/dev/null >/dev/null
+find /home/eric/homestun-sdk-check/openwrt-sdk-24.10.5-x86-64_gcc-13.3.0_musl.Linux-x86_64/build_dir/target-x86_64_musl/ucode-2025.07.18~3f64c808 -mindepth 1 -maxdepth 1 -not '(' -type f -and -name '.*' -and -size 0 ')' -and -not -name '.pkgdir'  -print0 | xargs -r -0 rm -rf
+make[2]: Leaving directory '/home/eric/homestun-sdk-check/upstream/openwrt-24.10.5/package/utils/ucode'
+time: package/feeds/base/ucode/compile#0.28#0.13#0.80
+find /home/eric/homestun-sdk-check/openwrt-sdk-24.10.5-x86-64_gcc-13.3.0_musl.Linux-x86_64/build_dir/hostpkg/pypi/wheel-0.45.1 -mindepth 1 -maxdepth 1 -not '(' -type f -and -name '.*' -and -size 0 ')' -print0 | xargs -r -0 rm -rf
+make[2]: Leaving directory '/home/eric/homestun-sdk-check/upstream/packages-953b6d47b4e9f0ad3c39547c6d3f9a828f10e206/lang/python/python-wheel'
+time: package/feeds/packages/python-wheel/host-compile#0.13#0.13#0.97
+make[2]: Entering directory '/home/eric/homestun-sdk-check/upstream/openwrt-24.10.5/package/system/rpcd'
+echo "rpcd" >> /home/eric/homestun-sdk-check/openwrt-sdk-24.10.5-x86-64_gcc-13.3.0_musl.Linux-x86_64/staging_dir/target-x86_64_musl/pkginfo/rpcd.default.install
+echo "rpcd-mod-file" >> /home/eric/homestun-sdk-check/openwrt-sdk-24.10.5-x86-64_gcc-13.3.0_musl.Linux-x86_64/staging_dir/target-x86_64_musl/pkginfo/rpcd.default.install
+echo "rpcd-mod-iwinfo" >> /home/eric/homestun-sdk-check/openwrt-sdk-24.10.5-x86-64_gcc-13.3.0_musl.Linux-x86_64/staging_dir/target-x86_64_musl/pkginfo/rpcd.default.install
+echo "rpcd-mod-ucode" >> /home/eric/homestun-sdk-check/openwrt-sdk-24.10.5-x86-64_gcc-13.3.0_musl.Linux-x86_64/staging_dir/target-x86_64_musl/pkginfo/rpcd.default.install
+touch -r /home/eric/homestun-sdk-check/openwrt-sdk-24.10.5-x86-64_gcc-13.3.0_musl.Linux-x86_64/build_dir/target-x86_64_musl/rpcd-2025.09.01~bba95191/.built /home/eric/homestun-sdk-check/openwrt-sdk-24.10.5-x86-64_gcc-13.3.0_musl.Linux-x86_64/build_dir/target-x86_64_musl/rpcd-2025.09.01~bba95191/.autoremove 2>/dev/null >/dev/null
+find /home/eric/homestun-sdk-check/openwrt-sdk-24.10.5-x86-64_gcc-13.3.0_musl.Linux-x86_64/build_dir/target-x86_64_musl/rpcd-2025.09.01~bba95191 -mindepth 1 -maxdepth 1 -not '(' -type f -and -name '.*' -and -size 0 ')' -and -not -name '.pkgdir'  -print0 | xargs -r -0 rm -rf
+make[2]: Leaving directory '/home/eric/homestun-sdk-check/upstream/openwrt-24.10.5/package/system/rpcd'
+time: package/feeds/base/rpcd/compile#0.19#0.12#0.53
+make[2]: Entering directory '/home/eric/homestun-sdk-check/upstream/luci-d88390be4ec9722cb427fee03368fc8c8582627d/contrib/package/lucihttp'
+echo "liblucihttp" >> /home/eric/homestun-sdk-check/openwrt-sdk-24.10.5-x86-64_gcc-13.3.0_musl.Linux-x86_64/staging_dir/target-x86_64_musl/pkginfo/lucihttp.default.install
+echo "liblucihttp-ucode" >> /home/eric/homestun-sdk-check/openwrt-sdk-24.10.5-x86-64_gcc-13.3.0_musl.Linux-x86_64/staging_dir/target-x86_64_musl/pkginfo/lucihttp.default.install
+touch -r /home/eric/homestun-sdk-check/openwrt-sdk-24.10.5-x86-64_gcc-13.3.0_musl.Linux-x86_64/build_dir/target-x86_64_musl/lucihttp-2023.03.15~9b5b683f/.built /home/eric/homestun-sdk-check/openwrt-sdk-24.10.5-x86-64_gcc-13.3.0_musl.Linux-x86_64/build_dir/target-x86_64_musl/lucihttp-2023.03.15~9b5b683f/.autoremove 2>/dev/null >/dev/null
+find /home/eric/homestun-sdk-check/openwrt-sdk-24.10.5-x86-64_gcc-13.3.0_musl.Linux-x86_64/build_dir/target-x86_64_musl/lucihttp-2023.03.15~9b5b683f -mindepth 1 -maxdepth 1 -not '(' -type f -and -name '.*' -and -size 0 ')' -and -not -name '.pkgdir'  -print0 | xargs -r -0 rm -rf
+make[2]: Leaving directory '/home/eric/homestun-sdk-check/upstream/luci-d88390be4ec9722cb427fee03368fc8c8582627d/contrib/package/lucihttp'
+time: package/feeds/luci/lucihttp/compile#0.19#0.13#0.52
+make[2]: Entering directory '/home/eric/homestun-sdk-check/upstream/luci-d88390be4ec9722cb427fee03368fc8c8582627d/contrib/package/ucode-mod-html'
+echo "ucode-mod-html" >> /home/eric/homestun-sdk-check/openwrt-sdk-24.10.5-x86-64_gcc-13.3.0_musl.Linux-x86_64/staging_dir/target-x86_64_musl/pkginfo/ucode-mod-html.default.install
+touch -r /home/eric/homestun-sdk-check/openwrt-sdk-24.10.5-x86-64_gcc-13.3.0_musl.Linux-x86_64/build_dir/target-x86_64_musl/ucode-mod-html/.built /home/eric/homestun-sdk-check/openwrt-sdk-24.10.5-x86-64_gcc-13.3.0_musl.Linux-x86_64/build_dir/target-x86_64_musl/ucode-mod-html/.autoremove 2>/dev/null >/dev/null
+find /home/eric/homestun-sdk-check/openwrt-sdk-24.10.5-x86-64_gcc-13.3.0_musl.Linux-x86_64/build_dir/target-x86_64_musl/ucode-mod-html -mindepth 1 -maxdepth 1 -not '(' -type f -and -name '.*' -and -size 0 ')' -and -not -name '.pkgdir'  -print0 | xargs -r -0 rm -rf
+make[2]: Leaving directory '/home/eric/homestun-sdk-check/upstream/luci-d88390be4ec9722cb427fee03368fc8c8582627d/contrib/package/ucode-mod-html'
+time: package/feeds/luci/ucode-mod-html/compile#0.19#0.13#0.46
+make[2]: Entering directory '/home/eric/homestun-sdk-check/upstream/luci-d88390be4ec9722cb427fee03368fc8c8582627d/libs/rpcd-mod-luci'
+echo "rpcd-mod-luci" >> /home/eric/homestun-sdk-check/openwrt-sdk-24.10.5-x86-64_gcc-13.3.0_musl.Linux-x86_64/staging_dir/target-x86_64_musl/pkginfo/rpcd-mod-luci.default.install
+touch -r /home/eric/homestun-sdk-check/openwrt-sdk-24.10.5-x86-64_gcc-13.3.0_musl.Linux-x86_64/build_dir/target-x86_64_musl/rpcd-mod-luci-20240305/.built /home/eric/homestun-sdk-check/openwrt-sdk-24.10.5-x86-64_gcc-13.3.0_musl.Linux-x86_64/build_dir/target-x86_64_musl/rpcd-mod-luci-20240305/.autoremove 2>/dev/null >/dev/null
+find /home/eric/homestun-sdk-check/openwrt-sdk-24.10.5-x86-64_gcc-13.3.0_musl.Linux-x86_64/build_dir/target-x86_64_musl/rpcd-mod-luci-20240305 -mindepth 1 -maxdepth 1 -not '(' -type f -and -name '.*' -and -size 0 ')' -and -not -name '.pkgdir'  -print0 | xargs -r -0 rm -rf
+make[2]: Leaving directory '/home/eric/homestun-sdk-check/upstream/luci-d88390be4ec9722cb427fee03368fc8c8582627d/libs/rpcd-mod-luci'
+time: package/feeds/luci/rpcd-mod-luci/compile#0.16#0.11#0.45
+make[2]: Entering directory '/home/eric/homestun-sdk-check/upstream/packages-953b6d47b4e9f0ad3c39547c6d3f9a828f10e206/lang/python/python3'
+touch -r /home/eric/homestun-sdk-check/openwrt-sdk-24.10.5-x86-64_gcc-13.3.0_musl.Linux-x86_64/build_dir/target-x86_64_musl/Python-3.11.14/.built /home/eric/homestun-sdk-check/openwrt-sdk-24.10.5-x86-64_gcc-13.3.0_musl.Linux-x86_64/build_dir/target-x86_64_musl/Python-3.11.14/.autoremove 2>/dev/null >/dev/null
+find /home/eric/homestun-sdk-check/openwrt-sdk-24.10.5-x86-64_gcc-13.3.0_musl.Linux-x86_64/build_dir/target-x86_64_musl/Python-3.11.14 -mindepth 1 -maxdepth 1 -not '(' -type f -and -name '.*' -and -size 0 ')' -and -not -name '.pkgdir'  -print0 | xargs -r -0 rm -rf
+make[2]: Leaving directory '/home/eric/homestun-sdk-check/upstream/packages-953b6d47b4e9f0ad3c39547c6d3f9a828f10e206/lang/python/python3'
+time: package/feeds/packages/python3/compile#0.39#0.20#1.20
+make[2]: Entering directory '/home/eric/homestun-sdk-check/upstream/packages-953b6d47b4e9f0ad3c39547c6d3f9a828f10e206/net/uwsgi'
+touch -r /home/eric/homestun-sdk-check/openwrt-sdk-24.10.5-x86-64_gcc-13.3.0_musl.Linux-x86_64/build_dir/target-x86_64_musl/pypi/uwsgi-2.0.26/.built /home/eric/homestun-sdk-check/openwrt-sdk-24.10.5-x86-64_gcc-13.3.0_musl.Linux-x86_64/build_dir/target-x86_64_musl/pypi/uwsgi-2.0.26/.autoremove 2>/dev/null >/dev/null
+find /home/eric/homestun-sdk-check/openwrt-sdk-24.10.5-x86-64_gcc-13.3.0_musl.Linux-x86_64/build_dir/target-x86_64_musl/pypi/uwsgi-2.0.26 -mindepth 1 -maxdepth 1 -not '(' -type f -and -name '.*' -and -size 0 ')' -and -not -name '.pkgdir'  -print0 | xargs -r -0 rm -rf
+make[2]: [Makefile:179: compile] Error 1 (ignored)
+/home/eric/homestun-sdk-check/openwrt-sdk-24.10.5-x86-64_gcc-13.3.0_musl.Linux-x86_64/staging_dir/host/bin/find: '/home/eric/homestun-sdk-check/openwrt-sdk-24.10.5-x86-64_gcc-13.3.0_musl.Linux-x86_64/build_dir/target-x86_64_musl/pypi/uwsgi-2.0.26': No such file or directory
+make[2]: Leaving directory '/home/eric/homestun-sdk-check/upstream/packages-953b6d47b4e9f0ad3c39547c6d3f9a828f10e206/net/uwsgi'
+time: package/feeds/packages/uwsgi/compile#0.19#0.11#0.44
+make[2]: Entering directory '/home/eric/homestun-sdk-check/upstream/packages-953b6d47b4e9f0ad3c39547c6d3f9a828f10e206/net/nginx'
+touch -r /home/eric/homestun-sdk-check/openwrt-sdk-24.10.5-x86-64_gcc-13.3.0_musl.Linux-x86_64/build_dir/target-x86_64_musl/nginx-ssl/nginx-1.26.1/.built /home/eric/homestun-sdk-check/openwrt-sdk-24.10.5-x86-64_gcc-13.3.0_musl.Linux-x86_64/build_dir/target-x86_64_musl/nginx-ssl/nginx-1.26.1/.autoremove 2>/dev/null >/dev/null
+find /home/eric/homestun-sdk-check/openwrt-sdk-24.10.5-x86-64_gcc-13.3.0_musl.Linux-x86_64/build_dir/target-x86_64_musl/nginx-ssl/nginx-1.26.1 -mindepth 1 -maxdepth 1 -not '(' -type f -and -name '.*' -and -size 0 ')' -and -not -name '.pkgdir'  -print0 | xargs -r -0 rm -rf
+make[2]: Leaving directory '/home/eric/homestun-sdk-check/upstream/packages-953b6d47b4e9f0ad3c39547c6d3f9a828f10e206/net/nginx'
+time: package/feeds/packages/nginx/ssl/compile#0.18#0.15#0.58
+make[2]: Entering directory '/home/eric/homestun-sdk-check/source-feed/homestun'
+touch -r /home/eric/homestun-sdk-check/openwrt-sdk-24.10.5-x86-64_gcc-13.3.0_musl.Linux-x86_64/build_dir/target-x86_64_musl/homestun-0.1.0/.built /home/eric/homestun-sdk-check/openwrt-sdk-24.10.5-x86-64_gcc-13.3.0_musl.Linux-x86_64/build_dir/target-x86_64_musl/homestun-0.1.0/.autoremove 2>/dev/null >/dev/null
+find /home/eric/homestun-sdk-check/openwrt-sdk-24.10.5-x86-64_gcc-13.3.0_musl.Linux-x86_64/build_dir/target-x86_64_musl/homestun-0.1.0 -mindepth 1 -maxdepth 1 -not '(' -type f -and -name '.*' -and -size 0 ')' -and -not -name '.pkgdir'  -print0 | xargs -r -0 rm -rf
+make[2]: Leaving directory '/home/eric/homestun-sdk-check/source-feed/homestun'
+time: package/feeds/homestunlocal/homestun/compile#0.22#0.14#0.61
+make[2]: Entering directory '/home/eric/homestun-sdk-check/upstream/luci-d88390be4ec9722cb427fee03368fc8c8582627d/modules/luci-base'
+touch /home/eric/homestun-sdk-check/openwrt-sdk-24.10.5-x86-64_gcc-13.3.0_musl.Linux-x86_64/build_dir/target-x86_64_musl/luci-base/.prepared_a184fca1b3c62c2ea433d21a17a5e9f6_18f1e190c5d53547fed41a3eaa76e9e9_check
+for d in luasrc ucode htdocs root src; do if [ -d ./$d ]; then mkdir -p /home/eric/homestun-sdk-check/openwrt-sdk-24.10.5-x86-64_gcc-13.3.0_musl.Linux-x86_64/build_dir/target-x86_64_musl/luci-base/$d; cp -fpR ./$d/* /home/eric/homestun-sdk-check/openwrt-sdk-24.10.5-x86-64_gcc-13.3.0_musl.Linux-x86_64/build_dir/target-x86_64_musl/luci-base/$d/; fi; done
+cp -fpR ../../NOTICE /home/eric/homestun-sdk-check/openwrt-sdk-24.10.5-x86-64_gcc-13.3.0_musl.Linux-x86_64/build_dir/target-x86_64_musl/luci-base
+cp -fpR ../../LICENSE /home/eric/homestun-sdk-check/openwrt-sdk-24.10.5-x86-64_gcc-13.3.0_musl.Linux-x86_64/build_dir/target-x86_64_musl/luci-base
+true
+[ ! -d ./src/ ] || cp -fpR ./src/. /home/eric/homestun-sdk-check/openwrt-sdk-24.10.5-x86-64_gcc-13.3.0_musl.Linux-x86_64/build_dir/target-x86_64_musl/luci-base
+touch /home/eric/homestun-sdk-check/openwrt-sdk-24.10.5-x86-64_gcc-13.3.0_musl.Linux-x86_64/build_dir/target-x86_64_musl/luci-base/.prepared_a184fca1b3c62c2ea433d21a17a5e9f6_18f1e190c5d53547fed41a3eaa76e9e9
+rm -f /home/eric/homestun-sdk-check/openwrt-sdk-24.10.5-x86-64_gcc-13.3.0_musl.Linux-x86_64/build_dir/target-x86_64_musl/luci-base/.configured_*
+rm -f /home/eric/homestun-sdk-check/openwrt-sdk-24.10.5-x86-64_gcc-13.3.0_musl.Linux-x86_64/staging_dir/target-x86_64_musl/stamp/.luci-base_installed
+touch /home/eric/homestun-sdk-check/openwrt-sdk-24.10.5-x86-64_gcc-13.3.0_musl.Linux-x86_64/build_dir/target-x86_64_musl/luci-base/.configured_811dc2f0ccfbe4b68a068320f8578dbe
+rm -f /home/eric/homestun-sdk-check/openwrt-sdk-24.10.5-x86-64_gcc-13.3.0_musl.Linux-x86_64/build_dir/target-x86_64_musl/luci-base/.built
+touch /home/eric/homestun-sdk-check/openwrt-sdk-24.10.5-x86-64_gcc-13.3.0_musl.Linux-x86_64/build_dir/target-x86_64_musl/luci-base/.built_check
+CFLAGS="-Os -pipe -fno-caller-saves -fno-plt -fhonour-copts -ffile-prefix-map=/home/eric/homestun-sdk-check/openwrt-sdk-24.10.5-x86-64_gcc-13.3.0_musl.Linux-x86_64/build_dir/target-x86_64_musl/luci-base=luci-base -Wformat -Werror=format-security -fstack-protector -D_FORTIFY_SOURCE=1 -Wl,-z,now -Wl,-z,relro  -I/home/eric/homestun-sdk-check/openwrt-sdk-24.10.5-x86-64_gcc-13.3.0_musl.Linux-x86_64/staging_dir/toolchain-x86_64_gcc-13.3.0_musl/usr/include -I/home/eric/homestun-sdk-check/openwrt-sdk-24.10.5-x86-64_gcc-13.3.0_musl.Linux-x86_64/staging_dir/toolchain-x86_64_gcc-13.3.0_musl/include -I/home/eric/homestun-sdk-check/openwrt-sdk-24.10.5-x86-64_gcc-13.3.0_musl.Linux-x86_64/staging_dir/toolchain-x86_64_gcc-13.3.0_musl/include/fortify " CXXFLAGS="-Os -pipe -fno-caller-saves -fno-plt -fhonour-copts -ffile-prefix-map=/home/eric/homestun-sdk-check/openwrt-sdk-24.10.5-x86-64_gcc-13.3.0_musl.Linux-x86_64/build_dir/target-x86_64_musl/luci-base=luci-base -Wformat -Werror=format-security -fstack-protector -D_FORTIFY_SOURCE=1 -Wl,-z,now -Wl,-z,relro  -I/home/eric/homestun-sdk-check/openwrt-sdk-24.10.5-x86-64_gcc-13.3.0_musl.Linux-x86_64/staging_dir/toolchain-x86_64_gcc-13.3.0_musl/usr/include -I/home/eric/homestun-sdk-check/openwrt-sdk-24.10.5-x86-64_gcc-13.3.0_musl.Linux-x86_64/staging_dir/toolchain-x86_64_gcc-13.3.0_musl/include -I/home/eric/homestun-sdk-check/openwrt-sdk-24.10.5-x86-64_gcc-13.3.0_musl.Linux-x86_64/staging_dir/toolchain-x86_64_gcc-13.3.0_musl/include/fortify " LDFLAGS="-L/home/eric/homestun-sdk-check/openwrt-sdk-24.10.5-x86-64_gcc-13.3.0_musl.Linux-x86_64/staging_dir/toolchain-x86_64_gcc-13.3.0_musl/usr/lib -L/home/eric/homestun-sdk-check/openwrt-sdk-24.10.5-x86-64_gcc-13.3.0_musl.Linux-x86_64/staging_dir/toolchain-x86_64_gcc-13.3.0_musl/lib -fuse-ld=bfd -znow -zrelro " FPIC="-DPIC -fpic" LUCI_VERSION="0.261012.28603" LUCI_GITBRANCH="LuCI openwrt-24.10 branch" make -j1 -C /home/eric/homestun-sdk-check/openwrt-sdk-24.10.5-x86-64_gcc-13.3.0_musl.Linux-x86_64/build_dir/target-x86_64_musl/luci-base/src/ AR="x86_64-openwrt-linux-musl-gcc-ar" AS="x86_64-openwrt-linux-musl-gcc -c -Os -pipe -fno-caller-saves -fno-plt -fhonour-copts -ffile-prefix-map=/home/eric/homestun-sdk-check/openwrt-sdk-24.10.5-x86-64_gcc-13.3.0_musl.Linux-x86_64/build_dir/target-x86_64_musl/luci-base=luci-base -Wformat -Werror=format-security -fstack-protector -D_FORTIFY_SOURCE=1 -Wl,-z,now -Wl,-z,relro" LD="x86_64-openwrt-linux-musl-ld.bfd" NM="x86_64-openwrt-linux-musl-gcc-nm" CC="x86_64-openwrt-linux-musl-gcc" GCC="x86_64-openwrt-linux-musl-gcc" CXX="x86_64-openwrt-linux-musl-g++" RANLIB="x86_64-openwrt-linux-musl-gcc-ranlib" STRIP=x86_64-openwrt-linux-musl-strip OBJCOPY=x86_64-openwrt-linux-musl-objcopy OBJDUMP=x86_64-openwrt-linux-musl-objdump SIZE=x86_64-openwrt-linux-musl-size CROSS="x86_64-openwrt-linux-musl-" ARCH="x86_64" clean compile;
+make[3]: Entering directory '/home/eric/homestun-sdk-check/openwrt-sdk-24.10.5-x86-64_gcc-13.3.0_musl.Linux-x86_64/build_dir/target-x86_64_musl/luci-base/src'
+rm -f contrib/lemon lib/*.o lib/plural_formula.c lib/plural_formula.h core.so version.uc
+x86_64-openwrt-linux-musl-gcc  -Os -pipe -fno-caller-saves -fno-plt -fhonour-copts -ffile-prefix-map=/home/eric/homestun-sdk-check/openwrt-sdk-24.10.5-x86-64_gcc-13.3.0_musl.Linux-x86_64/build_dir/target-x86_64_musl/luci-base=luci-base -Wformat -Werror=format-security -fstack-protector -D_FORTIFY_SOURCE=1 -Wl,-z,now -Wl,-z,relro  -I/home/eric/homestun-sdk-check/openwrt-sdk-24.10.5-x86-64_gcc-13.3.0_musl.Linux-x86_64/staging_dir/toolchain-x86_64_gcc-13.3.0_musl/usr/include -I/home/eric/homestun-sdk-check/openwrt-sdk-24.10.5-x86-64_gcc-13.3.0_musl.Linux-x86_64/staging_dir/toolchain-x86_64_gcc-13.3.0_musl/include -I/home/eric/homestun-sdk-check/openwrt-sdk-24.10.5-x86-64_gcc-13.3.0_musl.Linux-x86_64/staging_dir/toolchain-x86_64_gcc-13.3.0_musl/include/fortify  -DPIC -fpic -DNDEBUG -c -o lib/luci.o lib/luci.c
+cc -std=gnu17 -o contrib/lemon contrib/lemon.c
+./contrib/lemon -q lib/plural_formula.y
+x86_64-openwrt-linux-musl-gcc  -Os -pipe -fno-caller-saves -fno-plt -fhonour-copts -ffile-prefix-map=/home/eric/homestun-sdk-check/openwrt-sdk-24.10.5-x86-64_gcc-13.3.0_musl.Linux-x86_64/build_dir/target-x86_64_musl/luci-base=luci-base -Wformat -Werror=format-security -fstack-protector -D_FORTIFY_SOURCE=1 -Wl,-z,now -Wl,-z,relro  -I/home/eric/homestun-sdk-check/openwrt-sdk-24.10.5-x86-64_gcc-13.3.0_musl.Linux-x86_64/staging_dir/toolchain-x86_64_gcc-13.3.0_musl/usr/include -I/home/eric/homestun-sdk-check/openwrt-sdk-24.10.5-x86-64_gcc-13.3.0_musl.Linux-x86_64/staging_dir/toolchain-x86_64_gcc-13.3.0_musl/include -I/home/eric/homestun-sdk-check/openwrt-sdk-24.10.5-x86-64_gcc-13.3.0_musl.Linux-x86_64/staging_dir/toolchain-x86_64_gcc-13.3.0_musl/include/fortify  -DPIC -fpic -DNDEBUG -c -o lib/lmo.o lib/lmo.c
+x86_64-openwrt-linux-musl-gcc  -Os -pipe -fno-caller-saves -fno-plt -fhonour-copts -ffile-prefix-map=/home/eric/homestun-sdk-check/openwrt-sdk-24.10.5-x86-64_gcc-13.3.0_musl.Linux-x86_64/build_dir/target-x86_64_musl/luci-base=luci-base -Wformat -Werror=format-security -fstack-protector -D_FORTIFY_SOURCE=1 -Wl,-z,now -Wl,-z,relro  -I/home/eric/homestun-sdk-check/openwrt-sdk-24.10.5-x86-64_gcc-13.3.0_musl.Linux-x86_64/staging_dir/toolchain-x86_64_gcc-13.3.0_musl/usr/include -I/home/eric/homestun-sdk-check/openwrt-sdk-24.10.5-x86-64_gcc-13.3.0_musl.Linux-x86_64/staging_dir/toolchain-x86_64_gcc-13.3.0_musl/include -I/home/eric/homestun-sdk-check/openwrt-sdk-24.10.5-x86-64_gcc-13.3.0_musl.Linux-x86_64/staging_dir/toolchain-x86_64_gcc-13.3.0_musl/include/fortify  -DPIC -fpic -DNDEBUG -c -o lib/plural_formula.o lib/plural_formula.c
+x86_64-openwrt-linux-musl-gcc -L/home/eric/homestun-sdk-check/openwrt-sdk-24.10.5-x86-64_gcc-13.3.0_musl.Linux-x86_64/staging_dir/toolchain-x86_64_gcc-13.3.0_musl/usr/lib -L/home/eric/homestun-sdk-check/openwrt-sdk-24.10.5-x86-64_gcc-13.3.0_musl.Linux-x86_64/staging_dir/toolchain-x86_64_gcc-13.3.0_musl/lib -fuse-ld=bfd -znow -zrelro  -shared -lcrypt -o core.so lib/luci.o lib/lmo.o lib/plural_formula.o
+echo "export const revision = '0.261012.28603', branch = 'LuCI openwrt-24.10 branch';" > version.uc
+make[3]: Leaving directory '/home/eric/homestun-sdk-check/openwrt-sdk-24.10.5-x86-64_gcc-13.3.0_musl.Linux-x86_64/build_dir/target-x86_64_musl/luci-base/src'
+CFLAGS="-Os -pipe -fno-caller-saves -fno-plt -fhonour-copts -ffile-prefix-map=/home/eric/homestun-sdk-check/openwrt-sdk-24.10.5-x86-64_gcc-13.3.0_musl.Linux-x86_64/build_dir/target-x86_64_musl/luci-base=luci-base -Wformat -Werror=format-security -fstack-protector -D_FORTIFY_SOURCE=1 -Wl,-z,now -Wl,-z,relro  -I/home/eric/homestun-sdk-check/openwrt-sdk-24.10.5-x86-64_gcc-13.3.0_musl.Linux-x86_64/staging_dir/toolchain-x86_64_gcc-13.3.0_musl/usr/include -I/home/eric/homestun-sdk-check/openwrt-sdk-24.10.5-x86-64_gcc-13.3.0_musl.Linux-x86_64/staging_dir/toolchain-x86_64_gcc-13.3.0_musl/include -I/home/eric/homestun-sdk-check/openwrt-sdk-24.10.5-x86-64_gcc-13.3.0_musl.Linux-x86_64/staging_dir/toolchain-x86_64_gcc-13.3.0_musl/include/fortify " CXXFLAGS="-Os -pipe -fno-caller-saves -fno-plt -fhonour-copts -ffile-prefix-map=/home/eric/homestun-sdk-check/openwrt-sdk-24.10.5-x86-64_gcc-13.3.0_musl.Linux-x86_64/build_dir/target-x86_64_musl/luci-base=luci-base -Wformat -Werror=format-security -fstack-protector -D_FORTIFY_SOURCE=1 -Wl,-z,now -Wl,-z,relro  -I/home/eric/homestun-sdk-check/openwrt-sdk-24.10.5-x86-64_gcc-13.3.0_musl.Linux-x86_64/staging_dir/toolchain-x86_64_gcc-13.3.0_musl/usr/include -I/home/eric/homestun-sdk-check/openwrt-sdk-24.10.5-x86-64_gcc-13.3.0_musl.Linux-x86_64/staging_dir/toolchain-x86_64_gcc-13.3.0_musl/include -I/home/eric/homestun-sdk-check/openwrt-sdk-24.10.5-x86-64_gcc-13.3.0_musl.Linux-x86_64/staging_dir/toolchain-x86_64_gcc-13.3.0_musl/include/fortify " LDFLAGS="-L/home/eric/homestun-sdk-check/openwrt-sdk-24.10.5-x86-64_gcc-13.3.0_musl.Linux-x86_64/staging_dir/toolchain-x86_64_gcc-13.3.0_musl/usr/lib -L/home/eric/homestun-sdk-check/openwrt-sdk-24.10.5-x86-64_gcc-13.3.0_musl.Linux-x86_64/staging_dir/toolchain-x86_64_gcc-13.3.0_musl/lib -fuse-ld=bfd -znow -zrelro " FPIC="-DPIC -fpic" LUCI_VERSION="0.261012.28603" LUCI_GITBRANCH="LuCI openwrt-24.10 branch" make -C /home/eric/homestun-sdk-check/openwrt-sdk-24.10.5-x86-64_gcc-13.3.0_musl.Linux-x86_64/build_dir/target-x86_64_musl/luci-base/src/ AR="x86_64-openwrt-linux-musl-gcc-ar" AS="x86_64-openwrt-linux-musl-gcc -c -Os -pipe -fno-caller-saves -fno-plt -fhonour-copts -ffile-prefix-map=/home/eric/homestun-sdk-check/openwrt-sdk-24.10.5-x86-64_gcc-13.3.0_musl.Linux-x86_64/build_dir/target-x86_64_musl/luci-base=luci-base -Wformat -Werror=format-security -fstack-protector -D_FORTIFY_SOURCE=1 -Wl,-z,now -Wl,-z,relro" LD="x86_64-openwrt-linux-musl-ld.bfd" NM="x86_64-openwrt-linux-musl-gcc-nm" CC="x86_64-openwrt-linux-musl-gcc" GCC="x86_64-openwrt-linux-musl-gcc" CXX="x86_64-openwrt-linux-musl-g++" RANLIB="x86_64-openwrt-linux-musl-gcc-ranlib" STRIP=x86_64-openwrt-linux-musl-strip OBJCOPY=x86_64-openwrt-linux-musl-objcopy OBJDUMP=x86_64-openwrt-linux-musl-objdump SIZE=x86_64-openwrt-linux-musl-size CROSS="x86_64-openwrt-linux-musl-" ARCH="x86_64" DESTDIR="/home/eric/homestun-sdk-check/openwrt-sdk-24.10.5-x86-64_gcc-13.3.0_musl.Linux-x86_64/build_dir/target-x86_64_musl/luci-base/ipkg-install"   install;
+make[3]: Entering directory '/home/eric/homestun-sdk-check/openwrt-sdk-24.10.5-x86-64_gcc-13.3.0_musl.Linux-x86_64/build_dir/target-x86_64_musl/luci-base/src'
+mkdir -p /home/eric/homestun-sdk-check/openwrt-sdk-24.10.5-x86-64_gcc-13.3.0_musl.Linux-x86_64/build_dir/target-x86_64_musl/luci-base/ipkg-install/usr/lib/ucode/luci
+cp core.so /home/eric/homestun-sdk-check/openwrt-sdk-24.10.5-x86-64_gcc-13.3.0_musl.Linux-x86_64/build_dir/target-x86_64_musl/luci-base/ipkg-install/usr/lib/ucode/luci/core.so
+mkdir -p /home/eric/homestun-sdk-check/openwrt-sdk-24.10.5-x86-64_gcc-13.3.0_musl.Linux-x86_64/build_dir/target-x86_64_musl/luci-base/ipkg-install/usr/share/ucode/luci
+cp version.uc /home/eric/homestun-sdk-check/openwrt-sdk-24.10.5-x86-64_gcc-13.3.0_musl.Linux-x86_64/build_dir/target-x86_64_musl/luci-base/ipkg-install/usr/share/ucode/luci/version.uc
+make[3]: Leaving directory '/home/eric/homestun-sdk-check/openwrt-sdk-24.10.5-x86-64_gcc-13.3.0_musl.Linux-x86_64/build_dir/target-x86_64_musl/luci-base/src'
+touch /home/eric/homestun-sdk-check/openwrt-sdk-24.10.5-x86-64_gcc-13.3.0_musl.Linux-x86_64/build_dir/target-x86_64_musl/luci-base/.built
+rm -rf /home/eric/homestun-sdk-check/openwrt-sdk-24.10.5-x86-64_gcc-13.3.0_musl.Linux-x86_64/build_dir/target-x86_64_musl/luci-base/.pkgdir/luci-base.installed /home/eric/homestun-sdk-check/openwrt-sdk-24.10.5-x86-64_gcc-13.3.0_musl.Linux-x86_64/build_dir/target-x86_64_musl/luci-base/.pkgdir/luci-base
+mkdir -p /home/eric/homestun-sdk-check/openwrt-sdk-24.10.5-x86-64_gcc-13.3.0_musl.Linux-x86_64/build_dir/target-x86_64_musl/luci-base/.pkgdir/luci-base
+install -d -m0755 /home/eric/homestun-sdk-check/openwrt-sdk-24.10.5-x86-64_gcc-13.3.0_musl.Linux-x86_64/build_dir/target-x86_64_musl/luci-base/.pkgdir/luci-base/usr/share/ucode/luci
+cp -pR /home/eric/homestun-sdk-check/openwrt-sdk-24.10.5-x86-64_gcc-13.3.0_musl.Linux-x86_64/build_dir/target-x86_64_musl/luci-base/ucode/* /home/eric/homestun-sdk-check/openwrt-sdk-24.10.5-x86-64_gcc-13.3.0_musl.Linux-x86_64/build_dir/target-x86_64_musl/luci-base/.pkgdir/luci-base/usr/share/ucode/luci/
+find /home/eric/homestun-sdk-check/openwrt-sdk-24.10.5-x86-64_gcc-13.3.0_musl.Linux-x86_64/build_dir/target-x86_64_musl/luci-base/.pkgdir/luci-base/usr/share/ucode/luci/ -type f -name '*.htm' | while read src; do /home/eric/homestun-sdk-check/openwrt-sdk-24.10.5-x86-64_gcc-13.3.0_musl.Linux-x86_64/staging_dir/host/bin/sed -i -e 's/<%# *\([^ ]*\)PKG_VERSION *%>/\10.261012.28603/g' -e 's/"\(<%= *\(media\|resource\) *%>[^"]*\.\(js\|css\)\)"/"\1?v=0.261012.28603"/g' "$src"; done; find /home/eric/homestun-sdk-check/openwrt-sdk-24.10.5-x86-64_gcc-13.3.0_musl.Linux-x86_64/build_dir/target-x86_64_musl/luci-base/.pkgdir/luci-base/usr/share/ucode/luci/ -type f -name '*.ut' | while read src; do /home/eric/homestun-sdk-check/openwrt-sdk-24.10.5-x86-64_gcc-13.3.0_musl.Linux-x86_64/staging_dir/host/bin/sed -i -e 's/{# *\([^ ]*\)PKG_VERSION *#}/\10.261012.28603/g' -e 's/"\({{ *\(media\|resource\) *}}[^"]*\.\(js\|css\)\)"/"\1?v=0.261012.28603"/g' "$src"; done
+install -d -m0755 /home/eric/homestun-sdk-check/openwrt-sdk-24.10.5-x86-64_gcc-13.3.0_musl.Linux-x86_64/build_dir/target-x86_64_musl/luci-base/.pkgdir/luci-base/www
+cp -pR /home/eric/homestun-sdk-check/openwrt-sdk-24.10.5-x86-64_gcc-13.3.0_musl.Linux-x86_64/build_dir/target-x86_64_musl/luci-base/htdocs/* /home/eric/homestun-sdk-check/openwrt-sdk-24.10.5-x86-64_gcc-13.3.0_musl.Linux-x86_64/build_dir/target-x86_64_musl/luci-base/.pkgdir/luci-base/www/
+find /home/eric/homestun-sdk-check/openwrt-sdk-24.10.5-x86-64_gcc-13.3.0_musl.Linux-x86_64/build_dir/target-x86_64_musl/luci-base/.pkgdir/luci-base/www/ -type f -name '*.js' | while read src; do if jsmin < "$src" > "$src.o"; then mv "$src.o" "$src"; fi; done
+find /home/eric/homestun-sdk-check/openwrt-sdk-24.10.5-x86-64_gcc-13.3.0_musl.Linux-x86_64/build_dir/target-x86_64_musl/luci-base/.pkgdir/luci-base/www/ -type f -name '*.css' | while read src; do if csstidy "$src" --template=highest --remove_last_semicolon=true "$src.o"; then mv "$src.o" "$src"; fi; done
+install -d -m0755 /home/eric/homestun-sdk-check/openwrt-sdk-24.10.5-x86-64_gcc-13.3.0_musl.Linux-x86_64/build_dir/target-x86_64_musl/luci-base/.pkgdir/luci-base/
+cp -pR /home/eric/homestun-sdk-check/openwrt-sdk-24.10.5-x86-64_gcc-13.3.0_musl.Linux-x86_64/build_dir/target-x86_64_musl/luci-base/root/* /home/eric/homestun-sdk-check/openwrt-sdk-24.10.5-x86-64_gcc-13.3.0_musl.Linux-x86_64/build_dir/target-x86_64_musl/luci-base/.pkgdir/luci-base/
+CFLAGS="-Os -pipe -fno-caller-saves -fno-plt -fhonour-copts -ffile-prefix-map=/home/eric/homestun-sdk-check/openwrt-sdk-24.10.5-x86-64_gcc-13.3.0_musl.Linux-x86_64/build_dir/target-x86_64_musl/luci-base=luci-base -Wformat -Werror=format-security -fstack-protector -D_FORTIFY_SOURCE=1 -Wl,-z,now -Wl,-z,relro  -I/home/eric/homestun-sdk-check/openwrt-sdk-24.10.5-x86-64_gcc-13.3.0_musl.Linux-x86_64/staging_dir/toolchain-x86_64_gcc-13.3.0_musl/usr/include -I/home/eric/homestun-sdk-check/openwrt-sdk-24.10.5-x86-64_gcc-13.3.0_musl.Linux-x86_64/staging_dir/toolchain-x86_64_gcc-13.3.0_musl/include -I/home/eric/homestun-sdk-check/openwrt-sdk-24.10.5-x86-64_gcc-13.3.0_musl.Linux-x86_64/staging_dir/toolchain-x86_64_gcc-13.3.0_musl/include/fortify " CXXFLAGS="-Os -pipe -fno-caller-saves -fno-plt -fhonour-copts -ffile-prefix-map=/home/eric/homestun-sdk-check/openwrt-sdk-24.10.5-x86-64_gcc-13.3.0_musl.Linux-x86_64/build_dir/target-x86_64_musl/luci-base=luci-base -Wformat -Werror=format-security -fstack-protector -D_FORTIFY_SOURCE=1 -Wl,-z,now -Wl,-z,relro  -I/home/eric/homestun-sdk-check/openwrt-sdk-24.10.5-x86-64_gcc-13.3.0_musl.Linux-x86_64/staging_dir/toolchain-x86_64_gcc-13.3.0_musl/usr/include -I/home/eric/homestun-sdk-check/openwrt-sdk-24.10.5-x86-64_gcc-13.3.0_musl.Linux-x86_64/staging_dir/toolchain-x86_64_gcc-13.3.0_musl/include -I/home/eric/homestun-sdk-check/openwrt-sdk-24.10.5-x86-64_gcc-13.3.0_musl.Linux-x86_64/staging_dir/toolchain-x86_64_gcc-13.3.0_musl/include/fortify " LDFLAGS="-L/home/eric/homestun-sdk-check/openwrt-sdk-24.10.5-x86-64_gcc-13.3.0_musl.Linux-x86_64/staging_dir/toolchain-x86_64_gcc-13.3.0_musl/usr/lib -L/home/eric/homestun-sdk-check/openwrt-sdk-24.10.5-x86-64_gcc-13.3.0_musl.Linux-x86_64/staging_dir/toolchain-x86_64_gcc-13.3.0_musl/lib -fuse-ld=bfd -znow -zrelro " FPIC="-DPIC -fpic" LUCI_VERSION="0.261012.28603" LUCI_GITBRANCH="LuCI openwrt-24.10 branch" make -C /home/eric/homestun-sdk-check/openwrt-sdk-24.10.5-x86-64_gcc-13.3.0_musl.Linux-x86_64/build_dir/target-x86_64_musl/luci-base/src/ AR="x86_64-openwrt-linux-musl-gcc-ar" AS="x86_64-openwrt-linux-musl-gcc -c -Os -pipe -fno-caller-saves -fno-plt -fhonour-copts -ffile-prefix-map=/home/eric/homestun-sdk-check/openwrt-sdk-24.10.5-x86-64_gcc-13.3.0_musl.Linux-x86_64/build_dir/target-x86_64_musl/luci-base=luci-base -Wformat -Werror=format-security -fstack-protector -D_FORTIFY_SOURCE=1 -Wl,-z,now -Wl,-z,relro" LD="x86_64-openwrt-linux-musl-ld.bfd" NM="x86_64-openwrt-linux-musl-gcc-nm" CC="x86_64-openwrt-linux-musl-gcc" GCC="x86_64-openwrt-linux-musl-gcc" CXX="x86_64-openwrt-linux-musl-g++" RANLIB="x86_64-openwrt-linux-musl-gcc-ranlib" STRIP=x86_64-openwrt-linux-musl-strip OBJCOPY=x86_64-openwrt-linux-musl-objcopy OBJDUMP=x86_64-openwrt-linux-musl-objdump SIZE=x86_64-openwrt-linux-musl-size CROSS="x86_64-openwrt-linux-musl-" ARCH="x86_64" DESTDIR="/home/eric/homestun-sdk-check/openwrt-sdk-24.10.5-x86-64_gcc-13.3.0_musl.Linux-x86_64/build_dir/target-x86_64_musl/luci-base/ipkg-install"   install;
+make[3]: Entering directory '/home/eric/homestun-sdk-check/openwrt-sdk-24.10.5-x86-64_gcc-13.3.0_musl.Linux-x86_64/build_dir/target-x86_64_musl/luci-base/src'
+mkdir -p /home/eric/homestun-sdk-check/openwrt-sdk-24.10.5-x86-64_gcc-13.3.0_musl.Linux-x86_64/build_dir/target-x86_64_musl/luci-base/ipkg-install/usr/lib/ucode/luci
+cp core.so /home/eric/homestun-sdk-check/openwrt-sdk-24.10.5-x86-64_gcc-13.3.0_musl.Linux-x86_64/build_dir/target-x86_64_musl/luci-base/ipkg-install/usr/lib/ucode/luci/core.so
+mkdir -p /home/eric/homestun-sdk-check/openwrt-sdk-24.10.5-x86-64_gcc-13.3.0_musl.Linux-x86_64/build_dir/target-x86_64_musl/luci-base/ipkg-install/usr/share/ucode/luci
+cp version.uc /home/eric/homestun-sdk-check/openwrt-sdk-24.10.5-x86-64_gcc-13.3.0_musl.Linux-x86_64/build_dir/target-x86_64_musl/luci-base/ipkg-install/usr/share/ucode/luci/version.uc
+make[3]: Leaving directory '/home/eric/homestun-sdk-check/openwrt-sdk-24.10.5-x86-64_gcc-13.3.0_musl.Linux-x86_64/build_dir/target-x86_64_musl/luci-base/src'
+cp -fpR /home/eric/homestun-sdk-check/openwrt-sdk-24.10.5-x86-64_gcc-13.3.0_musl.Linux-x86_64/build_dir/target-x86_64_musl/luci-base/ipkg-install/* /home/eric/homestun-sdk-check/openwrt-sdk-24.10.5-x86-64_gcc-13.3.0_musl.Linux-x86_64/build_dir/target-x86_64_musl/luci-base/.pkgdir/luci-base/
+touch /home/eric/homestun-sdk-check/openwrt-sdk-24.10.5-x86-64_gcc-13.3.0_musl.Linux-x86_64/build_dir/target-x86_64_musl/luci-base/.pkgdir/luci-base.installed
+mkdir -p /home/eric/homestun-sdk-check/openwrt-sdk-24.10.5-x86-64_gcc-13.3.0_musl.Linux-x86_64/staging_dir/target-x86_64_musl/root-x86/stamp
+SHELL= flock /home/eric/homestun-sdk-check/openwrt-sdk-24.10.5-x86-64_gcc-13.3.0_musl.Linux-x86_64/tmp/.root-copy.flock -c 'cp -fpR /home/eric/homestun-sdk-check/openwrt-sdk-24.10.5-x86-64_gcc-13.3.0_musl.Linux-x86_64/build_dir/target-x86_64_musl/luci-base/.pkgdir/luci-base/. /home/eric/homestun-sdk-check/openwrt-sdk-24.10.5-x86-64_gcc-13.3.0_musl.Linux-x86_64/staging_dir/target-x86_64_musl/root-x86/'
+touch /home/eric/homestun-sdk-check/openwrt-sdk-24.10.5-x86-64_gcc-13.3.0_musl.Linux-x86_64/staging_dir/target-x86_64_musl/root-x86/stamp/.luci-base_installed
+rm -rf /home/eric/homestun-sdk-check/openwrt-sdk-24.10.5-x86-64_gcc-13.3.0_musl.Linux-x86_64/build_dir/target-x86_64_musl/luci-base/ipkg-x86_64/luci-base
+/home/eric/homestun-sdk-check/openwrt-sdk-24.10.5-x86-64_gcc-13.3.0_musl.Linux-x86_64/scripts/ipkg-remove luci-base /home/eric/homestun-sdk-check/openwrt-sdk-24.10.5-x86-64_gcc-13.3.0_musl.Linux-x86_64/bin/packages/x86_64/luci/luci-base_0.261012.28471_x86_64.ipk
+removed '/home/eric/homestun-sdk-check/openwrt-sdk-24.10.5-x86-64_gcc-13.3.0_musl.Linux-x86_64/bin/packages/x86_64/luci/luci-base_0.261012.28471_x86_64.ipk'
+mkdir -p /home/eric/homestun-sdk-check/openwrt-sdk-24.10.5-x86-64_gcc-13.3.0_musl.Linux-x86_64/bin/targets/x86/64/packages /home/eric/homestun-sdk-check/openwrt-sdk-24.10.5-x86-64_gcc-13.3.0_musl.Linux-x86_64/build_dir/target-x86_64_musl/luci-base/ipkg-x86_64/luci-base /home/eric/homestun-sdk-check/openwrt-sdk-24.10.5-x86-64_gcc-13.3.0_musl.Linux-x86_64/staging_dir/target-x86_64_musl/pkginfo
+install -d -m0755 /home/eric/homestun-sdk-check/openwrt-sdk-24.10.5-x86-64_gcc-13.3.0_musl.Linux-x86_64/build_dir/target-x86_64_musl/luci-base/ipkg-x86_64/luci-base/usr/share/ucode/luci
+cp -pR /home/eric/homestun-sdk-check/openwrt-sdk-24.10.5-x86-64_gcc-13.3.0_musl.Linux-x86_64/build_dir/target-x86_64_musl/luci-base/ucode/* /home/eric/homestun-sdk-check/openwrt-sdk-24.10.5-x86-64_gcc-13.3.0_musl.Linux-x86_64/build_dir/target-x86_64_musl/luci-base/ipkg-x86_64/luci-base/usr/share/ucode/luci/
+find /home/eric/homestun-sdk-check/openwrt-sdk-24.10.5-x86-64_gcc-13.3.0_musl.Linux-x86_64/build_dir/target-x86_64_musl/luci-base/ipkg-x86_64/luci-base/usr/share/ucode/luci/ -type f -name '*.htm' | while read src; do /home/eric/homestun-sdk-check/openwrt-sdk-24.10.5-x86-64_gcc-13.3.0_musl.Linux-x86_64/staging_dir/host/bin/sed -i -e 's/<%# *\([^ ]*\)PKG_VERSION *%>/\10.261012.28603/g' -e 's/"\(<%= *\(media\|resource\) *%>[^"]*\.\(js\|css\)\)"/"\1?v=0.261012.28603"/g' "$src"; done; find /home/eric/homestun-sdk-check/openwrt-sdk-24.10.5-x86-64_gcc-13.3.0_musl.Linux-x86_64/build_dir/target-x86_64_musl/luci-base/ipkg-x86_64/luci-base/usr/share/ucode/luci/ -type f -name '*.ut' | while read src; do /home/eric/homestun-sdk-check/openwrt-sdk-24.10.5-x86-64_gcc-13.3.0_musl.Linux-x86_64/staging_dir/host/bin/sed -i -e 's/{# *\([^ ]*\)PKG_VERSION *#}/\10.261012.28603/g' -e 's/"\({{ *\(media\|resource\) *}}[^"]*\.\(js\|css\)\)"/"\1?v=0.261012.28603"/g' "$src"; done
+install -d -m0755 /home/eric/homestun-sdk-check/openwrt-sdk-24.10.5-x86-64_gcc-13.3.0_musl.Linux-x86_64/build_dir/target-x86_64_musl/luci-base/ipkg-x86_64/luci-base/www
+cp -pR /home/eric/homestun-sdk-check/openwrt-sdk-24.10.5-x86-64_gcc-13.3.0_musl.Linux-x86_64/build_dir/target-x86_64_musl/luci-base/htdocs/* /home/eric/homestun-sdk-check/openwrt-sdk-24.10.5-x86-64_gcc-13.3.0_musl.Linux-x86_64/build_dir/target-x86_64_musl/luci-base/ipkg-x86_64/luci-base/www/
+find /home/eric/homestun-sdk-check/openwrt-sdk-24.10.5-x86-64_gcc-13.3.0_musl.Linux-x86_64/build_dir/target-x86_64_musl/luci-base/ipkg-x86_64/luci-base/www/ -type f -name '*.js' | while read src; do if jsmin < "$src" > "$src.o"; then mv "$src.o" "$src"; fi; done
+find /home/eric/homestun-sdk-check/openwrt-sdk-24.10.5-x86-64_gcc-13.3.0_musl.Linux-x86_64/build_dir/target-x86_64_musl/luci-base/ipkg-x86_64/luci-base/www/ -type f -name '*.css' | while read src; do if csstidy "$src" --template=highest --remove_last_semicolon=true "$src.o"; then mv "$src.o" "$src"; fi; done
+install -d -m0755 /home/eric/homestun-sdk-check/openwrt-sdk-24.10.5-x86-64_gcc-13.3.0_musl.Linux-x86_64/build_dir/target-x86_64_musl/luci-base/ipkg-x86_64/luci-base/
+cp -pR /home/eric/homestun-sdk-check/openwrt-sdk-24.10.5-x86-64_gcc-13.3.0_musl.Linux-x86_64/build_dir/target-x86_64_musl/luci-base/root/* /home/eric/homestun-sdk-check/openwrt-sdk-24.10.5-x86-64_gcc-13.3.0_musl.Linux-x86_64/build_dir/target-x86_64_musl/luci-base/ipkg-x86_64/luci-base/
+CFLAGS="-Os -pipe -fno-caller-saves -fno-plt -fhonour-copts -ffile-prefix-map=/home/eric/homestun-sdk-check/openwrt-sdk-24.10.5-x86-64_gcc-13.3.0_musl.Linux-x86_64/build_dir/target-x86_64_musl/luci-base=luci-base -Wformat -Werror=format-security -fstack-protector -D_FORTIFY_SOURCE=1 -Wl,-z,now -Wl,-z,relro  -I/home/eric/homestun-sdk-check/openwrt-sdk-24.10.5-x86-64_gcc-13.3.0_musl.Linux-x86_64/staging_dir/toolchain-x86_64_gcc-13.3.0_musl/usr/include -I/home/eric/homestun-sdk-check/openwrt-sdk-24.10.5-x86-64_gcc-13.3.0_musl.Linux-x86_64/staging_dir/toolchain-x86_64_gcc-13.3.0_musl/include -I/home/eric/homestun-sdk-check/openwrt-sdk-24.10.5-x86-64_gcc-13.3.0_musl.Linux-x86_64/staging_dir/toolchain-x86_64_gcc-13.3.0_musl/include/fortify " CXXFLAGS="-Os -pipe -fno-caller-saves -fno-plt -fhonour-copts -ffile-prefix-map=/home/eric/homestun-sdk-check/openwrt-sdk-24.10.5-x86-64_gcc-13.3.0_musl.Linux-x86_64/build_dir/target-x86_64_musl/luci-base=luci-base -Wformat -Werror=format-security -fstack-protector -D_FORTIFY_SOURCE=1 -Wl,-z,now -Wl,-z,relro  -I/home/eric/homestun-sdk-check/openwrt-sdk-24.10.5-x86-64_gcc-13.3.0_musl.Linux-x86_64/staging_dir/toolchain-x86_64_gcc-13.3.0_musl/usr/include -I/home/eric/homestun-sdk-check/openwrt-sdk-24.10.5-x86-64_gcc-13.3.0_musl.Linux-x86_64/staging_dir/toolchain-x86_64_gcc-13.3.0_musl/include -I/home/eric/homestun-sdk-check/openwrt-sdk-24.10.5-x86-64_gcc-13.3.0_musl.Linux-x86_64/staging_dir/toolchain-x86_64_gcc-13.3.0_musl/include/fortify " LDFLAGS="-L/home/eric/homestun-sdk-check/openwrt-sdk-24.10.5-x86-64_gcc-13.3.0_musl.Linux-x86_64/staging_dir/toolchain-x86_64_gcc-13.3.0_musl/usr/lib -L/home/eric/homestun-sdk-check/openwrt-sdk-24.10.5-x86-64_gcc-13.3.0_musl.Linux-x86_64/staging_dir/toolchain-x86_64_gcc-13.3.0_musl/lib -fuse-ld=bfd -znow -zrelro " FPIC="-DPIC -fpic" LUCI_VERSION="0.261012.28603" LUCI_GITBRANCH="LuCI openwrt-24.10 branch" make -C /home/eric/homestun-sdk-check/openwrt-sdk-24.10.5-x86-64_gcc-13.3.0_musl.Linux-x86_64/build_dir/target-x86_64_musl/luci-base/src/ AR="x86_64-openwrt-linux-musl-gcc-ar" AS="x86_64-openwrt-linux-musl-gcc -c -Os -pipe -fno-caller-saves -fno-plt -fhonour-copts -ffile-prefix-map=/home/eric/homestun-sdk-check/openwrt-sdk-24.10.5-x86-64_gcc-13.3.0_musl.Linux-x86_64/build_dir/target-x86_64_musl/luci-base=luci-base -Wformat -Werror=format-security -fstack-protector -D_FORTIFY_SOURCE=1 -Wl,-z,now -Wl,-z,relro" LD="x86_64-openwrt-linux-musl-ld.bfd" NM="x86_64-openwrt-linux-musl-gcc-nm" CC="x86_64-openwrt-linux-musl-gcc" GCC="x86_64-openwrt-linux-musl-gcc" CXX="x86_64-openwrt-linux-musl-g++" RANLIB="x86_64-openwrt-linux-musl-gcc-ranlib" STRIP=x86_64-openwrt-linux-musl-strip OBJCOPY=x86_64-openwrt-linux-musl-objcopy OBJDUMP=x86_64-openwrt-linux-musl-objdump SIZE=x86_64-openwrt-linux-musl-size CROSS="x86_64-openwrt-linux-musl-" ARCH="x86_64" DESTDIR="/home/eric/homestun-sdk-check/openwrt-sdk-24.10.5-x86-64_gcc-13.3.0_musl.Linux-x86_64/build_dir/target-x86_64_musl/luci-base/ipkg-install"   install;
+make[3]: Entering directory '/home/eric/homestun-sdk-check/openwrt-sdk-24.10.5-x86-64_gcc-13.3.0_musl.Linux-x86_64/build_dir/target-x86_64_musl/luci-base/src'
+mkdir -p /home/eric/homestun-sdk-check/openwrt-sdk-24.10.5-x86-64_gcc-13.3.0_musl.Linux-x86_64/build_dir/target-x86_64_musl/luci-base/ipkg-install/usr/lib/ucode/luci
+cp core.so /home/eric/homestun-sdk-check/openwrt-sdk-24.10.5-x86-64_gcc-13.3.0_musl.Linux-x86_64/build_dir/target-x86_64_musl/luci-base/ipkg-install/usr/lib/ucode/luci/core.so
+mkdir -p /home/eric/homestun-sdk-check/openwrt-sdk-24.10.5-x86-64_gcc-13.3.0_musl.Linux-x86_64/build_dir/target-x86_64_musl/luci-base/ipkg-install/usr/share/ucode/luci
+cp version.uc /home/eric/homestun-sdk-check/openwrt-sdk-24.10.5-x86-64_gcc-13.3.0_musl.Linux-x86_64/build_dir/target-x86_64_musl/luci-base/ipkg-install/usr/share/ucode/luci/version.uc
+make[3]: Leaving directory '/home/eric/homestun-sdk-check/openwrt-sdk-24.10.5-x86-64_gcc-13.3.0_musl.Linux-x86_64/build_dir/target-x86_64_musl/luci-base/src'
+cp -fpR /home/eric/homestun-sdk-check/openwrt-sdk-24.10.5-x86-64_gcc-13.3.0_musl.Linux-x86_64/build_dir/target-x86_64_musl/luci-base/ipkg-install/* /home/eric/homestun-sdk-check/openwrt-sdk-24.10.5-x86-64_gcc-13.3.0_musl.Linux-x86_64/build_dir/target-x86_64_musl/luci-base/ipkg-x86_64/luci-base/
+find /home/eric/homestun-sdk-check/openwrt-sdk-24.10.5-x86-64_gcc-13.3.0_musl.Linux-x86_64/build_dir/target-x86_64_musl/luci-base/ipkg-x86_64/luci-base -name 'CVS' -o -name '.svn' -o -name '.#*' -o -name '*~'| xargs -r rm -rf
+export CROSS="x86_64-openwrt-linux-musl-"   ; NM="x86_64-openwrt-linux-musl-nm" STRIP="/home/eric/homestun-sdk-check/openwrt-sdk-24.10.5-x86-64_gcc-13.3.0_musl.Linux-x86_64/staging_dir/host/bin/sstrip -z" STRIP_KMOD="/home/eric/homestun-sdk-check/openwrt-sdk-24.10.5-x86-64_gcc-13.3.0_musl.Linux-x86_64/scripts/strip-kmod.sh" PATCHELF="/home/eric/homestun-sdk-check/openwrt-sdk-24.10.5-x86-64_gcc-13.3.0_musl.Linux-x86_64/staging_dir/host/bin/patchelf" /home/eric/homestun-sdk-check/openwrt-sdk-24.10.5-x86-64_gcc-13.3.0_musl.Linux-x86_64/scripts/rstrip.sh /home/eric/homestun-sdk-check/openwrt-sdk-24.10.5-x86-64_gcc-13.3.0_musl.Linux-x86_64/build_dir/target-x86_64_musl/luci-base/ipkg-x86_64/luci-base
+rstrip.sh: /home/eric/homestun-sdk-check/openwrt-sdk-24.10.5-x86-64_gcc-13.3.0_musl.Linux-x86_64/build_dir/target-x86_64_musl/luci-base/ipkg-x86_64/luci-base/usr/lib/ucode/luci/core.so: shared object
+install -d -m0755 /home/eric/homestun-sdk-check/openwrt-sdk-24.10.5-x86-64_gcc-13.3.0_musl.Linux-x86_64/bin/packages/x86_64/luci
+mkdir -p /home/eric/homestun-sdk-check/openwrt-sdk-24.10.5-x86-64_gcc-13.3.0_musl.Linux-x86_64/build_dir/target-x86_64_musl/luci-base/ipkg-x86_64/luci-base/CONTROL
+(cd /home/eric/homestun-sdk-check/openwrt-sdk-24.10.5-x86-64_gcc-13.3.0_musl.Linux-x86_64/build_dir/target-x86_64_musl/luci-base/ipkg-x86_64/luci-base/CONTROL; ( echo "$CONTROL"; printf "Description: "; echo "$DESCRIPTION" | sed -e 's,^[[:space:]]*, ,g'; ) > control; chmod 644 control; ( echo "#!/bin/sh"; echo "[ \"\${IPKG_NO_SCRIPT}\" = \"1\" ] && exit 0"; echo "[ -s "\${IPKG_INSTROOT}/lib/functions.sh" ] || exit 0"; echo ". \${IPKG_INSTROOT}/lib/functions.sh"; echo "default_postinst \$0 \$@"; ) > postinst; ( echo "#!/bin/sh"; echo "[ -s "\${IPKG_INSTROOT}/lib/functions.sh" ] || exit 0"; echo ". \${IPKG_INSTROOT}/lib/functions.sh"; echo "default_prerm \$0 \$@"; ) > prerm; chmod 0755 postinst prerm; echo "$V_Package_luci_base_conffiles" > conffiles;  echo "$V_Package_luci_base_postinst" > postinst-pkg; chmod 0755 postinst-pkg; )
+/home/eric/homestun-sdk-check/openwrt-sdk-24.10.5-x86-64_gcc-13.3.0_musl.Linux-x86_64/staging_dir/host/bin/fakeroot /home/eric/homestun-sdk-check/openwrt-sdk-24.10.5-x86-64_gcc-13.3.0_musl.Linux-x86_64/staging_dir/host/bin/bash /home/eric/homestun-sdk-check/openwrt-sdk-24.10.5-x86-64_gcc-13.3.0_musl.Linux-x86_64/scripts/ipkg-build -m "" /home/eric/homestun-sdk-check/openwrt-sdk-24.10.5-x86-64_gcc-13.3.0_musl.Linux-x86_64/build_dir/target-x86_64_musl/luci-base/ipkg-x86_64/luci-base /home/eric/homestun-sdk-check/openwrt-sdk-24.10.5-x86-64_gcc-13.3.0_musl.Linux-x86_64/bin/packages/x86_64/luci
+Packaged contents of /home/eric/homestun-sdk-check/openwrt-sdk-24.10.5-x86-64_gcc-13.3.0_musl.Linux-x86_64/build_dir/target-x86_64_musl/luci-base/ipkg-x86_64/luci-base into /home/eric/homestun-sdk-check/openwrt-sdk-24.10.5-x86-64_gcc-13.3.0_musl.Linux-x86_64/bin/packages/x86_64/luci/luci-base_0.261012.28603_x86_64.ipk
+echo "luci-base" >> /home/eric/homestun-sdk-check/openwrt-sdk-24.10.5-x86-64_gcc-13.3.0_musl.Linux-x86_64/staging_dir/target-x86_64_musl/pkginfo/luci-base.default.install
+touch -r /home/eric/homestun-sdk-check/openwrt-sdk-24.10.5-x86-64_gcc-13.3.0_musl.Linux-x86_64/build_dir/target-x86_64_musl/luci-base/.built /home/eric/homestun-sdk-check/openwrt-sdk-24.10.5-x86-64_gcc-13.3.0_musl.Linux-x86_64/build_dir/target-x86_64_musl/luci-base/.autoremove 2>/dev/null >/dev/null
+find /home/eric/homestun-sdk-check/openwrt-sdk-24.10.5-x86-64_gcc-13.3.0_musl.Linux-x86_64/build_dir/target-x86_64_musl/luci-base -mindepth 1 -maxdepth 1 -not '(' -type f -and -name '.*' -and -size 0 ')' -and -not -name '.pkgdir'  -print0 | xargs -r -0 rm -rf
+make[2]: Leaving directory '/home/eric/homestun-sdk-check/upstream/luci-d88390be4ec9722cb427fee03368fc8c8582627d/modules/luci-base'
+time: package/feeds/luci/luci-base/compile#1.99#0.86#4.57
+make[2]: Entering directory '/home/eric/homestun-sdk-check/source-feed/luci-app-homestun'
+touch /home/eric/homestun-sdk-check/openwrt-sdk-24.10.5-x86-64_gcc-13.3.0_musl.Linux-x86_64/build_dir/target-x86_64_musl/luci-app-homestun/.prepared_33d1cff7f9477a076fab92a1e6afc4a9_18f1e190c5d53547fed41a3eaa76e9e9_check
+for d in luasrc ucode htdocs root src; do if [ -d ./$d ]; then mkdir -p /home/eric/homestun-sdk-check/openwrt-sdk-24.10.5-x86-64_gcc-13.3.0_musl.Linux-x86_64/build_dir/target-x86_64_musl/luci-app-homestun/$d; cp -fpR ./$d/* /home/eric/homestun-sdk-check/openwrt-sdk-24.10.5-x86-64_gcc-13.3.0_musl.Linux-x86_64/build_dir/target-x86_64_musl/luci-app-homestun/$d/; fi; done
+true
+[ ! -d ./src/ ] || cp -fpR ./src/. /home/eric/homestun-sdk-check/openwrt-sdk-24.10.5-x86-64_gcc-13.3.0_musl.Linux-x86_64/build_dir/target-x86_64_musl/luci-app-homestun
+touch /home/eric/homestun-sdk-check/openwrt-sdk-24.10.5-x86-64_gcc-13.3.0_musl.Linux-x86_64/build_dir/target-x86_64_musl/luci-app-homestun/.prepared_33d1cff7f9477a076fab92a1e6afc4a9_18f1e190c5d53547fed41a3eaa76e9e9
+rm -f /home/eric/homestun-sdk-check/openwrt-sdk-24.10.5-x86-64_gcc-13.3.0_musl.Linux-x86_64/build_dir/target-x86_64_musl/luci-app-homestun/.configured_*
+rm -f /home/eric/homestun-sdk-check/openwrt-sdk-24.10.5-x86-64_gcc-13.3.0_musl.Linux-x86_64/staging_dir/target-x86_64_musl/stamp/.luci-app-homestun_installed
+touch /home/eric/homestun-sdk-check/openwrt-sdk-24.10.5-x86-64_gcc-13.3.0_musl.Linux-x86_64/build_dir/target-x86_64_musl/luci-app-homestun/.configured_811dc2f0ccfbe4b68a068320f8578dbe
+rm -f /home/eric/homestun-sdk-check/openwrt-sdk-24.10.5-x86-64_gcc-13.3.0_musl.Linux-x86_64/build_dir/target-x86_64_musl/luci-app-homestun/.built
+touch /home/eric/homestun-sdk-check/openwrt-sdk-24.10.5-x86-64_gcc-13.3.0_musl.Linux-x86_64/build_dir/target-x86_64_musl/luci-app-homestun/.built_check
+touch /home/eric/homestun-sdk-check/openwrt-sdk-24.10.5-x86-64_gcc-13.3.0_musl.Linux-x86_64/build_dir/target-x86_64_musl/luci-app-homestun/.built
+rm -rf /home/eric/homestun-sdk-check/openwrt-sdk-24.10.5-x86-64_gcc-13.3.0_musl.Linux-x86_64/build_dir/target-x86_64_musl/luci-app-homestun/.pkgdir/luci-app-homestun.installed /home/eric/homestun-sdk-check/openwrt-sdk-24.10.5-x86-64_gcc-13.3.0_musl.Linux-x86_64/build_dir/target-x86_64_musl/luci-app-homestun/.pkgdir/luci-app-homestun
+mkdir -p /home/eric/homestun-sdk-check/openwrt-sdk-24.10.5-x86-64_gcc-13.3.0_musl.Linux-x86_64/build_dir/target-x86_64_musl/luci-app-homestun/.pkgdir/luci-app-homestun
+install -d -m0755 /home/eric/homestun-sdk-check/openwrt-sdk-24.10.5-x86-64_gcc-13.3.0_musl.Linux-x86_64/build_dir/target-x86_64_musl/luci-app-homestun/.pkgdir/luci-app-homestun/www
+cp -pR /home/eric/homestun-sdk-check/openwrt-sdk-24.10.5-x86-64_gcc-13.3.0_musl.Linux-x86_64/build_dir/target-x86_64_musl/luci-app-homestun/htdocs/* /home/eric/homestun-sdk-check/openwrt-sdk-24.10.5-x86-64_gcc-13.3.0_musl.Linux-x86_64/build_dir/target-x86_64_musl/luci-app-homestun/.pkgdir/luci-app-homestun/www/
+find /home/eric/homestun-sdk-check/openwrt-sdk-24.10.5-x86-64_gcc-13.3.0_musl.Linux-x86_64/build_dir/target-x86_64_musl/luci-app-homestun/.pkgdir/luci-app-homestun/www/ -type f -name '*.js' | while read src; do if jsmin < "$src" > "$src.o"; then mv "$src.o" "$src"; fi; done
+find /home/eric/homestun-sdk-check/openwrt-sdk-24.10.5-x86-64_gcc-13.3.0_musl.Linux-x86_64/build_dir/target-x86_64_musl/luci-app-homestun/.pkgdir/luci-app-homestun/www/ -type f -name '*.css' | while read src; do if csstidy "$src" --template=highest --remove_last_semicolon=true "$src.o"; then mv "$src.o" "$src"; fi; done
+install -d -m0755 /home/eric/homestun-sdk-check/openwrt-sdk-24.10.5-x86-64_gcc-13.3.0_musl.Linux-x86_64/build_dir/target-x86_64_musl/luci-app-homestun/.pkgdir/luci-app-homestun/
+cp -pR /home/eric/homestun-sdk-check/openwrt-sdk-24.10.5-x86-64_gcc-13.3.0_musl.Linux-x86_64/build_dir/target-x86_64_musl/luci-app-homestun/root/* /home/eric/homestun-sdk-check/openwrt-sdk-24.10.5-x86-64_gcc-13.3.0_musl.Linux-x86_64/build_dir/target-x86_64_musl/luci-app-homestun/.pkgdir/luci-app-homestun/
+touch /home/eric/homestun-sdk-check/openwrt-sdk-24.10.5-x86-64_gcc-13.3.0_musl.Linux-x86_64/build_dir/target-x86_64_musl/luci-app-homestun/.pkgdir/luci-app-homestun.installed
+mkdir -p /home/eric/homestun-sdk-check/openwrt-sdk-24.10.5-x86-64_gcc-13.3.0_musl.Linux-x86_64/staging_dir/target-x86_64_musl/root-x86/stamp
+SHELL= flock /home/eric/homestun-sdk-check/openwrt-sdk-24.10.5-x86-64_gcc-13.3.0_musl.Linux-x86_64/tmp/.root-copy.flock -c 'cp -fpR /home/eric/homestun-sdk-check/openwrt-sdk-24.10.5-x86-64_gcc-13.3.0_musl.Linux-x86_64/build_dir/target-x86_64_musl/luci-app-homestun/.pkgdir/luci-app-homestun/. /home/eric/homestun-sdk-check/openwrt-sdk-24.10.5-x86-64_gcc-13.3.0_musl.Linux-x86_64/staging_dir/target-x86_64_musl/root-x86/'
+touch /home/eric/homestun-sdk-check/openwrt-sdk-24.10.5-x86-64_gcc-13.3.0_musl.Linux-x86_64/staging_dir/target-x86_64_musl/root-x86/stamp/.luci-app-homestun_installed
+rm -rf /home/eric/homestun-sdk-check/openwrt-sdk-24.10.5-x86-64_gcc-13.3.0_musl.Linux-x86_64/build_dir/target-x86_64_musl/luci-app-homestun/ipkg-all/luci-app-homestun
+mkdir -p /home/eric/homestun-sdk-check/openwrt-sdk-24.10.5-x86-64_gcc-13.3.0_musl.Linux-x86_64/bin/targets/x86/64/packages /home/eric/homestun-sdk-check/openwrt-sdk-24.10.5-x86-64_gcc-13.3.0_musl.Linux-x86_64/build_dir/target-x86_64_musl/luci-app-homestun/ipkg-all/luci-app-homestun /home/eric/homestun-sdk-check/openwrt-sdk-24.10.5-x86-64_gcc-13.3.0_musl.Linux-x86_64/staging_dir/target-x86_64_musl/pkginfo
+install -d -m0755 /home/eric/homestun-sdk-check/openwrt-sdk-24.10.5-x86-64_gcc-13.3.0_musl.Linux-x86_64/build_dir/target-x86_64_musl/luci-app-homestun/ipkg-all/luci-app-homestun/www
+cp -pR /home/eric/homestun-sdk-check/openwrt-sdk-24.10.5-x86-64_gcc-13.3.0_musl.Linux-x86_64/build_dir/target-x86_64_musl/luci-app-homestun/htdocs/* /home/eric/homestun-sdk-check/openwrt-sdk-24.10.5-x86-64_gcc-13.3.0_musl.Linux-x86_64/build_dir/target-x86_64_musl/luci-app-homestun/ipkg-all/luci-app-homestun/www/
+find /home/eric/homestun-sdk-check/openwrt-sdk-24.10.5-x86-64_gcc-13.3.0_musl.Linux-x86_64/build_dir/target-x86_64_musl/luci-app-homestun/ipkg-all/luci-app-homestun/www/ -type f -name '*.js' | while read src; do if jsmin < "$src" > "$src.o"; then mv "$src.o" "$src"; fi; done
+find /home/eric/homestun-sdk-check/openwrt-sdk-24.10.5-x86-64_gcc-13.3.0_musl.Linux-x86_64/build_dir/target-x86_64_musl/luci-app-homestun/ipkg-all/luci-app-homestun/www/ -type f -name '*.css' | while read src; do if csstidy "$src" --template=highest --remove_last_semicolon=true "$src.o"; then mv "$src.o" "$src"; fi; done
+install -d -m0755 /home/eric/homestun-sdk-check/openwrt-sdk-24.10.5-x86-64_gcc-13.3.0_musl.Linux-x86_64/build_dir/target-x86_64_musl/luci-app-homestun/ipkg-all/luci-app-homestun/
+cp -pR /home/eric/homestun-sdk-check/openwrt-sdk-24.10.5-x86-64_gcc-13.3.0_musl.Linux-x86_64/build_dir/target-x86_64_musl/luci-app-homestun/root/* /home/eric/homestun-sdk-check/openwrt-sdk-24.10.5-x86-64_gcc-13.3.0_musl.Linux-x86_64/build_dir/target-x86_64_musl/luci-app-homestun/ipkg-all/luci-app-homestun/
+find /home/eric/homestun-sdk-check/openwrt-sdk-24.10.5-x86-64_gcc-13.3.0_musl.Linux-x86_64/build_dir/target-x86_64_musl/luci-app-homestun/ipkg-all/luci-app-homestun -name 'CVS' -o -name '.svn' -o -name '.#*' -o -name '*~'| xargs -r rm -rf
+export CROSS="x86_64-openwrt-linux-musl-"   ; NM="x86_64-openwrt-linux-musl-nm" STRIP="/home/eric/homestun-sdk-check/openwrt-sdk-24.10.5-x86-64_gcc-13.3.0_musl.Linux-x86_64/staging_dir/host/bin/sstrip -z" STRIP_KMOD="/home/eric/homestun-sdk-check/openwrt-sdk-24.10.5-x86-64_gcc-13.3.0_musl.Linux-x86_64/scripts/strip-kmod.sh" PATCHELF="/home/eric/homestun-sdk-check/openwrt-sdk-24.10.5-x86-64_gcc-13.3.0_musl.Linux-x86_64/staging_dir/host/bin/patchelf" /home/eric/homestun-sdk-check/openwrt-sdk-24.10.5-x86-64_gcc-13.3.0_musl.Linux-x86_64/scripts/rstrip.sh /home/eric/homestun-sdk-check/openwrt-sdk-24.10.5-x86-64_gcc-13.3.0_musl.Linux-x86_64/build_dir/target-x86_64_musl/luci-app-homestun/ipkg-all/luci-app-homestun
+install -d -m0755 /home/eric/homestun-sdk-check/openwrt-sdk-24.10.5-x86-64_gcc-13.3.0_musl.Linux-x86_64/bin/packages/x86_64/homestunlocal
+mkdir -p /home/eric/homestun-sdk-check/openwrt-sdk-24.10.5-x86-64_gcc-13.3.0_musl.Linux-x86_64/build_dir/target-x86_64_musl/luci-app-homestun/ipkg-all/luci-app-homestun/CONTROL
+(cd /home/eric/homestun-sdk-check/openwrt-sdk-24.10.5-x86-64_gcc-13.3.0_musl.Linux-x86_64/build_dir/target-x86_64_musl/luci-app-homestun/ipkg-all/luci-app-homestun/CONTROL; ( echo "$CONTROL"; printf "Description: "; echo "$DESCRIPTION" | sed -e 's,^[[:space:]]*, ,g'; ) > control; chmod 644 control; ( echo "#!/bin/sh"; echo "[ \"\${IPKG_NO_SCRIPT}\" = \"1\" ] && exit 0"; echo "[ -s "\${IPKG_INSTROOT}/lib/functions.sh" ] || exit 0"; echo ". \${IPKG_INSTROOT}/lib/functions.sh"; echo "default_postinst \$0 \$@"; ) > postinst; ( echo "#!/bin/sh"; echo "[ -s "\${IPKG_INSTROOT}/lib/functions.sh" ] || exit 0"; echo ". \${IPKG_INSTROOT}/lib/functions.sh"; echo "default_prerm \$0 \$@"; ) > prerm; chmod 0755 postinst prerm; echo "$V_Package_luci_app_homestun_postinst" > postinst-pkg; chmod 0755 postinst-pkg; )
+/home/eric/homestun-sdk-check/openwrt-sdk-24.10.5-x86-64_gcc-13.3.0_musl.Linux-x86_64/staging_dir/host/bin/fakeroot /home/eric/homestun-sdk-check/openwrt-sdk-24.10.5-x86-64_gcc-13.3.0_musl.Linux-x86_64/staging_dir/host/bin/bash /home/eric/homestun-sdk-check/openwrt-sdk-24.10.5-x86-64_gcc-13.3.0_musl.Linux-x86_64/scripts/ipkg-build -m "" /home/eric/homestun-sdk-check/openwrt-sdk-24.10.5-x86-64_gcc-13.3.0_musl.Linux-x86_64/build_dir/target-x86_64_musl/luci-app-homestun/ipkg-all/luci-app-homestun /home/eric/homestun-sdk-check/openwrt-sdk-24.10.5-x86-64_gcc-13.3.0_musl.Linux-x86_64/bin/packages/x86_64/homestunlocal
+Packaged contents of /home/eric/homestun-sdk-check/openwrt-sdk-24.10.5-x86-64_gcc-13.3.0_musl.Linux-x86_64/build_dir/target-x86_64_musl/luci-app-homestun/ipkg-all/luci-app-homestun into /home/eric/homestun-sdk-check/openwrt-sdk-24.10.5-x86-64_gcc-13.3.0_musl.Linux-x86_64/bin/packages/x86_64/homestunlocal/luci-app-homestun_0.1.0-r1_all.ipk
+touch -r /home/eric/homestun-sdk-check/openwrt-sdk-24.10.5-x86-64_gcc-13.3.0_musl.Linux-x86_64/build_dir/target-x86_64_musl/luci-app-homestun/.built /home/eric/homestun-sdk-check/openwrt-sdk-24.10.5-x86-64_gcc-13.3.0_musl.Linux-x86_64/build_dir/target-x86_64_musl/luci-app-homestun/.autoremove 2>/dev/null >/dev/null
+find /home/eric/homestun-sdk-check/openwrt-sdk-24.10.5-x86-64_gcc-13.3.0_musl.Linux-x86_64/build_dir/target-x86_64_musl/luci-app-homestun -mindepth 1 -maxdepth 1 -not '(' -type f -and -name '.*' -and -size 0 ')' -and -not -name '.pkgdir'  -print0 | xargs -r -0 rm -rf
+make[2]: Leaving directory '/home/eric/homestun-sdk-check/source-feed/luci-app-homestun'
+time: package/feeds/homestunlocal/luci-app-homestun/compile#0.25#0.16#0.66
+make[1]: Leaving directory '/home/eric/homestun-sdk-check/openwrt-sdk-24.10.5-x86-64_gcc-13.3.0_musl.Linux-x86_64'
+{
+  "artifact": "luci-app-homestun_0.1.0-r1_all.ipk",
+  "bytes": 4239,
+  "sha256": "9fb1269c6b8f3c679d07aa8631caa1e3ea3a817670402a039b37e6f4178949b2",
+  "luci_revision": "luci-d88390be4ec9722cb427fee03368fc8c8582627d",
+  "source_binding": [
+    {
+      "file": "Makefile",
+      "sha256": "342b9cb58ae58c22baa518d8796526c6d904955a8af6610f479132c3b43b26b7"
+    },
+    {
+      "file": "htdocs/luci-static/resources/view/homestun/schema.js",
+      "sha256": "ef9c07deda1c660c7a426fdbe65ce8b77f54be4d51c2290737b2dced4116d939"
+    },
+    {
+      "file": "htdocs/luci-static/resources/view/homestun/settings.js",
+      "sha256": "808cf76e061e34c501f68a957622f009dd2e36b4d5b3825acb690479a67cc1fe"
+    },
+    {
+      "file": "root/usr/libexec/rpcd/homestun",
+      "sha256": "aafb2973af716ed7be32ec14b633f1566f021b1784f7c20f52469894120a7b5b"
+    },
+    {
+      "file": "root/usr/share/luci/menu.d/luci-app-homestun.json",
+      "sha256": "f7389d2fd29af927f6109be217a704b2f20eb00d15f1e481e353798889f8d27d"
+    },
+    {
+      "file": "root/usr/share/rpcd/acl.d/luci-app-homestun.json",
+      "sha256": "93e035b94fa36d67459fe4d3a7b805826722a14078ecd60af9f3aa0498c8b88b"
+    },
+    {
+      "file": "tests/browser-acceptance.cjs",
+      "sha256": "f231c99b1e4a3253a6b2b4cd4a385026eb22cdd0a2b17e38f43f5b875b498639"
+    },
+    {
+      "file": "tests/persistence.cjs",
+      "sha256": "0643383a73c716a20d1a04be19f827a96be3660e671a6efe947e143f42981c78"
+    },
+    {
+      "file": "tests/real-loader.cjs",
+      "sha256": "9f76f66202dfa101848d4641279d7d6d55a598a2c80a8e191abd47c02b9b1354"
+    },
+    {
+      "file": "tests/row-lifecycle.test.cjs",
+      "sha256": "f471e3f1d5de894ef0ed509930da1ca01db990f1dda43160f40447bbb1bd0b31"
+    },
+    {
+      "file": "tests/save.test.cjs",
+      "sha256": "7062d7b1df86701ab418cc23c34abe51aa49d4a7a553f84865cca94e346dca46"
+    },
+    {
+      "file": "tests/ui.test.cjs",
+      "sha256": "3a5d836203c6d1556bd95e1cf628b2cf3b78ae66711d7872b5249034b3c363f4"
+    },
+    {
+      "file": "tests/validation.test.cjs",
+      "sha256": "782170b212047666fd3d895da4cfd021d6930121cfa2218cfef82027cb7528cd"
+    }
+  ]
+}

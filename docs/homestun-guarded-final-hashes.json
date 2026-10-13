@@ -1,0 +1,11 @@
+{
+  "homestun\\src\\lease-supervisor.c": "a093de21ac9210c331a33e0711d72c046111cf7b2688ff57bc47e7e81f0f3bc6",
+  "homestun\\files\\etc\\init.d\\homestun": "a3c490d6058dfe4bd46889ee871f97ae9a53a73a1d732bc3754452ea1020b05e",
+  "homestun\\files\\usr\\share\\homestun\\lease-run.sh": "0e0dc40c2adec609f386730482e8d62f876b11671bf6ddebae29aafc65dd8af4",
+  "homestun\\tests\\router-guarded-provision.sh": "2c63da221f68fee811424490f635c9d51d8a507a21d9184dfa1e2e781d04e6a1",
+  "homestun\\tests\\test-source-cleanup.py": "519a4d8643a78bc78296caac1e8a752d38eba0c49805b51403a73d51e523234a",
+  "fixture/homestun-lease": "002a851c64548ba20324bc45933460dcc3c69459fdda99ea05e187974e55f475",
+  "fixture/engine": "ff1eb8f73a49dc6c72b8a6566c7c83d9be3b0e087c545fbf5a150434efa48dad",
+  "fixture/lua": "f3c2042a0ebdc00056c3356fdb59cb7d924c3a1012bdac99d588c6e9cb790eb5",
+  "fixture/fixture.tar": "1d138d33376fe3c76423d1f2405af4efad54221a07f985364754e4a73efba2d2"
+}

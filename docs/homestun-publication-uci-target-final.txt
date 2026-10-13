@@ -1,0 +1,36 @@
+COMMAND: ['ssh', '-F', '/dev/null', '-i', 'D:/DevPortal/CloudHosts/HomePri.key', '-p', '222', '-o', 'BatchMode=yes', '-o', 'ConnectTimeout=10', 'root@127.0.0.1', 'sh -s']
+Mon Oct 12 12:55:16 CST 2026
+PASS disabled zero instances
+PASS fail before registration: unapproved
+PASS fail before registration: missing-token
+PASS opt-in exact native command; bounded TTL; no respawn/triggers; honest status
+PASS fail before registration: missing-curl
+PASS fail before registration: missing-ca
+PASS fail before registration: missing-publisher
+PASS fail before registration: public-token
+PASS fail before registration: owner
+HomeSTUN: explicit exposure approval required
+PASS fail before registration: hardlink
+PASS fail before registration: symlink
+PASS fail before registration: short-token
+PASS fail before registration: newline-token
+PASS fail before registration: oversized-token
+PASS fail before registration: public-parent
+PASS fail before registration: public-key
+PASS fail before registration: missing-cert
+publication token size: Invalid argument
+publication token bytes: Invalid argument
+publication token size: Invalid argument
+unsafe private directory: Success
+PASS fail before registration: wrong-path
+PASS fail before registration: ttl-overflow
+PASS fail before registration: plaintext
+PASS publication disabled legacy command; no secret needed
+PASS absent new options legacy registration
+PASS registration read-only: no engine/runtime/snapshot/network
+PASS publication UCI opt-in/defaults/reference/secret rejection/shared TTL
+HomeSTUN: dedicated private token path required
+HomeSTUN: invalid TTL or isolated ports
+HomeSTUN: unknown service option
+
+EXIT_CODE: 0

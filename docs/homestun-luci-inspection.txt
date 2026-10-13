@@ -1,0 +1,234 @@
+{
+  "artifact": "/mnt/d/DevPortal/homelede/feeds-xiaoqingfeng-homestun/docs/artifacts/luci-app-homestun_0.1.0-r1_all.ipk",
+  "sha256": "9fb1269c6b8f3c679d07aa8631caa1e3ea3a817670402a039b37e6f4178949b2",
+  "bytes": 4239,
+  "control": "Package: luci-app-homestun\nVersion: 0.1.0-r1\nDepends: libc, homestun, luci-base\nSource: /home/eric/homestun-sdk-check/source-feed/luci-app-homestun\nSourceName: luci-app-homestun\nLicense: Apache-2.0\nSection: luci\nSourceDateEpoch: 1766005702\nURL: https://github.com/openwrt/luci\nMaintainer: OpenWrt LuCI community\nArchitecture: all\nInstalled-Size: 20480\nDescription:  HomeSTUN settings and configuration status\n",
+  "payload": [
+    {
+      "name": ".",
+      "mode": "0o755",
+      "uid": 0,
+      "gid": 0,
+      "bytes": 0
+    },
+    {
+      "name": "./usr",
+      "mode": "0o755",
+      "uid": 0,
+      "gid": 0,
+      "bytes": 0
+    },
+    {
+      "name": "./usr/libexec",
+      "mode": "0o755",
+      "uid": 0,
+      "gid": 0,
+      "bytes": 0
+    },
+    {
+      "name": "./usr/libexec/rpcd",
+      "mode": "0o755",
+      "uid": 0,
+      "gid": 0,
+      "bytes": 0
+    },
+    {
+      "name": "./usr/libexec/rpcd/homestun",
+      "mode": "0o755",
+      "uid": 0,
+      "gid": 0,
+      "bytes": 237
+    },
+    {
+      "name": "./usr/share",
+      "mode": "0o755",
+      "uid": 0,
+      "gid": 0,
+      "bytes": 0
+    },
+    {
+      "name": "./usr/share/luci",
+      "mode": "0o755",
+      "uid": 0,
+      "gid": 0,
+      "bytes": 0
+    },
+    {
+      "name": "./usr/share/luci/menu.d",
+      "mode": "0o755",
+      "uid": 0,
+      "gid": 0,
+      "bytes": 0
+    },
+    {
+      "name": "./usr/share/luci/menu.d/luci-app-homestun.json",
+      "mode": "0o644",
+      "uid": 0,
+      "gid": 0,
+      "bytes": 176
+    },
+    {
+      "name": "./usr/share/rpcd",
+      "mode": "0o755",
+      "uid": 0,
+      "gid": 0,
+      "bytes": 0
+    },
+    {
+      "name": "./usr/share/rpcd/acl.d",
+      "mode": "0o755",
+      "uid": 0,
+      "gid": 0,
+      "bytes": 0
+    },
+    {
+      "name": "./usr/share/rpcd/acl.d/luci-app-homestun.json",
+      "mode": "0o644",
+      "uid": 0,
+      "gid": 0,
+      "bytes": 209
+    },
+    {
+      "name": "./www",
+      "mode": "0o755",
+      "uid": 0,
+      "gid": 0,
+      "bytes": 0
+    },
+    {
+      "name": "./www/luci-static",
+      "mode": "0o755",
+      "uid": 0,
+      "gid": 0,
+      "bytes": 0
+    },
+    {
+      "name": "./www/luci-static/resources",
+      "mode": "0o755",
+      "uid": 0,
+      "gid": 0,
+      "bytes": 0
+    },
+    {
+      "name": "./www/luci-static/resources/view",
+      "mode": "0o755",
+      "uid": 0,
+      "gid": 0,
+      "bytes": 0
+    },
+    {
+      "name": "./www/luci-static/resources/view/homestun",
+      "mode": "0o755",
+      "uid": 0,
+      "gid": 0,
+      "bytes": 0
+    },
+    {
+      "name": "./www/luci-static/resources/view/homestun/schema.js",
+      "mode": "0o644",
+      "uid": 0,
+      "gid": 0,
+      "bytes": 1675
+    },
+    {
+      "name": "./www/luci-static/resources/view/homestun/settings.js",
+      "mode": "0o644",
+      "uid": 0,
+      "gid": 0,
+      "bytes": 4409
+    }
+  ],
+  "acl": {
+    "description": "HomeSTUN configuration and read-only validation status",
+    "read": {
+      "uci": [
+        "homestun"
+      ],
+      "ubus": {
+        "homestun": [
+          "status"
+        ]
+      }
+    },
+    "write": {
+      "uci": [
+        "homestun"
+      ],
+      "ubus": {
+        "uci": [
+          "commit"
+        ]
+      }
+    }
+  },
+  "menu": {
+    "admin/services/homestun": {
+      "title": "HomeSTUN",
+      "order": 62,
+      "action": {
+        "type": "view",
+        "path": "homestun/settings"
+      },
+      "depends": {
+        "acl": [
+          "luci-app-homestun"
+        ],
+        "uci": {
+          "homestun": true
+        }
+      }
+    }
+  },
+  "core_sha256": "84087e052d2cefacc7ac943ef9bc74000206379d80ca31b4de5f9c58d0ca4c22",
+  "core_production_files_unchanged": [
+    "Makefile",
+    "src/lease-supervisor.c",
+    "src/publisher.c",
+    "files/etc/config/homestun",
+    "files/etc/init.d/homestun",
+    "files/usr/share/homestun/config-cli.lua",
+    "files/usr/share/homestun/config.lua",
+    "files/usr/share/homestun/core.lua",
+    "files/usr/share/homestun/lease-run.sh",
+    "files/usr/share/homestun/worker/worker.mjs"
+  ],
+  "core_config": "config service 'main'\n\toption enabled '0'\n\toption exposure_approved '0'\n\toption publication_enabled '0'\n\t# Reference only; root-owned 0600 credential, never a plaintext UCI secret.\n\toption router_token_file '/etc/homestun/router.token'\n\toption listen '127.0.0.1'\n\toption port '18443'\n\toption bind_port '18444'\n\toption ttl '60'\n\toption stun_server 'turn.cloudflare.com'\n\toption http_server 'example.com'\n\toption cert '/etc/homestun/cert.pem'\n\toption key '/etc/homestun/key.pem'\n\n# Add explicitly reviewed host sections before enabling. No upstream defaults.\n",
+  "sdk_discovery": "standard feeds index and package symlink verified",
+  "active_sdk_make": [],
+  "installed": false,
+  "activated": false,
+  "package_checks": {
+    "minified_js_source_match": true,
+    "class_export": true,
+    "scoped_save_commit": true,
+    "silent_row_lifecycle": true,
+    "payload_allowlist": [
+      "usr/libexec/rpcd/homestun",
+      "usr/share/luci/menu.d/luci-app-homestun.json",
+      "usr/share/rpcd/acl.d/luci-app-homestun.json",
+      "www/luci-static/resources/view/homestun/schema.js",
+      "www/luci-static/resources/view/homestun/settings.js"
+    ],
+    "homestun_activation_hooks": false
+  },
+  "standard_luci_control_hooks": {
+    "postinst": "#!/bin/sh\n[ \"${IPKG_NO_SCRIPT}\" = \"1\" ] && exit 0\n[ -s ${IPKG_INSTROOT}/lib/functions.sh ] || exit 0\n. ${IPKG_INSTROOT}/lib/functions.sh\ndefault_postinst $0 $@\n",
+    "postinst-pkg": "[ -n \"${IPKG_INSTROOT}\" ] || { rm -f /tmp/luci-indexcache.*\n\trm -rf /tmp/luci-modulecache/\n\tkillall -HUP rpcd 2>/dev/null\n\texit 0\n}\n",
+    "prerm": "#!/bin/sh\n[ -s ${IPKG_INSTROOT}/lib/functions.sh ] || exit 0\n. ${IPKG_INSTROOT}/lib/functions.sh\ndefault_prerm $0 $@\n"
+  },
+  "browser_evidence": {
+    "result": "PASS",
+    "errors": [],
+    "source_binding": {
+      "luci-app-homestun/htdocs/luci-static/resources/view/homestun/settings.js": "808cf76e061e34c501f68a957622f009dd2e36b4d5b3825acb690479a67cc1fe",
+      "luci-app-homestun/htdocs/luci-static/resources/view/homestun/schema.js": "ef9c07deda1c660c7a426fdbe65ce8b77f54be4d51c2290737b2dced4116d939",
+      "luci-app-homestun/root/usr/share/rpcd/acl.d/luci-app-homestun.json": "93e035b94fa36d67459fe4d3a7b805826722a14078ecd60af9f3aa0498c8b88b"
+    }
+  },
+  "source_binding_manifest": "docs/homestun-luci-sdk.json",
+  "limitations": [
+    "corrected IPK not installed on router; browser PASS exercised matching source with genuine target assets in isolated fixture",
+    "final independent review pending",
+    "real enabled engines/procd, target HTTPS, STUN/public TCP and Cloudflare deployment remain separate gates"
+  ]
+}

@@ -1,0 +1,16 @@
+COMMAND: ['ssh', '-F', '/dev/null', '-i', 'D:/DevPortal/CloudHosts/HomePri.key', '-p', '222', '-o', 'BatchMode=yes', '-o', 'ConnectTimeout=10', 'root@127.0.0.1', 'sh -s']
+Mon Oct 12 12:59:23 CST 2026
+PASS service absent; no engine/runtime/process; original cert/key unchanged
+39e5f62d9d140d26961e0c1ac60748b22cac3294d64560b45f89fdecf54d5770  /tmp/homestun-test/uci/root/etc/homestun/cert.pem
+b5ed13dd9d2e16f9c6a417a9aea4a58c641771d54e1cc9871c6f347a5bdc8ab5  /tmp/homestun-test/uci/root/etc/homestun/key.pem
+6c174265c2a127c597846b8521d569408162e342f035bd520ba48bc5beca6130  /tmp/homestun-test/uci/root/etc/config/homestun
+c75f4ae17103f590a85573db2cbc37986d357169dba1349bc98ecac96d7930c9  /tmp/homestun-test/uci/root/etc/init.d/homestun
+03278fe5489954c58694088d817a9a52f02fffaf1001464ed5114c8c53f0900c  /tmp/homestun-test/uci/root/test-publication-service.sh
+a0276546391c4e9e8bcef6784a0acbd44d3ec4c6dfcce2710a22ff07c9e381e9  /tmp/homestun-test/uci/tests/test-publication-config.lua
+0dc3306aed7d970d3618998b7467f4cfbcc987c149ec468f64183fdf33ced1c2  /tmp/homestun-test/uci/router-publication-uci.sh
+c6e148db828a47f478176ccaa85fb5a92c52e203985ac6bdac70de7425744a0d  /tmp/homestun-test/uci/root/usr/share/homestun/core.lua
+6d30c4421f4ff7071454f22c4dd6c8db35ac10dc851890df2496824226fd1735  /tmp/homestun-test/uci/root/usr/share/homestun/config.lua
+2fe80767382dba3691c50aebd72afa40d7ffe46a384e7c4edfa22ae70bba5fcf  /tmp/homestun-test/uci/root/usr/share/homestun/config-cli.lua
+75feed9552b1159e50e15e61961656224fd40499b9c9a727cf870bac83e14b1e  /tmp/homestun-test/uci/root/usr/libexec/homestun-lease
+
+EXIT_CODE: 0

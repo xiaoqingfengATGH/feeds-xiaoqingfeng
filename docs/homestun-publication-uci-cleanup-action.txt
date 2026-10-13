@@ -1,0 +1,4 @@
+COMMAND: ['ssh', '-F', '/dev/null', '-i', 'D:/DevPortal/CloudHosts/HomePri.key', '-p', '222', '-o', 'BatchMode=yes', '-o', 'ConnectTimeout=10', 'root@127.0.0.1', 'sh -s']
+PASS deleted only confirmed owned /tmp/homestun-test/uci; empty parent rmdir only
+
+EXIT_CODE: 0

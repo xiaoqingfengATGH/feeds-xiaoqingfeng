@@ -1,0 +1,384 @@
+2026-10-12T08:17:50.355449+00:00 $ test ! -e /tmp/homestun-test && mkdir -m 700 /tmp/homestun-test && mkdir -m 700 /tmp/homestun-test/realnat && tar xzf - -C /tmp/homestun-test/realnat
+
+exit=0
+2026-10-12T08:17:50.896855+00:00 $ sh -s
+cp: can't create '/tmp/homestun-test/realnat/root/usr/lib/libpcre.so': No such file or directory
+
+exit=1
+2026-10-12T08:18:18.730544+00:00 $ test ! -e /tmp/homestun-test && mkdir -m 700 /tmp/homestun-test && mkdir -m 700 /tmp/homestun-test/realnat && tar xzf - -C /tmp/homestun-test/realnat
+
+exit=0
+2026-10-12T08:18:19.458865+00:00 $ sh -s
+/usr/bin/natmap-real: unrecognized option: -
+Usage:
+ natmap [options]
+
+Options:
+ -4                  use IPv4
+ -6                  use IPv6
+ -u                  UDP mode
+ -d                  run as daemon
+ -i <interface>      network interface or IP address
+ -k <interval>       seconds between each keep-alive
+ -c <count>          UDP STUN check cycle (every <count> intervals)
+ -s <addr>[:port]    domain name or address of STUN server
+ -h <addr>[:port]    domain name or address of HTTP server
+ -e <path>           script path for notify mapped address
+ -f <mark>           fwmark value (hex: 0x1, dec: 1, oct: 01)
+
+Bind options:
+ -b                  port number range for binding
+                     - <0>: random allocation
+                     - <port>: specified
+                     - <port>~<port>: random allocation within the range
+                     - <port>-<port>: sequential allocation within the range
+
+Forward options:
+ -C <congestion>     TCP congestion control algorithm
+ -T <timeout>        port forwarding timeout in seconds
+ -t <address>        domain name or address of forward target
+ -p <port>           port number of forward target (0: use public port)
+
+Version: 20260214
+ba2df4ead5562b0bc0359881ffce1a07d65f62403b6e0b7e0980731be09c45b1  /tmp/homestun-test/realnat/root/usr/bin/natmap-real
+540b98eb8be0ed039d9f8bb19b52d287f1b5c7d594321b397e3d8783e50072a4  /tmp/homestun-test/realnat/root/usr/libexec/homestun-lease
+
+exit=0
+2026-10-12T08:18:19.934168+00:00 $ cat /tmp/homestun-test/realnat/root/tmp/homestun-real/cert.pem
+-----BEGIN CERTIFICATE-----
+MIIDUjCCAjqgAwIBAgIUKhij/GGgQ/40tUh9CBMtmbJYyfYwDQYJKoZIhvcNAQEL
+BQAwJTEjMCEGA1UEAwwaaG9tZXN0dW4tdGVzdC5ob21lbGVkZS5jb20wHhcNMjYx
+MDEyMDgxODE5WhcNMjYxMDEzMDgxODE5WjAlMSMwIQYDVQQDDBpob21lc3R1bi10
+ZXN0LmhvbWVsZWRlLmNvbTCCASIwDQYJKoZIhvcNAQEBBQADggEPADCCAQoCggEB
+AMNdr+XneZbTnb2BUuMYLP6I8yzxvN8ysmomKrvUUXydaTIxeNptwvLI3kjqC0wP
+n4ufp5Ep+AOAHK+MjzATYUcrxObTikL6Ec++kyMp00QDQ8nX9Opur1TypMs1DiY8
+JKck2IL5ifuJDbuuiUOJo4GPnnulCsai3tLHjq5gBnOdTNzxLH5nsWNH9uGLilcz
+S5Tzxy/qKJ9Un2n82HrnQOcjKr3shH261ytPg8BM4bbjTCeRHeyUbf6xxPv6njO8
+k3DvxWeAaZ7EgkHA94h3tzJXp9hzDUYnBZAqHS/TvfVUm77+I6YFvmQgBI8qzq1f
+2IxkAFiNn3MI1bolCtJj7sUCAwEAAaN6MHgwHQYDVR0OBBYEFMENNXIibRiWZsDc
+dbIGe6PO/QOvMB8GA1UdIwQYMBaAFMENNXIibRiWZsDcdbIGe6PO/QOvMA8GA1Ud
+EwEB/wQFMAMBAf8wJQYDVR0RBB4wHIIaaG9tZXN0dW4tdGVzdC5ob21lbGVkZS5j
+b20wDQYJKoZIhvcNAQELBQADggEBAJ1fdc81/T4MX/nRX++z8c9CBuN5KM3JplEN
+6amDjnTCkA2/aQGkezPgDxzT1Rx1u7YqQ8/P9hZ6BNgJ75l1g+1zDvssCW8bQw/v
+vRwmhT6oJWYVE29sEHzBHVjtl13+s94FwO6CblUlCKGDdRiVu/h6mXy+nk928vnU
+KuwwfBLajXWZnLefk6m9postS204gd3j3yAgXPYPCbcthMmBz8+o1ykcWH9eL4PT
+KOC9ujg8iBBCMoMc+90TWyal4CIentmM1+L0URjFEZjibuLPPE6mpgdnCf2j5kIu
+N/nbQdCRvdCcNXr/B9hCeX/lc7UjsdDTVFO5IPdypAZYEG9/N9A=
+-----END CERTIFICATE-----
+
+exit=0
+2026-10-12T08:18:34.234328+00:00 $ nft list ruleset | sha256sum
+a1ba7d13ce376ba95a69e168ad490a5835d4a4622e90416cf33a71a800a6a41e  -
+
+exit=0
+2026-10-12T08:18:36.897193+00:00 $ p=$(cat /tmp/homestun-test/realnat/root/tmp/natmap.pid); cat /proc/$p/status; netstat -lnt; curl -q --noproxy "*" --cacert /tmp/homestun-test/realnat/root/tmp/homestun-real/cert.pem --resolve homestun-test.homelede.com:18443:127.0.0.1 -sS --max-time 5 https://homestun-test.homelede.com:18443/
+cat: can't open '/tmp/homestun-test/realnat/root/tmp/natmap.pid': No such file or directory
+cat: can't open '/proc//status': No such file or directory
+Active Internet connections (only servers)
+Proto Recv-Q Send-Q Local Address           Foreign Address         State       
+tcp        0      0 192.168.1.2:53          0.0.0.0:*               LISTEN      
+tcp        0      0 0.0.0.0:443             0.0.0.0:*               LISTEN      
+tcp        0      0 192.168.1.2:22          0.0.0.0:*               LISTEN      
+tcp        0      0 172.17.0.1:2004         0.0.0.0:*               LISTEN      
+tcp        0      0 192.168.1.2:139         0.0.0.0:*               LISTEN      
+tcp        0      0 0.0.0.0:5355            0.0.0.0:*               LISTEN      
+tcp        0      0 127.0.0.1:53            0.0.0.0:*               LISTEN      
+tcp        0      0 0.0.0.0:80              0.0.0.0:*               LISTEN      
+tcp        0      0 192.168.1.2:445         0.0.0.0:*               LISTEN      
+tcp        0      0 0.0.0.0:1026            0.0.0.0:*               LISTEN      
+tcp        0      0 0.0.0.0:21              0.0.0.0:*               LISTEN      
+tcp        0      0 192.168.1.2:7681        0.0.0.0:*               LISTEN      
+tcp        0      0 127.0.0.1:2002          0.0.0.0:*               LISTEN      
+tcp        0      0 127.0.0.1:2003          0.0.0.0:*               LISTEN      
+tcp        0      0 127.0.0.1:2004          0.0.0.0:*               LISTEN      
+tcp        0      0 172.17.0.1:53           0.0.0.0:*               LISTEN      
+tcp        0      0 0.0.0.0:60000           0.0.0.0:*               LISTEN      
+tcp        0      0 0.0.0.0:3702            0.0.0.0:*               LISTEN      
+tcp        0      0 192.168.1.2:2004        0.0.0.0:*               LISTEN      
+tcp        0      0 fd89:878e:a47f::1:22    :::*                    LISTEN      
+tcp        0      0 ::1:2004                :::*                    LISTEN      
+tcp        0      0 fd89:878e:a47f::1:53    :::*                    LISTEN      
+tcp        0      0 :::5355                 :::*                    LISTEN      
+tcp        0      0 :::80                   :::*                    LISTEN      
+tcp        0      0 :::1070                 :::*                    LISTEN      
+tcp        0      0 fe80::290:a6ff:fee0:382c:53 :::*                    LISTEN      
+tcp        0      0 fe80::290:a6ff:fee0:382c:2004 :::*                    LISTEN      
+tcp        0      0 :::2001                 :::*                    LISTEN      
+tcp        0      0 :::9876                 :::*                    LISTEN      
+tcp        0      0 :::3702                 :::*                    LISTEN      
+tcp        0      0 fd89:878e:a47f::1:2004  :::*                    LISTEN      
+tcp        0      0 ::1:53                  :::*                    LISTEN      
+curl: (7) Failed to connect to homestun-test.homelede.com port 18443 after 0 ms: Error
+
+exit=7
+2026-10-12T08:18:38.857926+00:00 $ cd /; netstat -lnt; nft list ruleset | sha256sum; for p in /proc/[0-9]*; do for f in root exe cwd; do x=$(readlink "$p/$f" 2>/dev/null || :); case "$x" in /tmp/homestun-test/realnat*) echo "RETAINED $p/$f $x";; esac; done; done; ls /tmp/homestun-test/realnat/root/tmp/homestun-real; test ! -e /tmp/homestun-test/realnat/root/tmp/homestun-real/runner.lock && echo NATIVE_SNAPSHOT_ABSENT
+Active Internet connections (only servers)
+Proto Recv-Q Send-Q Local Address           Foreign Address         State       
+tcp        0      0 192.168.1.2:53          0.0.0.0:*               LISTEN      
+tcp        0      0 0.0.0.0:443             0.0.0.0:*               LISTEN      
+tcp        0      0 192.168.1.2:22          0.0.0.0:*               LISTEN      
+tcp        0      0 172.17.0.1:2004         0.0.0.0:*               LISTEN      
+tcp        0      0 192.168.1.2:139         0.0.0.0:*               LISTEN      
+tcp        0      0 0.0.0.0:5355            0.0.0.0:*               LISTEN      
+tcp        0      0 127.0.0.1:53            0.0.0.0:*               LISTEN      
+tcp        0      0 0.0.0.0:80              0.0.0.0:*               LISTEN      
+tcp        0      0 192.168.1.2:445         0.0.0.0:*               LISTEN      
+tcp        0      0 0.0.0.0:1026            0.0.0.0:*               LISTEN      
+tcp        0      0 0.0.0.0:21              0.0.0.0:*               LISTEN      
+tcp        0      0 192.168.1.2:7681        0.0.0.0:*               LISTEN      
+tcp        0      0 127.0.0.1:2002          0.0.0.0:*               LISTEN      
+tcp        0      0 127.0.0.1:2003          0.0.0.0:*               LISTEN      
+tcp        0      0 127.0.0.1:2004          0.0.0.0:*               LISTEN      
+tcp        0      0 172.17.0.1:53           0.0.0.0:*               LISTEN      
+tcp        0      0 0.0.0.0:60000           0.0.0.0:*               LISTEN      
+tcp        0      0 0.0.0.0:3702            0.0.0.0:*               LISTEN      
+tcp        0      0 192.168.1.2:2004        0.0.0.0:*               LISTEN      
+tcp        0      0 fd89:878e:a47f::1:22    :::*                    LISTEN      
+tcp        0      0 ::1:2004                :::*                    LISTEN      
+tcp        0      0 fd89:878e:a47f::1:53    :::*                    LISTEN      
+tcp        0      0 :::5355                 :::*                    LISTEN      
+tcp        0      0 :::80                   :::*                    LISTEN      
+tcp        0      0 :::1070                 :::*                    LISTEN      
+tcp        0      0 fe80::290:a6ff:fee0:382c:53 :::*                    LISTEN      
+tcp        0      0 fe80::290:a6ff:fee0:382c:2004 :::*                    LISTEN      
+tcp        0      0 :::2001                 :::*                    LISTEN      
+tcp        0      0 :::9876                 :::*                    LISTEN      
+tcp        0      0 :::3702                 :::*                    LISTEN      
+tcp        0      0 fd89:878e:a47f::1:2004  :::*                    LISTEN      
+tcp        0      0 ::1:53                  :::*                    LISTEN      
+fab54a3836ed19bfc94a77917229b83fe9bcdef218560a319aa598f74635fbb6  -
+cert.pem
+key.pem
+nginx.conf
+NATIVE_SNAPSHOT_ABSENT
+
+exit=0
+2026-10-12T08:18:39.667795+00:00 $ nft list ruleset | sha256sum
+bfd30992612fbc1e66a373f177cda59e7d6adc0bf0135b631d1adc50f6368f59  -
+
+exit=0
+2026-10-12T08:18:40.170179+00:00 $ rm -rf /tmp/homestun-test/realnat; rmdir /tmp/homestun-test; test ! -e /tmp/homestun-test/realnat && echo FIXTURE_ABSENT
+FIXTURE_ABSENT
+
+exit=0
+2026-10-12T08:19:26.667236+00:00 $ test ! -e /tmp/homestun-test && mkdir -m 700 /tmp/homestun-test && mkdir -m 700 /tmp/homestun-test/realnat && tar xzf - -C /tmp/homestun-test/realnat
+
+exit=0
+2026-10-12T08:19:27.401000+00:00 $ sh -s
+/usr/bin/natmap-real: unrecognized option: -
+Usage:
+ natmap [options]
+
+Options:
+ -4                  use IPv4
+ -6                  use IPv6
+ -u                  UDP mode
+ -d                  run as daemon
+ -i <interface>      network interface or IP address
+ -k <interval>       seconds between each keep-alive
+ -c <count>          UDP STUN check cycle (every <count> intervals)
+ -s <addr>[:port]    domain name or address of STUN server
+ -h <addr>[:port]    domain name or address of HTTP server
+ -e <path>           script path for notify mapped address
+ -f <mark>           fwmark value (hex: 0x1, dec: 1, oct: 01)
+
+Bind options:
+ -b                  port number range for binding
+                     - <0>: random allocation
+                     - <port>: specified
+                     - <port>~<port>: random allocation within the range
+                     - <port>-<port>: sequential allocation within the range
+
+Forward options:
+ -C <congestion>     TCP congestion control algorithm
+ -T <timeout>        port forwarding timeout in seconds
+ -t <address>        domain name or address of forward target
+ -p <port>           port number of forward target (0: use public port)
+
+Version: 20260214
+ba2df4ead5562b0bc0359881ffce1a07d65f62403b6e0b7e0980731be09c45b1  /tmp/homestun-test/realnat/root/usr/bin/natmap-real
+540b98eb8be0ed039d9f8bb19b52d287f1b5c7d594321b397e3d8783e50072a4  /tmp/homestun-test/realnat/root/usr/libexec/homestun-lease
+
+exit=0
+2026-10-12T08:19:27.926925+00:00 $ cat /tmp/homestun-test/realnat/root/tmp/homestun-real/cert.pem
+-----BEGIN CERTIFICATE-----
+MIIDUjCCAjqgAwIBAgIUYcfPRgXa9tnc7Bxh65kJVdGQ7+owDQYJKoZIhvcNAQEL
+BQAwJTEjMCEGA1UEAwwaaG9tZXN0dW4tdGVzdC5ob21lbGVkZS5jb20wHhcNMjYx
+MDEyMDgxOTI3WhcNMjYxMDEzMDgxOTI3WjAlMSMwIQYDVQQDDBpob21lc3R1bi10
+ZXN0LmhvbWVsZWRlLmNvbTCCASIwDQYJKoZIhvcNAQEBBQADggEPADCCAQoCggEB
+AL0QxOlhTsb18AXDtmLsv2VzY1XFp/3+yIh3SoMzyBQV9oDvODTKNjIJ1Yl0Un6F
+SFSnVw8leR+lWbG8vCUzfmskRR6pq8PUe5CO7juG6B1aUGolNccs7umMwDkX0QyG
+yqkl0zo+1HeOepZfgvbWqfCQhF3EU5OSTbvaMBMTcWfuSgPrdrsVHLpS8E0F/E3L
+gyX8eW2qIwks1ZehpPDgm2HKG48+ZfsTDuRjXcItzuFeSb5Asjl2DK327IgabCzX
+LFe2dxG+WDTkw+kPyq7GaesEfArYPB13ueVAVzjhUwkriAvjDud9MT99pscgBAeU
+X7KKdGpB4/5vAz1SV8nUM2cCAwEAAaN6MHgwHQYDVR0OBBYEFHYNsUrgJdJCFhe+
++vWVfRGuNY7oMB8GA1UdIwQYMBaAFHYNsUrgJdJCFhe++vWVfRGuNY7oMA8GA1Ud
+EwEB/wQFMAMBAf8wJQYDVR0RBB4wHIIaaG9tZXN0dW4tdGVzdC5ob21lbGVkZS5j
+b20wDQYJKoZIhvcNAQELBQADggEBAJLtMrxraYgcvJKcdl50PRpnd78OoVGouTct
+SeLSVe25ttyEppyVLm5fboMo2z8qAqw96BHP9km1KEA9pFvw3xJYxfBvXAja7b4I
+WeepIsxx1bSR9Q8qY6fMMENbXk6IeHX+7LbTrjmqJ++m6BuqyXuput+3Clx+pqoP
+Vc9Z7QoWb40CPAc8DyXJzr0L9gO89nO0Hehep4KEg9b72Mlls3mzWTcbjwuh466s
+9uPQMWd2EA/GwNRGolVGgphhcrYMuiPcPrTCptS1AIr69uMEyiWteBZyZC0H+lFb
+70QGhTx98J3+cnD4MUHX90qjYxP6bheiApuIm7kDQt18x2fDZ4Y=
+-----END CERTIFICATE-----
+
+exit=0
+2026-10-12T08:19:38.998903+00:00 $ nft list ruleset | sha256sum
+02bcabf3ea8dee1186cdffb0fd5fea2965b566ecd12a34e65c4a4e88a9c33f15  -
+
+exit=0
+2026-10-12T08:19:41.620313+00:00 $ p=$(cat /tmp/homestun-test/realnat/root/tmp/natmap.pid); cat /proc/$p/status; netstat -lnt; curl -q --noproxy "*" --cacert /tmp/homestun-test/realnat/root/tmp/homestun-real/cert.pem --resolve homestun-test.homelede.com:18443:127.0.0.1 -sS --max-time 5 https://homestun-test.homelede.com:18443/
+Name:	natmap-real
+Umask:	0077
+State:	S (sleeping)
+Tgid:	130558
+Ngid:	0
+Pid:	130558
+PPid:	130557
+TracerPid:	0
+Uid:	0	0	0	0
+Gid:	0	0	0	0
+FDSize:	64
+Groups:	 
+NStgid:	130558
+NSpid:	130558
+NSpgid:	130557
+NSsid:	130548
+Kthread:	0
+VmPeak:	    1168 kB
+VmSize:	    1168 kB
+VmLck:	       0 kB
+VmPin:	       0 kB
+VmHWM:	     732 kB
+VmRSS:	     732 kB
+RssAnon:	      92 kB
+RssFile:	       4 kB
+RssShmem:	     636 kB
+VmData:	     324 kB
+VmStk:	     132 kB
+VmExe:	      32 kB
+VmLib:	     412 kB
+VmPTE:	      36 kB
+VmSwap:	       0 kB
+HugetlbPages:	       0 kB
+CoreDumping:	0
+THP_enabled:	1
+untag_mask:	0xffffffffffffffff
+Threads:	2
+SigQ:	3/7839
+SigPnd:	0000000000000000
+ShdPnd:	0000000000000000
+SigBlk:	0000000000000000
+SigIgn:	0000000000005006
+SigCgt:	0000000000000440
+CapInh:	0000000000000000
+CapPrm:	000001ffffffffff
+CapEff:	000001ffffffffff
+CapBnd:	000001ffffffffff
+CapAmb:	0000000000000000
+NoNewPrivs:	1
+Seccomp:	2
+Seccomp_filters:	1
+Speculation_Store_Bypass:	thread vulnerable
+SpeculationIndirectBranch:	conditional enabled
+Cpus_allowed:	ffffffff,ffffffff,ffffffff,ffffffff
+Cpus_allowed_list:	0-127
+Mems_allowed:	1
+Mems_allowed_list:	0
+voluntary_ctxt_switches:	4
+nonvoluntary_ctxt_switches:	1
+Active Internet connections (only servers)
+Proto Recv-Q Send-Q Local Address           Foreign Address         State       
+tcp        0      0 192.168.1.2:53          0.0.0.0:*               LISTEN      
+tcp        0      0 0.0.0.0:443             0.0.0.0:*               LISTEN      
+tcp        0      0 192.168.1.2:22          0.0.0.0:*               LISTEN      
+tcp        0      0 172.17.0.1:2004         0.0.0.0:*               LISTEN      
+tcp        0      0 192.168.1.2:139         0.0.0.0:*               LISTEN      
+tcp        0      0 0.0.0.0:5355            0.0.0.0:*               LISTEN      
+tcp        0      0 127.0.0.1:18443         0.0.0.0:*               LISTEN      
+tcp        0      0 127.0.0.1:53            0.0.0.0:*               LISTEN      
+tcp        0      0 0.0.0.0:80              0.0.0.0:*               LISTEN      
+tcp        0      0 192.168.1.2:445         0.0.0.0:*               LISTEN      
+tcp        0      0 0.0.0.0:1026            0.0.0.0:*               LISTEN      
+tcp        0      0 0.0.0.0:21              0.0.0.0:*               LISTEN      
+tcp        0      0 192.168.1.2:7681        0.0.0.0:*               LISTEN      
+tcp        0      0 127.0.0.1:2002          0.0.0.0:*               LISTEN      
+tcp        0      0 127.0.0.1:2003          0.0.0.0:*               LISTEN      
+tcp        0      0 127.0.0.1:2004          0.0.0.0:*               LISTEN      
+tcp        0      0 172.17.0.1:53           0.0.0.0:*               LISTEN      
+tcp        0      0 0.0.0.0:60000           0.0.0.0:*               LISTEN      
+tcp        0      0 0.0.0.0:3702            0.0.0.0:*               LISTEN      
+tcp        0      0 192.168.1.2:2004        0.0.0.0:*               LISTEN      
+tcp        0      0 127.0.0.1:18081         0.0.0.0:*               LISTEN      
+tcp        0      0 fd89:878e:a47f::1:22    :::*                    LISTEN      
+tcp        0      0 ::1:2004                :::*                    LISTEN      
+tcp        0      0 fd89:878e:a47f::1:53    :::*                    LISTEN      
+tcp        0      0 :::5355                 :::*                    LISTEN      
+tcp        0      0 :::80                   :::*                    LISTEN      
+tcp        0      0 :::1070                 :::*                    LISTEN      
+tcp        0      0 fe80::290:a6ff:fee0:382c:53 :::*                    LISTEN      
+tcp        0      0 fe80::290:a6ff:fee0:382c:2004 :::*                    LISTEN      
+tcp        0      0 :::2001                 :::*                    LISTEN      
+tcp        0      0 :::9876                 :::*                    LISTEN      
+tcp        0      0 :::3702                 :::*                    LISTEN      
+tcp        0      0 fd89:878e:a47f::1:2004  :::*                    LISTEN      
+tcp        0      0 ::1:53                  :::*                    LISTEN      
+realnat-20261012T081926Z-720bc899c85eaa79affb1d71
+exit=0
+2026-10-12T08:19:42.232801+00:00 $ test ! -f /tmp/homestun-test/realnat/root/tmp/mappings || cat /tmp/homestun-test/realnat/root/tmp/mappings
+67.230.168.23 37314 2001::91c2:43e6:a817 18444 tcp 192.168.1.2
+
+exit=0
+2026-10-12T08:21:16.679674+00:00 $ cd /; netstat -lnt; nft list ruleset | sha256sum; for p in /proc/[0-9]*; do for f in root exe cwd; do x=$(readlink "$p/$f" 2>/dev/null || :); case "$x" in /tmp/homestun-test/realnat*) echo "RETAINED $p/$f $x";; esac; done; done; ls /tmp/homestun-test/realnat/root/tmp/homestun-real; test ! -e /tmp/homestun-test/realnat/root/tmp/homestun-real/runner.lock && echo NATIVE_SNAPSHOT_ABSENT
+Active Internet connections (only servers)
+Proto Recv-Q Send-Q Local Address           Foreign Address         State       
+tcp        0      0 192.168.1.2:53          0.0.0.0:*               LISTEN      
+tcp        0      0 0.0.0.0:443             0.0.0.0:*               LISTEN      
+tcp        0      0 192.168.1.2:22          0.0.0.0:*               LISTEN      
+tcp        0      0 172.17.0.1:2004         0.0.0.0:*               LISTEN      
+tcp        0      0 192.168.1.2:139         0.0.0.0:*               LISTEN      
+tcp        0      0 0.0.0.0:5355            0.0.0.0:*               LISTEN      
+tcp        0      0 127.0.0.1:53            0.0.0.0:*               LISTEN      
+tcp        0      0 0.0.0.0:80              0.0.0.0:*               LISTEN      
+tcp        0      0 192.168.1.2:445         0.0.0.0:*               LISTEN      
+tcp        0      0 0.0.0.0:1026            0.0.0.0:*               LISTEN      
+tcp        0      0 0.0.0.0:21              0.0.0.0:*               LISTEN      
+tcp        0      0 192.168.1.2:7681        0.0.0.0:*               LISTEN      
+tcp        0      0 127.0.0.1:2002          0.0.0.0:*               LISTEN      
+tcp        0      0 127.0.0.1:2003          0.0.0.0:*               LISTEN      
+tcp        0      0 127.0.0.1:2004          0.0.0.0:*               LISTEN      
+tcp        0      0 172.17.0.1:53           0.0.0.0:*               LISTEN      
+tcp        0      0 0.0.0.0:60000           0.0.0.0:*               LISTEN      
+tcp        0      0 0.0.0.0:3702            0.0.0.0:*               LISTEN      
+tcp        0      0 192.168.1.2:2004        0.0.0.0:*               LISTEN      
+tcp        0      0 fd89:878e:a47f::1:22    :::*                    LISTEN      
+tcp        0      0 ::1:2004                :::*                    LISTEN      
+tcp        0      0 fd89:878e:a47f::1:53    :::*                    LISTEN      
+tcp        0      0 :::5355                 :::*                    LISTEN      
+tcp        0      0 :::80                   :::*                    LISTEN      
+tcp        0      0 :::1070                 :::*                    LISTEN      
+tcp        0      0 fe80::290:a6ff:fee0:382c:53 :::*                    LISTEN      
+tcp        0      0 fe80::290:a6ff:fee0:382c:2004 :::*                    LISTEN      
+tcp        0      0 :::2001                 :::*                    LISTEN      
+tcp        0      0 :::9876                 :::*                    LISTEN      
+tcp        0      0 :::3702                 :::*                    LISTEN      
+tcp        0      0 fd89:878e:a47f::1:2004  :::*                    LISTEN      
+tcp        0      0 ::1:53                  :::*                    LISTEN      
+edb1ad9a66517aaba2f39b270d78f79515100cd73e29763a9785bcf265c25737  -
+cert.pem
+key.pem
+nginx.conf
+nginx.pid
+scgi_temp
+uwsgi_temp
+NATIVE_SNAPSHOT_ABSENT
+
+exit=0
+2026-10-12T08:21:17.283871+00:00 $ nft list ruleset | sha256sum
+2abb82f1e930164278e8326eede1e84f87958825ea681bd02bbd02c32e47ba77  -
+
+exit=0
+2026-10-12T08:21:17.821874+00:00 $ rm -rf /tmp/homestun-test/realnat; rmdir /tmp/homestun-test; test ! -e /tmp/homestun-test/realnat && echo FIXTURE_ABSENT
+FIXTURE_ABSENT
+
+exit=0

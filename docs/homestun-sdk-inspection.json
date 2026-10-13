@@ -1,0 +1,149 @@
+{
+  "runtime_needed": {
+    "homestun-lease": [
+      "libgcc_s.so.1",
+      "libc.so"
+    ],
+    "homestun-publish": [
+      "libgcc_s.so.1",
+      "libc.so"
+    ]
+  },
+  "runtime_providers": {
+    "libc.so": "libc",
+    "libgcc_s.so.1": "libgcc1"
+  },
+  "ipk": "/home/eric/homestun-sdk-check/openwrt-sdk-24.10.5-x86-64_gcc-13.3.0_musl.Linux-x86_64/bin/packages/x86_64/homestunlocal/homestun_0.1.0-r1_x86_64.ipk",
+  "sha256": "84087e052d2cefacc7ac943ef9bc74000206379d80ca31b4de5f9c58d0ca4c22",
+  "size": 17095,
+  "control": "Package: homestun\nVersion: 0.1.0-r1\nDepends: libc, libgcc1, lua, libuci-lua, nginx-ssl, natmap, curl, ca-bundle\nSource: /home/eric/homestun-sdk-check/source-feed/homestun\nSourceName: homestun\nLicense: Apache-2.0\nSection: net\nSourceDateEpoch: 1766005702\nArchitecture: x86_64\nInstalled-Size: 61440\nDescription:  Bounded independent HomeSTUN HTTPS service\n",
+  "conffiles": "/etc/config/homestun\n",
+  "payload": [
+    {
+      "name": ".",
+      "mode": "0o755",
+      "size": 0,
+      "uid": 0,
+      "gid": 0
+    },
+    {
+      "name": "./etc",
+      "mode": "0o755",
+      "size": 0,
+      "uid": 0,
+      "gid": 0
+    },
+    {
+      "name": "./etc/config",
+      "mode": "0o755",
+      "size": 0,
+      "uid": 0,
+      "gid": 0
+    },
+    {
+      "name": "./etc/config/homestun",
+      "mode": "0o600",
+      "size": 557,
+      "uid": 0,
+      "gid": 0
+    },
+    {
+      "name": "./etc/homestun",
+      "mode": "0o700",
+      "size": 0,
+      "uid": 0,
+      "gid": 0
+    },
+    {
+      "name": "./etc/init.d",
+      "mode": "0o755",
+      "size": 0,
+      "uid": 0,
+      "gid": 0
+    },
+    {
+      "name": "./etc/init.d/homestun",
+      "mode": "0o755",
+      "size": 1867,
+      "uid": 0,
+      "gid": 0
+    },
+    {
+      "name": "./usr",
+      "mode": "0o755",
+      "size": 0,
+      "uid": 0,
+      "gid": 0
+    },
+    {
+      "name": "./usr/libexec",
+      "mode": "0o755",
+      "size": 0,
+      "uid": 0,
+      "gid": 0
+    },
+    {
+      "name": "./usr/libexec/homestun-lease",
+      "mode": "0o755",
+      "size": 20492,
+      "uid": 0,
+      "gid": 0
+    },
+    {
+      "name": "./usr/libexec/homestun-publish",
+      "mode": "0o755",
+      "size": 11955,
+      "uid": 0,
+      "gid": 0
+    },
+    {
+      "name": "./usr/share",
+      "mode": "0o755",
+      "size": 0,
+      "uid": 0,
+      "gid": 0
+    },
+    {
+      "name": "./usr/share/homestun",
+      "mode": "0o755",
+      "size": 0,
+      "uid": 0,
+      "gid": 0
+    },
+    {
+      "name": "./usr/share/homestun/config-cli.lua",
+      "mode": "0o644",
+      "size": 1272,
+      "uid": 0,
+      "gid": 0
+    },
+    {
+      "name": "./usr/share/homestun/config.lua",
+      "mode": "0o644",
+      "size": 3356,
+      "uid": 0,
+      "gid": 0
+    },
+    {
+      "name": "./usr/share/homestun/core.lua",
+      "mode": "0o644",
+      "size": 3394,
+      "uid": 0,
+      "gid": 0
+    },
+    {
+      "name": "./usr/share/homestun/lease-run.sh",
+      "mode": "0o755",
+      "size": 3049,
+      "uid": 0,
+      "gid": 0
+    }
+  ],
+  "config": "config service 'main'\n\toption enabled '0'\n\toption exposure_approved '0'\n\toption publication_enabled '0'\n\t# Reference only; root-owned 0600 credential, never a plaintext UCI secret.\n\toption router_token_file '/etc/homestun/router.token'\n\toption listen '127.0.0.1'\n\toption port '18443'\n\toption bind_port '18444'\n\toption ttl '60'\n\toption stun_server 'turn.cloudflare.com'\n\toption http_server 'example.com'\n\toption cert '/etc/homestun/cert.pem'\n\toption key '/etc/homestun/key.pem'\n\n# Add explicitly reviewed host sections before enabling. No upstream defaults.\n",
+  "elf": {
+    "homestun-lease": "ELF Header:\n  Magic:   7f 45 4c 46 02 01 01 00 00 00 00 00 00 00 00 00 \n  Class:                             ELF64\n  Data:                              2's complement, little endian\n  Version:                           1 (current)\n  OS/ABI:                            UNIX - System V\n  ABI Version:                       0\n  Type:                              EXEC (Executable file)\n  Machine:                           Advanced Micro Devices X86-64\n  Version:                           0x1\n  Entry point address:               0x402c3d\n  Start of program headers:          64 (bytes into file)\n  Start of section headers:          0 (bytes into file)\n  Flags:                             0x0\n  Size of this header:               64 (bytes)\n  Size of program headers:           56 (bytes)\n  Number of program headers:         12\n  Size of section headers:           64 (bytes)\n  Number of section headers:         0\n  Section header string table index: 0\n\nProgram Headers:\n  Type           Offset             VirtAddr           PhysAddr\n                 FileSiz            MemSiz              Flags  Align\n  PHDR           0x0000000000000040 0x0000000000400040 0x0000000000400040\n                 0x00000000000002a0 0x00000000000002a0  R      0x8\n  INTERP         0x00000000000002e0 0x00000000004002e0 0x00000000004002e0\n                 0x0000000000000019 0x0000000000000019  R      0x1\n      [Requesting program interpreter: /lib/ld-musl-x86_64.so.1]\n  LOAD           0x0000000000000000 0x0000000000400000 0x0000000000400000\n                 0x00000000000011e8 0x00000000000011e8  R      0x1000\n  LOAD           0x0000000000002000 0x0000000000402000 0x0000000000402000\n                 0x0000000000001f73 0x0000000000001f73  R E    0x1000\n  LOAD           0x0000000000004000 0x0000000000404000 0x0000000000404000\n                 0x0000000000000af8 0x0000000000000af8  R      0x1000\n  LOAD           0x0000000000004c50 0x0000000000405c50 0x0000000000405c50\n                 0x00000000000003bc 0x0000000000000478  RW     0x1000\n  DYNAMIC        0x0000000000004c60 0x0000000000405c60 0x0000000000405c60\n                 0x00000000000001d0 0x00000000000001d0  RW     0x8\n  NOTE           0x0000000000000300 0x0000000000400300 0x0000000000400300\n                 0x0000000000000030 0x0000000000000030  R      0x8\n  GNU_PROPERTY   0x0000000000000300 0x0000000000400300 0x0000000000400300\n                 0x0000000000000030 0x0000000000000030  R      0x8\n  GNU_EH_FRAME   0x00000000000046a8 0x00000000004046a8 0x00000000004046a8\n                 0x0000000000000094 0x0000000000000094  R      0x4\n  GNU_STACK      0x0000000000000000 0x0000000000000000 0x0000000000000000\n                 0x0000000000000000 0x0000000000000000  RW     0x10\n  GNU_RELRO      0x0000000000004c50 0x0000000000405c50 0x0000000000405c50\n                 0x00000000000003b0 0x00000000000003b0  R      0x1\n\nDynamic section at offset 0x4c60 contains 24 entries:\n  Tag        Type                         Name/Value\n 0x0000000000000001 (NEEDED)             Shared library: [libgcc_s.so.1]\n 0x0000000000000001 (NEEDED)             Shared library: [libc.so]\n 0x000000000000000c (INIT)               0x402000\n 0x000000000000000d (FINI)               0x403f70\n 0x0000000000000019 (INIT_ARRAY)         0x405c50\n 0x000000000000001b (INIT_ARRAYSZ)       8 (bytes)\n 0x000000000000001a (FINI_ARRAY)         0x405c58\n 0x000000000000001c (FINI_ARRAYSZ)       8 (bytes)\n 0x0000000000000004 (HASH)               0x400330\n 0x000000006ffffef5 (GNU_HASH)           0x4004b8\n 0x0000000000000005 (STRTAB)             0x400a50\n 0x0000000000000006 (SYMTAB)             0x4004e0\n 0x000000000000000a (STRSZ)              474 (bytes)\n 0x000000000000000b (SYMENT)             24 (bytes)\n 0x0000000000000015 (DEBUG)              0x0\n 0x0000000000000007 (RELA)               0x400cc0\n 0x0000000000000008 (RELASZ)             1320 (bytes)\n 0x0000000000000009 (RELAENT)            24 (bytes)\n 0x0000000000000018 (BIND_NOW)           \n 0x000000006ffffffb (FLAGS_1)            Flags: NOW\n 0x000000006ffffffe (VERNEED)            0x400ca0\n 0x000000006fffffff (VERNEEDNUM)         1\n 0x000000006ffffff0 (VERSYM)             0x400c2a\n 0x0000000000000000 (NULL)               0x0\n",
+    "homestun-publish": "ELF Header:\n  Magic:   7f 45 4c 46 02 01 01 00 00 00 00 00 00 00 00 00 \n  Class:                             ELF64\n  Data:                              2's complement, little endian\n  Version:                           1 (current)\n  OS/ABI:                            UNIX - System V\n  ABI Version:                       0\n  Type:                              EXEC (Executable file)\n  Machine:                           Advanced Micro Devices X86-64\n  Version:                           0x1\n  Entry point address:               0x401807\n  Start of program headers:          64 (bytes into file)\n  Start of section headers:          0 (bytes into file)\n  Flags:                             0x0\n  Size of this header:               64 (bytes)\n  Size of program headers:           56 (bytes)\n  Number of program headers:         12\n  Size of section headers:           64 (bytes)\n  Number of section headers:         0\n  Section header string table index: 0\n\nProgram Headers:\n  Type           Offset             VirtAddr           PhysAddr\n                 FileSiz            MemSiz              Flags  Align\n  PHDR           0x0000000000000040 0x0000000000400040 0x0000000000400040\n                 0x00000000000002a0 0x00000000000002a0  R      0x8\n  INTERP         0x00000000000002e0 0x00000000004002e0 0x00000000004002e0\n                 0x0000000000000019 0x0000000000000019  R      0x1\n      [Requesting program interpreter: /lib/ld-musl-x86_64.so.1]\n  LOAD           0x0000000000000000 0x0000000000400000 0x0000000000400000\n                 0x0000000000000e20 0x0000000000000e20  R      0x1000\n  LOAD           0x0000000000001000 0x0000000000401000 0x0000000000401000\n                 0x00000000000009aa 0x00000000000009aa  R E    0x1000\n  LOAD           0x0000000000002000 0x0000000000402000 0x0000000000402000\n                 0x00000000000003e4 0x00000000000003e4  R      0x1000\n  LOAD           0x0000000000002cd0 0x0000000000403cd0 0x0000000000403cd0\n                 0x00000000000001e3 0x00000000000003a0  RW     0x1000\n  DYNAMIC        0x0000000000002ce0 0x0000000000403ce0 0x0000000000403ce0\n                 0x00000000000001d0 0x00000000000001d0  RW     0x8\n  NOTE           0x0000000000000300 0x0000000000400300 0x0000000000400300\n                 0x0000000000000030 0x0000000000000030  R      0x8\n  GNU_PROPERTY   0x0000000000000300 0x0000000000400300 0x0000000000400300\n                 0x0000000000000030 0x0000000000000030  R      0x8\n  GNU_EH_FRAME   0x0000000000002290 0x0000000000402290 0x0000000000402290\n                 0x0000000000000034 0x0000000000000034  R      0x4\n  GNU_STACK      0x0000000000000000 0x0000000000000000 0x0000000000000000\n                 0x0000000000000000 0x0000000000000000  RW     0x10\n  GNU_RELRO      0x0000000000002cd0 0x0000000000403cd0 0x0000000000403cd0\n                 0x00000000000001e3 0x0000000000000330  R      0x1\n\nDynamic section at offset 0x2ce0 contains 24 entries:\n  Tag        Type                         Name/Value\n 0x0000000000000001 (NEEDED)             Shared library: [libgcc_s.so.1]\n 0x0000000000000001 (NEEDED)             Shared library: [libc.so]\n 0x000000000000000c (INIT)               0x401000\n 0x000000000000000d (FINI)               0x4019a7\n 0x0000000000000019 (INIT_ARRAY)         0x403cd0\n 0x000000000000001b (INIT_ARRAYSZ)       8 (bytes)\n 0x000000000000001a (FINI_ARRAY)         0x403cd8\n 0x000000000000001c (FINI_ARRAYSZ)       8 (bytes)\n 0x0000000000000004 (HASH)               0x400330\n 0x000000006ffffef5 (GNU_HASH)           0x400478\n 0x0000000000000005 (STRTAB)             0x400890\n 0x0000000000000006 (SYMTAB)             0x4004a0\n 0x000000000000000a (STRSZ)              371 (bytes)\n 0x000000000000000b (SYMENT)             24 (bytes)\n 0x0000000000000015 (DEBUG)              0x0\n 0x0000000000000007 (RELA)               0x400a78\n 0x0000000000000008 (RELASZ)             936 (bytes)\n 0x0000000000000009 (RELAENT)            24 (bytes)\n 0x0000000000000018 (BIND_NOW)           \n 0x000000006ffffffb (FLAGS_1)            Flags: NOW\n 0x000000006ffffffe (VERNEED)            0x400a58\n 0x000000006fffffff (VERNEEDNUM)         1\n 0x000000006ffffff0 (VERSYM)             0x400a04\n 0x0000000000000000 (NULL)               0x0\n"
+  },
+  "installed": false,
+  "activated": false
+}

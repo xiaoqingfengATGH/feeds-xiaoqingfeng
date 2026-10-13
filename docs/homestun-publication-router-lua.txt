@@ -1,0 +1,17 @@
+ok 1 - accepts isolated explicit configuration
+ok 2 - rejects management port
+ok 3 - rejects port string injection
+ok 4 - rejects unspecified listener
+ok 5 - rejects leading-dot wildcard hostname
+ok 6 - rejects hostname injection
+ok 7 - rejects duplicate hostname
+ok 8 - rejects public upstream
+ok 9 - rejects management upstream
+ok 10 - rejects credentials upstream
+ok 11 - rejects nginx path injection
+ok 12 - rejects unisolated runtime
+ok 13 - rejects empty hosts
+ok 14 - rejects unknown option
+ok 15 - rejects HTTPS upstream without verification
+ok 16 - isolated multi-host TLS nginx generation and default deny
+PASS UCI disabled/approval/bounds/injection/hosts

@@ -1,0 +1,35 @@
+{
+  "capture_counts": {
+    "external": {
+      "packets": 0,
+      "inbound_syn": 0,
+      "outbound_synack": 0,
+      "inbound": 0,
+      "outbound": 0
+    },
+    "local-br": {
+      "packets": 23,
+      "inbound_syn": 0,
+      "outbound_synack": 0,
+      "inbound": 9,
+      "outbound": 14
+    },
+    "local-lo": {
+      "packets": 30,
+      "inbound_syn": 1,
+      "outbound_synack": 1,
+      "inbound": 15,
+      "outbound": 15
+    }
+  },
+  "helper_sha256": "e59e1364b38694fcc0c923ea319c5eea43fdf1f4c986829a0317dd58e15b537c",
+  "boundary": "No inbound SYN observed on Homelede br-lan for TCP18444; no SYNACK to Windows61.148.12.162 observed. Failure upstream of this observation point, exact upstream hop unknown.",
+  "limitations": [
+    "No sender-side SYN packet capture; connect attempts only.",
+    "No gateway WAN/LAN capture or administrative discovery: gateway192.168.1.1 credentials/interface unavailable; none guessed.",
+    "LAN-address forwarding probe originated on Homelede and traversed lo, not an independent LAN client.",
+    "Existing syn_flood drop, input default policy and handle_reject have no dedicated counters; no counters added.",
+    "No packet-socket drop statistics collected."
+  ],
+  "cleanup_verified": "Final SSH readback: fixture absent, no retained capture executable/process, ports18081/18443/18444 absent; management22/80/443 listening."
+}

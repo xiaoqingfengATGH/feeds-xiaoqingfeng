@@ -1,0 +1,32 @@
+READY interface=lo peer=192.168.1.2 tcp_port=18444 seconds=70 headers_only no_promisc
+epoch=1791810569 if=lo direction=out src=192.168.1.2:49222 dst=192.168.1.2:18444 flags=0x02 iplen=60 captured=40
+epoch=1791810569 if=lo direction=in src=192.168.1.2:49222 dst=192.168.1.2:18444 flags=0x02 iplen=60 captured=40
+epoch=1791810569 if=lo direction=out src=192.168.1.2:18444 dst=192.168.1.2:49222 flags=0x12 iplen=60 captured=40
+epoch=1791810569 if=lo direction=in src=192.168.1.2:18444 dst=192.168.1.2:49222 flags=0x12 iplen=60 captured=40
+epoch=1791810569 if=lo direction=out src=192.168.1.2:49222 dst=192.168.1.2:18444 flags=0x10 iplen=52 captured=40
+epoch=1791810569 if=lo direction=in src=192.168.1.2:49222 dst=192.168.1.2:18444 flags=0x10 iplen=52 captured=40
+epoch=1791810569 if=lo direction=out src=192.168.1.2:49222 dst=192.168.1.2:18444 flags=0x18 iplen=1627 captured=40
+epoch=1791810569 if=lo direction=in src=192.168.1.2:49222 dst=192.168.1.2:18444 flags=0x18 iplen=1627 captured=40
+epoch=1791810569 if=lo direction=out src=192.168.1.2:18444 dst=192.168.1.2:49222 flags=0x10 iplen=52 captured=40
+epoch=1791810569 if=lo direction=in src=192.168.1.2:18444 dst=192.168.1.2:49222 flags=0x10 iplen=52 captured=40
+epoch=1791810569 if=lo direction=out src=192.168.1.2:18444 dst=192.168.1.2:49222 flags=0x18 iplen=1350 captured=40
+epoch=1791810569 if=lo direction=in src=192.168.1.2:18444 dst=192.168.1.2:49222 flags=0x18 iplen=1350 captured=40
+epoch=1791810569 if=lo direction=out src=192.168.1.2:49222 dst=192.168.1.2:18444 flags=0x10 iplen=52 captured=40
+epoch=1791810569 if=lo direction=in src=192.168.1.2:49222 dst=192.168.1.2:18444 flags=0x10 iplen=52 captured=40
+epoch=1791810569 if=lo direction=out src=192.168.1.2:49222 dst=192.168.1.2:18444 flags=0x18 iplen=145 captured=40
+epoch=1791810569 if=lo direction=in src=192.168.1.2:49222 dst=192.168.1.2:18444 flags=0x18 iplen=145 captured=40
+epoch=1791810569 if=lo direction=out src=192.168.1.2:18444 dst=192.168.1.2:49222 flags=0x18 iplen=103 captured=40
+epoch=1791810569 if=lo direction=in src=192.168.1.2:18444 dst=192.168.1.2:49222 flags=0x18 iplen=103 captured=40
+epoch=1791810569 if=lo direction=out src=192.168.1.2:49222 dst=192.168.1.2:18444 flags=0x18 iplen=177 captured=40
+epoch=1791810569 if=lo direction=in src=192.168.1.2:49222 dst=192.168.1.2:18444 flags=0x18 iplen=177 captured=40
+epoch=1791810569 if=lo direction=out src=192.168.1.2:18444 dst=192.168.1.2:49222 flags=0x18 iplen=278 captured=40
+epoch=1791810569 if=lo direction=in src=192.168.1.2:18444 dst=192.168.1.2:49222 flags=0x18 iplen=278 captured=40
+epoch=1791810569 if=lo direction=out src=192.168.1.2:49222 dst=192.168.1.2:18444 flags=0x18 iplen=83 captured=40
+epoch=1791810569 if=lo direction=in src=192.168.1.2:49222 dst=192.168.1.2:18444 flags=0x18 iplen=83 captured=40
+epoch=1791810569 if=lo direction=out src=192.168.1.2:18444 dst=192.168.1.2:49222 flags=0x11 iplen=52 captured=40
+epoch=1791810569 if=lo direction=in src=192.168.1.2:18444 dst=192.168.1.2:49222 flags=0x11 iplen=52 captured=40
+epoch=1791810569 if=lo direction=out src=192.168.1.2:49222 dst=192.168.1.2:18444 flags=0x11 iplen=52 captured=40
+epoch=1791810569 if=lo direction=in src=192.168.1.2:49222 dst=192.168.1.2:18444 flags=0x11 iplen=52 captured=40
+epoch=1791810569 if=lo direction=out src=192.168.1.2:18444 dst=192.168.1.2:49222 flags=0x10 iplen=52 captured=40
+epoch=1791810569 if=lo direction=in src=192.168.1.2:18444 dst=192.168.1.2:49222 flags=0x10 iplen=52 captured=40
+END packets=30

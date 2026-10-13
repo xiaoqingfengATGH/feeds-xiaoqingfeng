@@ -1,0 +1,580 @@
+$ test ! -e /tmp/homestun-test/sdk-native && mkdir -p /tmp/homestun-test/sdk-native && chmod 700 /tmp/homestun-test /tmp/homestun-test/sdk-native && tar xzf - -C /tmp/homestun-test/sdk-native
+
+EXIT 0
+$ sha256sum -c -
+/tmp/homestun-test/sdk-native/root/usr/libexec/homestun-lease: OK
+/tmp/homestun-test/sdk-native/root/usr/share/homestun/config-cli.lua: OK
+/tmp/homestun-test/sdk-native/root/usr/share/homestun/config.lua: OK
+/tmp/homestun-test/sdk-native/root/usr/share/homestun/core.lua: OK
+/tmp/homestun-test/sdk-native/probe: OK
+/tmp/homestun-test/sdk-native/run.sh: OK
+
+EXIT 0
+$ timeout 140 sh /tmp/homestun-test/sdk-native/run.sh
+540b98eb8be0ed039d9f8bb19b52d287f1b5c7d594321b397e3d8783e50072a4  /tmp/homestun-test/sdk-native/root/usr/libexec/homestun-lease
+2fe80767382dba3691c50aebd72afa40d7ffe46a384e7c4edfa22ae70bba5fcf  /tmp/homestun-test/sdk-native/root/usr/share/homestun/config-cli.lua
+6d30c4421f4ff7071454f22c4dd6c8db35ac10dc851890df2496824226fd1735  /tmp/homestun-test/sdk-native/root/usr/share/homestun/config.lua
+c6e148db828a47f478176ccaa85fb5a92c52e203985ac6bdac70de7425744a0d  /tmp/homestun-test/sdk-native/root/usr/share/homestun/core.lua
+d24cceeb3b33fb61545b7c50b49be6299167959ffcdebf6d765dc4a67bb3d0f1  /tmp/homestun-test/sdk-native/root/usr/sbin/nginx
+1ba8c5630db7aed170be31824ea8ba82c3db51da74a1ad245537717a6d67271b  /tmp/homestun-test/sdk-native/root/usr/bin/lua
+005721aee62bcb21de67169aad469b502b7d9e7b44cfed73a89bf49e42a6d59a  /tmp/homestun-test/sdk-native/root/usr/bin/natmap
+PROBE pid=33270 pidfd_getfd=-1 errno=9 no_new_privs=0 seccomp=0
+PASS occupant bidirectional traffic
+FAIL-not-ready
+
+EXIT 1
+$ test ! -e /tmp/homestun-test/sdk-native && mkdir -p /tmp/homestun-test/sdk-native && chmod 700 /tmp/homestun-test /tmp/homestun-test/sdk-native && tar xzf - -C /tmp/homestun-test/sdk-native
+
+EXIT 0
+$ sha256sum -c -
+/tmp/homestun-test/sdk-native/root/usr/libexec/homestun-lease: OK
+/tmp/homestun-test/sdk-native/root/usr/share/homestun/config-cli.lua: OK
+/tmp/homestun-test/sdk-native/root/usr/share/homestun/config.lua: OK
+/tmp/homestun-test/sdk-native/root/usr/share/homestun/core.lua: OK
+/tmp/homestun-test/sdk-native/probe: OK
+/tmp/homestun-test/sdk-native/run.sh: OK
+
+EXIT 0
+$ timeout 140 sh /tmp/homestun-test/sdk-native/run.sh
+540b98eb8be0ed039d9f8bb19b52d287f1b5c7d594321b397e3d8783e50072a4  /tmp/homestun-test/sdk-native/root/usr/libexec/homestun-lease
+2fe80767382dba3691c50aebd72afa40d7ffe46a384e7c4edfa22ae70bba5fcf  /tmp/homestun-test/sdk-native/root/usr/share/homestun/config-cli.lua
+6d30c4421f4ff7071454f22c4dd6c8db35ac10dc851890df2496824226fd1735  /tmp/homestun-test/sdk-native/root/usr/share/homestun/config.lua
+c6e148db828a47f478176ccaa85fb5a92c52e203985ac6bdac70de7425744a0d  /tmp/homestun-test/sdk-native/root/usr/share/homestun/core.lua
+d24cceeb3b33fb61545b7c50b49be6299167959ffcdebf6d765dc4a67bb3d0f1  /tmp/homestun-test/sdk-native/root/usr/sbin/nginx
+1ba8c5630db7aed170be31824ea8ba82c3db51da74a1ad245537717a6d67271b  /tmp/homestun-test/sdk-native/root/usr/bin/lua
+005721aee62bcb21de67169aad469b502b7d9e7b44cfed73a89bf49e42a6d59a  /tmp/homestun-test/sdk-native/root/usr/bin/natmap
+PROBE pid=44836 pidfd_getfd=-1 errno=9 no_new_privs=0 seccomp=0
+PASS occupant bidirectional traffic
+/tmp/homestun-test/sdk-native/root/etc/homestun/cert.pem: OK
+/tmp/homestun-test/sdk-native/root/etc/homestun/key.pem: OK
+PASS occupant bidirectional traffic
+nginx: the configuration file /tmp/homestun-service-1eeea738e634e78a037eef5e185890d1/nginx.conf syntax is ok
+nginx: configuration file /tmp/homestun-service-1eeea738e634e78a037eef5e185890d1/nginx.conf test is successful
+PROBE pid=46149 pidfd_getfd=-1 errno=1 no_new_privs=1 seccomp=2
+FOREIGN pid=44817 fd=3 import=-1 errno=1
+PASS SDK real-nginx expiry bounded cleanup; NATMap syscall-only fixture
+/tmp/homestun-test/sdk-native/root/etc/homestun/cert.pem: OK
+/tmp/homestun-test/sdk-native/root/etc/homestun/key.pem: OK
+PASS occupant bidirectional traffic
+nginx: the configuration file /tmp/homestun-service-cb785ed1ce42f3abaca4bdc9b215009e/nginx.conf syntax is ok
+nginx: configuration file /tmp/homestun-service-cb785ed1ce42f3abaca4bdc9b215009e/nginx.conf test is successful
+PROBE pid=47512 pidfd_getfd=-1 errno=1 no_new_privs=1 seccomp=2
+FOREIGN pid=44817 fd=3 import=-1 errno=1
+PASS SDK real-nginx controller-KILL bounded cleanup; NATMap syscall-only fixture
+/tmp/homestun-test/sdk-native/root/etc/homestun/cert.pem: OK
+/tmp/homestun-test/sdk-native/root/etc/homestun/key.pem: OK
+PASS occupant bidirectional traffic
+nginx: the configuration file /tmp/homestun-service-80584af1bda3ff4b7fcd4f123da4cb75/nginx.conf syntax is ok
+nginx: configuration file /tmp/homestun-service-80584af1bda3ff4b7fcd4f123da4cb75/nginx.conf test is successful
+PROBE pid=48882 pidfd_getfd=-1 errno=1 no_new_privs=1 seccomp=2
+FOREIGN pid=44817 fd=3 import=-1 errno=1
+PASS SDK real-nginx controller-STOP bounded cleanup; NATMap syscall-only fixture
+/tmp/homestun-test/sdk-native/root/etc/homestun/cert.pem: OK
+/tmp/homestun-test/sdk-native/root/etc/homestun/key.pem: OK
+PASS occupant bidirectional traffic
+nginx: the configuration file /tmp/homestun-service-9885509e6860bed7e3ea5d10fdd43a35/nginx.conf syntax is ok
+nginx: configuration file /tmp/homestun-service-9885509e6860bed7e3ea5d10fdd43a35/nginx.conf test is successful
+PROBE pid=50228 pidfd_getfd=-1 errno=1 no_new_privs=1 seccomp=2
+FOREIGN pid=44817 fd=3 import=-1 errno=1
+PASS SDK real-nginx guardian-KILL bounded cleanup; NATMap syscall-only fixture
+/tmp/homestun-test/sdk-native/root/etc/homestun/cert.pem: OK
+/tmp/homestun-test/sdk-native/root/etc/homestun/key.pem: OK
+PASS occupant bidirectional traffic
+nginx: the configuration file /tmp/homestun-service-19f99ffc013a361e182afb4147b7986d/nginx.conf syntax is ok
+nginx: configuration file /tmp/homestun-service-19f99ffc013a361e182afb4147b7986d/nginx.conf test is successful
+PROBE pid=51591 pidfd_getfd=-1 errno=1 no_new_privs=1 seccomp=2
+FOREIGN pid=44817 fd=3 import=-1 errno=1
+PASS SDK real-nginx guardian-STOP bounded cleanup; NATMap syscall-only fixture
+/tmp/homestun-test/sdk-native/root/etc/homestun/cert.pem: OK
+/tmp/homestun-test/sdk-native/root/etc/homestun/key.pem: OK
+PASS occupant bidirectional traffic
+nginx: the configuration file /tmp/homestun-service-bca709b58d4d0856628039c214c11310/nginx.conf syntax is ok
+nginx: configuration file /tmp/homestun-service-bca709b58d4d0856628039c214c11310/nginx.conf test is successful
+PROBE pid=52929 pidfd_getfd=-1 errno=1 no_new_privs=1 seccomp=2
+FOREIGN pid=44817 fd=3 import=-1 errno=1
+PASS SDK real-nginx engine-KILL bounded cleanup; NATMap syscall-only fixture
+/tmp/homestun-test/sdk-native/run.sh: line 59: can't open /proc/44708/status: no such file
+/tmp/homestun-test/sdk-native/root/etc/homestun/cert.pem: OK
+/tmp/homestun-test/sdk-native/root/etc/homestun/key.pem: OK
+PASS occupant bidirectional traffic
+nginx: the configuration file /tmp/homestun-service-ea30440aa9241d0708e96a9bdeff035f/nginx.conf syntax is ok
+nginx: configuration file /tmp/homestun-service-ea30440aa9241d0708e96a9bdeff035f/nginx.conf test is successful
+PROBE pid=54289 pidfd_getfd=-1 errno=1 no_new_privs=1 seccomp=2
+FOREIGN pid=44817 fd=3 import=-1 errno=1
+PASS SDK real-nginx nginx-KILL bounded cleanup; NATMap syscall-only fixture
+/tmp/homestun-test/sdk-native/root/etc/homestun/cert.pem: OK
+/tmp/homestun-test/sdk-native/root/etc/homestun/key.pem: OK
+PASS occupant bidirectional traffic
+PASS SDK preparation KILL cleanup before real Lua render
+/tmp/homestun-test/sdk-native/root/etc/homestun/cert.pem: OK
+/tmp/homestun-test/sdk-native/root/etc/homestun/key.pem: OK
+PASS occupant bidirectional traffic
+PASS SDK preparation STOP cleanup before real Lua render
+{
+	"homestun-sdk-native-fixture-20261012": {
+		"instances": {
+			"lease": {
+				"running": true,
+				"pid": 54594,
+				"command": [
+					"/usr/sbin/chroot",
+					"/tmp/homestun-test/sdk-native/root",
+					"/usr/libexec/homestun-lease",
+					"--provision",
+					"5",
+					"18444",
+					"18443",
+					"example.com",
+					"example.com"
+				],
+				"term_timeout": 1
+			}
+		}
+	}
+}
+/tmp/homestun-test/sdk-native/root/etc/homestun/cert.pem: OK
+/tmp/homestun-test/sdk-native/root/etc/homestun/key.pem: OK
+PASS occupant bidirectional traffic
+PASS SDK genuine procd STOP TERM KILL cleanup and service absence
+/tmp/homestun-test/sdk-native/root/etc/homestun/cert.pem: OK
+/tmp/homestun-test/sdk-native/root/etc/homestun/key.pem: OK
+PASS occupant bidirectional traffic
+nginx: the configuration file /tmp/homestun-service-df9119632c4d7b06ca344f69f0ad7204/nginx.conf syntax is ok
+nginx: configuration file /tmp/homestun-service-df9119632c4d7b06ca344f69f0ad7204/nginx.conf test is successful
+NATMap seccomp boundary: Operation not permitted
+PASS unavailable seccomp installation fail-closed
+OCCUPANT pid=44817 fd=3 reuseport=0
+PASS occupant final SO_REUSEPORT=0
+Active Internet connections (only servers)
+Proto Recv-Q Send-Q Local Address           Foreign Address         State       
+tcp        0      0 192.168.1.2:53          0.0.0.0:*               LISTEN      
+tcp        0      0 0.0.0.0:443             0.0.0.0:*               LISTEN      
+tcp        0      0 192.168.1.2:22          0.0.0.0:*               LISTEN      
+tcp        0      0 172.17.0.1:2004         0.0.0.0:*               LISTEN      
+tcp        0      0 192.168.1.2:139         0.0.0.0:*               LISTEN      
+tcp        0      0 0.0.0.0:5355            0.0.0.0:*               LISTEN      
+tcp        0      0 127.0.0.1:53            0.0.0.0:*               LISTEN      
+tcp        0      0 0.0.0.0:80              0.0.0.0:*               LISTEN      
+tcp        0      0 192.168.1.2:445         0.0.0.0:*               LISTEN      
+tcp        0      0 0.0.0.0:1026            0.0.0.0:*               LISTEN      
+tcp        0      0 0.0.0.0:21              0.0.0.0:*               LISTEN      
+tcp        0      0 192.168.1.2:7681        0.0.0.0:*               LISTEN      
+tcp        0      0 127.0.0.1:2002          0.0.0.0:*               LISTEN      
+tcp        0      0 127.0.0.1:2003          0.0.0.0:*               LISTEN      
+tcp        0      0 127.0.0.1:2004          0.0.0.0:*               LISTEN      
+tcp        0      0 172.17.0.1:53           0.0.0.0:*               LISTEN      
+tcp        0      0 0.0.0.0:60000           0.0.0.0:*               LISTEN      
+tcp        0      0 0.0.0.0:3702            0.0.0.0:*               LISTEN      
+tcp        0      0 192.168.1.2:2004        0.0.0.0:*               LISTEN      
+tcp        0      0 fd89:878e:a47f::1:22    :::*                    LISTEN      
+tcp        0      0 ::1:2004                :::*                    LISTEN      
+tcp        0      0 fd89:878e:a47f::1:53    :::*                    LISTEN      
+tcp        0      0 :::5355                 :::*                    LISTEN      
+tcp        0      0 :::80                   :::*                    LISTEN      
+tcp        0      0 :::1070                 :::*                    LISTEN      
+tcp        0      0 fe80::290:a6ff:fee0:382c:53 :::*                    LISTEN      
+tcp        0      0 fe80::290:a6ff:fee0:382c:2004 :::*                    LISTEN      
+tcp        0      0 :::2001                 :::*                    LISTEN      
+tcp        0      0 :::9876                 :::*                    LISTEN      
+tcp        0      0 :::3702                 :::*                    LISTEN      
+tcp        0      0 fd89:878e:a47f::1:2004  :::*                    LISTEN      
+tcp        0      0 ::1:53                  :::*                    LISTEN      
+
+EXIT 0
+$ test ! -e /tmp/homestun-test/sdk-native && mkdir -p /tmp/homestun-test/sdk-native && chmod 700 /tmp/homestun-test /tmp/homestun-test/sdk-native && tar xzf - -C /tmp/homestun-test/sdk-native
+
+EXIT 0
+$ sha256sum -c -
+/tmp/homestun-test/sdk-native/root/usr/libexec/homestun-lease: OK
+/tmp/homestun-test/sdk-native/root/usr/share/homestun/config-cli.lua: OK
+/tmp/homestun-test/sdk-native/root/usr/share/homestun/config.lua: OK
+/tmp/homestun-test/sdk-native/root/usr/share/homestun/core.lua: OK
+/tmp/homestun-test/sdk-native/probe: OK
+/tmp/homestun-test/sdk-native/run.sh: OK
+
+EXIT 0
+$ timeout 140 sh /tmp/homestun-test/sdk-native/run.sh
+540b98eb8be0ed039d9f8bb19b52d287f1b5c7d594321b397e3d8783e50072a4  /tmp/homestun-test/sdk-native/root/usr/libexec/homestun-lease
+2fe80767382dba3691c50aebd72afa40d7ffe46a384e7c4edfa22ae70bba5fcf  /tmp/homestun-test/sdk-native/root/usr/share/homestun/config-cli.lua
+6d30c4421f4ff7071454f22c4dd6c8db35ac10dc851890df2496824226fd1735  /tmp/homestun-test/sdk-native/root/usr/share/homestun/config.lua
+c6e148db828a47f478176ccaa85fb5a92c52e203985ac6bdac70de7425744a0d  /tmp/homestun-test/sdk-native/root/usr/share/homestun/core.lua
+d24cceeb3b33fb61545b7c50b49be6299167959ffcdebf6d765dc4a67bb3d0f1  /tmp/homestun-test/sdk-native/root/usr/sbin/nginx
+1ba8c5630db7aed170be31824ea8ba82c3db51da74a1ad245537717a6d67271b  /tmp/homestun-test/sdk-native/root/usr/bin/lua
+005721aee62bcb21de67169aad469b502b7d9e7b44cfed73a89bf49e42a6d59a  /tmp/homestun-test/sdk-native/root/usr/bin/natmap
+PROBE pid=56387 pidfd_getfd=-1 errno=9 no_new_privs=0 seccomp=0
+PASS occupant bidirectional traffic
+tcp        0      0 127.0.0.1:18443         127.0.0.1:58144         ESTABLISHED 
+tcp        0      0 127.0.0.1:58144         127.0.0.1:18443         ESTABLISHED 
+/tmp/homestun-test/sdk-native/root/etc/homestun/cert.pem: OK
+/tmp/homestun-test/sdk-native/root/etc/homestun/key.pem: OK
+PASS occupant bidirectional traffic
+BOUND mode=expiry ttl=5 observed_cleanup_seconds=8
+
+EXIT 1
+$ test ! -e /tmp/homestun-test/sdk-native && mkdir -p /tmp/homestun-test/sdk-native && chmod 700 /tmp/homestun-test /tmp/homestun-test/sdk-native && tar xzf - -C /tmp/homestun-test/sdk-native
+
+EXIT 0
+$ sha256sum -c -
+/tmp/homestun-test/sdk-native/root/usr/libexec/homestun-lease: OK
+/tmp/homestun-test/sdk-native/root/usr/share/homestun/config-cli.lua: OK
+/tmp/homestun-test/sdk-native/root/usr/share/homestun/config.lua: OK
+/tmp/homestun-test/sdk-native/root/usr/share/homestun/core.lua: OK
+/tmp/homestun-test/sdk-native/probe: OK
+/tmp/homestun-test/sdk-native/run.sh: OK
+
+EXIT 0
+$ timeout 140 sh /tmp/homestun-test/sdk-native/run.sh
+540b98eb8be0ed039d9f8bb19b52d287f1b5c7d594321b397e3d8783e50072a4  /tmp/homestun-test/sdk-native/root/usr/libexec/homestun-lease
+2fe80767382dba3691c50aebd72afa40d7ffe46a384e7c4edfa22ae70bba5fcf  /tmp/homestun-test/sdk-native/root/usr/share/homestun/config-cli.lua
+6d30c4421f4ff7071454f22c4dd6c8db35ac10dc851890df2496824226fd1735  /tmp/homestun-test/sdk-native/root/usr/share/homestun/config.lua
+c6e148db828a47f478176ccaa85fb5a92c52e203985ac6bdac70de7425744a0d  /tmp/homestun-test/sdk-native/root/usr/share/homestun/core.lua
+d24cceeb3b33fb61545b7c50b49be6299167959ffcdebf6d765dc4a67bb3d0f1  /tmp/homestun-test/sdk-native/root/usr/sbin/nginx
+1ba8c5630db7aed170be31824ea8ba82c3db51da74a1ad245537717a6d67271b  /tmp/homestun-test/sdk-native/root/usr/bin/lua
+005721aee62bcb21de67169aad469b502b7d9e7b44cfed73a89bf49e42a6d59a  /tmp/homestun-test/sdk-native/root/usr/bin/natmap
+PROBE pid=57985 pidfd_getfd=-1 errno=9 no_new_privs=0 seccomp=0
+PASS occupant bidirectional traffic
+tcp        0      0 127.0.0.1:18443         127.0.0.1:42072         ESTABLISHED 
+tcp        0      0 127.0.0.1:42072         127.0.0.1:18443         ESTABLISHED 
+/tmp/homestun-test/sdk-native/root/etc/homestun/cert.pem: OK
+/tmp/homestun-test/sdk-native/root/etc/homestun/key.pem: OK
+PASS occupant bidirectional traffic
+BOUND mode=expiry ttl=5 observed_cleanup_seconds=9
+curl: (56) OpenSSL SSL_read: OpenSSL/3.6.4: error:0A000126:SSL routines::unexpected eof while reading, errno 0
+PASS expiry established TLS stream closed before client timeout
+nginx: the configuration file /tmp/homestun-service-1e8eef005bfa616b48000f8b286cbbb7/nginx.conf syntax is ok
+nginx: configuration file /tmp/homestun-service-1e8eef005bfa616b48000f8b286cbbb7/nginx.conf test is successful
+PROBE pid=59280 pidfd_getfd=-1 errno=1 no_new_privs=1 seccomp=2
+FOREIGN pid=57966 fd=3 import=-1 errno=1
+PASS SDK real-nginx expiry bounded cleanup; NATMap syscall-only fixture
+/tmp/homestun-test/sdk-native/root/etc/homestun/cert.pem: OK
+/tmp/homestun-test/sdk-native/root/etc/homestun/key.pem: OK
+PASS occupant bidirectional traffic
+BOUND mode=controller-KILL ttl=5 observed_cleanup_seconds=8
+nginx: the configuration file /tmp/homestun-service-8127bf8db12e3675dc10835e78ece12b/nginx.conf syntax is ok
+nginx: configuration file /tmp/homestun-service-8127bf8db12e3675dc10835e78ece12b/nginx.conf test is successful
+PROBE pid=60662 pidfd_getfd=-1 errno=1 no_new_privs=1 seccomp=2
+FOREIGN pid=57966 fd=3 import=-1 errno=1
+PASS SDK real-nginx controller-KILL bounded cleanup; NATMap syscall-only fixture
+/tmp/homestun-test/sdk-native/root/etc/homestun/cert.pem: OK
+/tmp/homestun-test/sdk-native/root/etc/homestun/key.pem: OK
+PASS occupant bidirectional traffic
+BOUND mode=controller-STOP ttl=5 observed_cleanup_seconds=8
+nginx: the configuration file /tmp/homestun-service-8466d1d43aa382c4bf746287c2db7e65/nginx.conf syntax is ok
+nginx: configuration file /tmp/homestun-service-8466d1d43aa382c4bf746287c2db7e65/nginx.conf test is successful
+PROBE pid=62024 pidfd_getfd=-1 errno=1 no_new_privs=1 seccomp=2
+FOREIGN pid=57966 fd=3 import=-1 errno=1
+PASS SDK real-nginx controller-STOP bounded cleanup; NATMap syscall-only fixture
+/tmp/homestun-test/sdk-native/root/etc/homestun/cert.pem: OK
+/tmp/homestun-test/sdk-native/root/etc/homestun/key.pem: OK
+PASS occupant bidirectional traffic
+BOUND mode=guardian-KILL ttl=5 observed_cleanup_seconds=8
+nginx: the configuration file /tmp/homestun-service-df9979a002556fbc283f3b7b8e986d49/nginx.conf syntax is ok
+nginx: configuration file /tmp/homestun-service-df9979a002556fbc283f3b7b8e986d49/nginx.conf test is successful
+PROBE pid=63373 pidfd_getfd=-1 errno=1 no_new_privs=1 seccomp=2
+FOREIGN pid=57966 fd=3 import=-1 errno=1
+PASS SDK real-nginx guardian-KILL bounded cleanup; NATMap syscall-only fixture
+/tmp/homestun-test/sdk-native/root/etc/homestun/cert.pem: OK
+/tmp/homestun-test/sdk-native/root/etc/homestun/key.pem: OK
+PASS occupant bidirectional traffic
+BOUND mode=guardian-STOP ttl=5 observed_cleanup_seconds=7
+nginx: the configuration file /tmp/homestun-service-96ea75fef8d2b67f005984bf310cac7c/nginx.conf syntax is ok
+nginx: configuration file /tmp/homestun-service-96ea75fef8d2b67f005984bf310cac7c/nginx.conf test is successful
+PROBE pid=64735 pidfd_getfd=-1 errno=1 no_new_privs=1 seccomp=2
+FOREIGN pid=57966 fd=3 import=-1 errno=1
+PASS SDK real-nginx guardian-STOP bounded cleanup; NATMap syscall-only fixture
+/tmp/homestun-test/sdk-native/root/etc/homestun/cert.pem: OK
+/tmp/homestun-test/sdk-native/root/etc/homestun/key.pem: OK
+PASS occupant bidirectional traffic
+BOUND mode=engine-KILL ttl=5 observed_cleanup_seconds=8
+nginx: the configuration file /tmp/homestun-service-fa998e982957f13c063edce5b1c925ce/nginx.conf syntax is ok
+nginx: configuration file /tmp/homestun-service-fa998e982957f13c063edce5b1c925ce/nginx.conf test is successful
+PROBE pid=66133 pidfd_getfd=-1 errno=1 no_new_privs=1 seccomp=2
+FOREIGN pid=57966 fd=3 import=-1 errno=1
+PASS SDK real-nginx engine-KILL bounded cleanup; NATMap syscall-only fixture
+INJECT nginx KILL pid=67516
+/tmp/homestun-test/sdk-native/root/etc/homestun/cert.pem: OK
+/tmp/homestun-test/sdk-native/root/etc/homestun/key.pem: OK
+PASS occupant bidirectional traffic
+BOUND mode=nginx-KILL ttl=5 observed_cleanup_seconds=9
+nginx: the configuration file /tmp/homestun-service-9bca4baa1fe7ff51e0ec3dce09cb9af7/nginx.conf syntax is ok
+nginx: configuration file /tmp/homestun-service-9bca4baa1fe7ff51e0ec3dce09cb9af7/nginx.conf test is successful
+PROBE pid=67515 pidfd_getfd=-1 errno=1 no_new_privs=1 seccomp=2
+FOREIGN pid=57966 fd=3 import=-1 errno=1
+PASS SDK real-nginx nginx-KILL bounded cleanup; NATMap syscall-only fixture
+/tmp/homestun-test/sdk-native/root/etc/homestun/cert.pem: OK
+/tmp/homestun-test/sdk-native/root/etc/homestun/key.pem: OK
+PASS occupant bidirectional traffic
+PASS SDK preparation KILL cleanup before real Lua render
+/tmp/homestun-test/sdk-native/root/etc/homestun/cert.pem: OK
+/tmp/homestun-test/sdk-native/root/etc/homestun/key.pem: OK
+PASS occupant bidirectional traffic
+PASS SDK preparation STOP cleanup before real Lua render
+{
+	"homestun-sdk-native-fixture-20261012": {
+		"instances": {
+			"lease": {
+				"running": true,
+				"pid": 67791,
+				"command": [
+					"/usr/sbin/chroot",
+					"/tmp/homestun-test/sdk-native/root",
+					"/usr/libexec/homestun-lease",
+					"--provision",
+					"5",
+					"18444",
+					"18443",
+					"example.com",
+					"example.com"
+				],
+				"term_timeout": 1
+			}
+		}
+	}
+}
+/tmp/homestun-test/sdk-native/root/etc/homestun/cert.pem: OK
+/tmp/homestun-test/sdk-native/root/etc/homestun/key.pem: OK
+PASS occupant bidirectional traffic
+PASS SDK genuine procd STOP TERM KILL cleanup and service absence
+/tmp/homestun-test/sdk-native/root/etc/homestun/cert.pem: OK
+/tmp/homestun-test/sdk-native/root/etc/homestun/key.pem: OK
+PASS occupant bidirectional traffic
+nginx: the configuration file /tmp/homestun-service-1ecf12b15b1eddd330e2ce210eff0e21/nginx.conf syntax is ok
+nginx: configuration file /tmp/homestun-service-1ecf12b15b1eddd330e2ce210eff0e21/nginx.conf test is successful
+NATMap seccomp boundary: Operation not permitted
+PASS unavailable seccomp installation fail-closed
+OCCUPANT pid=57966 fd=3 reuseport=0
+PASS occupant final SO_REUSEPORT=0
+Active Internet connections (only servers)
+Proto Recv-Q Send-Q Local Address           Foreign Address         State       
+tcp        0      0 192.168.1.2:53          0.0.0.0:*               LISTEN      
+tcp        0      0 0.0.0.0:443             0.0.0.0:*               LISTEN      
+tcp        0      0 192.168.1.2:22          0.0.0.0:*               LISTEN      
+tcp        0      0 172.17.0.1:2004         0.0.0.0:*               LISTEN      
+tcp        0      0 192.168.1.2:139         0.0.0.0:*               LISTEN      
+tcp        0      0 0.0.0.0:5355            0.0.0.0:*               LISTEN      
+tcp        0      0 127.0.0.1:53            0.0.0.0:*               LISTEN      
+tcp        0      0 0.0.0.0:80              0.0.0.0:*               LISTEN      
+tcp        0      0 192.168.1.2:445         0.0.0.0:*               LISTEN      
+tcp        0      0 0.0.0.0:1026            0.0.0.0:*               LISTEN      
+tcp        0      0 0.0.0.0:21              0.0.0.0:*               LISTEN      
+tcp        0      0 192.168.1.2:7681        0.0.0.0:*               LISTEN      
+tcp        0      0 127.0.0.1:2002          0.0.0.0:*               LISTEN      
+tcp        0      0 127.0.0.1:2003          0.0.0.0:*               LISTEN      
+tcp        0      0 127.0.0.1:2004          0.0.0.0:*               LISTEN      
+tcp        0      0 172.17.0.1:53           0.0.0.0:*               LISTEN      
+tcp        0      0 0.0.0.0:60000           0.0.0.0:*               LISTEN      
+tcp        0      0 0.0.0.0:3702            0.0.0.0:*               LISTEN      
+tcp        0      0 192.168.1.2:2004        0.0.0.0:*               LISTEN      
+tcp        0      0 fd89:878e:a47f::1:22    :::*                    LISTEN      
+tcp        0      0 ::1:2004                :::*                    LISTEN      
+tcp        0      0 fd89:878e:a47f::1:53    :::*                    LISTEN      
+tcp        0      0 :::5355                 :::*                    LISTEN      
+tcp        0      0 :::80                   :::*                    LISTEN      
+tcp        0      0 :::1070                 :::*                    LISTEN      
+tcp        0      0 fe80::290:a6ff:fee0:382c:53 :::*                    LISTEN      
+tcp        0      0 fe80::290:a6ff:fee0:382c:2004 :::*                    LISTEN      
+tcp        0      0 :::2001                 :::*                    LISTEN      
+tcp        0      0 :::9876                 :::*                    LISTEN      
+tcp        0      0 :::3702                 :::*                    LISTEN      
+tcp        0      0 fd89:878e:a47f::1:2004  :::*                    LISTEN      
+tcp        0      0 ::1:53                  :::*                    LISTEN      
+
+EXIT 0
+$ test ! -e /tmp/homestun-test/sdk-native && mkdir -p /tmp/homestun-test/sdk-native && chmod 700 /tmp/homestun-test /tmp/homestun-test/sdk-native && tar xzf - -C /tmp/homestun-test/sdk-native
+
+EXIT 0
+$ sha256sum -c -
+/tmp/homestun-test/sdk-native/root/usr/libexec/homestun-lease: OK
+/tmp/homestun-test/sdk-native/root/usr/share/homestun/config-cli.lua: OK
+/tmp/homestun-test/sdk-native/root/usr/share/homestun/config.lua: OK
+/tmp/homestun-test/sdk-native/root/usr/share/homestun/core.lua: OK
+/tmp/homestun-test/sdk-native/probe: OK
+/tmp/homestun-test/sdk-native/run.sh: OK
+
+EXIT 0
+$ timeout 140 sh /tmp/homestun-test/sdk-native/run.sh
+540b98eb8be0ed039d9f8bb19b52d287f1b5c7d594321b397e3d8783e50072a4  /tmp/homestun-test/sdk-native/root/usr/libexec/homestun-lease
+2fe80767382dba3691c50aebd72afa40d7ffe46a384e7c4edfa22ae70bba5fcf  /tmp/homestun-test/sdk-native/root/usr/share/homestun/config-cli.lua
+6d30c4421f4ff7071454f22c4dd6c8db35ac10dc851890df2496824226fd1735  /tmp/homestun-test/sdk-native/root/usr/share/homestun/config.lua
+c6e148db828a47f478176ccaa85fb5a92c52e203985ac6bdac70de7425744a0d  /tmp/homestun-test/sdk-native/root/usr/share/homestun/core.lua
+d24cceeb3b33fb61545b7c50b49be6299167959ffcdebf6d765dc4a67bb3d0f1  /tmp/homestun-test/sdk-native/root/usr/sbin/nginx
+1ba8c5630db7aed170be31824ea8ba82c3db51da74a1ad245537717a6d67271b  /tmp/homestun-test/sdk-native/root/usr/bin/lua
+005721aee62bcb21de67169aad469b502b7d9e7b44cfed73a89bf49e42a6d59a  /tmp/homestun-test/sdk-native/root/usr/bin/natmap
+PROBE pid=69870 pidfd_getfd=-1 errno=9 no_new_privs=0 seccomp=0
+PASS occupant bidirectional traffic
+tcp        0      0 127.0.0.1:39970         127.0.0.1:18443         ESTABLISHED 
+tcp        0      0 127.0.0.1:18443         127.0.0.1:39970         ESTABLISHED 
+/tmp/homestun-test/sdk-native/root/etc/homestun/cert.pem: OK
+/tmp/homestun-test/sdk-native/root/etc/homestun/key.pem: OK
+/tmp/homestun-test/sdk-native/root/tmp/homestun-service-Foreign/key.pem: OK
+PASS occupant bidirectional traffic
+PASS cleanup observed before resuming any stopped supervisor mode=expiry
+BOUND mode=expiry ttl=5 observed_cleanup_seconds=9
+curl: (56) OpenSSL SSL_read: OpenSSL/3.6.4: error:0A000126:SSL routines::unexpected eof while reading, errno 0
+PASS expiry established TLS stream closed before client timeout
+nginx: the configuration file /tmp/homestun-service-496143262700cba034d27c6c5b6c03e4/nginx.conf syntax is ok
+nginx: configuration file /tmp/homestun-service-496143262700cba034d27c6c5b6c03e4/nginx.conf test is successful
+PROBE pid=71188 pidfd_getfd=-1 errno=1 no_new_privs=1 seccomp=2
+FOREIGN pid=69851 fd=3 import=-1 errno=1
+PASS SDK real-nginx expiry bounded cleanup; NATMap syscall-only fixture
+/tmp/homestun-test/sdk-native/root/etc/homestun/cert.pem: OK
+/tmp/homestun-test/sdk-native/root/etc/homestun/key.pem: OK
+/tmp/homestun-test/sdk-native/root/tmp/homestun-service-Foreign/key.pem: OK
+PASS occupant bidirectional traffic
+PASS cleanup observed before resuming any stopped supervisor mode=TERM
+BOUND mode=TERM ttl=5 observed_cleanup_seconds=8
+nginx: the configuration file /tmp/homestun-service-151459b91e5162db362f8c6d127f8ea9/nginx.conf syntax is ok
+nginx: configuration file /tmp/homestun-service-151459b91e5162db362f8c6d127f8ea9/nginx.conf test is successful
+PROBE pid=72573 pidfd_getfd=-1 errno=1 no_new_privs=1 seccomp=2
+FOREIGN pid=69851 fd=3 import=-1 errno=1
+PASS SDK real-nginx TERM bounded cleanup; NATMap syscall-only fixture
+/tmp/homestun-test/sdk-native/root/etc/homestun/cert.pem: OK
+/tmp/homestun-test/sdk-native/root/etc/homestun/key.pem: OK
+/tmp/homestun-test/sdk-native/root/tmp/homestun-service-Foreign/key.pem: OK
+PASS occupant bidirectional traffic
+PASS cleanup observed before resuming any stopped supervisor mode=controller-KILL
+BOUND mode=controller-KILL ttl=5 observed_cleanup_seconds=8
+nginx: the configuration file /tmp/homestun-service-b8c6e8428dacc4d66bed087bf765b16a/nginx.conf syntax is ok
+nginx: configuration file /tmp/homestun-service-b8c6e8428dacc4d66bed087bf765b16a/nginx.conf test is successful
+PROBE pid=73938 pidfd_getfd=-1 errno=1 no_new_privs=1 seccomp=2
+FOREIGN pid=69851 fd=3 import=-1 errno=1
+PASS SDK real-nginx controller-KILL bounded cleanup; NATMap syscall-only fixture
+/tmp/homestun-test/sdk-native/root/etc/homestun/cert.pem: OK
+/tmp/homestun-test/sdk-native/root/etc/homestun/key.pem: OK
+/tmp/homestun-test/sdk-native/root/tmp/homestun-service-Foreign/key.pem: OK
+PASS occupant bidirectional traffic
+PASS cleanup observed before resuming any stopped supervisor mode=controller-STOP
+BOUND mode=controller-STOP ttl=5 observed_cleanup_seconds=8
+nginx: the configuration file /tmp/homestun-service-5120f548151bb089efef8b4d951e2e3f/nginx.conf syntax is ok
+nginx: configuration file /tmp/homestun-service-5120f548151bb089efef8b4d951e2e3f/nginx.conf test is successful
+PROBE pid=75302 pidfd_getfd=-1 errno=1 no_new_privs=1 seccomp=2
+FOREIGN pid=69851 fd=3 import=-1 errno=1
+PASS SDK real-nginx controller-STOP bounded cleanup; NATMap syscall-only fixture
+/tmp/homestun-test/sdk-native/root/etc/homestun/cert.pem: OK
+/tmp/homestun-test/sdk-native/root/etc/homestun/key.pem: OK
+/tmp/homestun-test/sdk-native/root/tmp/homestun-service-Foreign/key.pem: OK
+PASS occupant bidirectional traffic
+PASS cleanup observed before resuming any stopped supervisor mode=guardian-KILL
+BOUND mode=guardian-KILL ttl=5 observed_cleanup_seconds=8
+nginx: the configuration file /tmp/homestun-service-bf27b8a6b155610187e91221c1d04136/nginx.conf syntax is ok
+nginx: configuration file /tmp/homestun-service-bf27b8a6b155610187e91221c1d04136/nginx.conf test is successful
+PROBE pid=76693 pidfd_getfd=-1 errno=1 no_new_privs=1 seccomp=2
+FOREIGN pid=69851 fd=3 import=-1 errno=1
+PASS SDK real-nginx guardian-KILL bounded cleanup; NATMap syscall-only fixture
+/tmp/homestun-test/sdk-native/root/etc/homestun/cert.pem: OK
+/tmp/homestun-test/sdk-native/root/etc/homestun/key.pem: OK
+/tmp/homestun-test/sdk-native/root/tmp/homestun-service-Foreign/key.pem: OK
+PASS occupant bidirectional traffic
+PASS cleanup observed before resuming any stopped supervisor mode=guardian-STOP
+BOUND mode=guardian-STOP ttl=5 observed_cleanup_seconds=8
+nginx: the configuration file /tmp/homestun-service-1199c5f0ce49c0c1411c52b9968d24af/nginx.conf syntax is ok
+nginx: configuration file /tmp/homestun-service-1199c5f0ce49c0c1411c52b9968d24af/nginx.conf test is successful
+PROBE pid=78094 pidfd_getfd=-1 errno=1 no_new_privs=1 seccomp=2
+FOREIGN pid=69851 fd=3 import=-1 errno=1
+PASS SDK real-nginx guardian-STOP bounded cleanup; NATMap syscall-only fixture
+/tmp/homestun-test/sdk-native/root/etc/homestun/cert.pem: OK
+/tmp/homestun-test/sdk-native/root/etc/homestun/key.pem: OK
+/tmp/homestun-test/sdk-native/root/tmp/homestun-service-Foreign/key.pem: OK
+PASS occupant bidirectional traffic
+PASS cleanup observed before resuming any stopped supervisor mode=engine-KILL
+BOUND mode=engine-KILL ttl=5 observed_cleanup_seconds=8
+nginx: the configuration file /tmp/homestun-service-2555c981a67465f6892ea989531eddaf/nginx.conf syntax is ok
+nginx: configuration file /tmp/homestun-service-2555c981a67465f6892ea989531eddaf/nginx.conf test is successful
+PROBE pid=79434 pidfd_getfd=-1 errno=1 no_new_privs=1 seccomp=2
+FOREIGN pid=69851 fd=3 import=-1 errno=1
+PASS SDK real-nginx engine-KILL bounded cleanup; NATMap syscall-only fixture
+INJECT nginx KILL pid=80779
+/tmp/homestun-test/sdk-native/root/etc/homestun/cert.pem: OK
+/tmp/homestun-test/sdk-native/root/etc/homestun/key.pem: OK
+/tmp/homestun-test/sdk-native/root/tmp/homestun-service-Foreign/key.pem: OK
+PASS occupant bidirectional traffic
+PASS cleanup observed before resuming any stopped supervisor mode=nginx-KILL
+BOUND mode=nginx-KILL ttl=5 observed_cleanup_seconds=8
+nginx: the configuration file /tmp/homestun-service-8be4714d51b19a12ecc9c96bb6822cf5/nginx.conf syntax is ok
+nginx: configuration file /tmp/homestun-service-8be4714d51b19a12ecc9c96bb6822cf5/nginx.conf test is successful
+PROBE pid=80778 pidfd_getfd=-1 errno=1 no_new_privs=1 seccomp=2
+FOREIGN pid=69851 fd=3 import=-1 errno=1
+PASS SDK real-nginx nginx-KILL bounded cleanup; NATMap syscall-only fixture
+/tmp/homestun-test/sdk-native/root/etc/homestun/cert.pem: OK
+/tmp/homestun-test/sdk-native/root/etc/homestun/key.pem: OK
+/tmp/homestun-test/sdk-native/root/tmp/homestun-service-Foreign/key.pem: OK
+PASS occupant bidirectional traffic
+PASS SDK preparation KILL cleanup before real Lua render
+/tmp/homestun-test/sdk-native/root/etc/homestun/cert.pem: OK
+/tmp/homestun-test/sdk-native/root/etc/homestun/key.pem: OK
+/tmp/homestun-test/sdk-native/root/tmp/homestun-service-Foreign/key.pem: OK
+PASS occupant bidirectional traffic
+PASS SDK preparation STOP cleanup before real Lua render
+{
+	"homestun-sdk-native-fixture-20261012": {
+		"instances": {
+			"lease": {
+				"running": true,
+				"pid": 81060,
+				"command": [
+					"/usr/sbin/chroot",
+					"/tmp/homestun-test/sdk-native/root",
+					"/usr/libexec/homestun-lease",
+					"--provision",
+					"5",
+					"18444",
+					"18443",
+					"example.com",
+					"example.com"
+				],
+				"term_timeout": 1
+			}
+		}
+	}
+}
+/tmp/homestun-test/sdk-native/root/etc/homestun/cert.pem: OK
+/tmp/homestun-test/sdk-native/root/etc/homestun/key.pem: OK
+/tmp/homestun-test/sdk-native/root/tmp/homestun-service-Foreign/key.pem: OK
+PASS occupant bidirectional traffic
+PASS SDK genuine procd STOP TERM KILL cleanup and service absence
+/tmp/homestun-test/sdk-native/root/etc/homestun/cert.pem: OK
+/tmp/homestun-test/sdk-native/root/etc/homestun/key.pem: OK
+/tmp/homestun-test/sdk-native/root/tmp/homestun-service-Foreign/key.pem: OK
+PASS occupant bidirectional traffic
+nginx: the configuration file /tmp/homestun-service-396a101e6a8ac6d8a13743bc68b16ccc/nginx.conf syntax is ok
+nginx: configuration file /tmp/homestun-service-396a101e6a8ac6d8a13743bc68b16ccc/nginx.conf test is successful
+NATMap seccomp boundary: Operation not permitted
+PASS unavailable seccomp installation fail-closed
+OCCUPANT pid=69851 fd=3 reuseport=0
+PASS occupant final SO_REUSEPORT=0
+Active Internet connections (only servers)
+Proto Recv-Q Send-Q Local Address           Foreign Address         State       
+tcp        0      0 192.168.1.2:53          0.0.0.0:*               LISTEN      
+tcp        0      0 0.0.0.0:443             0.0.0.0:*               LISTEN      
+tcp        0      0 192.168.1.2:22          0.0.0.0:*               LISTEN      
+tcp        0      0 172.17.0.1:2004         0.0.0.0:*               LISTEN      
+tcp        0      0 192.168.1.2:139         0.0.0.0:*               LISTEN      
+tcp        0      0 0.0.0.0:5355            0.0.0.0:*               LISTEN      
+tcp        0      0 127.0.0.1:53            0.0.0.0:*               LISTEN      
+tcp        0      0 0.0.0.0:80              0.0.0.0:*               LISTEN      
+tcp        0      0 192.168.1.2:445         0.0.0.0:*               LISTEN      
+tcp        0      0 0.0.0.0:1026            0.0.0.0:*               LISTEN      
+tcp        0      0 0.0.0.0:21              0.0.0.0:*               LISTEN      
+tcp        0      0 192.168.1.2:7681        0.0.0.0:*               LISTEN      
+tcp        0      0 127.0.0.1:2002          0.0.0.0:*               LISTEN      
+tcp        0      0 127.0.0.1:2003          0.0.0.0:*               LISTEN      
+tcp        0      0 127.0.0.1:2004          0.0.0.0:*               LISTEN      
+tcp        0      0 172.17.0.1:53           0.0.0.0:*               LISTEN      
+tcp        0      0 0.0.0.0:60000           0.0.0.0:*               LISTEN      
+tcp        0      0 0.0.0.0:3702            0.0.0.0:*               LISTEN      
+tcp        0      0 192.168.1.2:2004        0.0.0.0:*               LISTEN      
+tcp        0      0 fd89:878e:a47f::1:22    :::*                    LISTEN      
+tcp        0      0 ::1:2004                :::*                    LISTEN      
+tcp        0      0 fd89:878e:a47f::1:53    :::*                    LISTEN      
+tcp        0      0 :::5355                 :::*                    LISTEN      
+tcp        0      0 :::80                   :::*                    LISTEN      
+tcp        0      0 :::1070                 :::*                    LISTEN      
+tcp        0      0 fe80::290:a6ff:fee0:382c:53 :::*                    LISTEN      
+tcp        0      0 fe80::290:a6ff:fee0:382c:2004 :::*                    LISTEN      
+tcp        0      0 :::2001                 :::*                    LISTEN      
+tcp        0      0 :::9876                 :::*                    LISTEN      
+tcp        0      0 :::3702                 :::*                    LISTEN      
+tcp        0      0 fd89:878e:a47f::1:2004  :::*                    LISTEN      
+tcp        0      0 ::1:53                  :::*                    LISTEN      
+
+EXIT 0

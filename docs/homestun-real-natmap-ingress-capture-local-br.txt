@@ -1,0 +1,25 @@
+READY interface=br-lan peer=192.168.1.2 tcp_port=18444 seconds=90 headers_only no_promisc
+epoch=1791797820 if=br-lan direction=out src=192.168.1.2:18444 dst=172.66.147.243:80 flags=0x02 iplen=60 captured=40
+epoch=1791797820 if=br-lan direction=in src=172.66.147.243:80 dst=192.168.1.2:18444 flags=0x12 iplen=60 captured=40
+epoch=1791797820 if=br-lan direction=out src=192.168.1.2:18444 dst=172.66.147.243:80 flags=0x10 iplen=52 captured=40
+epoch=1791797820 if=br-lan direction=out src=192.168.1.2:18444 dst=172.66.147.243:80 flags=0x18 iplen=114 captured=40
+epoch=1791797820 if=br-lan direction=out src=192.168.1.2:18444 dst=141.101.90.1:3478 flags=0x02 iplen=60 captured=40
+epoch=1791797821 if=br-lan direction=in src=141.101.90.1:3478 dst=192.168.1.2:18444 flags=0x12 iplen=60 captured=40
+epoch=1791797821 if=br-lan direction=out src=192.168.1.2:18444 dst=141.101.90.1:3478 flags=0x10 iplen=52 captured=40
+epoch=1791797821 if=br-lan direction=out src=192.168.1.2:18444 dst=141.101.90.1:3478 flags=0x18 iplen=72 captured=40
+epoch=1791797821 if=br-lan direction=in src=172.66.147.243:80 dst=192.168.1.2:18444 flags=0x10 iplen=52 captured=40
+epoch=1791797821 if=br-lan direction=in src=172.66.147.243:80 dst=192.168.1.2:18444 flags=0x18 iplen=371 captured=40
+epoch=1791797821 if=br-lan direction=out src=192.168.1.2:18444 dst=172.66.147.243:80 flags=0x10 iplen=52 captured=40
+epoch=1791797821 if=br-lan direction=in src=141.101.90.1:3478 dst=192.168.1.2:18444 flags=0x10 iplen=52 captured=40
+epoch=1791797821 if=br-lan direction=in src=141.101.90.1:3478 dst=192.168.1.2:18444 flags=0x18 iplen=92 captured=40
+epoch=1791797821 if=br-lan direction=out src=192.168.1.2:18444 dst=141.101.90.1:3478 flags=0x10 iplen=52 captured=40
+epoch=1791797821 if=br-lan direction=out src=192.168.1.2:18444 dst=141.101.90.1:3478 flags=0x11 iplen=52 captured=40
+epoch=1791797821 if=br-lan direction=in src=141.101.90.1:3478 dst=192.168.1.2:18444 flags=0x11 iplen=52 captured=40
+epoch=1791797821 if=br-lan direction=out src=192.168.1.2:18444 dst=141.101.90.1:3478 flags=0x10 iplen=52 captured=40
+epoch=1791797851 if=br-lan direction=out src=192.168.1.2:18444 dst=172.66.147.243:80 flags=0x18 iplen=114 captured=40
+epoch=1791797851 if=br-lan direction=in src=172.66.147.243:80 dst=192.168.1.2:18444 flags=0x18 iplen=371 captured=40
+epoch=1791797851 if=br-lan direction=out src=192.168.1.2:18444 dst=172.66.147.243:80 flags=0x10 iplen=52 captured=40
+epoch=1791797881 if=br-lan direction=out src=192.168.1.2:18444 dst=172.66.147.243:80 flags=0x18 iplen=114 captured=40
+epoch=1791797881 if=br-lan direction=in src=172.66.147.243:80 dst=192.168.1.2:18444 flags=0x18 iplen=371 captured=40
+epoch=1791797881 if=br-lan direction=out src=192.168.1.2:18444 dst=172.66.147.243:80 flags=0x10 iplen=52 captured=40
+END packets=23

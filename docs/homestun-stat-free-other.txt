@@ -1,0 +1,47 @@
+[E] set_reuse_port /home/eric/homestun-natmap-20260214/src/hev-misc.c:201
+..[E] set_reuse_port /home/eric/homestun-natmap-20260214/src/hev-misc.c:201
+.NATMap seccomp boundary: Invalid argument
+.
+----------------------------------------------------------------------
+Ran 4 tests in 9.185s
+
+OK
+.
+----------------------------------------------------------------------
+Ran 1 test in 3.277s
+
+OK
+mkdir -p /tmp/homestun-recipe-3ct8xuc8/build/homestun-0.1.0
+cp -fpR ./src/lease-supervisor.c /tmp/homestun-recipe-3ct8xuc8/build/homestun-0.1.0/
+gcc  -Os -static -Wall -Wextra -Werror -o /tmp/homestun-recipe-3ct8xuc8/build/homestun-0.1.0/homestun-lease /tmp/homestun-recipe-3ct8xuc8/build/homestun-0.1.0/lease-supervisor.c 
+mkdir -p /tmp/homestun-recipe-3ct8xuc8/root/usr/libexec /tmp/homestun-recipe-3ct8xuc8/root/usr/share/homestun /tmp/homestun-recipe-3ct8xuc8/root/etc/config /tmp/homestun-recipe-3ct8xuc8/root/etc/init.d /tmp/homestun-recipe-3ct8xuc8/root/etc/homestun
+install -m0755 /tmp/homestun-recipe-3ct8xuc8/build/homestun-0.1.0/homestun-lease /tmp/homestun-recipe-3ct8xuc8/root/usr/libexec/homestun-lease
+install -m0644 ./files/usr/share/homestun/*.lua /tmp/homestun-recipe-3ct8xuc8/root/usr/share/homestun/
+install -m0755 ./files/usr/share/homestun/lease-run.sh /tmp/homestun-recipe-3ct8xuc8/root/usr/share/homestun/
+install -m0600 ./files/etc/config/homestun /tmp/homestun-recipe-3ct8xuc8/root/etc/config/homestun
+install -m0755 ./files/etc/init.d/homestun /tmp/homestun-recipe-3ct8xuc8/root/etc/init.d/homestun
+chmod 0700 /tmp/homestun-recipe-3ct8xuc8/root/etc/homestun
+.
+----------------------------------------------------------------------
+Ran 1 test in 0.993s
+
+OK
+.
+----------------------------------------------------------------------
+Ran 1 test in 0.009s
+
+OK
+✔ Worker entry uses one Durable Object and fails closed on binding errors (25.3509ms)
+✔ portal fails closed when authentication secrets are absent (0.787ms)
+✔ expired, corrupted and absent leases block links; revoke closes portal (1.7128ms)
+✔ publisher cannot supply arbitrary targets, invalid ports, expired or unbounded leases (3.0512ms)
+✔ malformed JSON, oversized body, wrong origin and storage failure fail closed (1.0685ms)
+✔ only router role can publish bounded fixed-host lease; viewer gets no-store redirect (0.7107ms)
+ℹ tests 6
+ℹ suites 0
+ℹ pass 6
+ℹ fail 0
+ℹ cancelled 0
+ℹ skipped 0
+ℹ todo 0
+ℹ duration_ms 121.1654

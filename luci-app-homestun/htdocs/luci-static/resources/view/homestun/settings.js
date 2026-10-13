@@ -27,13 +27,18 @@ return view.extend({
    _('Configuration only. Saving does not open a lease. Enabling permits a later manual service start (and boot start if separately enabled). Each lease has a fixed TTL, no automatic renewal or respawn.'));
   var service = m.section(form.NamedSection, 'main', 'service', _('Lease configuration'));
   var s = service;
-  var originalParse = m.parse;
-  m.parse = function() {
+  var originalSave = m.save;
+  m.save = function(cb, silent) {
+   // TypedSection add/remove uses save(null, true) before new inputs exist.
+   // That only stages session edits and renders; explicit Save validates the
+   // complete form before staging or committing any enabled configuration.
+   if (silent === true)
+    return originalSave.call(this, cb, silent);
    var c = {}, hosts = [];
    ['enabled', 'exposure_approved', 'ttl', 'port', 'bind_port', 'stun_server', 'http_server'].forEach(function(k) { c[k] = service.formvalue('main', k); });
    hostSection.cfgsections().forEach(function(id) { hosts.push({name: hostSection.formvalue(id, 'name'), upstream: hostSection.formvalue(id, 'upstream')}); });
    var valid = schema.configuration(c, hosts);
-   return valid === true ? originalParse.call(this) : Promise.reject(new Error(_(valid)));
+   return valid === true ? originalSave.call(this, cb, silent) : Promise.reject(new Error(_(valid)));
   };
   function flag(name, label, description) {
    var o = s.option(form.Flag, name, label, description); o.default = '0'; o.rmempty = false; return o;

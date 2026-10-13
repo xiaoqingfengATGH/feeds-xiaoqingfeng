@@ -1,0 +1,31 @@
+PASS target stat absent
+PASS native provision expiry cleanup + originals/foreign
+PASS native provision TERM cleanup + originals/foreign
+PASS native provision KILL cleanup + originals/foreign
+PASS native provision STOP cleanup + originals/foreign
+PASS native preparation KILL during render cleanup
+PASS native preparation STOP during render cleanup
+{
+	"homestun-publication-final-fixture": {
+		"instances": {
+			"lease": {
+				"running": true,
+				"pid": 6875,
+				"command": [
+					"/usr/sbin/chroot",
+					"/tmp/homestun-test/publication-final/root",
+					"/usr/libexec/homestun-lease",
+					"--provision",
+					"4",
+					"18444",
+					"18443",
+					"example.com",
+					"example.com",
+					"publish"
+				],
+				"term_timeout": 1
+			}
+		}
+	}
+}
+PASS native real procd STOP->TERM->KILL cleanup; readback absent

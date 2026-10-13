@@ -1,0 +1,24 @@
+test_credential_boundaries_and_metadata (__main__.Security.test_credential_boundaries_and_metadata) ... ok
+test_publication_snapshot_cleanup_faults (__main__.Security.test_publication_snapshot_cleanup_faults) ... ok
+test_real_tls_trust_hostname_and_environment_isolation (__main__.Security.test_real_tls_trust_hostname_and_environment_isolation) ... ok
+
+----------------------------------------------------------------------
+Ran 3 tests in 21.826s
+
+OK
+✔ authenticated session reserves generation before mapping and fixed-host redirect (24.0723ms)
+✔ old sessions, delayed begins and out-of-order callbacks cannot overwrite or revive (2.43ms)
+✔ Worker entry uses one Durable Object and fails closed on binding errors (21.4843ms)
+✔ portal fails closed when authentication secrets are absent (0.5828ms)
+✔ expired, corrupted and absent leases block links; revoke closes portal (2.1151ms)
+✔ publisher cannot supply arbitrary targets, invalid ports, expired or unbounded leases (2.9642ms)
+✔ malformed JSON, oversized body, wrong origin and storage failure fail closed (0.9054ms)
+✔ only router role can publish bounded fixed-host lease; viewer gets no-store redirect (1.1908ms)
+ℹ tests 8
+ℹ suites 0
+ℹ pass 8
+ℹ fail 0
+ℹ cancelled 0
+ℹ skipped 0
+ℹ todo 0
+ℹ duration_ms 123.5579

@@ -1,0 +1,15 @@
+PASS target publisher token 31 valid=False
+PASS target provision token 31 valid=False snapshot-before-side-effects
+tmp/session-before tmp/homestun-tokencheck/session differ: byte 68, line 1
+PASS target publisher token 32 valid=True
+PASS target provision token 32 valid=True snapshot-before-side-effects
+tmp/session-before tmp/homestun-tokencheck/session differ: byte 68, line 1
+PASS target publisher token 127 valid=True
+PASS target provision token 127 valid=True snapshot-before-side-effects
+tmp/session-before tmp/homestun-tokencheck/session differ: byte 68, line 1
+PASS target publisher token 128 valid=True
+PASS target provision token 128 valid=True snapshot-before-side-effects
+PASS target publisher token 129 valid=False
+publication token size: Invalid argument
+publication token size: Invalid argument
+cmp: etc/home: No such file or directory

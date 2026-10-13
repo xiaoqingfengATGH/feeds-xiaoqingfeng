@@ -1,1 +1,1 @@
-{"luci-app-homestun":{"description":"HomeSTUN configuration and read-only validation status","read":{"uci":["homestun"],"ubus":{"homestun":["status"]}},"write":{"uci":["homestun"]}}}
+{"luci-app-homestun":{"description":"HomeSTUN configuration and read-only validation status","read":{"uci":["homestun"],"ubus":{"homestun":["status"]}},"write":{"uci":["homestun"],"ubus":{"uci":["commit"]}}}}

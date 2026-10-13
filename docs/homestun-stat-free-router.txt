@@ -1,0 +1,29 @@
+genuine-target-no-stat
+PASS BusyBox expiry owned cleanup + foreign/original preservation
+PASS BusyBox TERM owned cleanup + foreign/original preservation
+PASS BusyBox KILL owned cleanup + foreign/original preservation
+PASS BusyBox STOP owned cleanup + foreign/original preservation
+{
+	"homestun-source-cleanup-fixture": {
+		"instances": {
+			"lease": {
+				"running": true,
+				"pid": 85225,
+				"command": [
+					"/usr/sbin/chroot",
+					"/tmp/homestun-test/source-cleanup-fixture/root",
+					"/bin/sh",
+					"/usr/share/homestun/lease-run.sh",
+					"/tmp/homestun-service-Test123",
+					"2",
+					"18444",
+					"18443",
+					"example.com",
+					"example.com"
+				],
+				"term_timeout": 1
+			}
+		}
+	}
+}
+PASS isolated real procd STOP->TERM->KILL cleanup; service readback absent

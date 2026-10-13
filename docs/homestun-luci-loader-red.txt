@@ -1,0 +1,1 @@
+{"loader":"FAIL","error":"\"view.homestun.schema\" factory yields invalid constructor\n  at http://127.0.0.1:18991/luci-static/resources/luci.js:175:16"}

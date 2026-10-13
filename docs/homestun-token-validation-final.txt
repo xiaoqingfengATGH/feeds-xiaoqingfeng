@@ -1,0 +1,7 @@
+test_provision_rejects_before_token_snapshot (__main__.TokenValidation.test_provision_rejects_before_token_snapshot) ... ok
+test_publisher_whole_file_before_sequence_or_transport (__main__.TokenValidation.test_publisher_whole_file_before_sequence_or_transport) ... ok
+
+----------------------------------------------------------------------
+Ran 2 tests in 21.661s
+
+OK

@@ -15,7 +15,7 @@ test('independent menu and least-privilege ACL permit only homestun UCI and stat
  assert(fs.existsSync(aclPath),'HomeSTUN ACL exists');
  const acl=JSON.parse(fs.readFileSync(aclPath))['luci-app-homestun'];
  assert.deepEqual(acl.read,{uci:['homestun'],ubus:{homestun:['status']}});
- assert.deepEqual(acl.write,{uci:['homestun']});
+ assert.deepEqual(acl.write,{uci:['homestun'],ubus:{uci:['commit']}});
  const menu=JSON.parse(fs.readFileSync(path.join(base,'root/usr/share/luci/menu.d/luci-app-homestun.json')));
  assert.equal(menu['admin/services/homestun'].action.path,'homestun/settings');
  assert.deepEqual(menu['admin/services/homestun'].depends.acl,['luci-app-homestun']);

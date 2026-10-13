@@ -1,0 +1,31 @@
+test_adapter_sigkill_removes_owned_sources (__main__.SourceCleanup.test_adapter_sigkill_removes_owned_sources) ... ok
+test_adapter_stop_does_not_delay_cleanup (__main__.SourceCleanup.test_adapter_stop_does_not_delay_cleanup) ... ok
+test_competing_adapter_preserves_active_runtime (__main__.SourceCleanup.test_competing_adapter_preserves_active_runtime) ... ok
+test_controller_sigkill_removes_owned_sources (__main__.SourceCleanup.test_controller_sigkill_removes_owned_sources) ... ok
+test_disable_term_removes_private_sources (__main__.SourceCleanup.test_disable_term_removes_private_sources) ... ok
+test_failure_before_detached_watcher_leaves_no_sources (__main__.SourceCleanup.test_failure_before_detached_watcher_leaves_no_sources) ... ok
+test_guardian_sigkill_removes_owned_sources (__main__.SourceCleanup.test_guardian_sigkill_removes_owned_sources) ... ok
+test_init_death_and_later_submission_rejection_create_no_sources (__main__.SourceCleanup.test_init_death_and_later_submission_rejection_create_no_sources) ... ok
+test_init_registers_native_provisioner (__main__.SourceCleanup.test_init_registers_native_provisioner) ... ok
+test_init_registration_failure_removes_private_sources (__main__.SourceCleanup.test_init_registration_failure_removes_private_sources) ... ok
+test_native_metadata_without_stat (__main__.SourceCleanup.test_native_metadata_without_stat) ... ok
+test_native_provision_controller_kill_during_render (__main__.SourceCleanup.test_native_provision_controller_kill_during_render) ... ok
+test_native_provision_controller_stop_during_render (__main__.SourceCleanup.test_native_provision_controller_stop_during_render) ... ok
+test_native_provision_expiry (__main__.SourceCleanup.test_native_provision_expiry) ... ok
+test_native_provision_guardian_kill_during_render (__main__.SourceCleanup.test_native_provision_guardian_kill_during_render) ... ok
+test_native_provision_guardian_stop_during_render (__main__.SourceCleanup.test_native_provision_guardian_stop_during_render) ... ok
+test_native_provision_preparation_kill_during_render (__main__.SourceCleanup.test_native_provision_preparation_kill_during_render) ... ok
+test_native_provision_preparation_stop_during_render (__main__.SourceCleanup.test_native_provision_preparation_stop_during_render) ... ok
+test_natmap_exec_failure_removes_owned_sources (__main__.SourceCleanup.test_natmap_exec_failure_removes_owned_sources) ... ok
+test_natmap_exit_removes_owned_sources (__main__.SourceCleanup.test_natmap_exit_removes_owned_sources) ... ok
+test_nginx_exit_removes_owned_sources (__main__.SourceCleanup.test_nginx_exit_removes_owned_sources) ... ok
+test_normal_expiry_removes_private_sources (__main__.SourceCleanup.test_normal_expiry_removes_private_sources) ... ok
+test_preexisting_competing_snapshot_is_untouched (__main__.SourceCleanup.test_preexisting_competing_snapshot_is_untouched) ... ok
+test_replaced_runtime_directory_is_untouched (__main__.SourceCleanup.test_replaced_runtime_directory_is_untouched) ... ok
+test_replaced_source_and_unknown_files_are_preserved (__main__.SourceCleanup.test_replaced_source_and_unknown_files_are_preserved) ... ok
+test_startup_failure_removes_private_sources (__main__.SourceCleanup.test_startup_failure_removes_private_sources) ... ok
+
+----------------------------------------------------------------------
+Ran 26 tests in 116.315s
+
+OK

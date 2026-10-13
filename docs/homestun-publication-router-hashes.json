@@ -1,0 +1,22 @@
+{
+  "homestun\\src\\lease-supervisor.c": "e457ec7c1495975e0f7165db1bb76893b93f4523d56b7de20229e3761f4b8086",
+  "homestun\\src\\publisher.c": "9bb6f7b7651a0e4c43a910d96f81cbbe8efc6fb863a8723e5e5b34ab49db1bb6",
+  "homestun\\tests\\router-guarded-provision.sh": "377065d649672bc9363b805c06c0cafa0ce9d22aa5e07452db62f70e5c4a34b6",
+  "homestun\\files\\usr\\share\\homestun\\core.lua": "c6e148db828a47f478176ccaa85fb5a92c52e203985ac6bdac70de7425744a0d",
+  "homestun\\files\\usr\\share\\homestun\\config.lua": "524e5da59e4cebb324b31d23eb8bfdee719cef0f8d2442c8fb3376265e3b9fd3",
+  "payload": {
+    "usr/libexec/homestun-lease": "89358b9ff8c3b87e50048a173bdccd3e577d16b17366690c7422c1688afc0efa",
+    "usr/libexec/homestun-publish": "e4bb1a7fe6bdc141ad3a12da0aa3cb677b69b567c5cc92d3044640546dc290fc",
+    "harness.sh": "377065d649672bc9363b805c06c0cafa0ce9d22aa5e07452db62f70e5c4a34b6",
+    "usr/bin/lua": "ed901d0f4024edd6cc5e3a91a088ef9c586ef0630f955c6cf936e725f3cadbd8",
+    "usr/bin/curl": "14a0f3b464cf215385bce8134a45a832c3c2b309abca945230701cc9fa6a6695",
+    "usr/sbin/nginx": "628d8846126bcd5ac24a5fbbd624f8068f5de000e9102affc68b196acd42ff33",
+    "usr/bin/natmap": "628d8846126bcd5ac24a5fbbd624f8068f5de000e9102affc68b196acd42ff33",
+    "usr/share/homestun/core.lua": "c6e148db828a47f478176ccaa85fb5a92c52e203985ac6bdac70de7425744a0d",
+    "usr/share/homestun/config.lua": "524e5da59e4cebb324b31d23eb8bfdee719cef0f8d2442c8fb3376265e3b9fd3",
+    "usr/share/homestun/config-cli.lua": "4e8193ae0112c98f4891fb64cdeb69d832391f5e23c83e9c07cf3cce3f3c1a2a",
+    "tests/test-core.lua": "d5e85d919ca295bea5f96a1a95cd7faf684303705c77b487fc0b0973ae4e653e",
+    "tests/test-config.lua": "fb086fecd93a528788dec0559b6bff1f8bd6a1ba6b293476c5a0baafe4556f81"
+  },
+  "audit_payload_sha256": "f5dd41ec09da647e5e7d31269f5df6befef8fdfb2e4494ea11ccb1d5594ae86f"
+}

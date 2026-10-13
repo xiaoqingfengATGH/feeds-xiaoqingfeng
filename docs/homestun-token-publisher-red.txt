@@ -1,0 +1,206 @@
+test_publisher_whole_file_before_sequence_or_transport (__main__.TokenValidation.test_publisher_whole_file_before_sequence_or_transport) ... 
+  test_publisher_whole_file_before_sequence_or_transport (__main__.TokenValidation.test_publisher_whole_file_before_sequence_or_transport) (injected='short', case='31') ... FAIL
+  test_publisher_whole_file_before_sequence_or_transport (__main__.TokenValidation.test_publisher_whole_file_before_sequence_or_transport) (injected='short', case='32') ... FAIL
+  test_publisher_whole_file_before_sequence_or_transport (__main__.TokenValidation.test_publisher_whole_file_before_sequence_or_transport) (injected='short', case='127') ... FAIL
+  test_publisher_whole_file_before_sequence_or_transport (__main__.TokenValidation.test_publisher_whole_file_before_sequence_or_transport) (injected='short', case='128') ... FAIL
+  test_publisher_whole_file_before_sequence_or_transport (__main__.TokenValidation.test_publisher_whole_file_before_sequence_or_transport) (injected='short', case='129') ... FAIL
+  test_publisher_whole_file_before_sequence_or_transport (__main__.TokenValidation.test_publisher_whole_file_before_sequence_or_transport) (injected='short', case='512') ... FAIL
+  test_publisher_whole_file_before_sequence_or_transport (__main__.TokenValidation.test_publisher_whole_file_before_sequence_or_transport) (injected='short', case='newline') ... FAIL
+  test_publisher_whole_file_before_sequence_or_transport (__main__.TokenValidation.test_publisher_whole_file_before_sequence_or_transport) (injected='short', case='nul') ... FAIL
+  test_publisher_whole_file_before_sequence_or_transport (__main__.TokenValidation.test_publisher_whole_file_before_sequence_or_transport) (injected='short', case='invalid') ... FAIL
+  test_publisher_whole_file_before_sequence_or_transport (__main__.TokenValidation.test_publisher_whole_file_before_sequence_or_transport) (injected='short', case='nonascii') ... FAIL
+  test_publisher_whole_file_before_sequence_or_transport (__main__.TokenValidation.test_publisher_whole_file_before_sequence_or_transport) (injected='eintr', case='31') ... FAIL
+  test_publisher_whole_file_before_sequence_or_transport (__main__.TokenValidation.test_publisher_whole_file_before_sequence_or_transport) (injected='eintr', case='32') ... FAIL
+  test_publisher_whole_file_before_sequence_or_transport (__main__.TokenValidation.test_publisher_whole_file_before_sequence_or_transport) (injected='eintr', case='127') ... FAIL
+  test_publisher_whole_file_before_sequence_or_transport (__main__.TokenValidation.test_publisher_whole_file_before_sequence_or_transport) (injected='eintr', case='128') ... FAIL
+  test_publisher_whole_file_before_sequence_or_transport (__main__.TokenValidation.test_publisher_whole_file_before_sequence_or_transport) (injected='eintr', case='129') ... FAIL
+  test_publisher_whole_file_before_sequence_or_transport (__main__.TokenValidation.test_publisher_whole_file_before_sequence_or_transport) (injected='eintr', case='512') ... FAIL
+  test_publisher_whole_file_before_sequence_or_transport (__main__.TokenValidation.test_publisher_whole_file_before_sequence_or_transport) (injected='eintr', case='newline') ... FAIL
+  test_publisher_whole_file_before_sequence_or_transport (__main__.TokenValidation.test_publisher_whole_file_before_sequence_or_transport) (injected='eintr', case='nul') ... FAIL
+  test_publisher_whole_file_before_sequence_or_transport (__main__.TokenValidation.test_publisher_whole_file_before_sequence_or_transport) (injected='eintr', case='invalid') ... FAIL
+  test_publisher_whole_file_before_sequence_or_transport (__main__.TokenValidation.test_publisher_whole_file_before_sequence_or_transport) (injected='eintr', case='nonascii') ... FAIL
+
+======================================================================
+FAIL: test_publisher_whole_file_before_sequence_or_transport (__main__.TokenValidation.test_publisher_whole_file_before_sequence_or_transport) (injected='short', case='31')
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/mnt/d/DevPortal/homelede/feeds-xiaoqingfeng-homestun/homestun/tests/test-token-validation.py", line 32, in test_publisher_whole_file_before_sequence_or_transport
+    if len(value)<=128:self.assertIn('eof',events)
+                       ^^^^^^^^^^^^^^^^^^^^^^^^^^^
+AssertionError: 'eof' not found in 'short\n'
+
+======================================================================
+FAIL: test_publisher_whole_file_before_sequence_or_transport (__main__.TokenValidation.test_publisher_whole_file_before_sequence_or_transport) (injected='short', case='32')
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/mnt/d/DevPortal/homelede/feeds-xiaoqingfeng-homestun/homestun/tests/test-token-validation.py", line 32, in test_publisher_whole_file_before_sequence_or_transport
+    if len(value)<=128:self.assertIn('eof',events)
+                       ^^^^^^^^^^^^^^^^^^^^^^^^^^^
+AssertionError: 'eof' not found in 'short\n'
+
+======================================================================
+FAIL: test_publisher_whole_file_before_sequence_or_transport (__main__.TokenValidation.test_publisher_whole_file_before_sequence_or_transport) (injected='short', case='127')
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/mnt/d/DevPortal/homelede/feeds-xiaoqingfeng-homestun/homestun/tests/test-token-validation.py", line 26, in test_publisher_whole_file_before_sequence_or_transport
+    self.assertEqual(result.returncode,0,result.stderr);self.assertTrue(calls.exists());self.assertEqual(session.read_text().split()[-1],'1')
+    ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+AssertionError: 2 != 0 : b''
+
+======================================================================
+FAIL: test_publisher_whole_file_before_sequence_or_transport (__main__.TokenValidation.test_publisher_whole_file_before_sequence_or_transport) (injected='short', case='128')
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/mnt/d/DevPortal/homelede/feeds-xiaoqingfeng-homestun/homestun/tests/test-token-validation.py", line 26, in test_publisher_whole_file_before_sequence_or_transport
+    self.assertEqual(result.returncode,0,result.stderr);self.assertTrue(calls.exists());self.assertEqual(session.read_text().split()[-1],'1')
+    ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+AssertionError: 2 != 0 : b''
+
+======================================================================
+FAIL: test_publisher_whole_file_before_sequence_or_transport (__main__.TokenValidation.test_publisher_whole_file_before_sequence_or_transport) (injected='short', case='129')
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/mnt/d/DevPortal/homelede/feeds-xiaoqingfeng-homestun/homestun/tests/test-token-validation.py", line 28, in test_publisher_whole_file_before_sequence_or_transport
+    self.assertNotEqual(result.returncode,0);self.assertFalse(calls.exists());self.assertEqual(session.read_bytes(),before)
+                                                                              ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+AssertionError: b'179[20 chars]aaaaaaaaaaaaaaaaaaaaaaa 1791779005459 7286.691270522 18444 1\n' != b'179[20 chars]aaaaaaaaaaaaaaaaaaaaaaa 1791779005459 7286.691270522 18444 0\n'
+
+======================================================================
+FAIL: test_publisher_whole_file_before_sequence_or_transport (__main__.TokenValidation.test_publisher_whole_file_before_sequence_or_transport) (injected='short', case='512')
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/mnt/d/DevPortal/homelede/feeds-xiaoqingfeng-homestun/homestun/tests/test-token-validation.py", line 28, in test_publisher_whole_file_before_sequence_or_transport
+    self.assertNotEqual(result.returncode,0);self.assertFalse(calls.exists());self.assertEqual(session.read_bytes(),before)
+                                                                              ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+AssertionError: b'179[20 chars]aaaaaaaaaaaaaaaaaaaaaaa 1791779005541 7286.773413823 18444 1\n' != b'179[20 chars]aaaaaaaaaaaaaaaaaaaaaaa 1791779005541 7286.773413823 18444 0\n'
+
+======================================================================
+FAIL: test_publisher_whole_file_before_sequence_or_transport (__main__.TokenValidation.test_publisher_whole_file_before_sequence_or_transport) (injected='short', case='newline')
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/mnt/d/DevPortal/homelede/feeds-xiaoqingfeng-homestun/homestun/tests/test-token-validation.py", line 28, in test_publisher_whole_file_before_sequence_or_transport
+    self.assertNotEqual(result.returncode,0);self.assertFalse(calls.exists());self.assertEqual(session.read_bytes(),before)
+                                                                              ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+AssertionError: b'179[20 chars]aaaaaaaaaaaaaaaaaaaaaaa 1791779005633 7286.865053335 18444 1\n' != b'179[20 chars]aaaaaaaaaaaaaaaaaaaaaaa 1791779005633 7286.865053335 18444 0\n'
+
+======================================================================
+FAIL: test_publisher_whole_file_before_sequence_or_transport (__main__.TokenValidation.test_publisher_whole_file_before_sequence_or_transport) (injected='short', case='nul')
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/mnt/d/DevPortal/homelede/feeds-xiaoqingfeng-homestun/homestun/tests/test-token-validation.py", line 28, in test_publisher_whole_file_before_sequence_or_transport
+    self.assertNotEqual(result.returncode,0);self.assertFalse(calls.exists());self.assertEqual(session.read_bytes(),before)
+                                                                              ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+AssertionError: b'179[20 chars]aaaaaaaaaaaaaaaaaaaaaaa 1791779005720 7286.951997559 18444 1\n' != b'179[20 chars]aaaaaaaaaaaaaaaaaaaaaaa 1791779005720 7286.951997559 18444 0\n'
+
+======================================================================
+FAIL: test_publisher_whole_file_before_sequence_or_transport (__main__.TokenValidation.test_publisher_whole_file_before_sequence_or_transport) (injected='short', case='invalid')
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/mnt/d/DevPortal/homelede/feeds-xiaoqingfeng-homestun/homestun/tests/test-token-validation.py", line 28, in test_publisher_whole_file_before_sequence_or_transport
+    self.assertNotEqual(result.returncode,0);self.assertFalse(calls.exists());self.assertEqual(session.read_bytes(),before)
+                                                                              ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+AssertionError: b'179[20 chars]aaaaaaaaaaaaaaaaaaaaaaa 1791779005806 7287.038293328 18444 1\n' != b'179[20 chars]aaaaaaaaaaaaaaaaaaaaaaa 1791779005806 7287.038293328 18444 0\n'
+
+======================================================================
+FAIL: test_publisher_whole_file_before_sequence_or_transport (__main__.TokenValidation.test_publisher_whole_file_before_sequence_or_transport) (injected='short', case='nonascii')
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/mnt/d/DevPortal/homelede/feeds-xiaoqingfeng-homestun/homestun/tests/test-token-validation.py", line 28, in test_publisher_whole_file_before_sequence_or_transport
+    self.assertNotEqual(result.returncode,0);self.assertFalse(calls.exists());self.assertEqual(session.read_bytes(),before)
+                                                                              ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+AssertionError: b'179[20 chars]aaaaaaaaaaaaaaaaaaaaaaa 1791779005893 7287.124927020 18444 1\n' != b'179[20 chars]aaaaaaaaaaaaaaaaaaaaaaa 1791779005893 7287.124927020 18444 0\n'
+
+======================================================================
+FAIL: test_publisher_whole_file_before_sequence_or_transport (__main__.TokenValidation.test_publisher_whole_file_before_sequence_or_transport) (injected='eintr', case='31')
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/mnt/d/DevPortal/homelede/feeds-xiaoqingfeng-homestun/homestun/tests/test-token-validation.py", line 30, in test_publisher_whole_file_before_sequence_or_transport
+    events=trace.read_text();self.assertIn('short',events)
+                             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+AssertionError: 'short' not found in 'interrupt\n'
+
+======================================================================
+FAIL: test_publisher_whole_file_before_sequence_or_transport (__main__.TokenValidation.test_publisher_whole_file_before_sequence_or_transport) (injected='eintr', case='32')
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/mnt/d/DevPortal/homelede/feeds-xiaoqingfeng-homestun/homestun/tests/test-token-validation.py", line 26, in test_publisher_whole_file_before_sequence_or_transport
+    self.assertEqual(result.returncode,0,result.stderr);self.assertTrue(calls.exists());self.assertEqual(session.read_text().split()[-1],'1')
+    ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+AssertionError: 2 != 0 : b''
+
+======================================================================
+FAIL: test_publisher_whole_file_before_sequence_or_transport (__main__.TokenValidation.test_publisher_whole_file_before_sequence_or_transport) (injected='eintr', case='127')
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/mnt/d/DevPortal/homelede/feeds-xiaoqingfeng-homestun/homestun/tests/test-token-validation.py", line 26, in test_publisher_whole_file_before_sequence_or_transport
+    self.assertEqual(result.returncode,0,result.stderr);self.assertTrue(calls.exists());self.assertEqual(session.read_text().split()[-1],'1')
+    ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+AssertionError: 2 != 0 : b''
+
+======================================================================
+FAIL: test_publisher_whole_file_before_sequence_or_transport (__main__.TokenValidation.test_publisher_whole_file_before_sequence_or_transport) (injected='eintr', case='128')
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/mnt/d/DevPortal/homelede/feeds-xiaoqingfeng-homestun/homestun/tests/test-token-validation.py", line 26, in test_publisher_whole_file_before_sequence_or_transport
+    self.assertEqual(result.returncode,0,result.stderr);self.assertTrue(calls.exists());self.assertEqual(session.read_text().split()[-1],'1')
+    ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+AssertionError: 2 != 0 : b''
+
+======================================================================
+FAIL: test_publisher_whole_file_before_sequence_or_transport (__main__.TokenValidation.test_publisher_whole_file_before_sequence_or_transport) (injected='eintr', case='129')
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/mnt/d/DevPortal/homelede/feeds-xiaoqingfeng-homestun/homestun/tests/test-token-validation.py", line 30, in test_publisher_whole_file_before_sequence_or_transport
+    events=trace.read_text();self.assertIn('short',events)
+                             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+AssertionError: 'short' not found in 'interrupt\n'
+
+======================================================================
+FAIL: test_publisher_whole_file_before_sequence_or_transport (__main__.TokenValidation.test_publisher_whole_file_before_sequence_or_transport) (injected='eintr', case='512')
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/mnt/d/DevPortal/homelede/feeds-xiaoqingfeng-homestun/homestun/tests/test-token-validation.py", line 30, in test_publisher_whole_file_before_sequence_or_transport
+    events=trace.read_text();self.assertIn('short',events)
+                             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+AssertionError: 'short' not found in 'interrupt\n'
+
+======================================================================
+FAIL: test_publisher_whole_file_before_sequence_or_transport (__main__.TokenValidation.test_publisher_whole_file_before_sequence_or_transport) (injected='eintr', case='newline')
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/mnt/d/DevPortal/homelede/feeds-xiaoqingfeng-homestun/homestun/tests/test-token-validation.py", line 30, in test_publisher_whole_file_before_sequence_or_transport
+    events=trace.read_text();self.assertIn('short',events)
+                             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+AssertionError: 'short' not found in 'interrupt\n'
+
+======================================================================
+FAIL: test_publisher_whole_file_before_sequence_or_transport (__main__.TokenValidation.test_publisher_whole_file_before_sequence_or_transport) (injected='eintr', case='nul')
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/mnt/d/DevPortal/homelede/feeds-xiaoqingfeng-homestun/homestun/tests/test-token-validation.py", line 30, in test_publisher_whole_file_before_sequence_or_transport
+    events=trace.read_text();self.assertIn('short',events)
+                             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+AssertionError: 'short' not found in 'interrupt\n'
+
+======================================================================
+FAIL: test_publisher_whole_file_before_sequence_or_transport (__main__.TokenValidation.test_publisher_whole_file_before_sequence_or_transport) (injected='eintr', case='invalid')
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/mnt/d/DevPortal/homelede/feeds-xiaoqingfeng-homestun/homestun/tests/test-token-validation.py", line 30, in test_publisher_whole_file_before_sequence_or_transport
+    events=trace.read_text();self.assertIn('short',events)
+                             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+AssertionError: 'short' not found in 'interrupt\n'
+
+======================================================================
+FAIL: test_publisher_whole_file_before_sequence_or_transport (__main__.TokenValidation.test_publisher_whole_file_before_sequence_or_transport) (injected='eintr', case='nonascii')
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/mnt/d/DevPortal/homelede/feeds-xiaoqingfeng-homestun/homestun/tests/test-token-validation.py", line 30, in test_publisher_whole_file_before_sequence_or_transport
+    events=trace.read_text();self.assertIn('short',events)
+                             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+AssertionError: 'short' not found in 'interrupt\n'
+
+----------------------------------------------------------------------
+Ran 1 test in 1.939s
+
+FAILED (failures=20)

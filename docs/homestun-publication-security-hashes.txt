@@ -1,0 +1,17 @@
+{
+  "sha256": {
+    "homestun/src/publisher.c": "b668a9dc808fd1fefae0330d211f9511c57db48424328d9f4480125a49c1f666",
+    "homestun/src/lease-supervisor.c": "08813e682c95ca0132c44124d1f0fafb4a2a0c1c4cda9226c3e5ffa32c59541d",
+    "homestun/tests/test-publication-security.py": "f296d231af11328dbe7765a74f3511ece0f0a34cd1092e80b50f2e06d23a648f",
+    "homestun/tests/run-publication-security.sh": "7b587114e7af8791077ad30f9a5e42ea36c75cc08dcdc5c7e92427a0a2ebad59"
+  },
+  "test_totals": [
+    "3",
+    "3",
+    "4",
+    "1",
+    "1",
+    "1",
+    "30"
+  ]
+}

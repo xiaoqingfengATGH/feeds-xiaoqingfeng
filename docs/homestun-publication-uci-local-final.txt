@@ -1,0 +1,119 @@
+COMMAND: ['wsl.exe', '-u', 'root', '--exec', 'unshare', '-nm', '--propagation', 'private', 'bash', '-c', 'set -euo pipefail\ncd /mnt/d/DevPortal/homelede/feeds-xiaoqingfeng-homestun\nip link set lo up\nhosts=$(mktemp -d /tmp/homestun-uci-hosts-XXXXXX)\ncleanup() { umount /etc/hosts; rm -rf "$hosts"; }\ntrap cleanup EXIT\nprintf \'127.0.0.1 localhost stun-test.innonext.win\\n\' > "$hosts/hosts"\nmount --bind "$hosts/hosts" /etc/hosts\nfor test in token-validation publication-security publication socket-boundary lifecycle recipe package source-cleanup; do\n printf \'\\nSUITE %s\\n\' "$test"\n python3 -B "homestun/tests/test-$test.py" -v\ndone\n']
+
+SUITE token-validation
+test_provision_rejects_before_token_snapshot (__main__.TokenValidation.test_provision_rejects_before_token_snapshot) ... ok
+test_publisher_whole_file_before_sequence_or_transport (__main__.TokenValidation.test_publisher_whole_file_before_sequence_or_transport) ... ok
+
+----------------------------------------------------------------------
+Ran 2 tests in 28.963s
+
+OK
+
+SUITE publication-security
+test_credential_boundaries_and_metadata (__main__.Security.test_credential_boundaries_and_metadata) ... ok
+test_publication_snapshot_cleanup_faults (__main__.Security.test_publication_snapshot_cleanup_faults) ... ok
+test_real_tls_trust_hostname_and_environment_isolation (__main__.Security.test_real_tls_trust_hostname_and_environment_isolation) ... ok
+
+----------------------------------------------------------------------
+Ran 3 tests in 22.300s
+
+OK
+
+SUITE publication
+test_callback_native_adapter_exists (__main__.Publication.test_callback_native_adapter_exists) ... ok
+test_native_optin_provision_callback_and_cleanup (__main__.Publication.test_native_optin_provision_callback_and_cleanup) ... ok
+test_real_http_callback_to_worker (__main__.Publication.test_real_http_callback_to_worker) ... ok
+
+----------------------------------------------------------------------
+Ran 3 tests in 9.273s
+
+OK
+
+SUITE socket-boundary
+test_occupied_port_preserves_foreign_socket_and_traffic (__main__.Boundary.test_occupied_port_preserves_foreign_socket_and_traffic) ... [E] set_reuse_port /home/eric/homestun-natmap-20260214/src/hev-misc.c:201
+ok
+test_pidfd_getfd_denied_before_engine_exec (__main__.Boundary.test_pidfd_getfd_denied_before_engine_exec) ... ok
+test_startup_race_preserves_foreign_socket_and_traffic (__main__.Boundary.test_startup_race_preserves_foreign_socket_and_traffic) ... [E] set_reuse_port /home/eric/homestun-natmap-20260214/src/hev-misc.c:201
+ok
+test_unavailable_seccomp_never_executes_engines (__main__.Boundary.test_unavailable_seccomp_never_executes_engines) ... NATMap seccomp boundary: Invalid argument
+ok
+
+----------------------------------------------------------------------
+Ran 4 tests in 8.499s
+
+OK
+
+SUITE lifecycle
+test_tcp_children_expire_together (__main__.Lifecycle.test_tcp_children_expire_together) ... ok
+
+----------------------------------------------------------------------
+Ran 1 test in 3.186s
+
+OK
+
+SUITE recipe
+test_compile_install_target_artifacts_only (__main__.Recipe.test_compile_install_target_artifacts_only) ... mkdir -p /tmp/homestun-recipe-e1ay8dop/build/homestun-0.1.0
+cp -fpR ./src/lease-supervisor.c ./src/publisher.c /tmp/homestun-recipe-e1ay8dop/build/homestun-0.1.0/
+gcc  -Os -static -Wall -Wextra -Werror -o /tmp/homestun-recipe-e1ay8dop/build/homestun-0.1.0/homestun-publish /tmp/homestun-recipe-e1ay8dop/build/homestun-0.1.0/publisher.c 
+gcc  -Os -static -Wall -Wextra -Werror -o /tmp/homestun-recipe-e1ay8dop/build/homestun-0.1.0/homestun-lease /tmp/homestun-recipe-e1ay8dop/build/homestun-0.1.0/lease-supervisor.c 
+mkdir -p /tmp/homestun-recipe-e1ay8dop/root/usr/libexec /tmp/homestun-recipe-e1ay8dop/root/usr/share/homestun /tmp/homestun-recipe-e1ay8dop/root/etc/config /tmp/homestun-recipe-e1ay8dop/root/etc/init.d /tmp/homestun-recipe-e1ay8dop/root/etc/homestun
+install -m0755 /tmp/homestun-recipe-e1ay8dop/build/homestun-0.1.0/homestun-lease /tmp/homestun-recipe-e1ay8dop/root/usr/libexec/homestun-lease
+install -m0755 /tmp/homestun-recipe-e1ay8dop/build/homestun-0.1.0/homestun-publish /tmp/homestun-recipe-e1ay8dop/root/usr/libexec/homestun-publish
+install -m0644 ./files/usr/share/homestun/*.lua /tmp/homestun-recipe-e1ay8dop/root/usr/share/homestun/
+install -m0755 ./files/usr/share/homestun/lease-run.sh /tmp/homestun-recipe-e1ay8dop/root/usr/share/homestun/
+install -m0600 ./files/etc/config/homestun /tmp/homestun-recipe-e1ay8dop/root/etc/config/homestun
+install -m0755 ./files/etc/init.d/homestun /tmp/homestun-recipe-e1ay8dop/root/etc/init.d/homestun
+chmod 0700 /tmp/homestun-recipe-e1ay8dop/root/etc/homestun
+ok
+
+----------------------------------------------------------------------
+Ran 1 test in 1.208s
+
+OK
+
+SUITE package
+test_target_build_and_disabled_defaults (__main__.Package.test_target_build_and_disabled_defaults) ... ok
+
+----------------------------------------------------------------------
+Ran 1 test in 0.007s
+
+OK
+
+SUITE source-cleanup
+test_adapter_sigkill_removes_owned_sources (__main__.SourceCleanup.test_adapter_sigkill_removes_owned_sources) ... ok
+test_adapter_stop_does_not_delay_cleanup (__main__.SourceCleanup.test_adapter_stop_does_not_delay_cleanup) ... ok
+test_competing_adapter_preserves_active_runtime (__main__.SourceCleanup.test_competing_adapter_preserves_active_runtime) ... ok
+test_controller_sigkill_removes_owned_sources (__main__.SourceCleanup.test_controller_sigkill_removes_owned_sources) ... ok
+test_disable_term_removes_private_sources (__main__.SourceCleanup.test_disable_term_removes_private_sources) ... ok
+test_failure_before_detached_watcher_leaves_no_sources (__main__.SourceCleanup.test_failure_before_detached_watcher_leaves_no_sources) ... ok
+test_guardian_sigkill_removes_owned_sources (__main__.SourceCleanup.test_guardian_sigkill_removes_owned_sources) ... ok
+test_init_death_and_later_submission_rejection_create_no_sources (__main__.SourceCleanup.test_init_death_and_later_submission_rejection_create_no_sources) ... ok
+test_init_registers_native_provisioner (__main__.SourceCleanup.test_init_registers_native_provisioner) ... ok
+test_init_registration_failure_removes_private_sources (__main__.SourceCleanup.test_init_registration_failure_removes_private_sources) ... ok
+test_native_metadata_without_stat (__main__.SourceCleanup.test_native_metadata_without_stat) ... ok
+test_native_provision_concurrent_leases_are_isolated (__main__.SourceCleanup.test_native_provision_concurrent_leases_are_isolated) ... ok
+test_native_provision_controller_kill_during_render (__main__.SourceCleanup.test_native_provision_controller_kill_during_render) ... ok
+test_native_provision_controller_stop_during_render (__main__.SourceCleanup.test_native_provision_controller_stop_during_render) ... ok
+test_native_provision_expiry (__main__.SourceCleanup.test_native_provision_expiry) ... ok
+test_native_provision_guardian_kill_during_render (__main__.SourceCleanup.test_native_provision_guardian_kill_during_render) ... ok
+test_native_provision_guardian_stop_during_render (__main__.SourceCleanup.test_native_provision_guardian_stop_during_render) ... ok
+test_native_provision_preparation_kill_during_render (__main__.SourceCleanup.test_native_provision_preparation_kill_during_render) ... ok
+test_native_provision_preparation_stop_during_render (__main__.SourceCleanup.test_native_provision_preparation_stop_during_render) ... ok
+test_native_provision_renderer_exec_failure (__main__.SourceCleanup.test_native_provision_renderer_exec_failure) ... ok
+test_native_provision_replacement_directory_preserved (__main__.SourceCleanup.test_native_provision_replacement_directory_preserved) ... ok
+test_native_provision_replacement_sources_preserved (__main__.SourceCleanup.test_native_provision_replacement_sources_preserved) ... ok
+test_natmap_exec_failure_removes_owned_sources (__main__.SourceCleanup.test_natmap_exec_failure_removes_owned_sources) ... ok
+test_natmap_exit_removes_owned_sources (__main__.SourceCleanup.test_natmap_exit_removes_owned_sources) ... ok
+test_nginx_exit_removes_owned_sources (__main__.SourceCleanup.test_nginx_exit_removes_owned_sources) ... ok
+test_normal_expiry_removes_private_sources (__main__.SourceCleanup.test_normal_expiry_removes_private_sources) ... ok
+test_preexisting_competing_snapshot_is_untouched (__main__.SourceCleanup.test_preexisting_competing_snapshot_is_untouched) ... ok
+test_replaced_runtime_directory_is_untouched (__main__.SourceCleanup.test_replaced_runtime_directory_is_untouched) ... ok
+test_replaced_source_and_unknown_files_are_preserved (__main__.SourceCleanup.test_replaced_source_and_unknown_files_are_preserved) ... ok
+test_startup_failure_removes_private_sources (__main__.SourceCleanup.test_startup_failure_removes_private_sources) ... ok
+
+----------------------------------------------------------------------
+Ran 30 tests in 75.335s
+
+OK
+
+EXIT_CODE: 0

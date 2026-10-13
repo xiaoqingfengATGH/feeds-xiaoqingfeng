@@ -1,0 +1,8 @@
+RED executed before publisher.c change, WSL root unshare -nm private mount and loopback only.
+Command: python3 homestun/tests/test-publication-security.py -v
+Ran 3 tests in 20.861s; FAILED (failures=2), exit 1.
+Expected failures: credential size=129 and size=4096 both returned 0 (oversized credential accepted).
+Publication snapshot controller/guardian/preparation SIGKILL and SIGSTOP: passed.
+Real TLS untrusted certificate, trusted hostname mismatch, trusted valid success, production CA/environment isolation: passed.
+Reproduced production defect: read(t, token, 128) silently truncated longer credentials to an allowed 128-byte prefix.
+Minimal fix: read 129 bytes into a zero-initialized 130-byte buffer, retain existing n>128 rejection before transport.

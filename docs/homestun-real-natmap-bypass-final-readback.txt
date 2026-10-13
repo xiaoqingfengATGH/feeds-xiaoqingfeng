@@ -1,0 +1,58 @@
+Mon Oct 12 09:25:59 UTC 2026
+FIXTURE_ABSENT
+Active Internet connections (only servers)
+Proto Recv-Q Send-Q Local Address           Foreign Address         State       
+tcp        0      0 192.168.1.2:53          0.0.0.0:*               LISTEN      
+tcp        0      0 0.0.0.0:443             0.0.0.0:*               LISTEN      
+tcp        0      0 192.168.1.2:22          0.0.0.0:*               LISTEN      
+tcp        0      0 172.17.0.1:2004         0.0.0.0:*               LISTEN      
+tcp        0      0 192.168.1.2:139         0.0.0.0:*               LISTEN      
+tcp        0      0 0.0.0.0:5355            0.0.0.0:*               LISTEN      
+tcp        0      0 127.0.0.1:53            0.0.0.0:*               LISTEN      
+tcp        0      0 0.0.0.0:80              0.0.0.0:*               LISTEN      
+tcp        0      0 192.168.1.2:445         0.0.0.0:*               LISTEN      
+tcp        0      0 0.0.0.0:1026            0.0.0.0:*               LISTEN      
+tcp        0      0 0.0.0.0:21              0.0.0.0:*               LISTEN      
+tcp        0      0 192.168.1.2:7681        0.0.0.0:*               LISTEN      
+tcp        0      0 127.0.0.1:2002          0.0.0.0:*               LISTEN      
+tcp        0      0 127.0.0.1:2003          0.0.0.0:*               LISTEN      
+tcp        0      0 127.0.0.1:2004          0.0.0.0:*               LISTEN      
+tcp        0      0 172.17.0.1:53           0.0.0.0:*               LISTEN      
+tcp        0      0 0.0.0.0:60000           0.0.0.0:*               LISTEN      
+tcp        0      0 0.0.0.0:3702            0.0.0.0:*               LISTEN      
+tcp        0      0 192.168.1.2:2004        0.0.0.0:*               LISTEN      
+tcp        0      0 fd89:878e:a47f::1:22    :::*                    LISTEN      
+tcp        0      0 ::1:2004                :::*                    LISTEN      
+tcp        0      0 fd89:878e:a47f::1:53    :::*                    LISTEN      
+tcp        0      0 :::5355                 :::*                    LISTEN      
+tcp        0      0 :::80                   :::*                    LISTEN      
+tcp        0      0 :::1070                 :::*                    LISTEN      
+tcp        0      0 fe80::290:a6ff:fee0:382c:53 :::*                    LISTEN      
+tcp        0      0 fe80::290:a6ff:fee0:382c:2004 :::*                    LISTEN      
+tcp        0      0 :::2001                 :::*                    LISTEN      
+tcp        0      0 :::9876                 :::*                    LISTEN      
+tcp        0      0 :::3702                 :::*                    LISTEN      
+tcp        0      0 fd89:878e:a47f::1:2004  :::*                    LISTEN      
+tcp        0      0 ::1:53                  :::*                    LISTEN      
+52a2755e9a380e1e6d526204ec443dcdd85639f07d2903f64839d073edd55795  /etc/config/firewall
+62cb51fe983f98e057c368d4654675d15a34572b68b6ae0fca241887ea9a58c4  /etc/config/passwall2
+0:	from all lookup local
+220:	from all lookup 220
+999:	from all fwmark 0x50535732 lookup 999
+32766:	from all lookup main
+32767:	from all lookup default
+table inet passwall2 {
+	chain PSW2_OUTPUT_NAT {
+		ip daddr 67.230.168.23 tcp dport 443 return comment "la.iwonderful.top:443"
+		ip daddr @psw2_vps counter packets 0 bytes 0 return
+		meta mark & 0x000000ff == 0x000000ff counter packets 4 bytes 240 return
+		ip protocol tcp ip daddr 198.18.0.0/16 counter packets 0 bytes 0 redirect to :2001
+		ip protocol tcp ip daddr @psw2_rulenode_DirectFront counter packets 0 bytes 0 return
+		ip protocol tcp ip daddr @psw2_rulenode_ProxyFront counter packets 0 bytes 0 redirect to :2001
+		ip protocol tcp ip daddr @psw2_rulenode_DirectGame counter packets 0 bytes 0 return
+		ip protocol tcp ip daddr @psw2_rulenode_ProxyGame counter packets 0 bytes 0 redirect to :2001
+		ip protocol tcp ip daddr @psw2_rulenode_CN counter packets 1715 bytes 102900 return
+		ip protocol tcp ip daddr @psw2_rulenode_white counter packets 0 bytes 0 return
+		ip protocol tcp counter packets 811 bytes 48660 redirect to :2001
+	}
+}

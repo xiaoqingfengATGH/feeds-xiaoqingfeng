@@ -1,0 +1,716 @@
+{
+  "generation": "homestun-upnp-20261012T122756Z",
+  "local_deadline_seconds": 120,
+  "requested_lease_seconds": 300,
+  "mode": "UPnP explicit mapping; no STUN",
+  "requests": [
+    {
+      "action": "GetSpecificPortMappingEntry",
+      "at_monotonic": 213559.3541099,
+      "http_status": 500,
+      "fault": "714",
+      "fields": {}
+    },
+    {
+      "action": "GetSpecificPortMappingEntry",
+      "at_monotonic": 213578.6716116,
+      "http_status": 500,
+      "fault": "714",
+      "fields": {}
+    },
+    {
+      "action": "AddPortMapping",
+      "at_monotonic": 213579.0416526,
+      "http_status": 200,
+      "fault": null,
+      "fields": {}
+    },
+    {
+      "action": "GetSpecificPortMappingEntry",
+      "at_monotonic": 213579.3952494,
+      "http_status": 200,
+      "fault": null,
+      "fields": {
+        "NewInternalPort": "18444",
+        "NewInternalClient": "192.168.1.2",
+        "NewEnabled": "1",
+        "NewPortMappingDescription": "homestun-upnp-20261012T122756Z",
+        "NewLeaseDuration": "299"
+      }
+    },
+    {
+      "action": "GetSpecificPortMappingEntry",
+      "at_monotonic": 213691.0190502,
+      "http_status": 200,
+      "fault": null,
+      "fields": {
+        "NewInternalPort": "18444",
+        "NewInternalClient": "192.168.1.2",
+        "NewEnabled": "1",
+        "NewPortMappingDescription": "homestun-upnp-20261012T122756Z",
+        "NewLeaseDuration": "188"
+      }
+    },
+    {
+      "action": "GetSpecificPortMappingEntry",
+      "at_monotonic": 213706.3904668,
+      "http_status": 200,
+      "fault": null,
+      "fields": {
+        "NewInternalPort": "18444",
+        "NewInternalClient": "192.168.1.2",
+        "NewEnabled": "1",
+        "NewPortMappingDescription": "homestun-upnp-20261012T122756Z",
+        "NewLeaseDuration": "172"
+      }
+    },
+    {
+      "action": "GetSpecificPortMappingEntry",
+      "at_monotonic": 213721.7748849,
+      "http_status": 200,
+      "fault": null,
+      "fields": {
+        "NewInternalPort": "18444",
+        "NewInternalClient": "192.168.1.2",
+        "NewEnabled": "1",
+        "NewPortMappingDescription": "homestun-upnp-20261012T122756Z",
+        "NewLeaseDuration": "157"
+      }
+    },
+    {
+      "action": "GetSpecificPortMappingEntry",
+      "at_monotonic": 213737.1511071,
+      "http_status": 200,
+      "fault": null,
+      "fields": {
+        "NewInternalPort": "18444",
+        "NewInternalClient": "192.168.1.2",
+        "NewEnabled": "1",
+        "NewPortMappingDescription": "homestun-upnp-20261012T122756Z",
+        "NewLeaseDuration": "141"
+      }
+    },
+    {
+      "action": "GetSpecificPortMappingEntry",
+      "at_monotonic": 213752.5347884,
+      "http_status": 200,
+      "fault": null,
+      "fields": {
+        "NewInternalPort": "18444",
+        "NewInternalClient": "192.168.1.2",
+        "NewEnabled": "1",
+        "NewPortMappingDescription": "homestun-upnp-20261012T122756Z",
+        "NewLeaseDuration": "126"
+      }
+    },
+    {
+      "action": "GetSpecificPortMappingEntry",
+      "at_monotonic": 213767.9041837,
+      "http_status": 200,
+      "fault": null,
+      "fields": {
+        "NewInternalPort": "18444",
+        "NewInternalClient": "192.168.1.2",
+        "NewEnabled": "1",
+        "NewPortMappingDescription": "homestun-upnp-20261012T122756Z",
+        "NewLeaseDuration": "111"
+      }
+    },
+    {
+      "action": "GetSpecificPortMappingEntry",
+      "at_monotonic": 213783.2932718,
+      "http_status": 200,
+      "fault": null,
+      "fields": {
+        "NewInternalPort": "18444",
+        "NewInternalClient": "192.168.1.2",
+        "NewEnabled": "1",
+        "NewPortMappingDescription": "homestun-upnp-20261012T122756Z",
+        "NewLeaseDuration": "95"
+      }
+    },
+    {
+      "action": "GetSpecificPortMappingEntry",
+      "at_monotonic": 213798.6847748,
+      "http_status": 200,
+      "fault": null,
+      "fields": {
+        "NewInternalPort": "18444",
+        "NewInternalClient": "192.168.1.2",
+        "NewEnabled": "1",
+        "NewPortMappingDescription": "homestun-upnp-20261012T122756Z",
+        "NewLeaseDuration": "80"
+      }
+    },
+    {
+      "action": "GetSpecificPortMappingEntry",
+      "at_monotonic": 213814.0611107,
+      "http_status": 200,
+      "fault": null,
+      "fields": {
+        "NewInternalPort": "18444",
+        "NewInternalClient": "192.168.1.2",
+        "NewEnabled": "1",
+        "NewPortMappingDescription": "homestun-upnp-20261012T122756Z",
+        "NewLeaseDuration": "64"
+      }
+    },
+    {
+      "action": "GetSpecificPortMappingEntry",
+      "at_monotonic": 213829.4250454,
+      "http_status": 200,
+      "fault": null,
+      "fields": {
+        "NewInternalPort": "18444",
+        "NewInternalClient": "192.168.1.2",
+        "NewEnabled": "1",
+        "NewPortMappingDescription": "homestun-upnp-20261012T122756Z",
+        "NewLeaseDuration": "49"
+      }
+    },
+    {
+      "action": "GetSpecificPortMappingEntry",
+      "at_monotonic": 213844.8204426,
+      "http_status": 200,
+      "fault": null,
+      "fields": {
+        "NewInternalPort": "18444",
+        "NewInternalClient": "192.168.1.2",
+        "NewEnabled": "1",
+        "NewPortMappingDescription": "homestun-upnp-20261012T122756Z",
+        "NewLeaseDuration": "34"
+      }
+    },
+    {
+      "action": "GetSpecificPortMappingEntry",
+      "at_monotonic": 213860.2104566,
+      "http_status": 200,
+      "fault": null,
+      "fields": {
+        "NewInternalPort": "18444",
+        "NewInternalClient": "192.168.1.2",
+        "NewEnabled": "1",
+        "NewPortMappingDescription": "homestun-upnp-20261012T122756Z",
+        "NewLeaseDuration": "18"
+      }
+    },
+    {
+      "action": "GetSpecificPortMappingEntry",
+      "at_monotonic": 213875.5896695,
+      "http_status": 200,
+      "fault": null,
+      "fields": {
+        "NewInternalPort": "18444",
+        "NewInternalClient": "192.168.1.2",
+        "NewEnabled": "1",
+        "NewPortMappingDescription": "homestun-upnp-20261012T122756Z",
+        "NewLeaseDuration": "3"
+      }
+    },
+    {
+      "action": "GetSpecificPortMappingEntry",
+      "at_monotonic": 213890.9534682,
+      "http_status": 500,
+      "fault": "714",
+      "fields": {}
+    },
+    {
+      "action": "GetSpecificPortMappingEntry",
+      "at_monotonic": 213891.3060649,
+      "http_status": 500,
+      "fault": "714",
+      "fields": {}
+    }
+  ],
+  "marker": "homestun-upnp-20261012T122756Z-7c1951cba0fa9e8c4e683a8f",
+  "initial_mapping": {
+    "action": "GetSpecificPortMappingEntry",
+    "at_monotonic": 213559.3541099,
+    "http_status": 500,
+    "fault": "714",
+    "fields": {}
+  },
+  "baseline": "52a2755e9a380e1e6d526204ec443dcdd85639f07d2903f64839d073edd55795  /etc/config/firewall\n6ead1d3a553f28348a58b4a3055b8873aee4916b2fe3471b67e960cbfba2dacd  /etc/config/network\n62cb51fe983f98e057c368d4654675d15a34572b68b6ae0fca241887ea9a58c4  /etc/config/passwall2\nHOMESTUN_CONFIG_ABSENT\n0:\tfrom all lookup local\n220:\tfrom all lookup 220\n999:\tfrom all fwmark 0x50535732 lookup 999\n32766:\tfrom all lookup main\n32767:\tfrom all lookup default\ndefault via 192.168.1.1 dev br-lan proto static \n172.17.0.0/16 dev docker0 proto kernel scope link src 172.17.0.1 linkdown \n192.168.1.0/24 dev br-lan proto kernel scope link src 192.168.1.2 \nActive Internet connections (only servers)\nProto Recv-Q Send-Q Local Address           Foreign Address         State       \ntcp        0      0 192.168.1.2:53          0.0.0.0:*               LISTEN      \ntcp        0      0 0.0.0.0:443             0.0.0.0:*               LISTEN      \ntcp        0      0 192.168.1.2:22          0.0.0.0:*               LISTEN      \ntcp        0      0 172.17.0.1:2004         0.0.0.0:*               LISTEN      \ntcp        0      0 192.168.1.2:139         0.0.0.0:*               LISTEN      \ntcp        0      0 0.0.0.0:5355            0.0.0.0:*               LISTEN      \ntcp        0      0 127.0.0.1:53            0.0.0.0:*               LISTEN      \ntcp        0      0 0.0.0.0:80              0.0.0.0:*               LISTEN      \ntcp        0      0 192.168.1.2:445         0.0.0.0:*               LISTEN      \ntcp        0      0 0.0.0.0:1026            0.0.0.0:*               LISTEN      \ntcp        0      0 0.0.0.0:21              0.0.0.0:*               LISTEN      \ntcp        0      0 192.168.1.2:7681        0.0.0.0:*               LISTEN      \ntcp        0      0 127.0.0.1:2002          0.0.0.0:*               LISTEN      \ntcp        0      0 127.0.0.1:2003          0.0.0.0:*               LISTEN      \ntcp        0      0 127.0.0.1:2004          0.0.0.0:*               LISTEN      \ntcp        0      0 172.17.0.1:53           0.0.0.0:*               LISTEN      \ntcp        0      0 0.0.0.0:60000           0.0.0.0:*               LISTEN      \ntcp        0      0 0.0.0.0:3702            0.0.0.0:*               LISTEN      \ntcp        0      0 192.168.1.2:2004        0.0.0.0:*               LISTEN      \ntcp        0      0 fd89:878e:a47f::1:22    :::*                    LISTEN      \ntcp        0      0 ::1:2004                :::*                    LISTEN      \ntcp        0      0 fd89:878e:a47f::1:53    :::*                    LISTEN      \ntcp        0      0 :::5355                 :::*                    LISTEN      \ntcp        0      0 :::80                   :::*                    LISTEN      \ntcp        0      0 :::1070                 :::*                    LISTEN      \ntcp        0      0 fe80::290:a6ff:fee0:382c:53 :::*                    LISTEN      \ntcp        0      0 fe80::290:a6ff:fee0:382c:2004 :::*                    LISTEN      \ntcp        0      0 :::2001                 :::*                    LISTEN      \ntcp        0      0 :::9876                 :::*                    LISTEN      \ntcp        0      0 :::3702                 :::*                    LISTEN      \ntcp        0      0 fd89:878e:a47f::1:2004  :::*                    LISTEN      \ntcp        0      0 ::1:53                  :::*                    LISTEN      \n",
+  "lease_sha256": "540b98eb8be0ed039d9f8bb19b52d287f1b5c7d594321b397e3d8783e50072a4",
+  "forwarder_sha256": "374dd0311b29106ef588467811c8d6802fed85d621be17c490c422e318a86e63",
+  "forwarder_source_sha256": "682a5e76598fd09ed0cadf8f6fb649b0ce337949e125479a9fa3361cb2700666",
+  "backend_sha256": "8be9fbd5893bdb21e47d097722fa7d91e163de5f790f5db07751b0455f9fd2b7",
+  "backend_source_sha256": "9394edbf7eb951e8f3725259a7d671741e2862abf53f6ee4b97af2b7bc66919f",
+  "backend_stream_seconds": 182,
+  "backend_independent_guard_seconds": 210,
+  "actual_nginx_version": "nginx version: nginx/1.21.3 (x86_64-pc-linux-gnu)\n",
+  "actual_nginx_sha256": "d24cceeb3b33fb61545b7c50b49be6299167959ffcdebf6d765dc4a67bb3d0f1  /usr/sbin/nginx\n",
+  "stage_hashes": "374dd0311b29106ef588467811c8d6802fed85d621be17c490c422e318a86e63  /tmp/homestun-test/upnp-active/root/usr/bin/natmap\n540b98eb8be0ed039d9f8bb19b52d287f1b5c7d594321b397e3d8783e50072a4  /tmp/homestun-test/upnp-active/root/usr/libexec/homestun-lease\n",
+  "transfer_backend_hash": "8be9fbd5893bdb21e47d097722fa7d91e163de5f790f5db07751b0455f9fd2b7  /tmp/homestun-test/upnp-active/backend\n",
+  "transfer_nginx_hash": "d24cceeb3b33fb61545b7c50b49be6299167959ffcdebf6d765dc4a67bb3d0f1  /tmp/homestun-test/upnp-active/root/usr/sbin/nginx\n",
+  "native_300_rejection": "REJECTION_EXIT=2\n",
+  "local_started_monotonic": 213564.2530865,
+  "local_preflight": "homestun-upnp-20261012T122756Z-7c1951cba0fa9e8c4e683a8f",
+  "native_start_correlation": {
+    "target_uptime_start": 430501.52,
+    "native_client_estimated_start": 213564.41314865,
+    "uncertainty_seconds": 0.15948914999491534,
+    "ssh_start_delay_seconds": 0.16006215001107194
+  },
+  "target_tls_stream_preflight": {
+    "ticks": [
+      [
+        "tick",
+        "1",
+        "430504.292970",
+        "homestun-upnp-20261012T122756Z-7c1951cba0fa9e8c4e683a8f"
+      ],
+      [
+        "tick",
+        "2",
+        "430506.293123",
+        "homestun-upnp-20261012T122756Z-7c1951cba0fa9e8c4e683a8f"
+      ],
+      [
+        "tick",
+        "3",
+        "430508.293364",
+        "homestun-upnp-20261012T122756Z-7c1951cba0fa9e8c4e683a8f"
+      ],
+      [
+        "tick",
+        "4",
+        "430510.293526",
+        "homestun-upnp-20261012T122756Z-7c1951cba0fa9e8c4e683a8f"
+      ],
+      [
+        "tick",
+        "5",
+        "430512.293787",
+        "homestun-upnp-20261012T122756Z-7c1951cba0fa9e8c4e683a8f"
+      ],
+      [
+        "tick",
+        "6",
+        "430514.293939",
+        "homestun-upnp-20261012T122756Z-7c1951cba0fa9e8c4e683a8f"
+      ]
+    ],
+    "span_seconds": 10.000968999986071,
+    "wall_elapsed": 11.377666799991857,
+    "PASS": true
+  },
+  "candidate_before_add": {
+    "action": "GetSpecificPortMappingEntry",
+    "at_monotonic": 213578.6716116,
+    "http_status": 500,
+    "fault": "714",
+    "fields": {}
+  },
+  "mapping_started_monotonic": 213578.6782516,
+  "add_attempted": true,
+  "add": {
+    "action": "AddPortMapping",
+    "at_monotonic": 213579.0416526,
+    "http_status": 200,
+    "fault": null,
+    "fields": {}
+  },
+  "readback": {
+    "action": "GetSpecificPortMappingEntry",
+    "at_monotonic": 213579.3952494,
+    "http_status": 200,
+    "fault": null,
+    "fields": {
+      "NewInternalPort": "18444",
+      "NewInternalClient": "192.168.1.2",
+      "NewEnabled": "1",
+      "NewPortMappingDescription": "homestun-upnp-20261012T122756Z",
+      "NewLeaseDuration": "299"
+    }
+  },
+  "accepted_lease_seconds": 299,
+  "external_https": {
+    "exit": 0,
+    "body": "homestun-upnp-20261012T122756Z-7c1951cba0fa9e8c4e683a8f",
+    "stderr": "* Added homestun-test.homelede.com:18444:60.20.170.34 to DNS cache\r\n* Hostname homestun-test.homelede.com was found in DNS cache\r\n* Host homestun-test.homelede.com:18444 was resolved.\r\n* IPv6: (none)\r\n* IPv4: 60.20.170.34\r\n*   Trying 60.20.170.34:18444...\r\n* schannel: disabled automatic use of client certificate\r\n* ALPN: curl offers http/1.1\r\n* schannel: added 1 certificate(s) from CA file 'D:\\DevPortal\\homelede\\feeds-xiaoqingfeng-homestun\\docs\\artifacts\\upnp-lease-private\\active-cutoff\\test-cert.pem'\r\n* schannel: connection hostname (homestun-test.homelede.com) validated against certificate name (homestun-test.homelede.com)\r\n* ALPN: server accepted http/1.1\r\n* Established connection to homestun-test.homelede.com (60.20.170.34 port 18444) from 10.250.0.245 port 64222 \r\n* using HTTP/1.x\r\n> GET / HTTP/1.1\r\r\n> Host: homestun-test.homelede.com:18444\r\r\n> User-Agent: curl/8.21.0\r\r\n> Accept: */*\r\r\n> \r\r\n* Request completely sent off\r\n< HTTP/1.1 200 OK\r\r\n< Server: nginx/1.21.3\r\r\n< Date: Mon, 12 Oct 2026 12:28:17 GMT\r\r\n< Content-Length: 55\r\r\n< Connection: keep-alive\r\r\n< \r\r\n{ [55 bytes data]\r\n* Connection #0 to host homestun-test.homelede.com:18444 left intact\r\n",
+    "marker_matches": true,
+    "elapsed_local": 15.323363700008485
+  },
+  "held_connection": {
+    "bytes": 4619,
+    "headers": "HTTP/1.1 200 OK\r\nServer: nginx/1.21.3\r\nDate: Mon, 12 Oct 2026 12:28:17 GMT\r\nContent-Type: text/plain\r\nTransfer-Encoding: chunked\r\nConnection: close\r\nCache-Control: no-store",
+    "first_byte_elapsed_native": 15.278336049988866,
+    "ticks": [
+      {
+        "number": 1,
+        "source_monotonic": 430516.67871,
+        "received_elapsed_native": 15.278362949989969
+      },
+      {
+        "number": 2,
+        "source_monotonic": 430518.678866,
+        "received_elapsed_native": 17.27851564998855
+      },
+      {
+        "number": 3,
+        "source_monotonic": 430520.679117,
+        "received_elapsed_native": 19.279131449991837
+      },
+      {
+        "number": 4,
+        "source_monotonic": 430522.67925,
+        "received_elapsed_native": 21.27857855000184
+      },
+      {
+        "number": 5,
+        "source_monotonic": 430524.679469,
+        "received_elapsed_native": 23.27760614998988
+      },
+      {
+        "number": 6,
+        "source_monotonic": 430526.679616,
+        "received_elapsed_native": 25.277816449990496
+      },
+      {
+        "number": 7,
+        "source_monotonic": 430528.67977,
+        "received_elapsed_native": 27.27892455001711
+      },
+      {
+        "number": 8,
+        "source_monotonic": 430530.679932,
+        "received_elapsed_native": 29.27829605000443
+      },
+      {
+        "number": 9,
+        "source_monotonic": 430532.680143,
+        "received_elapsed_native": 31.291926350007998
+      },
+      {
+        "number": 10,
+        "source_monotonic": 430534.680283,
+        "received_elapsed_native": 33.280354349990375
+      },
+      {
+        "number": 11,
+        "source_monotonic": 430536.680534,
+        "received_elapsed_native": 35.28052555001341
+      },
+      {
+        "number": 12,
+        "source_monotonic": 430538.680694,
+        "received_elapsed_native": 37.27926884999033
+      },
+      {
+        "number": 13,
+        "source_monotonic": 430540.680854,
+        "received_elapsed_native": 39.27837205000105
+      },
+      {
+        "number": 14,
+        "source_monotonic": 430542.68096,
+        "received_elapsed_native": 41.28022844999214
+      },
+      {
+        "number": 15,
+        "source_monotonic": 430544.681069,
+        "received_elapsed_native": 43.27901605001534
+      },
+      {
+        "number": 16,
+        "source_monotonic": 430546.681302,
+        "received_elapsed_native": 45.28057644999353
+      },
+      {
+        "number": 17,
+        "source_monotonic": 430548.681472,
+        "received_elapsed_native": 47.28461495001102
+      },
+      {
+        "number": 18,
+        "source_monotonic": 430550.681632,
+        "received_elapsed_native": 49.28328765000333
+      },
+      {
+        "number": 19,
+        "source_monotonic": 430552.68179,
+        "received_elapsed_native": 51.28019535000203
+      },
+      {
+        "number": 20,
+        "source_monotonic": 430554.682029,
+        "received_elapsed_native": 53.27997584998957
+      },
+      {
+        "number": 21,
+        "source_monotonic": 430556.682198,
+        "received_elapsed_native": 55.305861850007204
+      },
+      {
+        "number": 22,
+        "source_monotonic": 430558.68235,
+        "received_elapsed_native": 57.280286149994936
+      },
+      {
+        "number": 23,
+        "source_monotonic": 430560.682517,
+        "received_elapsed_native": 59.28859315000591
+      },
+      {
+        "number": 24,
+        "source_monotonic": 430562.682814,
+        "received_elapsed_native": 61.28096025000559
+      },
+      {
+        "number": 25,
+        "source_monotonic": 430564.682979,
+        "received_elapsed_native": 63.281045650015585
+      },
+      {
+        "number": 26,
+        "source_monotonic": 430566.683128,
+        "received_elapsed_native": 65.28183295001509
+      },
+      {
+        "number": 27,
+        "source_monotonic": 430568.683302,
+        "received_elapsed_native": 67.28293395001674
+      },
+      {
+        "number": 28,
+        "source_monotonic": 430570.683483,
+        "received_elapsed_native": 69.28228924999712
+      },
+      {
+        "number": 29,
+        "source_monotonic": 430572.683722,
+        "received_elapsed_native": 71.2819938499888
+      },
+      {
+        "number": 30,
+        "source_monotonic": 430574.683835,
+        "received_elapsed_native": 73.28361094999127
+      },
+      {
+        "number": 31,
+        "source_monotonic": 430576.683994,
+        "received_elapsed_native": 75.28192614999716
+      },
+      {
+        "number": 32,
+        "source_monotonic": 430578.684174,
+        "received_elapsed_native": 77.28519424999831
+      },
+      {
+        "number": 33,
+        "source_monotonic": 430580.684419,
+        "received_elapsed_native": 79.2831027499924
+      },
+      {
+        "number": 34,
+        "source_monotonic": 430582.684588,
+        "received_elapsed_native": 81.28230905000237
+      },
+      {
+        "number": 35,
+        "source_monotonic": 430584.684703,
+        "received_elapsed_native": 83.28145234999829
+      },
+      {
+        "number": 36,
+        "source_monotonic": 430586.684811,
+        "received_elapsed_native": 85.28334675001679
+      },
+      {
+        "number": 37,
+        "source_monotonic": 430588.685061,
+        "received_elapsed_native": 87.28775034999126
+      },
+      {
+        "number": 38,
+        "source_monotonic": 430590.685267,
+        "received_elapsed_native": 89.28270625000005
+      },
+      {
+        "number": 39,
+        "source_monotonic": 430592.685449,
+        "received_elapsed_native": 91.28360145000624
+      },
+      {
+        "number": 40,
+        "source_monotonic": 430594.685557,
+        "received_elapsed_native": 93.28359644999728
+      },
+      {
+        "number": 41,
+        "source_monotonic": 430596.685752,
+        "received_elapsed_native": 95.28651325000101
+      },
+      {
+        "number": 42,
+        "source_monotonic": 430598.685882,
+        "received_elapsed_native": 97.28335315000731
+      },
+      {
+        "number": 43,
+        "source_monotonic": 430600.686055,
+        "received_elapsed_native": 99.3469693500083
+      },
+      {
+        "number": 44,
+        "source_monotonic": 430602.686209,
+        "received_elapsed_native": 101.28571055000066
+      },
+      {
+        "number": 45,
+        "source_monotonic": 430604.686444,
+        "received_elapsed_native": 103.28379615000449
+      },
+      {
+        "number": 46,
+        "source_monotonic": 430606.686658,
+        "received_elapsed_native": 105.28776425000979
+      },
+      {
+        "number": 47,
+        "source_monotonic": 430608.686831,
+        "received_elapsed_native": 107.28697305000969
+      },
+      {
+        "number": 48,
+        "source_monotonic": 430610.686947,
+        "received_elapsed_native": 109.28573284999584
+      },
+      {
+        "number": 49,
+        "source_monotonic": 430612.687114,
+        "received_elapsed_native": 111.28584815000067
+      },
+      {
+        "number": 50,
+        "source_monotonic": 430614.687307,
+        "received_elapsed_native": 113.28763944999082
+      },
+      {
+        "number": 51,
+        "source_monotonic": 430616.687419,
+        "received_elapsed_native": 115.28590975000407
+      },
+      {
+        "number": 52,
+        "source_monotonic": 430618.687593,
+        "received_elapsed_native": 117.28648675000295
+      },
+      {
+        "number": 53,
+        "source_monotonic": 430620.687712,
+        "received_elapsed_native": 119.29178614998818
+      }
+    ],
+    "outcome": "EOF",
+    "elapsed_native_to_eof": 120.1285820500052
+  },
+  "supervisor_exit": 0,
+  "local_elapsed_to_exit": 120.58316890001879,
+  "held_stream_assessment": {
+    "tick_count": 53,
+    "last_tick_to_eof_seconds": 0.8367959000170231,
+    "receive_gaps_seconds": [
+      2.00015269999858,
+      2.0006158000032883,
+      1.999447100010002,
+      1.9990275999880396,
+      2.0002103000006173,
+      2.001108100026613,
+      1.9993714999873191,
+      2.0136303000035696,
+      1.9884279999823775,
+      2.0001712000230327,
+      1.9987432999769226,
+      1.9991032000107225,
+      2.001856399991084,
+      1.9987876000232063,
+      2.001560399978189,
+      2.0040385000174865,
+      1.9986726999923121,
+      1.996907699998701,
+      1.999780499987537,
+      2.0258860000176355,
+      1.9744242999877315,
+      2.008307000010973,
+      1.992367099999683,
+      2.0000854000099935,
+      2.0007872999995016,
+      2.001101000001654,
+      1.9993552999803796,
+      1.9997045999916736,
+      2.001617100002477,
+      1.9983152000058908,
+      2.0032681000011507,
+      1.9979084999940824,
+      1.9992063000099733,
+      1.9991432999959216,
+      2.0018944000185,
+      2.0044035999744665,
+      1.9949559000087902,
+      2.000895200006198,
+      1.9999949999910314,
+      2.0029168000037316,
+      1.9968399000063073,
+      2.063616200000979,
+      1.9387411999923643,
+      1.998085600003833,
+      2.003968100005295,
+      1.9992087999999058,
+      1.9987597999861464,
+      2.000115300004836,
+      2.0017912999901455,
+      1.998270300013246,
+      2.0005769999988843,
+      2.0052993999852333
+    ],
+    "EOF_native_seconds": 120.1285820500052,
+    "PASS": true
+  },
+  "backend_after_native_cutoff": "tick 1 430622.182159 homestun-upnp-20261012T122756Z-7c1951cba0fa9e8c4e683a8f\ntick 2 430624.182322 homestun-upnp-20261012T122756Z-7c1951cba0fa9e8c4e683a8f\n",
+  "backend_still_streaming_after_native_cutoff": true,
+  "post_deadline_new_connection": {
+    "exit": 7,
+    "stderr": "* Added homestun-test.homelede.com:18444:60.20.170.34 to DNS cache\r\n* Hostname homestun-test.homelede.com was found in DNS cache\r\n* Host homestun-test.homelede.com:18444 was resolved.\r\n* IPv6: (none)\r\n* IPv4: 60.20.170.34\r\n*   Trying 60.20.170.34:18444...\r\n* connect to 60.20.170.34 port 18444 from 0.0.0.0 port 54337 failed: Connection refused\r\n* Failed to connect to homestun-test.homelede.com:18444 after 2162 ms: Could not connect to server\r\n* closing connection #0\r\ncurl: (7) Failed to connect to homestun-test.homelede.com:18444 after 2162 ms: Could not connect to server\r\n"
+  },
+  "backend_stop": "",
+  "last_lease_query": {
+    "action": "GetSpecificPortMappingEntry",
+    "at_monotonic": 213890.9534682,
+    "http_status": 500,
+    "fault": "714",
+    "fields": {}
+  },
+  "natural_expiry_verified": true,
+  "expiry_observed_seconds": 312.2766372000042,
+  "status": "PASS",
+  "final_mapping": {
+    "action": "GetSpecificPortMappingEntry",
+    "at_monotonic": 213891.3060649,
+    "http_status": 500,
+    "fault": "714",
+    "fields": {}
+  },
+  "cleanup_readback": "Active Internet connections (only servers)\nProto Recv-Q Send-Q Local Address           Foreign Address         State       \ntcp        0      0 192.168.1.2:53          0.0.0.0:*               LISTEN      \ntcp        0      0 0.0.0.0:443             0.0.0.0:*               LISTEN      \ntcp        0      0 192.168.1.2:22          0.0.0.0:*               LISTEN      \ntcp        0      0 172.17.0.1:2004         0.0.0.0:*               LISTEN      \ntcp        0      0 192.168.1.2:139         0.0.0.0:*               LISTEN      \ntcp        0      0 0.0.0.0:5355            0.0.0.0:*               LISTEN      \ntcp        0      0 127.0.0.1:53            0.0.0.0:*               LISTEN      \ntcp        0      0 0.0.0.0:80              0.0.0.0:*               LISTEN      \ntcp        0      0 192.168.1.2:445         0.0.0.0:*               LISTEN      \ntcp        0      0 0.0.0.0:1026            0.0.0.0:*               LISTEN      \ntcp        0      0 0.0.0.0:21              0.0.0.0:*               LISTEN      \ntcp        0      0 192.168.1.2:7681        0.0.0.0:*               LISTEN      \ntcp        0      0 127.0.0.1:2002          0.0.0.0:*               LISTEN      \ntcp        0      0 127.0.0.1:2003          0.0.0.0:*               LISTEN      \ntcp        0      0 127.0.0.1:2004          0.0.0.0:*               LISTEN      \ntcp        0      0 172.17.0.1:53           0.0.0.0:*               LISTEN      \ntcp        0      0 0.0.0.0:60000           0.0.0.0:*               LISTEN      \ntcp        0      0 0.0.0.0:3702            0.0.0.0:*               LISTEN      \ntcp        0      0 192.168.1.2:2004        0.0.0.0:*               LISTEN      \ntcp        0      0 fd89:878e:a47f::1:22    :::*                    LISTEN      \ntcp        0      0 ::1:2004                :::*                    LISTEN      \ntcp        0      0 fd89:878e:a47f::1:53    :::*                    LISTEN      \ntcp        0      0 :::5355                 :::*                    LISTEN      \ntcp        0      0 :::80                   :::*                    LISTEN      \ntcp        0      0 :::1070                 :::*                    LISTEN      \ntcp        0      0 fe80::290:a6ff:fee0:382c:53 :::*                    LISTEN      \ntcp        0      0 fe80::290:a6ff:fee0:382c:2004 :::*                    LISTEN      \ntcp        0      0 :::2001                 :::*                    LISTEN      \ntcp        0      0 :::9876                 :::*                    LISTEN      \ntcp        0      0 :::3702                 :::*                    LISTEN      \ntcp        0      0 fd89:878e:a47f::1:2004  :::*                    LISTEN      \ntcp        0      0 ::1:53                  :::*                    LISTEN      \nNATIVE_SNAPSHOT_ABSENT\n",
+  "fixture_cleanup": "FIXTURE_ABSENT\n",
+  "fixture_removed": true,
+  "final_baseline": "52a2755e9a380e1e6d526204ec443dcdd85639f07d2903f64839d073edd55795  /etc/config/firewall\n6ead1d3a553f28348a58b4a3055b8873aee4916b2fe3471b67e960cbfba2dacd  /etc/config/network\n62cb51fe983f98e057c368d4654675d15a34572b68b6ae0fca241887ea9a58c4  /etc/config/passwall2\nHOMESTUN_CONFIG_ABSENT\n0:\tfrom all lookup local\n220:\tfrom all lookup 220\n999:\tfrom all fwmark 0x50535732 lookup 999\n32766:\tfrom all lookup main\n32767:\tfrom all lookup default\ndefault via 192.168.1.1 dev br-lan proto static \n172.17.0.0/16 dev docker0 proto kernel scope link src 172.17.0.1 linkdown \n192.168.1.0/24 dev br-lan proto kernel scope link src 192.168.1.2 \nActive Internet connections (only servers)\nProto Recv-Q Send-Q Local Address           Foreign Address         State       \ntcp        0      0 192.168.1.2:53          0.0.0.0:*               LISTEN      \ntcp        0      0 0.0.0.0:443             0.0.0.0:*               LISTEN      \ntcp        0      0 192.168.1.2:22          0.0.0.0:*               LISTEN      \ntcp        0      0 172.17.0.1:2004         0.0.0.0:*               LISTEN      \ntcp        0      0 192.168.1.2:139         0.0.0.0:*               LISTEN      \ntcp        0      0 0.0.0.0:5355            0.0.0.0:*               LISTEN      \ntcp        0      0 127.0.0.1:53            0.0.0.0:*               LISTEN      \ntcp        0      0 0.0.0.0:80              0.0.0.0:*               LISTEN      \ntcp        0      0 192.168.1.2:445         0.0.0.0:*               LISTEN      \ntcp        0      0 0.0.0.0:1026            0.0.0.0:*               LISTEN      \ntcp        0      0 0.0.0.0:21              0.0.0.0:*               LISTEN      \ntcp        0      0 192.168.1.2:7681        0.0.0.0:*               LISTEN      \ntcp        0      0 127.0.0.1:2002          0.0.0.0:*               LISTEN      \ntcp        0      0 127.0.0.1:2003          0.0.0.0:*               LISTEN      \ntcp        0      0 127.0.0.1:2004          0.0.0.0:*               LISTEN      \ntcp        0      0 172.17.0.1:53           0.0.0.0:*               LISTEN      \ntcp        0      0 0.0.0.0:60000           0.0.0.0:*               LISTEN      \ntcp        0      0 0.0.0.0:3702            0.0.0.0:*               LISTEN      \ntcp        0      0 192.168.1.2:2004        0.0.0.0:*               LISTEN      \ntcp        0      0 fd89:878e:a47f::1:22    :::*                    LISTEN      \ntcp        0      0 ::1:2004                :::*                    LISTEN      \ntcp        0      0 fd89:878e:a47f::1:53    :::*                    LISTEN      \ntcp        0      0 :::5355                 :::*                    LISTEN      \ntcp        0      0 :::80                   :::*                    LISTEN      \ntcp        0      0 :::1070                 :::*                    LISTEN      \ntcp        0      0 fe80::290:a6ff:fee0:382c:53 :::*                    LISTEN      \ntcp        0      0 fe80::290:a6ff:fee0:382c:2004 :::*                    LISTEN      \ntcp        0      0 :::2001                 :::*                    LISTEN      \ntcp        0      0 :::9876                 :::*                    LISTEN      \ntcp        0      0 :::3702                 :::*                    LISTEN      \ntcp        0      0 fd89:878e:a47f::1:2004  :::*                    LISTEN      \ntcp        0      0 ::1:53                  :::*                    LISTEN      \n",
+  "persistent_config_unchanged": true,
+  "routing_unchanged": true,
+  "rules_structurally_unchanged": true,
+  "management_retained": true,
+  "independent_verification": {
+  "gateway_exact_key_fault": "714",
+  "gateway_remote": "192.168.1.1:5351",
+  "homestun_service_absent": true,
+  "fixture_absent": true,
+  "owned_proc_mount_listeners_absent": true,
+  "Add_count": 1,
+  "Delete_count": 0,
+  "ticks_count_recomputed": 53,
+  "runner_sha256": "7eaabf7746b3c6462c27b5e0c8320db912295ffc84841daab8814aca090cbf8c",
+  "cleanup_note": "Read-only ubus JSON argv quoting failed once, then stdin-script query returned empty object.",
+  "backend_tdd": "Missing-binary RED; WSL static gcc -O2 -Wall -Wextra -Werror; six real ticks span10.001s GREEN"
+}
+}

@@ -1,0 +1,8 @@
+{
+  "root/usr/libexec/homestun-lease": "540b98eb8be0ed039d9f8bb19b52d287f1b5c7d594321b397e3d8783e50072a4",
+  "root/usr/share/homestun/config-cli.lua": "2fe80767382dba3691c50aebd72afa40d7ffe46a384e7c4edfa22ae70bba5fcf",
+  "root/usr/share/homestun/config.lua": "6d30c4421f4ff7071454f22c4dd6c8db35ac10dc851890df2496824226fd1735",
+  "root/usr/share/homestun/core.lua": "c6e148db828a47f478176ccaa85fb5a92c52e203985ac6bdac70de7425744a0d",
+  "probe": "005721aee62bcb21de67169aad469b502b7d9e7b44cfed73a89bf49e42a6d59a",
+  "run.sh": "fc6bf7e40d669536842376e6cfd41fdf89d62eeb14d9e9127e6911797641c7ea"
+}

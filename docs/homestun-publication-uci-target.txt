@@ -1,0 +1,31 @@
+PASS disabled zero instances
+PASS fail before registration: unapproved
+PASS fail before registration: missing-token
+PASS opt-in exact native command; bounded TTL; no respawn/triggers; honest status
+HomeSTUN: explicit exposure approval required
+PASS fail before registration: missing-curl
+PASS fail before registration: missing-ca
+PASS fail before registration: missing-publisher
+PASS fail before registration: public-token
+PASS fail before registration: owner
+PASS fail before registration: hardlink
+PASS fail before registration: symlink
+publication token size: Invalid argument
+PASS fail before registration: short-token
+PASS fail before registration: newline-token
+PASS fail before registration: oversized-token
+publication token bytes: Invalid argument
+publication token size: Invalid argument
+PASS fail before registration: public-parent
+PASS fail before registration: public-key
+PASS fail before registration: missing-cert
+PASS fail before registration: wrong-path
+unsafe private directory: Success
+HomeSTUN: dedicated private token path required
+PASS fail before registration: ttl-overflow
+PASS fail before registration: plaintext
+HomeSTUN: invalid TTL or isolated ports
+HomeSTUN: unknown service option
+PASS publication disabled legacy command; no secret needed
+PASS absent new options legacy registration
+PASS registration read-only: no engine/runtime/snapshot/network

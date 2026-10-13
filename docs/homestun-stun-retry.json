@@ -1,0 +1,470 @@
+{
+  "status": "completed_stun_only_no_external_ingress_success",
+  "variants_count": 3,
+  "external_successes": 0,
+  "variants": [
+    {
+      "variant": "cf-baidu",
+      "generation": "realnat-20261012T130736Z",
+      "stun_server": "141.101.90.1:3478",
+      "http_keeper": "www.baidu.com",
+      "http_keeper_ip": "110.242.70.57",
+      "keep_interval_seconds": 5,
+      "ttl_seconds": 70,
+      "started_at": "2026-10-12T13:07:39.990038+00:00",
+      "mapping_observed_at": "2026-10-12T13:07:43.692101+00:00",
+      "public_endpoint": "60.20.170.34:18444",
+      "callback_fields": [
+        "60.20.170.34",
+        "18444",
+        "2001::480c:3c14:aa22",
+        "18444",
+        "tcp",
+        "192.168.1.2"
+      ],
+      "local_marker_matches": true,
+      "external_tcp": {
+        "connected": false,
+        "error": "ConnectionRefusedError(10061, '由于目标计算机积极拒绝，无法连接。', None, 10061, None)",
+        "at": "2026-10-12T13:07:46.716449+00:00"
+      },
+      "external_curl": {
+        "exit": 7,
+        "body": "",
+        "stderr": "* Added homestun-test.homelede.com:18444:60.20.170.34 to DNS cache\r\n* Hostname homestun-test.homelede.com was found in DNS cache\r\n* Host homestun-test.homelede.com:18444 was resolved.\r\n* IPv6: (none)\r\n* IPv4: 60.20.170.34\r\n*   Trying 60.20.170.34:18444...\r\n* connect to 60.20.170.34 port 18444 from 0.0.0.0 port 54153 failed: Connection refused\r\n* Failed to connect to homestun-test.homelede.com:18444 after 2139 ms: Could not connect to server\r\n* closing connection #0\r\ncurl: (7) Failed to connect to homestun-test.homelede.com:18444 after 2139 ms: Could not connect to server\r\n",
+        "marker_matches": false,
+        "at": "2026-10-12T13:07:48.873477+00:00"
+      },
+      "supervisor_exit": 0,
+      "elapsed_to_exit": 71.60069579997798,
+      "expired_at": "2026-10-12T13:08:51.594278+00:00",
+      "gateway_initial": {
+        "at": "2026-10-12T13:07:37.306136+00:00",
+        "exact_port": 18444,
+        "protocol": "TCP",
+        "fault": "714"
+      },
+      "gateway_after": {
+        "at": "2026-10-12T13:08:57.184204+00:00",
+        "exact_port": 18444,
+        "protocol": "TCP",
+        "fault": "714"
+      },
+      "fixture_removed": true,
+      "rules_structurally_unchanged": true,
+      "routing_unchanged": true,
+      "persistent_config_unchanged": true,
+      "capture": {
+        "external": {
+          "in": 0,
+          "out": 0,
+          "packets": 0,
+          "first_epoch": null,
+          "last_epoch": null,
+          "outbound_data_epochs": [],
+          "inbound_data_epochs": []
+        },
+        "stun": {
+          "in": 4,
+          "out": 6,
+          "packets": 10,
+          "first_epoch": 1791810462,
+          "last_epoch": 1791810462,
+          "outbound_data_epochs": [
+            1791810462
+          ],
+          "inbound_data_epochs": [
+            1791810462
+          ]
+        },
+        "keeper": {
+          "in": 29,
+          "out": 30,
+          "packets": 59,
+          "first_epoch": 1791810462,
+          "last_epoch": 1791810527,
+          "outbound_data_epochs": [
+            1791810462,
+            1791810467,
+            1791810472,
+            1791810477,
+            1791810482,
+            1791810487,
+            1791810492,
+            1791810497,
+            1791810502,
+            1791810507,
+            1791810512,
+            1791810517,
+            1791810522,
+            1791810527
+          ],
+          "inbound_data_epochs": [
+            1791810462,
+            1791810467,
+            1791810472,
+            1791810477,
+            1791810482,
+            1791810487,
+            1791810492,
+            1791810497,
+            1791810502,
+            1791810507,
+            1791810512,
+            1791810517,
+            1791810522,
+            1791810527
+          ]
+        },
+        "local-lo": {
+          "in": 15,
+          "out": 15,
+          "packets": 30,
+          "first_epoch": 1791810464,
+          "last_epoch": 1791810464,
+          "outbound_data_epochs": [
+            1791810464,
+            1791810464,
+            1791810464,
+            1791810464,
+            1791810464,
+            1791810464,
+            1791810464
+          ],
+          "inbound_data_epochs": [
+            1791810464,
+            1791810464,
+            1791810464,
+            1791810464,
+            1791810464,
+            1791810464,
+            1791810464
+          ]
+        }
+      },
+      "live_keeper": [
+        "tcp        0      0 192.168.1.2:18444       110.242.70.57:80        ESTABLISHED 6974/natmap-real"
+      ],
+      "seccomp_verified": true,
+      "evidence_file": "homestun-stun-retry-cf-baidu-result.json"
+    },
+    {
+      "variant": "nextcloud-baidu",
+      "generation": "realnat-20261012T130921Z",
+      "stun_server": "46.225.95.169:3478",
+      "http_keeper": "www.baidu.com",
+      "http_keeper_ip": "110.242.70.57",
+      "keep_interval_seconds": 5,
+      "ttl_seconds": 70,
+      "started_at": "2026-10-12T13:09:25.095758+00:00",
+      "mapping_observed_at": "2026-10-12T13:09:28.778773+00:00",
+      "public_endpoint": "60.20.170.34:18444",
+      "callback_fields": [
+        "60.20.170.34",
+        "18444",
+        "2001::480c:3c14:aa22",
+        "18444",
+        "tcp",
+        "192.168.1.2"
+      ],
+      "local_marker_matches": true,
+      "external_tcp": {
+        "connected": false,
+        "error": "ConnectionRefusedError(10061, '由于目标计算机积极拒绝，无法连接。', None, 10061, None)",
+        "at": "2026-10-12T13:09:31.831450+00:00"
+      },
+      "external_curl": {
+        "exit": 7,
+        "body": "",
+        "stderr": "* Added homestun-test.homelede.com:18444:60.20.170.34 to DNS cache\r\n* Hostname homestun-test.homelede.com was found in DNS cache\r\n* Host homestun-test.homelede.com:18444 was resolved.\r\n* IPv6: (none)\r\n* IPv4: 60.20.170.34\r\n*   Trying 60.20.170.34:18444...\r\n* connect to 60.20.170.34 port 18444 from 0.0.0.0 port 53423 failed: Connection refused\r\n* Failed to connect to homestun-test.homelede.com:18444 after 2182 ms: Could not connect to server\r\n* closing connection #0\r\ncurl: (7) Failed to connect to homestun-test.homelede.com:18444 after 2182 ms: Could not connect to server\r\n",
+        "marker_matches": false,
+        "at": "2026-10-12T13:09:34.033320+00:00"
+      },
+      "supervisor_exit": 0,
+      "elapsed_to_exit": 71.5919935000129,
+      "expired_at": "2026-10-12T13:10:36.691298+00:00",
+      "gateway_initial": {
+        "at": "2026-10-12T13:09:22.354335+00:00",
+        "exact_port": 18444,
+        "protocol": "TCP",
+        "fault": "714"
+      },
+      "gateway_after": {
+        "at": "2026-10-12T13:10:42.280980+00:00",
+        "exact_port": 18444,
+        "protocol": "TCP",
+        "fault": "714"
+      },
+      "fixture_removed": true,
+      "rules_structurally_unchanged": true,
+      "routing_unchanged": true,
+      "persistent_config_unchanged": true,
+      "capture": {
+        "external": {
+          "in": 0,
+          "out": 0,
+          "packets": 0,
+          "first_epoch": null,
+          "last_epoch": null,
+          "outbound_data_epochs": [],
+          "inbound_data_epochs": []
+        },
+        "stun": {
+          "in": 4,
+          "out": 5,
+          "packets": 9,
+          "first_epoch": 1791810567,
+          "last_epoch": 1791810567,
+          "outbound_data_epochs": [
+            1791810567
+          ],
+          "inbound_data_epochs": [
+            1791810567
+          ]
+        },
+        "keeper": {
+          "in": 29,
+          "out": 30,
+          "packets": 59,
+          "first_epoch": 1791810567,
+          "last_epoch": 1791810632,
+          "outbound_data_epochs": [
+            1791810567,
+            1791810572,
+            1791810577,
+            1791810582,
+            1791810587,
+            1791810592,
+            1791810597,
+            1791810602,
+            1791810607,
+            1791810612,
+            1791810617,
+            1791810622,
+            1791810627,
+            1791810632
+          ],
+          "inbound_data_epochs": [
+            1791810567,
+            1791810572,
+            1791810577,
+            1791810582,
+            1791810587,
+            1791810592,
+            1791810597,
+            1791810602,
+            1791810607,
+            1791810612,
+            1791810617,
+            1791810622,
+            1791810627,
+            1791810632
+          ]
+        },
+        "local-lo": {
+          "in": 15,
+          "out": 15,
+          "packets": 30,
+          "first_epoch": 1791810569,
+          "last_epoch": 1791810569,
+          "outbound_data_epochs": [
+            1791810569,
+            1791810569,
+            1791810569,
+            1791810569,
+            1791810569,
+            1791810569,
+            1791810569
+          ],
+          "inbound_data_epochs": [
+            1791810569,
+            1791810569,
+            1791810569,
+            1791810569,
+            1791810569,
+            1791810569,
+            1791810569
+          ]
+        }
+      },
+      "live_keeper": [
+        "tcp        0      0 192.168.1.2:18444       110.242.70.57:80        ESTABLISHED 12018/natmap-real"
+      ],
+      "seccomp_verified": true,
+      "evidence_file": "homestun-stun-retry-nextcloud-baidu-result.json"
+    },
+    {
+      "variant": "cf-qq",
+      "generation": "realnat-20261012T131106Z",
+      "stun_server": "141.101.90.1:3478",
+      "http_keeper": "www.qq.com",
+      "http_keeper_ip": "221.198.70.47",
+      "keep_interval_seconds": 5,
+      "ttl_seconds": 70,
+      "started_at": "2026-10-12T13:11:09.843454+00:00",
+      "mapping_observed_at": "2026-10-12T13:11:13.528201+00:00",
+      "public_endpoint": "60.20.170.34:18444",
+      "callback_fields": [
+        "60.20.170.34",
+        "18444",
+        "2001::480c:3c14:aa22",
+        "18444",
+        "tcp",
+        "192.168.1.2"
+      ],
+      "local_marker_matches": true,
+      "external_tcp": {
+        "connected": false,
+        "error": "ConnectionRefusedError(10061, '由于目标计算机积极拒绝，无法连接。', None, 10061, None)",
+        "at": "2026-10-12T13:11:16.569776+00:00"
+      },
+      "external_curl": {
+        "exit": 7,
+        "body": "",
+        "stderr": "* Added homestun-test.homelede.com:18444:60.20.170.34 to DNS cache\r\n* Hostname homestun-test.homelede.com was found in DNS cache\r\n* Host homestun-test.homelede.com:18444 was resolved.\r\n* IPv6: (none)\r\n* IPv4: 60.20.170.34\r\n*   Trying 60.20.170.34:18444...\r\n* connect to 60.20.170.34 port 18444 from 0.0.0.0 port 57986 failed: Connection refused\r\n* Failed to connect to homestun-test.homelede.com:18444 after 2139 ms: Could not connect to server\r\n* closing connection #0\r\ncurl: (7) Failed to connect to homestun-test.homelede.com:18444 after 2139 ms: Could not connect to server\r\n",
+        "marker_matches": false,
+        "at": "2026-10-12T13:11:18.726761+00:00"
+      },
+      "supervisor_exit": 0,
+      "elapsed_to_exit": 71.60128639999311,
+      "expired_at": "2026-10-12T13:12:21.448288+00:00",
+      "gateway_initial": {
+        "at": "2026-10-12T13:11:06.997968+00:00",
+        "exact_port": 18444,
+        "protocol": "TCP",
+        "fault": "714"
+      },
+      "gateway_after": {
+        "at": "2026-10-12T13:12:27.001768+00:00",
+        "exact_port": 18444,
+        "protocol": "TCP",
+        "fault": "714"
+      },
+      "fixture_removed": true,
+      "rules_structurally_unchanged": true,
+      "routing_unchanged": true,
+      "persistent_config_unchanged": true,
+      "capture": {
+        "external": {
+          "in": 0,
+          "out": 0,
+          "packets": 0,
+          "first_epoch": null,
+          "last_epoch": null,
+          "outbound_data_epochs": [],
+          "inbound_data_epochs": []
+        },
+        "stun": {
+          "in": 4,
+          "out": 6,
+          "packets": 10,
+          "first_epoch": 1791810671,
+          "last_epoch": 1791810672,
+          "outbound_data_epochs": [
+            1791810672
+          ],
+          "inbound_data_epochs": [
+            1791810672
+          ]
+        },
+        "keeper": {
+          "in": 19,
+          "out": 30,
+          "packets": 49,
+          "first_epoch": 1791810671,
+          "last_epoch": 1791810737,
+          "outbound_data_epochs": [
+            1791810671,
+            1791810676,
+            1791810681,
+            1791810686,
+            1791810692,
+            1791810697,
+            1791810702,
+            1791810707,
+            1791810712,
+            1791810717,
+            1791810722,
+            1791810727,
+            1791810732,
+            1791810737
+          ],
+          "inbound_data_epochs": [
+            1791810671,
+            1791810676,
+            1791810681,
+            1791810686,
+            1791810692,
+            1791810697,
+            1791810702,
+            1791810707,
+            1791810712,
+            1791810717,
+            1791810722,
+            1791810727,
+            1791810732,
+            1791810737
+          ]
+        },
+        "local-lo": {
+          "in": 15,
+          "out": 15,
+          "packets": 30,
+          "first_epoch": 1791810674,
+          "last_epoch": 1791810674,
+          "outbound_data_epochs": [
+            1791810674,
+            1791810674,
+            1791810674,
+            1791810674,
+            1791810674,
+            1791810674,
+            1791810674
+          ],
+          "inbound_data_epochs": [
+            1791810674,
+            1791810674,
+            1791810674,
+            1791810674,
+            1791810674,
+            1791810674,
+            1791810674
+          ]
+        }
+      },
+      "live_keeper": [
+        "tcp        0      0 192.168.1.2:18444       221.198.70.47:80        ESTABLISHED 17068/natmap-real"
+      ],
+      "seccomp_verified": true,
+      "evidence_file": "homestun-stun-retry-cf-qq-result.json"
+    }
+  ],
+  "natmap_revision": "f8d7996710677c9885c148dda80a42d626f0a17b",
+  "natmap_sha256": "ba2df4ead5562b0bc0359881ffce1a07d65f62403b6e0b7e0980731be09c45b1",
+  "probe_ip_lookup": "Windows direct HTTP literal220.185.184.53 Hostmyip.ipip.net returned123.118.214.120; CGNAT per-destination source address not independently captured",
+  "upnp_add_delete_calls": 0,
+  "natpmp_calls": 0,
+  "production_changes": false,
+  "conclusion": "Successful outbound mapping and persistent domestic HTTP keeper do not make unsolicited third-party inbound TCP reachable. Same observed STUN endpoint across two providers does not establish NAT classification. No third-party SYN matching fixed source IP observed at br-lan; location of refusal cannot be assigned from this capture alone.",
+  "sources": [
+    "https://raw.githubusercontent.com/heiher/natmap/f8d7996710677c9885c148dda80a42d626f0a17b/src/hev-conf.c",
+    "https://raw.githubusercontent.com/heiher/natmap/f8d7996710677c9885c148dda80a42d626f0a17b/src/hev-tnsk.c",
+    "https://raw.githubusercontent.com/heiher/natmap/f8d7996710677c9885c148dda80a42d626f0a17b/src/hev-sock.c",
+    "https://raw.githubusercontent.com/heiher/natmap/f8d7996710677c9885c148dda80a42d626f0a17b/src/hev-stun.c",
+    "https://github.com/heiher/natmap/wiki",
+    "https://github.com/heiher/natmap/wiki/faq"
+  ],
+  "independent_final_readback": {
+    "at_utc": "2026-10-12T13:13:41Z",
+    "gateway_exact_18444_tcp": "714",
+    "fixture_process_mount_private_keys_listeners_absent": true,
+    "management_ports_preserved": [
+      22,
+      80,
+      443
+    ],
+    "homestun_service": "{}",
+    "evidence": "homestun-stun-retry-cleanup.txt",
+    "probe_ip_reconfirmed": "123.118.214.120"
+  }
+}

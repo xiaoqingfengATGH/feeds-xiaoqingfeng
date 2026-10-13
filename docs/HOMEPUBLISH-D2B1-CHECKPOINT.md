@@ -1,5 +1,16 @@
 # D2b1 checkpoint
 
+## Review remediation checkpoint (supersedes earlier final-gate claims)
+
+F1 watchdog-stop RED reproduced listener still open at 350ms; reciprocal bounded watchdog PID heartbeats plus guardian watchdog pidfd and active owned-group cleanup GREEN. Single watchdog KILL/STOP and guardian/controller KILL/STOP now run in repository regression. Both guardians stopped together remain outside this user-space fault domain: require an active third supervisor or kernel-enforced boundary; no claim of coverage.
+
+F3 foreign-fd RED reproduced CLOEXEC descriptors inherited by fork-only callback. Guardian/watchdog/data each use close_range allowlists; data keeps only report IPC, watchdog/guardian keep only necessary native IPC and temporary bootstrap descriptors. Unsupported close_range fails closed. Foreign listening socket, connected socketpair, file descriptor and unrelated control socket remain open in the controller but absent in callback GREEN. Guardian/watchdog per-inode FD readback still pending.
+
+F4 startup fork2 RED returned success despite absent callback. Bounded data-isolation READY to watchdog, watchdog-owned leader READY to guardian, and guardian READY to controller now precede success; fork1/2/3 and pidfd ENOSYS fault harness passes with -1, callback absent and adopted PIDs reaped. READY denotes native isolation/supervision setup, NOT provider listener/health/TLS readiness. Explicit ERROR frames and startup suspension matrix still pending; EOF is startup error, no bare-PID kernel fallback.
+
+`export TMPDIR=/mnt/c/Users/xiaoq/AppData/Local/hermes/profiles/ta/cache/scratch && python3 homepublish/tests/test-renewable-guard.py` exit 0: 16 lifecycle cases plus four startup faults. F2 escape/non-escape process-tree boundary is NOT CLOSED at this checkpoint. No Nginx provider is implemented. Product activation remains disabled; CLI exit78/StartApply unsupported unchanged. Remaining production health/scope/TLS/journal/fw/target integration unchanged. 600/200ms are host fixture budgets only.
+
+
 Baseline ff495727f1cf3a4cc4983afcf5edbc1240b626e9; exclusive feature/homepublish-product worktree. Local source/WSL loopback only, no installation/network/firewall/UPnP/push/merge/PR.
 
 Initial vertical TDD: `TMPDIR=/home/eric/homestun-sdk-check python3 homepublish/tests/test-renewable-guard.py` RED exit 1 `independent renewable guardian missing`; initial finite independent process slice GREEN exit 0, real loopback ticks stopped, listener refused and owned PIDs absent. Core is host fixture only pending renewable behavior and packaging. Product activation remains blocked. No TLS secret copying/owner journal/controller health/scope validation/firewall cleanup implemented.

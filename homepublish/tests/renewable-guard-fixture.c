@@ -11,10 +11,24 @@
 #include <sys/socket.h>
 #include <sys/wait.h>
 #include <time.h>
+#include <fcntl.h>
+#include <errno.h>
+#include <sys/stat.h>
+#include <sys/un.h>
 #include <unistd.h>
+static int foreign_fds[5];
+static void foreign_setup(void) {
+ foreign_fds[0]=socket(AF_INET,SOCK_STREAM|SOCK_CLOEXEC,0);assert(foreign_fds[0]>=0);
+ struct sockaddr_in a={.sin_family=AF_INET,.sin_addr.s_addr=htonl(INADDR_LOOPBACK)};
+ assert(!bind(foreign_fds[0],(void*)&a,sizeof(a)));assert(!listen(foreign_fds[0],2));
+ int pair[2];assert(!socketpair(AF_UNIX,SOCK_STREAM|SOCK_CLOEXEC,0,pair));foreign_fds[1]=pair[0];foreign_fds[2]=pair[1];
+ foreign_fds[3]=open("/dev/null",O_RDWR|O_CLOEXEC);assert(foreign_fds[3]>=0);
+ foreign_fds[4]=socket(AF_UNIX,SOCK_SEQPACKET|SOCK_CLOEXEC,0);assert(foreign_fds[4]>=0);
+}
 static long long ms(void) { struct timespec t;assert(!clock_gettime(CLOCK_MONOTONIC,&t));return (long long)t.tv_sec*1000+t.tv_nsec/1000000; }
 static void pause_ms(int n) {poll(NULL,0,n);}
 static void stream(int report) {
+ if(foreign_fds[0]) for(int i=0;i<5;i++) {errno=0;assert(fcntl(foreign_fds[i],F_GETFD)==-1 && errno==EBADF);}
  int s=socket(AF_INET,SOCK_STREAM,0);assert(s>=0);
  struct sockaddr_in a={.sin_family=AF_INET,.sin_addr.s_addr=htonl(INADDR_LOOPBACK)};
  assert(!bind(s,(void*)&a,sizeof(a)));assert(!listen(s,4));socklen_t l=sizeof(a);assert(!getsockname(s,(void*)&a,&l));
@@ -29,6 +43,7 @@ static int connect_port(unsigned port) {
 }
 int main(int argc,char **argv) {
  assert(argc==2);assert(!prctl(PR_SET_CHILD_SUBREAPER,1));
+ if(!strcmp(argv[1],"foreign-fd")) foreign_setup();
  int p[2];assert(!pipe(p)); struct hp_guard g;
  long long start=ms();assert(!hp_guard_start(&g,7,9,!strcmp(argv[1],"temporary")?800:0,stream,p[1]));close(p[1]);
  struct {pid_t pid;unsigned port;} info;
@@ -40,6 +55,10 @@ int main(int argc,char **argv) {
  } else if(!strcmp(argv[1],"temporary")) {
   for(int i=0;i<5;i++) {pause_ms(150);assert(!hp_guard_send(&g,1));}
   pause_ms(300);assert(connect_port(info.port)<0);assert(ms()-start<1400);
+ } else if(!strncmp(argv[1],"watchdog-",9)) {
+  char path[128];snprintf(path,sizeof(path),"/proc/%d/task/%d/children",g.pid,g.pid);
+  FILE *fp=fopen(path,"r");assert(fp);int w=0;assert(fscanf(fp,"%d",&w)==1);fclose(fp);
+  assert(!kill(w,strstr(argv[1],"stop")?SIGSTOP:SIGKILL));
  } else if(!strncmp(argv[1],"guardian-",9)) {
   assert(!kill(g.pid,strstr(argv[1],"stop")?SIGSTOP:SIGKILL));
  } else if(!strncmp(argv[1],"controller-",11)) {
@@ -55,9 +74,9 @@ int main(int argc,char **argv) {
  else if(!strcmp(argv[1],"replay")) {assert(!hp_guard_send(&g,1));pause_ms(50);g.sequence--;assert(!hp_guard_send(&g,1));}
  else if(!strcmp(argv[1],"auth")) {g.token[0]^=1;assert(!hp_guard_send(&g,1));}
  else if(!strcmp(argv[1],"short")) {assert(send(g.fd,"x",1,MSG_NOSIGNAL)==1);}
- else assert(!strcmp(argv[1],"expiry"));
+ else assert(!strcmp(argv[1],"expiry") || !strcmp(argv[1],"foreign-fd"));
  long long closing=ms();
- if(strcmp(argv[1],"expiry") && strcmp(argv[1],"renew") && strcmp(argv[1],"temporary") && strncmp(argv[1],"controller-",11)) {
+ if(strcmp(argv[1],"foreign-fd") && strcmp(argv[1],"expiry") && strcmp(argv[1],"renew") && strcmp(argv[1],"temporary") && strncmp(argv[1],"controller-",11)) {
   pause_ms(350);assert(connect_port(info.port)<0);
  } else pause_ms(850);
  assert(ms()-closing<1500);
@@ -67,5 +86,6 @@ int main(int argc,char **argv) {
  char path[80];snprintf(path,sizeof(path),"/proc/%d",info.pid);assert(access(path,F_OK));
  snprintf(path,sizeof(path),"/proc/%d",g.pid);assert(access(path,F_OK));
  assert(waitpid(-1,NULL,WNOHANG)==-1);
+ if(foreign_fds[0]) for(int i=0;i<5;i++) {assert(fcntl(foreign_fds[i],F_GETFD)>=0);close(foreign_fds[i]);}
  printf("PASS %s: stream EOF, listener refused, owned PIDs absent\n",argv[1]);return 0;
 }

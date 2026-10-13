@@ -1,4 +1,7 @@
-.PHONY: direct product guardian
+.PHONY: direct product guardian guardian-nginx
+# D2b2 acceptance gate: intentionally RED while internal-channel safety is unresolved.
+guardian-nginx:
+	python3 test-guardian-nginx.py
 guardian:
 	python3 test-renewable-guard.py
 # Run from homepublish/tests in WSL; uses cached tools, never installs.

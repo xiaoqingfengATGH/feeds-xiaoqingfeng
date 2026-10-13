@@ -13,6 +13,18 @@ SHARE=ROOT/'homepublish/files/usr/share/homepublish'
 EVIDENCE=pathlib.Path(os.environ.get('HP_D2B2_EVIDENCE','/home/eric/homestun-sdk-check/d2b2-nginx-evidence'))
 EVIDENCE.mkdir(parents=True,exist_ok=True)
 results=[]
+def cleanup_snapshot(d, tracked, p):
+    runtime=d/'runtime'
+    entries=[]
+    if runtime.exists():
+        for q in sorted(runtime.rglob('*')):
+            s=q.lstat()
+            entries.append({'name':str(q.relative_to(runtime)), 'inode':s.st_ino,
+                            'device':s.st_dev, 'mode':oct(s.st_mode), 'links':s.st_nlink})
+    return {'runtime_exists':runtime.exists(), 'entries':entries,
+            'controller_returncode':p.poll(),
+            'owned_pid_states':{str(pid):pathlib.Path('/proc',str(pid),'status').read_text().split('State:')[1].splitlines()[0].strip()
+                                for pid in tracked if pathlib.Path('/proc',str(pid),'status').exists()}}
 owned=set()
 def children(pid):
     found=[]
@@ -202,6 +214,9 @@ try:
                     record['files_before_harness_cleanup']=sorted(x.name for x in d.iterdir())
                     results.append(record);print(json.dumps(record),flush=True)
                 finally:
+                    # Persist metadata before any fallback kill or TemporaryDirectory removal,
+                    # including failed assertions; never record secret file contents.
+                    (EVIDENCE/(fault+'.cleanup.json')).write_text(json.dumps(cleanup_snapshot(d,tracked,p),indent=2)+'\n')
                     if stream:stream.close()
                     for pid in tracked:
                         if pathlib.Path('/proc',str(pid)).exists():

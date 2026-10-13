@@ -109,10 +109,12 @@ static int worker_boundary(int private_pair) {
 }
 /* Fail closed without close_range: never rely on CLOEXEC for fork callbacks. */
 static int clean_fds(int a,int b,int c) {
- int keep[5]={a,b,c,owned_runtime?owned_runtime->dir:-1,owned_runtime?owned_runtime->parent:-1};
- for(int i=0;i<5;i++) for(int j=i+1;j<5;j++) if(keep[j]<keep[i]) {int t=keep[i];keep[i]=keep[j];keep[j]=t;}
+ int keep[14]={a,b,c,owned_runtime?owned_runtime->dir:-1,owned_runtime?owned_runtime->parent:-1};
+ for(int i=0;i<4;i++)keep[5+i]=owned_runtime?owned_runtime->entries[i].fd:-1;
+ for(int i=0;i<5;i++)keep[9+i]=owned_runtime?owned_runtime->dirs[i].fd:-1;
+ for(int i=0;i<14;i++) for(int j=i+1;j<14;j++) if(keep[j]<keep[i]) {int t=keep[i];keep[i]=keep[j];keep[j]=t;}
  unsigned first=0;
- for(int i=0;i<5;i++) {
+ for(int i=0;i<14;i++) {
   if(keep[i]<0 || (unsigned)keep[i]<first) continue;
   if((unsigned)keep[i]>first && syscall(SYS_close_range,first,(unsigned)keep[i]-1,0)) return -1;
   first=(unsigned)keep[i]+1;
@@ -133,6 +135,20 @@ int hp_guard_send(struct hp_guard *g, uint32_t op) {
 static void reap_bounded(void) {
  int64_t until=now_ms()+250;
  do { while(waitpid(-1,NULL,WNOHANG)>0) {} poll(NULL,0,5); } while(now_ms()<until);
+}
+static int provider_exited(pid_t pid) {
+ /* The unreaped owned leader is reserved by watchdog or subreaper adoption.
+  * Observe actual kernel exit, not an arbitrary grace sleep, before unlink. */
+ int fd=syscall(SYS_pidfd_open,pid,0);if(fd<0)return 0;
+ int64_t until=now_ms()+250;int ready=0;
+ do {
+  int64_t remaining=until-now_ms();if(remaining<=0)break;
+  struct pollfd p={fd,POLLIN,0};
+  int rc=poll(&p,1,(int)remaining);
+  if(rc>0 && (p.revents&POLLIN)){ready=1;break;}
+  if(rc<0 && errno!=EINTR)break;
+ } while(now_ms()<until);
+ close(fd);return ready;
 }
 static void watchdog(int fd, int ownerfd, void (*child)(int), int arg, int64_t deadline, struct startup_state *state, int private_pair) {
  int boot[2];if(socketpair(AF_UNIX,SOCK_SEQPACKET|SOCK_CLOEXEC,0,boot)) _exit(125);
@@ -180,8 +196,13 @@ static void watchdog(int fd, int ownerfd, void (*child)(int), int arg, int64_t d
  /* This group is created here, with its unreaped leader still owned here.
   * No caller-supplied PID, path, process group or socket is accepted. */
  kill(-p,SIGKILL); kill(p,SIGKILL);
+ /* Never kill the reciprocal cleaner before completing our own cleanup.
+  * Both guards may reach this tail together; killing first can kill BOTH
+  * cleaners with every owned secret still linked. Pinned identities plus
+  * ENOENT-tolerant unlink make concurrent cleanup idempotent, not a lock. */
+ int residual=provider_exited(p)?hp_owned_cleanup(owned_runtime):1;
  syscall(SYS_pidfd_send_signal,ownerfd,SIGKILL,NULL,0);
- reap_bounded(); int residual=hp_owned_cleanup(owned_runtime); close(fd); close(ownerfd); _exit(residual?124:0);
+ reap_bounded();close(fd); close(ownerfd); _exit(residual?124:0);
 }
 static int guard_start(struct hp_guard *g, uint64_t gen, uint64_t epoch, unsigned temporary_ms, void (*child)(int), int arg, int private_pair) {
  if(!gen || !epoch || temporary_ms>86400000 || !child) {errno=EINVAL;return -1;}
@@ -203,7 +224,7 @@ static int guard_start(struct hp_guard *g, uint64_t gen, uint64_t epoch, unsigne
    kill(pid,SIGKILL);
    int64_t until=now_ms()+HP_WINDOW_MS;
    while(waitpid(pid,NULL,WNOHANG)==0 && now_ms()<until) poll(NULL,0,5);
-   (void)hp_owned_cleanup(owned_runtime);errno=EIO;return -1;
+   errno=EIO;return -1;
   }
   g->fd=pair[0];g->pid=pid;return 0;
  }
@@ -268,8 +289,11 @@ static int guard_start(struct hp_guard *g, uint64_t gen, uint64_t epoch, unsigne
  /* If watchdog died, subreaper adoption reserves the data leader here.
   * If alive, it holds WNOWAIT until killing us. Never reap before group kill. */
  kill(-data,SIGKILL);
- syscall(SYS_pidfd_send_signal,wfd,SIGKILL,NULL,0);
- close(wfd);close(pair[1]);close(inner[0]);reap_bounded();_exit(hp_owned_cleanup(owned_runtime)?124:0);
+ close(pair[1]);close(inner[0]);
+ /* As above, cleanup must precede killing the other possible cleaner. */
+ int residual=provider_exited(data)?hp_owned_cleanup(owned_runtime):1;
+ syscall(SYS_pidfd_send_signal,wfd,SIGKILL,NULL,0);close(wfd);
+ reap_bounded();_exit(residual?124:0);
 }
 int hp_guard_start(struct hp_guard *g, uint64_t gen, uint64_t epoch, unsigned temporary_ms, void (*child)(int), int arg) {
  return guard_start(g,gen,epoch,temporary_ms,child,arg,0);

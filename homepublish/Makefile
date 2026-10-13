@@ -21,7 +21,7 @@ endef
 
 define Build/Prepare
 	mkdir -p $(PKG_BUILD_DIR)
-	$(CP) ./src/lease-supervisor.c ./src/publisher.c ./src/product-store.c ./src/renewable-guard.c ./src/renewable-guard.h $(PKG_BUILD_DIR)/
+	$(CP) ./src/lease-supervisor.c ./src/publisher.c ./src/product-store.c ./src/renewable-guard.c ./src/renewable-guard.h ./src/owned-runtime.inc ./src/owned-runtime.h $(PKG_BUILD_DIR)/
 endef
 
 define Build/Compile

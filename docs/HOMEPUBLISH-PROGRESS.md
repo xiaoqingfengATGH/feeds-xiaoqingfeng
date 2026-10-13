@@ -1,6 +1,10 @@
 # HomePublish 当前检查点
 
-## 最新 D2b3：私有 STREAM socketpair 本地兼容 GREEN（未激活）
+## 最新 D2c1：FD-pinned native cleanup 竞态关闭（本地 gate，未激活）
+
+接续 `ed646fc03a8ba5b1e7af5a1e7acd23747d158b92`，父复验 controller-stop 真失败，本轮独立重复第三轮同样 exit2：所有 owned 文件/目录残留而 PID 已消失。根因是双guard在cleanup前互杀，可同时杀死两个cleaner；改为kill provider group→pidfd观察真实退出→native cleanup→kill reciprocal guard→bounded reap。所有文件/目录在fork前FD-pinned，减少inode reuse；不加断言延迟、不拿harness删除当native通过。14 native cases+100 Stop压力、5连续真实Nginx全fault矩阵以及完整 `make owned-runtime guardian direct product guardian-nginx` exit0；每矩阵12 records/8 native runtime absent，foreign inode/source TLS保全。失败/成功均保留兜底前metadata证据。最终committed-source复验命令与root cause/evidence详见 [D2c1 checkpoint](HOMEPUBLISH-D2C1-CHECKPOINT.md)。固定exec authority、生产SAN/health/controller/typed residual/crash recovery仍gate；Start/Apply unsupported、activation_ready=false、helper exit78不改。
+
+## 历史 D2b3：私有 STREAM socketpair 本地兼容 GREEN（未激活）
 
 真实 `make guardian direct product guardian-nginx` exit0；2worker双栈TLS、动态SCM_RIGHTS/FD复用、worker重建/同master续展、temporary及三监管角色单STOP/KILL、兜底前owned PID/listener清理通过；12 integration records，channel_EPERM0/internal_errors0。generic仍全局拒recvmsg；新private profile仅HP_GUARD_TEST内部fixture可选，禁止socket(AF_UNIX)/其它非INET域及DGRAM/SEQPACKET pair，仅私有STREAM pair。pathname/abstract外来sender旧profile真实入队，新profile创建连接拒绝，三角色foreign inode保全。详见 [D2b3 checkpoint](HOMEPUBLISH-D2B3-CHECKPOINT.md)。生产固定exec/inode authority、native TLS文件cleanup、scope/DNS/health/controller和目标aarch64仍未完成；Start/Apply unsupported、activation_ready=false、helper exit78保持。仅可信固定非root provider契约，不是hostile filesystem sandbox，不包含外部sameUID/root干预隔离。
 

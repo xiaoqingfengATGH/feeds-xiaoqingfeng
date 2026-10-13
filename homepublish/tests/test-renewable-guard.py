@@ -16,7 +16,7 @@ class Guardian(unittest.TestCase):
    foreign=subprocess.Popen(['sleep','60'])
    sentinel=pathlib.Path(d)/'foreign';sentinel.write_bytes(b'foreign-preserved')
    try:
-    cases=[os.environ['CASE']] if 'CASE' in os.environ else ['foreign-fd','expiry','renew','temporary','controller-kill','controller-stop','watchdog-stop','watchdog-kill','guardian-kill','guardian-stop','stop','stale-gen','stale-epoch','replay','auth','short']
+    cases=[os.environ['CASE']] if 'CASE' in os.environ else ['foreign-fd','expiry','renew','temporary','controller-kill','controller-stop','watchdog-stop','watchdog-kill','guardian-kill','guardian-stop','stop','flood','queued-stop','stale-gen','stale-epoch','replay','auth','short']
     for case in cases:
      with self.subTest(case=case):
       subprocess.run([str(exe),case],check=True,timeout=8)

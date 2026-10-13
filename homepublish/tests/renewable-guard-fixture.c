@@ -69,6 +69,10 @@ int main(int argc,char **argv) {
   pause_ms(750);assert(connect_port(info.port)<0);kill(c,SIGKILL);
  } else if(!strcmp(argv[1],"stop")) {
   assert(!hp_guard_send(&g,2));(void)hp_guard_send(&g,1);
+ } else if(!strcmp(argv[1],"flood")) {
+  assert(!kill(g.pid,SIGSTOP));for(int i=0;i<33;i++) assert(!hp_guard_send(&g,1));assert(!kill(g.pid,SIGCONT));
+ } else if(!strcmp(argv[1],"queued-stop")) {
+  assert(!kill(g.pid,SIGSTOP));assert(!hp_guard_send(&g,1));assert(!hp_guard_send(&g,2));assert(!hp_guard_send(&g,1));assert(!kill(g.pid,SIGCONT));
  } else if(!strcmp(argv[1],"stale-gen")) {g.generation++;assert(!hp_guard_send(&g,1));}
  else if(!strcmp(argv[1],"stale-epoch")) {g.epoch++;assert(!hp_guard_send(&g,1));}
  else if(!strcmp(argv[1],"replay")) {assert(!hp_guard_send(&g,1));pause_ms(50);g.sequence--;assert(!hp_guard_send(&g,1));}

@@ -40,7 +40,7 @@ Status: 正式模式方向确认；最终生命周期设计已整理，adapter�
 
 ## REQ-004 — 持续/临时发布、内部有限能力及恢复
 
-Status: continuous/temporary产品设计已确认；D2b1审查修复本地回归16生命周期场景+fork1/2/3及pidfd ENOSYS启动故障通过。双向有限heartbeat、watchdog pidfd、FD allowlist及bounded原生READY已加入；READY不等于provider health就绪。详见docs/HOMEPUBLISH-D2B1-CHECKPOINT.md最新审查checkpoint；F2逃逸进程树边界仍未关闭，guardian/watchdog FD inode读回与startup suspension矩阵待补。尚无Nginx provider、controller全量health/scope验证、TLS秘密/journal/fw整合、恢复/boot/UPnP。两guardian同时STOP不在用户态覆盖范围，需活跃第三/内核边界或故障域限制。Start/Apply unsupported与activation_ready=false保留，产品未激活，非生产完成。
+Status: continuous/temporary产品设计已确认；D2b1审查修复本地回归18生命周期场景+fork1/2/3及pidfd ENOSYS启动故障通过。双向有限heartbeat、watchdog pidfd、FD allowlist及bounded原生READY已加入；READY不等于provider health就绪。详见docs/HOMEPUBLISH-D2B1-CHECKPOINT.md最新审查checkpoint；F2逃逸进程树边界仍未关闭，guardian/watchdog FD inode读回与startup suspension矩阵待补。尚无Nginx provider、controller全量health/scope验证、TLS秘密/journal/fw整合、恢复/boot/UPnP。两guardian同时STOP不在用户态覆盖范围，需活跃第三/内核边界或故障域限制。Start/Apply unsupported与activation_ready=false保留，产品未激活，非生产完成。
 
 - continuous无用户总deadline；temporary默认30分钟、15/30/60快捷、自定义1分钟～24小时，后端验证，准备/Add计入首次批准截止，Apply/recovery/reboot不得续时。
 - desired enabled/disabled与runtime/generation独立，manual_stop_latch持久化优先。guard capability始终有限，controller健康核验续授权，失控fail closed；不能TTL=0/循环旧fixed-deadline达成持续。

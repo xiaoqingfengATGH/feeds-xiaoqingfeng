@@ -1,4 +1,6 @@
-.PHONY: direct product guardian guardian-nginx owned-runtime startup-owned
+.PHONY: direct product guardian guardian-nginx owned-runtime startup-owned trusted-provider
+trusted-provider:
+	python3 test-trusted-provider.py
 startup-owned:
 	python3 test-startup-owned.py
 owned-runtime:

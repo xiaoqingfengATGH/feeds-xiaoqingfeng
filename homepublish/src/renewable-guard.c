@@ -115,12 +115,13 @@ static int worker_boundary(int private_pair) {
 }
 /* Fail closed without close_range: never rely on CLOEXEC for fork callbacks. */
 static int clean_fds(int a,int b,int c) {
- int keep[14]={a,b,c,owned_runtime?owned_runtime->dir:-1,owned_runtime?owned_runtime->parent:-1};
- for(int i=0;i<4;i++)keep[5+i]=owned_runtime?owned_runtime->entries[i].fd:-1;
- for(int i=0;i<5;i++)keep[9+i]=owned_runtime?owned_runtime->dirs[i].fd:-1;
- for(int i=0;i<14;i++) for(int j=i+1;j<14;j++) if(keep[j]<keep[i]) {int t=keep[i];keep[i]=keep[j];keep[j]=t;}
+ enum { KEEP_COUNT=10+HP_OWNED_FILES };
+ int keep[KEEP_COUNT]={a,b,c,owned_runtime?owned_runtime->dir:-1,owned_runtime?owned_runtime->parent:-1};
+ for(unsigned i=0;i<HP_OWNED_FILES;i++)keep[5+i]=owned_runtime?owned_runtime->entries[i].fd:-1;
+ for(int i=0;i<5;i++)keep[5+HP_OWNED_FILES+i]=owned_runtime?owned_runtime->dirs[i].fd:-1;
+ for(int i=0;i<KEEP_COUNT;i++) for(int j=i+1;j<KEEP_COUNT;j++) if(keep[j]<keep[i]) {int t=keep[i];keep[i]=keep[j];keep[j]=t;}
  unsigned first=0;
- for(int i=0;i<14;i++) {
+ for(int i=0;i<KEEP_COUNT;i++) {
   if(keep[i]<0 || (unsigned)keep[i]<first) continue;
   if((unsigned)keep[i]>first && syscall(SYS_close_range,first,(unsigned)keep[i]-1,0)) return -1;
   first=(unsigned)keep[i]+1;

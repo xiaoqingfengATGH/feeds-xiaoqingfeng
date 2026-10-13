@@ -43,14 +43,20 @@ def wait_for(fn,seconds=3):
         time.sleep(.02)
     raise AssertionError('bounded condition not reached')
 def compile_fixture(d):
+    files=["lib/libc.so","usr/sbin/nginx","usr/lib/libpcre2-8.so.0.11.2","usr/lib/libssl.so.3","usr/lib/libcrypto.so.3","usr/lib/libz.so.1.3.1","lib/libgcc_s.so.1"]
+    names=["loader","nginx","libpcre2-8.so.0","libssl.so.3","libcrypto.so.3","libz.so.1","libgcc_s.so.1"]
+    header=d/"trusted-profile.h"
+    rows=["{"+json.dumps(f)+","+json.dumps(n)+","+json.dumps(hashlib.sha256((SDK/f).read_bytes()).hexdigest())+"}" for f,n in zip(files,names)]
+    header.write_text("#define HP_TRUST_ROOT "+json.dumps(str(SDK))+"\nstatic const struct hp_trust_entry hp_trust_entries[]={"+",".join(rows)+"};\n")
     vals={'HP_NGINX_LOADER':SDK/'lib/ld-musl-x86_64.so.1',
           'HP_NGINX_EXEC':SDK/'usr/sbin/nginx',
           'HP_NGINX_LIBS':str(SDK/'lib')+':'+str(SDK/'usr/lib'),
           'HP_NGINX_PREFIX':d,'HP_FOREIGN_SOCKET':d/'foreign.sock'}
     subprocess.run(['cc','-std=c11','-Wall','-Wextra','-Werror','-DHP_GUARD_TEST','-I'+str(SRC),
                     *['-D'+k+'='+json.dumps(str(v)) for k,v in vals.items()],
+                    '-DHP_TRUST_PROFILE_HEADER='+json.dumps(str(header)),str(SRC/'trusted-nginx.c'),
                     str(SRC/'renewable-guard.c'),str(ROOT/'homepublish/tests/guardian-nginx-fixture.c'),
-                    '-o',str(d/'fixture')],check=True)
+                    '-o',str(d/'fixture'),'-l:libcrypto.so.3'],check=True)
     return d/'fixture'
 class Backend(http.server.BaseHTTPRequestHandler):
     def log_message(self,*args):pass
@@ -217,6 +223,7 @@ try:
                     # Persist metadata before any fallback kill or TemporaryDirectory removal,
                     # including failed assertions; never record secret file contents.
                     (EVIDENCE/(fault+'.cleanup.json')).write_text(json.dumps(cleanup_snapshot(d,tracked,p),indent=2)+'\n')
+                    if (d/'stderr').exists():(EVIDENCE/(fault+'.stderr')).write_bytes((d/'stderr').read_bytes())
                     if stream:stream.close()
                     for pid in tracked:
                         if pathlib.Path('/proc',str(pid)).exists():

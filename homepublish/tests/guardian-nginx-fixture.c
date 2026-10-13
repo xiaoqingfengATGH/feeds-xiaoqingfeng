@@ -1,6 +1,9 @@
 #define _GNU_SOURCE
 #include "renewable-guard.h"
 #include "owned-runtime.h"
+#ifdef HP_TRUST_PROFILE_HEADER
+#include "trusted-nginx.h"
+#endif
 #include <assert.h>
 #include <errno.h>
 #include <fcntl.h>
@@ -37,6 +40,9 @@ static void nginx_provider(int fd) {
  }
  int log=open(HP_NGINX_PREFIX "/stderr",O_CREAT|O_APPEND|O_WRONLY,0600);
  if(log<0 || dup2(log,2)<0) _exit(127);
+ #ifdef HP_TRUST_PROFILE_HEADER
+ if(hp_trusted_nginx_exec(runtime,HP_NGINX_PREFIX)){dprintf(2,"trusted provider errno=%d\n",errno);_exit(127);}
+ #endif
  char *v[]={HP_NGINX_LOADER,"--library-path",HP_NGINX_LIBS,HP_NGINX_EXEC,
             "-p",runtime?HP_NGINX_PREFIX "/runtime/":HP_NGINX_PREFIX "/","-c","nginx.conf",NULL};
  execv(v[0],v); _exit(127);
@@ -76,6 +82,12 @@ int main(int argc,char **argv) {
   int root=open(HP_NGINX_PREFIX,O_RDONLY|O_DIRECTORY|O_NOFOLLOW|O_CLOEXEC);assert(root>=0);
   runtime=hp_owned_prepare(root);assert(runtime);close(root);hp_guard_bind_owned_test(runtime);
  }
+ #ifdef HP_TRUST_PROFILE_HEADER
+ if(!probe && hp_trusted_nginx_verify()) {
+  if(runtime){assert(!hp_owned_cleanup(runtime));hp_owned_release(runtime);}
+  printf("guard rc=-1 guardian=0\n");return 2;
+ }
+ #endif
  struct hp_guard g;int p[2];assert(!pipe(p));
  int rc=private_probe?hp_guard_start_private_test(&g,7,9,(unsigned)temporary,private_foreign_probe,p[1]):probe?hp_guard_start(&g,7,9,(unsigned)temporary,foreign_probe,p[1]):hp_guard_start_private_test(&g,7,9,(unsigned)temporary,nginx_provider,p[1]);close(p[1]);
  printf("guard rc=%d guardian=%d\n",rc,g.pid);fflush(stdout);if(rc)return 2;

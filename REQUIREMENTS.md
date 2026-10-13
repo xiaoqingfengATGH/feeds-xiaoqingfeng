@@ -40,7 +40,7 @@ Status: 正式模式方向确认；最终生命周期设计已整理，adapter�
 
 ## REQ-004 — 持续/临时发布、内部有限能力及恢复
 
-Status: 用户确认持续直到停用、临时可选、受控续租及独立开机恢复；默认值为本文产品设计选择，未实现。
+Status: continuous/temporary产品设计已确认；D2b1独立原生有限可续授权process-control内核本地13场景已验证（同PID多周期renew、固定temporary截止、controller/guardian KILL/STOP、stale/Stop/foreign保护）。详见docs/HOMEPUBLISH-D2B1-CHECKPOINT.md；尚无controller全量health/scope验证、TLS秘密/journal/fw整合、恢复/boot/UPnP；watchdog STOP/descendant及FD安全尚需review。Start/Apply unsupported与activation_ready=false保留，产品模式未激活，非生产完成。
 
 - continuous无用户总deadline；temporary默认30分钟、15/30/60快捷、自定义1分钟～24小时，后端验证，准备/Add计入首次批准截止，Apply/recovery/reboot不得续时。
 - desired enabled/disabled与runtime/generation独立，manual_stop_latch持久化优先。guard capability始终有限，controller健康核验续授权，失控fail closed；不能TTL=0/循环旧fixed-deadline达成持续。

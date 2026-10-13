@@ -115,6 +115,10 @@ done
 
 **产品仍未完成；下一阶段独立有限能力guardian/controller**，不能从本地TLS修复跳到activation。
 
+## D2b1 独立原生有限可续授权内核（仅process-control gate）
+
+新增 renewable-guard.c/.h、固定loopback C fixture及13场景Python回归，tests guardian target与TARGET_CC recipe helper。首次expiry及renew实跑RED→GREEN，中途checkpoint commit acffea1；最终 `export TMPDIR=/home/eric/homestun-sdk-check && make -C homepublish/tests guardian direct product` exit 0。有限600ms guard、独立200ms watchdog、monotonic固定temporary截止、gen/epoch/exact sequence/token/有限严格帧、Stop不可续活；真实同PID八次renew、controller/guardian KILL/STOP、stale/replay/auth/短帧断流，foreign进程/文件不动，owned PID/监听/既有流/临时目录清理读回通过。helper无provider，任意argv也仅exit78。完整协议/预算/证据/未验watchdog STOP与FD/descendant边界见[checkpoint](HOMEPUBLISH-D2B1-CHECKPOINT.md)。无secret-copy/owner journal/renderer/controller/fw整合；activation_ready=false、Start/Apply unsupported不变，旧fixed-TTL未改；macro recipe不是SDK/IPK/真目标。产品仍未完成。
+
 ## 剩余门槛
 
-D1尚缺真实rpcd scoped权限/角色及迁移工具；D2a仅renderer/静态backend完成本地切片，D2-D7 controller/独立有限续授权guardian、权威DNS/TLS/归属管理核验与TTL刷新、精确INPUT/UPnP受控续租恢复、真实四页LuCI/RPC、ACME/DNS维护/Passwall2、matching SDK/IPK/真BusyBox-procd-fw4及另授权实网均未完成。Start/Apply继续unsupported，provider不宣称running。禁止以本切片或legacy PASS称产品可发布。
+D1尚缺真实rpcd scoped权限/角色及迁移工具；D2a仅renderer/静态backend完成本地切片，D2-D7 controller/guardian生产整合、权威DNS/TLS/归属管理核验与TTL刷新、精确INPUT/UPnP受控续租恢复、真实四页LuCI/RPC、ACME/DNS维护/Passwall2、matching SDK/IPK/真BusyBox-procd-fw4及另授权实网均未完成。Start/Apply继续unsupported，provider不宣称running。禁止以本切片或legacy PASS称产品可发布。

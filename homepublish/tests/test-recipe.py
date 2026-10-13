@@ -42,6 +42,9 @@ endef
    subprocess.run([os.environ.get('LUA','/home/eric/homestun-sdk-check/local-tools/usr/bin/lua5.1'),'-e',"assert(type(require('homepublish_store').transaction)=='function')"],env=dict(os.environ,LUA_CPATH=f'{module.parent}/?.so',LD_LIBRARY_PATH=str(p)),check=True)
    self.assertTrue((p/'root/usr/share/homepublish/product-cli.lua').is_file())
    installed=p/'root'; helper=installed/'usr/libexec/homepublish-lease'
+   guard=installed/'usr/libexec/homepublish-guard'
+   self.assertEqual(guard.read_bytes(),(p/'build/homepublish-0.1.0/homepublish-guard').read_bytes())
+   self.assertEqual(subprocess.run([str(guard),'arbitrary-command'],capture_output=True).returncode,78)
    self.assertTrue((installed/'usr/libexec/homepublish-publish').exists(),'publisher missing from package')
    self.assertTrue(helper.exists());self.assertEqual(helper.read_bytes()[:4],b'\x7fELF')
    self.assertTrue((installed/'etc/init.d/homepublish').stat().st_mode&0o100)

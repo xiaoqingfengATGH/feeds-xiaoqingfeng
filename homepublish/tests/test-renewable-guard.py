@@ -8,5 +8,15 @@ class Guardian(unittest.TestCase):
   with tempfile.TemporaryDirectory(prefix='hp-guard-') as d:
    exe=pathlib.Path(d)/'fixture'
    subprocess.run(['cc','-std=c11','-Wall','-Wextra','-Werror','-DHP_GUARD_TEST','-I'+str(ROOT/'src'),str(ROOT/'src/renewable-guard.c'),str(ROOT/'tests/renewable-guard-fixture.c'),'-o',str(exe)],check=True)
-   subprocess.run([str(exe),'expiry'],check=True,timeout=8)
+   foreign=subprocess.Popen(['sleep','60'])
+   sentinel=pathlib.Path(d)/'foreign';sentinel.write_bytes(b'foreign-preserved')
+   try:
+    cases=[os.environ['CASE']] if 'CASE' in os.environ else ['expiry','renew','temporary','controller-kill','controller-stop','guardian-kill','guardian-stop','stop','stale-gen','stale-epoch','replay','auth','short']
+    for case in cases:
+     with self.subTest(case=case):
+      subprocess.run([str(exe),case],check=True,timeout=8)
+      self.assertIsNone(foreign.poll());self.assertEqual(sentinel.read_bytes(),b'foreign-preserved')
+   finally: foreign.terminate();foreign.wait(timeout=2)
+  self.assertFalse(pathlib.Path(d).exists())
+  print('PASS foreign process/files preserved; fixture directory removed')
 if __name__=='__main__': unittest.main()

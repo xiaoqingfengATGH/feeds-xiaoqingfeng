@@ -1,4 +1,6 @@
-.PHONY: direct product
+.PHONY: direct product guardian
+guardian:
+	python3 test-renewable-guard.py
 # Run from homepublish/tests in WSL; uses cached tools, never installs.
 direct:
 	python3 test-direct.py

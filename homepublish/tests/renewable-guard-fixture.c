@@ -30,16 +30,42 @@ static int connect_port(unsigned port) {
 int main(int argc,char **argv) {
  assert(argc==2);assert(!prctl(PR_SET_CHILD_SUBREAPER,1));
  int p[2];assert(!pipe(p)); struct hp_guard g;
- long long start=ms();assert(!hp_guard_start(&g,7,9,0,stream,p[1]));close(p[1]);
+ long long start=ms();assert(!hp_guard_start(&g,7,9,!strcmp(argv[1],"temporary")?800:0,stream,p[1]));close(p[1]);
  struct {pid_t pid;unsigned port;} info;
  struct pollfd f={p[0],POLLIN,0};assert(poll(&f,1,1000)==1);assert(read(p[0],&info,sizeof(info))==sizeof(info));close(p[0]);
  int s=connect_port(info.port);assert(s>=0);char b[128];assert(recv(s,b,sizeof(b),0)>0);
- assert(!strcmp(argv[1],"expiry"));
- pause_ms(850);assert(ms()-start<1500);
+ if(!strcmp(argv[1],"renew")) {
+  for(int i=0;i<8;i++) {pause_ms(150);assert(!hp_guard_send(&g,1));assert(recv(s,b,sizeof(b),MSG_DONTWAIT)>0);assert(!kill(info.pid,0));}
+  assert(ms()-start>HP_WINDOW_MS*2);
+ } else if(!strcmp(argv[1],"temporary")) {
+  for(int i=0;i<5;i++) {pause_ms(150);assert(!hp_guard_send(&g,1));}
+  pause_ms(300);assert(connect_port(info.port)<0);assert(ms()-start<1400);
+ } else if(!strncmp(argv[1],"guardian-",9)) {
+  assert(!kill(g.pid,strstr(argv[1],"stop")?SIGSTOP:SIGKILL));
+ } else if(!strncmp(argv[1],"controller-",11)) {
+  pid_t c=fork();assert(c>=0);
+  if(!c) {for(;;) {hp_guard_send(&g,1);pause_ms(50);}}
+  close(g.fd);g.fd=-1;pause_ms(100);
+  assert(!kill(c,strstr(argv[1],"stop")?SIGSTOP:SIGKILL));
+  pause_ms(750);assert(connect_port(info.port)<0);kill(c,SIGKILL);
+ } else if(!strcmp(argv[1],"stop")) {
+  assert(!hp_guard_send(&g,2));(void)hp_guard_send(&g,1);
+ } else if(!strcmp(argv[1],"stale-gen")) {g.generation++;assert(!hp_guard_send(&g,1));}
+ else if(!strcmp(argv[1],"stale-epoch")) {g.epoch++;assert(!hp_guard_send(&g,1));}
+ else if(!strcmp(argv[1],"replay")) {assert(!hp_guard_send(&g,1));pause_ms(50);g.sequence--;assert(!hp_guard_send(&g,1));}
+ else if(!strcmp(argv[1],"auth")) {g.token[0]^=1;assert(!hp_guard_send(&g,1));}
+ else if(!strcmp(argv[1],"short")) {assert(send(g.fd,"x",1,MSG_NOSIGNAL)==1);}
+ else assert(!strcmp(argv[1],"expiry"));
+ long long closing=ms();
+ if(strcmp(argv[1],"expiry") && strcmp(argv[1],"renew") && strcmp(argv[1],"temporary") && strncmp(argv[1],"controller-",11)) {
+  pause_ms(350);assert(connect_port(info.port)<0);
+ } else pause_ms(850);
+ assert(ms()-closing<1500);
  while(recv(s,b,sizeof(b),MSG_DONTWAIT)>0) {}
  assert(recv(s,b,sizeof(b),0)==0);close(s);assert(connect_port(info.port)<0);close(g.fd);
  long long until=ms()+700;do {while(waitpid(-1,NULL,WNOHANG)>0){} pause_ms(10);}while(ms()<until);
  char path[80];snprintf(path,sizeof(path),"/proc/%d",info.pid);assert(access(path,F_OK));
  snprintf(path,sizeof(path),"/proc/%d",g.pid);assert(access(path,F_OK));
- puts("PASS expiry: stream EOF, listener refused, owned PIDs absent");return 0;
+ assert(waitpid(-1,NULL,WNOHANG)==-1);
+ printf("PASS %s: stream EOF, listener refused, owned PIDs absent\n",argv[1]);return 0;
 }

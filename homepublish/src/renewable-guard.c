@@ -13,20 +13,17 @@
 #include <unistd.h>
 #include <stdio.h>
 #include <stdlib.h>
-#ifdef HP_GUARD_TEST
 static int64_t now_ms(void) {
  struct timespec t;
  if(clock_gettime(CLOCK_MONOTONIC,&t)) _exit(125);
  return (int64_t)t.tv_sec*1000+t.tv_nsec/1000000;
 }
-#endif
 int hp_guard_send(struct hp_guard *g, uint32_t op) {
  struct hp_frame f={.generation=g->generation,.epoch=g->epoch,.sequence=++g->sequence,.operation=op};
  memcpy(f.token,g->token,16);
  return send(g->fd,&f,sizeof(f),MSG_NOSIGNAL)==sizeof(f)?0:-1;
 }
-#ifdef HP_GUARD_TEST
-/* The host-only callback is compiled out of the packaged helper. */
+/* Internal native callback only: no exec/path/PID/command wire interface. */
 static void reap_bounded(void) {
  int64_t until=now_ms()+250;
  do { while(waitpid(-1,NULL,WNOHANG)>0) {} poll(NULL,0,5); } while(now_ms()<until);
@@ -73,22 +70,39 @@ int hp_guard_start(struct hp_guard *g, uint64_t gen, uint64_t epoch, unsigned te
  if(pid<0) {close(pair[0]);close(pair[1]);return -1;}
  if(pid) {close(pair[1]);g->fd=pair[0];g->pid=pid;return 0;}
  close(pair[0]);
+ if(setpgid(0,0)) _exit(125);
  int ownerfd=syscall(SYS_pidfd_open,getpid(),0);
  int inner[2];
  if(ownerfd<0 || socketpair(AF_UNIX,SOCK_SEQPACKET|SOCK_CLOEXEC,0,inner)) _exit(125);
  pid_t w=fork(); if(w<0) _exit(125);
- if(!w) {close(pair[1]);close(inner[0]);watchdog(inner[1],ownerfd,child,arg,deadline);}
+ if(!w) {if(setpgid(0,0)) _exit(125);close(pair[1]);close(inner[0]);watchdog(inner[1],ownerfd,child,arg,deadline);}
  close(inner[1]);close(ownerfd);
  for(;;) {
   if(now_ms()>=deadline) break;
   struct pollfd f={pair[1],POLLIN,0};
   if(poll(&f,1,25)<0 && errno!=EINTR) break;
-  if(f.revents) break; /* Initial slice: no renew yet. */
+  if(f.revents) {
+   int valid=0, stop=0;
+   for(int i=0;i<32;i++) {
+    struct hp_frame frame;
+    ssize_t n=recv(pair[1],&frame,sizeof(frame),MSG_DONTWAIT|MSG_TRUNC);
+    if(n<0 && (errno==EAGAIN || errno==EWOULDBLOCK)) break;
+    if(n!=sizeof(frame) || frame.generation!=gen || frame.epoch!=epoch ||
+       frame.sequence!=g->sequence+1 || memcmp(frame.token,g->token,16) ||
+       frame.reserved || (frame.operation!=1 && frame.operation!=2)) {stop=1;break;}
+    g->sequence=frame.sequence;
+    if(frame.operation==2) {stop=1;break;}
+    valid=1;
+    if(i==31) stop=1; /* bounded drain: flooding cannot extend authority */
+   }
+   if(stop || now_ms()>=deadline) break;
+   if(valid) {deadline=now_ms()+HP_WINDOW_MS;if(deadline>limit) deadline=limit;}
+  }
   if(send(inner[0],&deadline,sizeof(deadline),MSG_DONTWAIT|MSG_NOSIGNAL)!=sizeof(deadline)) break;
  }
  close(pair[1]);close(inner[0]);reap_bounded();_exit(0);
 }
-#else
+#ifndef HP_GUARD_TEST
 /* No provider has been integrated: packaged executable cannot start anything. */
 int main(void) { fputs("HomePublish guardian provider unavailable; activation disabled\n",stderr); return 78; }
 #endif

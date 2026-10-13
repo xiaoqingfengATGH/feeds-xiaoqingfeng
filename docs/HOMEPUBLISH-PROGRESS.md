@@ -1,5 +1,9 @@
 # HomePublish 当前检查点
 
+## 最新 D2d1 fixed-provider runnable subset（local，未激活）
+
+新增 server-owned host-test manifest + FD exact-byte digest copy + sealed loader/Nginx memfd + 五实际依赖私有readonly native-owned snapshot，真实 maps 验闭包、恶意LD/OPENSSL环境清除。14拒绝回归（exec替换正式RED→GREEN，其余补充覆盖）、完整make七targets exit0、8真实Nginx lifecycle native cleanup通过。详见 [D2d1 checkpoint](HOMEPUBLISH-D2D1-CHECKPOINT.md)。**库snapshot仍经private path，未对sameUID/root或runtime-parent替换建立kernel immutable authority；target安装manifest/namespace能力尚未验，production API ENOTSUP。不是production trust closed。** Start/Apply unsupported/activation_ready=false/helper78保持；parent验证与独立review待做。
+
 ## 最新 D2c2 errno/residual LOW 收尾（local gate，未激活）
 
 接续 a794446：invalidargs/binding独立review已通过；早期启动errno覆盖及residual优先级正式RED→GREEN，新增controller pidfd EMFILE保留。early random/probe/pair/mmap/fork统一错误tail；remote handshake仍明确EIO，cleanup residual优先ENOTRECOVERABLE，EINVAL/EBUSY不混foreign PID。79 startup runs+两ownership contracts与全套真实本地make exit0；foreign内容/inode保全。详见 [errno checkpoint](HOMEPUBLISH-D2C2-CHECKPOINT.md#early-startup-errnoresidual-low-closure-after-a794446)，本轮仅自检，非新独立review。Start/Apply unsupported、activation_ready=false、helper exit78不变；production authority/controller/target仍未完成。

@@ -50,6 +50,8 @@ Status: continuous/temporary产品设计已确认；D2b1本地受控worker F2边
 
 追加 D2c2 独立复审：原秘密残留修复通过；LOW 无效参数遗留empty anchors已五项正式RED→GREEN，cleanup责任仅本次prepared binding，active重入/claimed ledger拒绝且不误删，foreign replacement保留residual。11 fault正式regression及25 delayed ACK重复，总65 startup runs+两ownership contracts；详情/命令见 docs/HOMEPUBLISH-D2C2-CHECKPOINT.md LOW closure，最终commit复验由报告读回。新修复独立复审仍待，Start/Apply unsupported、activation_ready=false、helper exit78保持。
 
+追加 D2d1：固定可信host provider可运行subset与真实依赖映射验收见 docs/HOMEPUBLISH-D2D1-CHECKPOINT.md；exec替换正式RED→GREEN，14拒绝回归、sealed exec/loader及5库verified native-owned readonly snapshot、环境清除/8真实Nginx故障清理与全套make本地通过。库path/kernel immutable authority与目标安装manifest仍未闭合，production API ENOTSUP；未宣称生产trust closed，禁激活保持，parent/独立review待。
+
 - continuous无用户总deadline；temporary默认30分钟、15/30/60快捷、自定义1分钟～24小时，后端验证，准备/Add计入首次批准截止，Apply/recovery/reboot不得续时。
 - desired enabled/disabled与runtime/generation独立，manual_stop_latch持久化优先。guard capability始终有限，controller健康核验续授权，失控fail closed；不能TTL=0/循环旧fixed-deadline达成持续。
 - 合法enabled同scope自动健康恢复，每轮有限尝试/指数backoff/上限、超阈值blocked，不thrash/blind Add。Stop/过期/stale事件不得复活；STUN仍有界无自动常驻。

@@ -147,7 +147,7 @@ try:
                 originals={n:hashlib.sha256((d/n).read_bytes()).hexdigest() for n in ('cert.pem','key.pem')}
                 (d/'nginx.conf').write_text(config)
                 exe=compile_fixture(d)
-                started=time.monotonic();p=subprocess.Popen([str(exe),'nginx','1200' if fault=='temporary' else '0'],stdout=subprocess.PIPE,text=True,env={**os.environ,'HP_OWNED_RUNTIME':'1'})
+                started=time.monotonic();p=subprocess.Popen([str(exe),'nginx','1200' if fault=='temporary' else '0'],stdout=subprocess.PIPE,text=True,env={**os.environ,'HP_OWNED_RUNTIME':'1','HP_TEST_INJECT_ENV':'1','HP_CLIENT_MANIFEST':'/not-trusted'})
                 owned.add(p.pid);tracked={p.pid};stream=None
                 try:
                     line=p.stdout.readline().strip();assert 'rc=0' in line,line
@@ -162,6 +162,16 @@ try:
                     stream=connect('127.0.0.1',port,ctx);stream.sendall(b'GET /stream HTTP/1.0\r\nHost: service.home\r\n\r\n')
                     wait_for(lambda:b'tick-' in stream.recv(4096))
                     record={'case':fault,'master':master,'workers':workers,'port':port,'TLS_v4_v6':True}
+                    environ=pathlib.Path('/proc',str(master),'environ').read_bytes().split(b'\0')
+                    # Nginx rewrites argv/environ for its process title; forbidden markers
+                    # must not survive, but PATH visibility is not promised.
+                    assert not any(b'/not-trusted' in x or x.startswith((b'LD_',b'OPENSSL_',b'HP_')) for x in environ),environ
+                    maps=pathlib.Path('/proc',str(master),'maps').read_text()
+                    assert '/memfd:hp-loader' in maps and '/memfd:hp-nginx' in maps,maps
+                    for name in ('libpcre2-8.so.0','libssl.so.3','libcrypto.so.3','libz.so.1','libgcc_s.so.1'):
+                        assert str(d/'runtime'/name) in maps,(name,maps)
+                    assert str(SDK) not in maps,maps
+                    record['verified_actual_dependency_maps']=True;record['environment_injection_removed']=True
                     record['fd_roles']={str(pid):{q.name:os.readlink(q) for q in pathlib.Path('/proc',str(pid),'fd').iterdir()} for pid in (guardian,watchdog,master,*workers)}
                     record['worker_boundary']={str(pid):{line.split(':')[0]:line.split(':',1)[1].strip() for line in pathlib.Path('/proc',str(pid),'status').read_text().splitlines() if line.startswith(('Uid:','Gid:','NoNewPrivs:','Seccomp:'))} for pid in (master,*workers)}
                     assert all(v['NoNewPrivs']=='1' and v['Seccomp']=='2' for v in record['worker_boundary'].values())

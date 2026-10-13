@@ -41,11 +41,12 @@ static void nginx_provider(int fd) {
  int log=open(HP_NGINX_PREFIX "/stderr",O_CREAT|O_APPEND|O_WRONLY,0600);
  if(log<0 || dup2(log,2)<0) _exit(127);
  #ifdef HP_TRUST_PROFILE_HEADER
- if(hp_trusted_nginx_exec(runtime,HP_NGINX_PREFIX)){dprintf(2,"trusted provider errno=%d\n",errno);_exit(127);}
- #endif
+ (void)hp_trusted_nginx_exec(runtime,HP_NGINX_PREFIX);dprintf(2,"trusted provider errno=%d\n",errno);_exit(127);
+ #else
  char *v[]={HP_NGINX_LOADER,"--library-path",HP_NGINX_LIBS,HP_NGINX_EXEC,
             "-p",runtime?HP_NGINX_PREFIX "/runtime/":HP_NGINX_PREFIX "/","-c","nginx.conf",NULL};
  execv(v[0],v); _exit(127);
+ #endif
 }
 static int abstract_probe;
 static void private_foreign_probe(int report) {
@@ -74,6 +75,9 @@ static void foreign_probe(int report) {
 }
 int main(int argc,char **argv) {
  assert(argc==3);assert(!prctl(PR_SET_CHILD_SUBREAPER,1));
+ #ifdef HP_GUARD_TEST
+ if(getenv("HP_TEST_INJECT_ENV")){setenv("LD_PRELOAD","/not-trusted.so",1);setenv("LD_LIBRARY_PATH","/not-trusted",1);setenv("OPENSSL_CONF","/not-trusted.cnf",1);}
+ #endif
  int private_probe=!strcmp(argv[1],"private-foreign");
  abstract_probe=!strcmp(argv[1],"foreign-abstract");
  int probe=!strcmp(argv[1],"foreign") || abstract_probe || private_probe;assert(probe || !strcmp(argv[1],"nginx"));

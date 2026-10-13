@@ -18,13 +18,21 @@ with tempfile.TemporaryDirectory(prefix='provider-authority-',dir=os.environ.get
     for f in FILES:
         p=source/f;p.parent.mkdir(parents=True,exist_ok=True);shutil.copyfile(SDK/f,p)
     header=manifest(d,source)
-    for attack in ['exec-replaced']:
-        shutil.copyfile('/bin/true',source/'usr/sbin/nginx')
+    for attack in ['exec-replaced']+[f+'-tamper' for f in FILES[0:1]+FILES[2:]]+[f+'-symlink' for f in FILES]:
+        for f in FILES:
+            p=source/f
+            if p.exists() or p.is_symlink():p.unlink()
+            shutil.copyfile(SDK/f,p)
+        if attack=='exec-replaced':shutil.copyfile('/bin/true',source/'usr/sbin/nginx')
+        elif attack.endswith('-symlink'):
+            p=source/attack.removesuffix('-symlink');p.unlink();p.symlink_to(SDK/attack.removesuffix('-symlink'))
+        else:
+            p=source/attack.removesuffix('-tamper');data=bytearray(p.read_bytes());data[-1]^=1;p.write_bytes(data)
         vals={'HP_NGINX_LOADER':source/'lib/libc.so','HP_NGINX_EXEC':source/'usr/sbin/nginx','HP_NGINX_LIBS':str(source/'lib')+':'+str(source/'usr/lib'),'HP_NGINX_PREFIX':d,'HP_FOREIGN_SOCKET':d/'foreign.sock'}
         cmd=['cc','-std=c11','-Wall','-Wextra','-Werror','-DHP_GUARD_TEST','-I'+str(SRC),*[ '-D'+k+'='+json.dumps(str(v)) for k,v in vals.items()]]
         if (SRC/'trusted-nginx.c').exists():cmd+=['-DHP_TRUST_PROFILE_HEADER='+json.dumps(str(header)),str(SRC/'trusted-nginx.c')]
         subprocess.run(cmd+[str(SRC/'renewable-guard.c'),str(ROOT/'homepublish/tests/guardian-nginx-fixture.c'),'-o',str(d/'fixture'),'-l:libcrypto.so.3'],check=True)
-        p=subprocess.run([str(d/'fixture'),'nginx','0'],capture_output=True,text=True,timeout=8)
+        p=subprocess.run([str(d/'fixture'),'nginx','0'],capture_output=True,text=True,timeout=8,env={**os.environ,'HP_OWNED_RUNTIME':'1'})
         assert p.returncode==2 and 'rc=-1' in p.stdout,('untrusted executable accepted',p.returncode,p.stdout,p.stderr)
         assert not (d/'runtime').exists(),'native residue before fallback'
         print('PASS',attack,'rejected; runtime absent')

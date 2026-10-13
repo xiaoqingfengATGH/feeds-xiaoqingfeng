@@ -231,25 +231,31 @@ static int start_bound(struct hp_guard *g, uint64_t gen, uint64_t epoch, unsigne
   errno=residual?ENOTRECOVERABLE:EINVAL;return -1;
  }
  memset(g,0,sizeof(*g)); g->generation=gen;g->epoch=epoch;
- if(getrandom(g->token,16,0)!=16) {hp_owned_cleanup(owned_runtime);return -1;}
- int probe=syscall(SYS_pidfd_open,getpid(),0);if(probe<0) {hp_owned_cleanup(owned_runtime);return -1;}close(probe);
- int pair[2]; if(socketpair(AF_UNIX,SOCK_SEQPACKET|SOCK_CLOEXEC,0,pair)) {hp_owned_cleanup(owned_runtime);return -1;}
+ int pair[2]={-1,-1};struct startup_state *state=NULL;
+ ssize_t random_bytes=getrandom(g->token,16,0);
+ if(random_bytes!=16) {if(random_bytes>=0)errno=EIO;goto startup_fail;}
+ int probe=syscall(SYS_pidfd_open,getpid(),0);if(probe<0)goto startup_fail;close(probe);
+ if(socketpair(AF_UNIX,SOCK_SEQPACKET|SOCK_CLOEXEC,0,pair))goto startup_fail;
  int64_t started=now_ms(), deadline=started+HP_WINDOW_MS;
  int64_t limit=temporary_ms?started+temporary_ms:INT64_MAX;
  if(deadline>limit) deadline=limit;
  /* Parent retains the same pinned ledger and startup identities as a final
   * bounded cleaner. Only this native handshake grants provisioning, not flags
   * in client frames. Empty-anchor failures are also owned by this invocation. */
- struct startup_state *state=mmap(NULL,sizeof(*state),PROT_READ|PROT_WRITE,MAP_SHARED|MAP_ANONYMOUS,-1,0);
- if(state==MAP_FAILED){hp_owned_cleanup(owned_runtime);close(pair[0]);close(pair[1]);return -1;}
+ state=mmap(NULL,sizeof(*state),PROT_READ|PROT_WRITE,MAP_SHARED|MAP_ANONYMOUS,-1,0);
+ if(state==MAP_FAILED)goto startup_fail;
  atomic_init(&state->data,0);atomic_init(&state->watchdog,0);
  pid_t pid=fork();
- if(pid<0) {hp_owned_cleanup(owned_runtime);munmap(state,sizeof(*state));close(pair[0]);close(pair[1]);return -1;}
+ if(pid<0)goto startup_fail;
  if(pid) {
-  close(pair[1]);pid_t data=0;int datafd=-1;
+  close(pair[1]);pid_t data=0;int datafd=-1,start_error=EIO;
   struct pollfd r={pair[0],POLLIN,0};
   int valid=poll(&r,1,HP_WINDOW_MS)==1 && recv(pair[0],&data,sizeof(data),MSG_TRUNC)==sizeof(data) && data>0;
-  if(valid) {datafd=syscall(SYS_pidfd_open,data,0);valid=datafd>=0 && !send_int(pair[0],2) && !receive_int(pair[0],1);}
+  if(valid) {
+   datafd=syscall(SYS_pidfd_open,data,0);
+   if(datafd<0){start_error=errno;valid=0;}
+   else valid=!send_int(pair[0],2) && !receive_int(pair[0],1);
+  }
   if(!valid) {
    /* Never signal shared numeric descendant IDs here: a supervisor may
     * already have reaped them. Before the retained pidfd/ACK, provisioning
@@ -267,7 +273,7 @@ static int start_bound(struct hp_guard *g, uint64_t gen, uint64_t epoch, unsigne
    }
    if(!finished) {kill(pid,SIGKILL);reap_bounded();}
    if(datafd>=0)close(datafd);
-   munmap(state,sizeof(*state));errno=residual?ENOTRECOVERABLE:EIO;return -1;
+   munmap(state,sizeof(*state));errno=residual?ENOTRECOVERABLE:start_error;return -1;
   }
   close(datafd);munmap(state,sizeof(*state));g->fd=pair[0];g->pid=pid;return 0;
  }
@@ -333,6 +339,15 @@ guard_fail:
  else if(w>0){kill(-w,SIGKILL);kill(w,SIGKILL);}
  close(pair[1]);if(inner[0]>=0)close(inner[0]);
  reap_bounded();_exit(residual?124:0);
+startup_fail:;
+ /* Capture before cleanup/close/munmap can overwrite the triggering error.
+  * Residual ownership always wins; handshake failures remain explicit EIO. */
+ int start_error=errno;
+ int startup_residual=hp_owned_cleanup(owned_runtime);
+ if(state && state!=MAP_FAILED)munmap(state,sizeof(*state));
+ if(pair[0]>=0)close(pair[0]);
+ if(pair[1]>=0)close(pair[1]);
+ errno=startup_residual?ENOTRECOVERABLE:start_error;return -1;
 }
 
 /* Process-local, single outstanding start; callers must serialize this test

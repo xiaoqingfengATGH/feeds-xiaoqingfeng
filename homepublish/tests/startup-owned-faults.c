@@ -71,15 +71,31 @@ static void child(int fd){
  written[1]=ntohs(a.sin_port);*written=1;assert(write(fd,"R",1)==1);for(;;)pause();
 }
 int main(int argc,char **argv){
- assert(argc==3);mode=argv[2];controller=getpid();assert(!prctl(PR_SET_CHILD_SUBREAPER,1));
+ assert(argc==3);char name[128];snprintf(name,sizeof(name),"%s",argv[2]);
+ char *variant=strchr(name,'@');if(variant)*variant++=0;mode=name;controller=getpid();assert(!prctl(PR_SET_CHILD_SUBREAPER,1));
  written=mmap(NULL,2*sizeof(int),PROT_READ|PROT_WRITE,MAP_SHARED|MAP_ANONYMOUS,-1,0);assert(written!=MAP_FAILED);
  int root=open(argv[1],O_RDONLY|O_DIRECTORY|O_CLOEXEC);assert(root>=0);r=hp_owned_prepare(root);assert(r);hp_guard_bind_owned_test(r);
+ struct stat foreign={0};int replaced=variant && !strcmp(variant,"foreign");
+ if(variant){int d=hp_owned_dirfd(r);assert(!unlinkat(d,"key.pem",0));
+  if(replaced){int f=openat(d,"key.pem",O_CREAT|O_EXCL|O_WRONLY,0600);assert(f>=0);assert(write(f,"foreign",7)==7);close(f);assert(!fstatat(d,"key.pem",&foreign,0));}}
  int p[2];assert(!pipe(p));struct hp_guard g={.pid=getpid(),.fd=p[0]};struct hp_guard untouched=g;
  int invalid=!strncmp(mode,"invalid-",8);
  int rc=hp_guard_start(!strcmp(mode,"invalid-nullguard")?NULL:&g,
   !strcmp(mode,"invalid-gen")?0:7,!strcmp(mode,"invalid-epoch")?0:9,
   !strcmp(mode,"invalid-bound")?86400001:!strcmp(mode,"late-grant")?40:0,
   !strcmp(mode,"invalid-child")?NULL:child,p[1]);
+ int start_errno=errno;
+ int expected=EIO;
+ if(invalid)expected=EINVAL;
+ if(!strcmp(mode,"pidfd-probe") || !strcmp(mode,"pidfd-controller") || !strcmp(mode,"pair-controller"))expected=EMFILE;
+ if(!strcmp(mode,"fork-guardian"))expected=EAGAIN;
+ if(!strcmp(mode,"map-state"))expected=ENOMEM;
+ if(replaced)expected=ENOTRECOVERABLE;
+ printf("case=%s errno=%d expected_errno=%d\n",argv[2],start_errno,expected);fflush(stdout);
+ /* A post-grant peer death can leave provider exit unconfirmed at return,
+  * even when reciprocal cleanup finishes before the later metadata snapshot. */
+ int uncertain_exit=(!strcmp(mode,"kill:activated") || !strcmp(mode,"stop:activated")) && start_errno==ENOTRECOVERABLE;
+ assert(start_errno==expected || uncertain_exit);
  close(p[1]);if(!rc){close(g.fd);}
  for(int i=0;i<400;i++){while(waitpid(-1,NULL,WNOHANG)>0){}poll(NULL,0,5);}
  struct stat s;int residual=!fstatat(root,"runtime",&s,AT_SYMLINK_NOFOLLOW);
@@ -91,7 +107,8 @@ int main(int argc,char **argv){
   assert(connect(sock,(void*)&a,sizeof(a))==-1);close(sock);
  }
  printf("listener_absent=1 recorded_port=%d\n",written[1]);
- assert(rc==-1);assert(!residual);assert(waitpid(-1,NULL,WNOHANG)==-1);
+ assert(rc==-1);assert(residual==replaced);assert(waitpid(-1,NULL,WNOHANG)==-1);
+ if(replaced){struct stat current;char bytes[7];int d=hp_owned_dirfd(r);assert(!fstatat(d,"key.pem",&current,0));assert(current.st_ino==foreign.st_ino && current.st_size==7);int f=openat(d,"key.pem",O_RDONLY);assert(f>=0);assert(read(f,bytes,7)==7 && !memcmp(bytes,"foreign",7));close(f);}
  if(invalid){assert(!*written);assert(!memcmp(&g,&untouched,sizeof(g)));assert(!kill(getpid(),0));}
  if(!strcmp(mode,"wfd") || !strcmp(mode,"late-grant"))assert(!*written);
  if(!strcmp(mode,"after-write"))assert(*written);

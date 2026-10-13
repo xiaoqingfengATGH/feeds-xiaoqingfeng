@@ -1,6 +1,10 @@
 # HomePublish 当前检查点
 
-## 最新 D2c2 LOW 收尾（local gate，未激活）
+## 最新 D2c2 errno/residual LOW 收尾（local gate，未激活）
+
+接续 a794446：invalidargs/binding独立review已通过；早期启动errno覆盖及residual优先级正式RED→GREEN，新增controller pidfd EMFILE保留。early random/probe/pair/mmap/fork统一错误tail；remote handshake仍明确EIO，cleanup residual优先ENOTRECOVERABLE，EINVAL/EBUSY不混foreign PID。79 startup runs+两ownership contracts与全套真实本地make exit0；foreign内容/inode保全。详见 [errno checkpoint](HOMEPUBLISH-D2C2-CHECKPOINT.md#early-startup-errnoresidual-low-closure-after-a794446)，本轮仅自检，非新独立review。Start/Apply unsupported、activation_ready=false、helper exit78不变；production authority/controller/target仍未完成。
+
+## 历史 D2c2 LOW 收尾（local gate，未激活）
 
 原秘密残留修复独立复审通过；LOW 无效启动参数遗留 empty runtime 已正式五项 RED→GREEN关闭，nullguard不再崩溃。绑定仅转交本次prepared empty清理责任并在返回时消费；active重入/claimed ledger拒绝且不误删，不从无效g取得PID信号权限，foreign replacement保留并报residual。11新增故障纳入正式regression，25 delayed ACK重复保留；65 startup runs + 两ownership contracts，不冒称每项都有RED。全套/最终committed-source复验及清理责任详见 [D2c2 LOW checkpoint](HOMEPUBLISH-D2C2-CHECKPOINT.md#independent-re-review-low-closure-after-f311c114)。新修复仍须独立复审；生产authority另切片，Start/Apply unsupported、activation_ready=false、helper exit78不变。
 

@@ -46,6 +46,8 @@ Status: continuous/temporary产品设计已确认；D2b1本地受控worker F2边
 
 追加 D2c2 startup review 修复见 docs/HOMEPUBLISH-D2C2-CHECKPOINT.md：pidfd EMFILE 注入在真实写入后残留已正式 RED→GREEN；server-owned provisioning barrier 与 startup cleanup责任闭环本地验证，24新增fault+三连续committed-source真实Nginx矩阵；非自然资源耗尽证据，typed durable residual/生产authority/target gates仍blocked，禁激活不变。
 
+追加当前errno review pointer：a794446 invalidargs/binding独立review通过后的LOW错误语义收尾见 docs/HOMEPUBLISH-D2C2-CHECKPOINT.md Early startup errno/residual closure；正式random missing/foreign及controller pidfd RED→GREEN，统一early cleanup tail/residual优先级，79 startup runs+两contracts与全套真实本地回归通过；本次仅自检，生产activation继续false，Start/Apply unsupported/helper exit78不变。
+
 追加 D2c2 独立复审：原秘密残留修复通过；LOW 无效参数遗留empty anchors已五项正式RED→GREEN，cleanup责任仅本次prepared binding，active重入/claimed ledger拒绝且不误删，foreign replacement保留residual。11 fault正式regression及25 delayed ACK重复，总65 startup runs+两ownership contracts；详情/命令见 docs/HOMEPUBLISH-D2C2-CHECKPOINT.md LOW closure，最终commit复验由报告读回。新修复独立复审仍待，Start/Apply unsupported、activation_ready=false、helper exit78保持。
 
 - continuous无用户总deadline；temporary默认30分钟、15/30/60快捷、自定义1分钟～24小时，后端验证，准备/Add计入首次批准截止，Apply/recovery/reboot不得续时。

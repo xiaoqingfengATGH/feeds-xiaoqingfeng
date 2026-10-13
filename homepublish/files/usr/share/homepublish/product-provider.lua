@@ -16,8 +16,11 @@ local function revision(n) assert(type(n)=='number' and n%1==0 and n>=0 and n<90
 local function validate_state(s)
  known(s,{state_version=true,saved_revision=true,saved_config=true,active_revision=true,active_config=true,intent_revision=true,desired_state=true,runtime=true,approval=true})
  assert(s.state_version==1,'journal version');revision(s.saved_revision);revision(s.intent_revision)
- if s.saved_revision>0 then assert(model.validate(s.saved_config),'invalid saved config') else assert(s.saved_config==nil,'unexpected config') end
- if s.active_revision~=nil then revision(s.active_revision);assert(s.active_revision>0 and s.active_revision<=s.saved_revision and model.validate(s.active_config),'invalid active snapshot') else assert(s.active_config==nil,'orphan active config') end
+ if s.saved_revision>0 then s.saved_config=assert(model.validate(s.saved_config),'invalid saved config') else assert(s.saved_config==nil,'unexpected config') end
+ if s.active_revision~=nil then
+  revision(s.active_revision);assert(s.active_revision>0 and s.active_revision<=s.saved_revision,'invalid active revision')
+  s.active_config=assert(model.validate(s.active_config),'invalid active snapshot')
+ else assert(s.active_config==nil,'orphan active config') end
  known(s.desired_state,{state=true,manual_stop_latch=true})
  assert(s.desired_state.state=='disabled' or s.desired_state.state=='enabled','journal desired')
  assert(type(s.desired_state.manual_stop_latch)=='boolean','journal latch')
@@ -42,6 +45,7 @@ function M.handle(request)
   if request.action=='status' then return nil,public(state) end
   if request.action=='stop' then
    state.desired_state={state='disabled',manual_stop_latch=true}
+   assert(state.intent_revision<9007199254740990,'intent revision exhausted')
    state.intent_revision=state.intent_revision+1;state.approval=nil
    -- No controller exists yet: intent revocation is real, resource cleanup is not claimed.
    state.runtime={phase=state.active_revision and 'cleanup_required' or 'unsupported'}
@@ -50,6 +54,7 @@ function M.handle(request)
   assert(request.action=='save','unsupported action')
   assert(request.expected_revision==state.saved_revision,'revision conflict')
   local config,err=model.validate(request.config);assert(config,err)
+  assert(state.saved_revision<9007199254740990,'saved revision exhausted')
   state.saved_revision=state.saved_revision+1;state.saved_config=config
   return wire.encode(state),public(state)
  end)

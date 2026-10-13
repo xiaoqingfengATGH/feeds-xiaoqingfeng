@@ -9,7 +9,9 @@ end
 local function array(t,lo,hi)
  check(type(t)=='table' and getmetatable(t)==nil,'array required')
  local n=0; for k in pairs(t) do check(type(k)=='number' and k%1==0 and k>=1,'array key'); n=n+1 end
- check(n==#t and n>=lo and n<=hi,'array size'); return n
+ check(n>=lo and n<=hi,'array size')
+ for i=1,n do check(rawget(t,i)~=nil,'sparse array') end
+ return n
 end
 local function integer(v,lo,hi) check(type(v)=='number' and v%1==0 and v>=lo and v<=hi,'integer range'); return v end
 local function identifier(s)
@@ -136,7 +138,7 @@ local function validate(c)
  check(not families.ipv6 or methods.direct_ipv6,'IPv6 method required')
  check(not methods.direct_ipv6 or families.ipv6,'IPv6 listener required')
  check(not (methods.manual_ipv4 or methods.upnp_ipv4 or methods.stun_experimental) or families.ipv4,'IPv4 listener required')
- local p=c.publication_policy or {}
+ local p=c.publication_policy; if p==nil then p={} end
  object(p,{mode=true,temporary_duration=true,boot_restore=true})
  local mode=p.mode or 'continuous'; check(mode=='continuous' or mode=='temporary','policy mode')
  check(p.boot_restore==nil or type(p.boot_restore)=='boolean','boot_restore boolean')

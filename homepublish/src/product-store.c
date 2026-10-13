@@ -18,7 +18,7 @@ static int private_file(int fd) {
  return fd>=0 && fstat(fd,&st)==0 && S_ISREG(st.st_mode) && st.st_uid==geteuid() && (st.st_mode&0777)==0600 && st.st_nlink==1;
 }
 static int transaction(lua_State *L) {
- int dir=-1,lock=-1,in=-1,out=-1,failed=0,renamed=0;
+ int dir=-1,lock=-1,in=-1,out=-1,failed=0,renamed=0,owned_candidate=0;
  char *buf=NULL; const char *failure="store failure";
  luaL_checktype(L,1,LUA_TFUNCTION);
  if (mkdir(PRODUCT_ROOT,0700)<0 && errno!=EEXIST) goto fail;
@@ -47,8 +47,13 @@ static int transaction(lua_State *L) {
   if(old>=0) {int safe=private_file(old);close(old);if(!safe) {failure="unsafe store candidate";goto fail;} if(unlinkat(dir,"candidate",0)<0)goto fail;}
   else if(errno!=ENOENT) {failure="unsafe store candidate";goto fail;}
   out=openat(dir,"candidate",O_WRONLY|O_CREAT|O_EXCL|O_NOFOLLOW|O_CLOEXEC,0600);if(out<0)goto fail;
+  owned_candidate=1;
   size_t used=0;while(used<size) {ssize_t n=write(out,data+used,size-used);if(n<0&&errno==EINTR)continue;if(n<=0)goto fail;used+=(size_t)n;}
   if(fsync(out)<0) goto fail;
+  /* close may release the descriptor even on EIO/EINTR: never retry it.
+   * No candidate may be published before both fsync and close succeed. */
+  int closing=out;out=-1;
+  if(close(closing)<0) {failure="candidate close failed";goto fail;}
   if(renameat(dir,"candidate",dir,"state")<0)goto fail;
   renamed=1;
   if(fsync(dir)<0) {failure="commit durability unknown; read status";goto fail;}
@@ -58,7 +63,8 @@ fail:
  failed=1;
 done:
  free(buf);if(in>=0)close(in);
- if(out>=0) {close(out);if(!renamed)unlinkat(dir,"candidate",0);}
+ if(out>=0)close(out);
+ if(owned_candidate&&!renamed)unlinkat(dir,"candidate",0);
  if(lock>=0)close(lock);
  if(dir>=0)close(dir);
  if(failed) {lua_pushnil(L);lua_pushstring(L,failure);return 2;}

@@ -35,8 +35,26 @@ local function render(plan,p)
   local backend,e=B.select(s.backend,p);assert(backend,e);snapshots[#snapshots+1]=backend
   local host=backend.family=='ipv6' and '['..backend.address..']' or backend.address
   local service_listens={};for i,l in ipairs(listens) do service_listens[i]=l:gsub(' ipv6only=on','') end
+  -- Match the raw Host, not $host (which discards ports and can fall back).
+  -- Only absent port or the canonical decimal port of this actual socket is valid.
+  -- Quoted Nginx regex uses [.] instead of backslash escaping; no client regex.
+  local hostname_pattern=s.hostname:gsub('%.','[.]')
+  local host_guard='homepublish_host_'..#snapshots
+  out[#out+1]='map "$http_host:$server_port" $'..host_guard..' { default 0;'
+  local ports={}
+  for _,l in ipairs(plan.access_profile.listeners) do
+   local number=tostring(l.internal_port)
+   if not ports[number] then
+    ports[number]=true
+    out[#out+1]='"~*^'..hostname_pattern..'(:'..number..')?:'..number..'$" 1;'
+   end
+  end
+  out[#out+1]='}'
   out[#out+1]='server { '..table.concat(service_listens,' ')..' server_name '..s.hostname..'; ssl_certificate '..path(cert.certificate)..'; ssl_certificate_key '..path(cert.key)..';'
-  out[#out+1]='if ($ssl_server_name != "'..s.hostname..'") { return 444; }'
+  -- Reverse proxy accepts origin-form only; $host prefers absolute URI authority.
+  out[#out+1]='if ($request !~ "^[^ ]+ /") { return 444; }'
+  out[#out+1]='if ($ssl_server_name !~* "^'..hostname_pattern..'$") { return 444; }'
+  out[#out+1]='if ($'..host_guard..' != 1) { return 444; }'
   out[#out+1]='if ($host != "'..s.hostname..'") { return 444; }'
   out[#out+1]='location / { proxy_pass http://'..host..':'..backend.port..'; proxy_next_upstream off; proxy_set_header Host '..s.hostname..'; proxy_connect_timeout 2s; proxy_read_timeout 5s; } }'
  end

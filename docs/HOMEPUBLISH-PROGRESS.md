@@ -107,6 +107,14 @@ done
 - Cached SDK nginx 1.26.1经musl loader运行，3次真实nginx -t和启动通过；v4→v4、v6→v4、v4→v6、v6→v6全部真实TLS反代PASS。附加controlled hostname fixture（AAAA先给出、选择A）两种ingress真实通过，config无backend hostname。六次POST各接受一次副作用后后端断连接，客户端502、计数仅+1，零重放；unknown Host空响应/unknown SNI握手拒绝。全部loopback隔离，无公网结果。
 - 子进程wait/readback、测试listener连接失败、owned PID不存在、临时目录/CA/key/cert移除均断言PASS。product-review/product/recipe/package完整复跑PASS；recipe既有上游Lua tmpnam warning仍在，仅recipe smoke非SDK/IPK。
 
+## D2a 独立review修复（2ef5be5之后 local commit）
+
+两项真实问题已按行为逐个RED→GREEN关闭：absolute-form使`$host`跳过原始未知Host；大写合法SNI被大小写敏感比较拒绝。现策略只允许origin-form，严格匹配原始Host/实际socket port与SNI，同域大小写合法；不允许absolute-form forward proxy或不同Host port（未来external translated port需权威controller明确支持）。端口额外RED证明`service.home:0`旧实现到达backend，修复后拒绝。
+
+项目新增`test-direct-boundary.py`/`direct-boundary-fixture.lua`并注册Makefile direct：两个独立SAN证书、两个独立GET计数backend，真实双栈四组合；所有未知/跨服务/absolute请求两backend零副作用，大小写/Host:实际port合法。最终WSL `export TMPDIR=/home/eric/homestun-sdk-check && make -C homepublish/tests direct product` exit 0；原direct/POST不replay、边界矩阵、product-review/product/recipe/package全部PASS，Start/Apply unsupported与activation_ready=false保持。owned process/listener/临时证书清理断言PASS；既有Lua tmpnam linker warning不变。具体RED断言、命令和端口策略见[详细checkpoint](HOMEPUBLISH-D2A-CHECKPOINT.md)。本段引入的local commit由文件git log定位；无生产/安装/公网/映射/fw/push/merge/PR。
+
+**产品仍未完成；下一阶段独立有限能力guardian/controller**，不能从本地TLS修复跳到activation。
+
 ## 剩余门槛
 
 D1尚缺真实rpcd scoped权限/角色及迁移工具；D2a仅renderer/静态backend完成本地切片，D2-D7 controller/独立有限续授权guardian、权威DNS/TLS/归属管理核验与TTL刷新、精确INPUT/UPnP受控续租恢复、真实四页LuCI/RPC、ACME/DNS维护/Passwall2、matching SDK/IPK/真BusyBox-procd-fw4及另授权实网均未完成。Start/Apply继续unsupported，provider不宣称running。禁止以本切片或legacy PASS称产品可发布。

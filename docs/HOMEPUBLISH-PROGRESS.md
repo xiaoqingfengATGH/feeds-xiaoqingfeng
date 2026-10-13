@@ -96,6 +96,17 @@ for case in sparse journal policy revision fault; do
 done
 ```
 
+## D2a 本地renderer/backend切片（产品仍未完成）
+
+- `direct-address.lua` / `direct-backend.lua` / `direct-renderer.lua`：独立于legacy core的纯内部模块，接受typed plan与可信provider；精确literal listener、IPv6 socket `ipv6only=on`、拒wildcard/重复socket/未批准或管理冲突。backend受限hostname或literal，全量安全/scope/ownership-role核验后稳定IPv4优先并要求health；IPv6按16-bit完整解析，拒zone/linklocal/multicast/unspecified/mapped/坏压缩；proxy_pass冻结为literal IP，无runtime resolver，`proxy_next_upstream off`。
+- renderer返回configuration/backend evidence，**activation_ready始终false**。可信内部provider是缺省拒绝的代码依赖，不能由CLI/client注入。fixture的ownership/管理角色/health/resolve为隔离断言，不是实际系统权威发现。生产须先canonical.validate并接入真实审核provider；fixture直接构造相同typed结构并仅用loopback，未放宽canonical生产listener限制。
+- certificate_ref仅acme/import标识；路径来自可信snapshot provider并拒Nginx注入。**真实证书SAN/chain/有效期/key匹配/owner权限与secret snapshot guardian未实现**。测试客户端真实CA/SAN校验只证明本地TLS反代，不冒称产品证书readiness。
+- DNS snapshot含resolver/TTL/observed_at，TTL限定1..86400；无可信TTL拒绝。真实受限resolver、TTL refresh/rebinding受控替换与deadline关闭尚未接入，禁止无限缓存或激活。backup/runtime failover尚未接入。
+- 中途local checkpoint commit `97fb603`；TDD实跑RED：`direct typed backend selection missing` → GREEN；安全下一轮 `accepted unsafe resolver result ::` → GREEN；renderer `direct renderer missing` →真实nginx RED `duplicate listen options` → GREEN（ipv6only只设置一次）。初次fixture用fd00::/8不满足canonical范围最小/16，收紧fixture范围后通过。
+- 最终命令（WSL，无联网/安装）：`cd /mnt/d/DevPortal/homelede/homepublish-product && export TMPDIR=/home/eric/homestun-sdk-check && make -C homepublish/tests direct product`，exit 0。新增test Makefile注册可复验入口；包Makefile已有*.lua通配，无需改安装规则。
+- Cached SDK nginx 1.26.1经musl loader运行，3次真实nginx -t和启动通过；v4→v4、v6→v4、v4→v6、v6→v6全部真实TLS反代PASS。附加controlled hostname fixture（AAAA先给出、选择A）两种ingress真实通过，config无backend hostname。六次POST各接受一次副作用后后端断连接，客户端502、计数仅+1，零重放；unknown Host空响应/unknown SNI握手拒绝。全部loopback隔离，无公网结果。
+- 子进程wait/readback、测试listener连接失败、owned PID不存在、临时目录/CA/key/cert移除均断言PASS。product-review/product/recipe/package完整复跑PASS；recipe既有上游Lua tmpnam warning仍在，仅recipe smoke非SDK/IPK。
+
 ## 剩余门槛
 
-D1尚缺真实rpcd scoped权限/角色及迁移工具；D2-D7 controller/独立有限续授权guardian、双栈直接Nginx/确定DNS backend、精确INPUT/UPnP受控续租恢复、真实四页LuCI/RPC、ACME/DNS维护/Passwall2、matching SDK/IPK/真BusyBox-procd-fw4及另授权实网均未完成。禁止以本切片或legacy PASS称产品可发布。下一步在独立review后继续runtime纵向TDD，不把旧120秒engine冒充continuous。
+D1尚缺真实rpcd scoped权限/角色及迁移工具；D2a仅renderer/静态backend完成本地切片，D2-D7 controller/独立有限续授权guardian、权威DNS/TLS/归属管理核验与TTL刷新、精确INPUT/UPnP受控续租恢复、真实四页LuCI/RPC、ACME/DNS维护/Passwall2、matching SDK/IPK/真BusyBox-procd-fw4及另授权实网均未完成。Start/Apply继续unsupported，provider不宣称running。禁止以本切片或legacy PASS称产品可发布。

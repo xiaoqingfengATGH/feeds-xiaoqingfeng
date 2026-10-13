@@ -6,7 +6,7 @@
 
 ## REQ-001 — 家庭Web HTTPS直连（当前定位）
 
-Status: 产品方向确认；最终设计基线形成，尚未实现新架构或生产集成。
+Status: 产品方向确认；D1 canonical/journal/CLI与D2a纯内部直接Nginx/安全静态backend本地切片已验证。D2a真实loopback TLS四组合、controlled hostname IPv4优先及POST零重放通过；仍无controller/guardian、生产权威DNS/TLS/归属角色provider与TTL刷新。Start/Apply继续unsupported，产品未完成、无生产集成；证据见docs/HOMEPUBLISH-PROGRESS.md。
 
 - 服务/域名/证书/业务鉴权优先，首版IPv4/IPv6双栈独立Nginx直接监听，manual IPv4/finite UPnP/direct IPv6；STUN仅有界高级实验。IPv6功能本地gate必做，真实外网可后验并标未验证。
 - 单服务backend IPv4 literal/IPv6 literal/hostname，默认确定IPv4优先，受限resolver验证所有A/AAAA结果与归属、TTL快照/安全刷新；显式IPv6 primary和backup候选，默认proxy_next_upstream off，不重放POST/PATCH/PUT。

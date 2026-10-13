@@ -1,5 +1,6 @@
 #define _GNU_SOURCE
 #include "renewable-guard.h"
+#include "owned-runtime.h"
 #include <assert.h>
 #include <errno.h>
 #include <fcntl.h>
@@ -11,6 +12,7 @@
 #include <string.h>
 #include <sys/prctl.h>
 #include <sys/socket.h>
+#include <sys/stat.h>
 #include <sys/un.h>
 #include <sys/wait.h>
 #include <unistd.h>
@@ -19,12 +21,24 @@
 #error fixed cached loader required
 #endif
 extern int hp_guard_start_private_test(struct hp_guard *,uint64_t,uint64_t,unsigned,void (*)(int),int);
+static struct hp_owned_runtime *runtime;
 static void nginx_provider(int fd) {
  close(fd);
+ if(runtime) {
+  const char *names[]={"cert.pem","key.pem","nginx.conf"};
+  for(unsigned i=0;i<3;i++) {
+   char path[1024];snprintf(path,sizeof(path),"%s/%s",HP_NGINX_PREFIX,names[i]);
+   int in=open(path,O_RDONLY|O_NOFOLLOW|O_CLOEXEC);if(in<0)_exit(127);
+   char buf[65536];ssize_t n=read(in,buf,sizeof(buf));char extra;
+   if(n<=0 || read(in,&extra,1)!=0 || hp_owned_file(runtime,i,buf,(size_t)n))_exit(127);
+   close(in);
+  }
+  if(hp_owned_file(runtime,3,"",0))_exit(127);
+ }
  int log=open(HP_NGINX_PREFIX "/stderr",O_CREAT|O_APPEND|O_WRONLY,0600);
  if(log<0 || dup2(log,2)<0) _exit(127);
  char *v[]={HP_NGINX_LOADER,"--library-path",HP_NGINX_LIBS,HP_NGINX_EXEC,
-            "-p",HP_NGINX_PREFIX "/","-c","nginx.conf",NULL};
+            "-p",runtime?HP_NGINX_PREFIX "/runtime/":HP_NGINX_PREFIX "/","-c","nginx.conf",NULL};
  execv(v[0],v); _exit(127);
 }
 static int abstract_probe;
@@ -58,6 +72,10 @@ int main(int argc,char **argv) {
  abstract_probe=!strcmp(argv[1],"foreign-abstract");
  int probe=!strcmp(argv[1],"foreign") || abstract_probe || private_probe;assert(probe || !strcmp(argv[1],"nginx"));
  char *end;unsigned long temporary=strtoul(argv[2],&end,10);assert(!*end && temporary<=8000);
+ if(!probe && getenv("HP_OWNED_RUNTIME")) {
+  int root=open(HP_NGINX_PREFIX,O_RDONLY|O_DIRECTORY|O_NOFOLLOW|O_CLOEXEC);assert(root>=0);
+  runtime=hp_owned_prepare(root);assert(runtime);close(root);hp_guard_bind_owned_test(runtime);
+ }
  struct hp_guard g;int p[2];assert(!pipe(p));
  int rc=private_probe?hp_guard_start_private_test(&g,7,9,(unsigned)temporary,private_foreign_probe,p[1]):probe?hp_guard_start(&g,7,9,(unsigned)temporary,foreign_probe,p[1]):hp_guard_start_private_test(&g,7,9,(unsigned)temporary,nginx_provider,p[1]);close(p[1]);
  printf("guard rc=%d guardian=%d\n",rc,g.pid);fflush(stdout);if(rc)return 2;

@@ -110,7 +110,7 @@ try:
         try:
             probe=base/'probe';probe.mkdir();exe=compile_fixture(probe);foreign_test(probe,exe);foreign_test(probe,exe,True)
             for fault in ('renew-rebuild','temporary','controller-kill','controller-stop','guardian-kill','guardian-stop','watchdog-kill','watchdog-stop'):
-                d=base/fault;d.mkdir()
+                d=base/fault;d.mkdir(mode=0o700)
                 for n in ('cert.pem','key.pem'):(d/n).write_bytes((base/n).read_bytes())
                 with socket.socket() as s:s.bind(('127.0.0.1',0));port=s.getsockname()[1]
                 subprocess.run([LUA,str(ROOT/'homepublish/tests/direct-fixture.lua'),str(SHARE),str(d),str(port),'127.0.0.1',str(back.server_port),'literal'],check=True,stdout=subprocess.PIPE)
@@ -121,9 +121,15 @@ try:
                 # Renderer may use a file log; use explicit final directive without relaxing TLS rules.
                 import re
                 config=re.sub(r'error_log [^;]+;',f'error_log {d}/error.log notice;',config)
+                config=config.replace(str(d/'cert.pem'),str(d/'runtime/cert.pem')).replace(str(d/'key.pem'),str(d/'runtime/key.pem'))
+                config=config.replace(str(d/'nginx.pid'),str(d/'runtime/nginx.pid'))
+                # No disk buffering/temp creation in this flat lifecycle slice.
+                config=config.replace('proxy_next_upstream off;', 'proxy_next_upstream off; proxy_buffering off;')
+                sentinel=d/'foreign.txt';sentinel.write_text('foreign-preserved');identity=sentinel.stat()
+                originals={n:hashlib.sha256((d/n).read_bytes()).hexdigest() for n in ('cert.pem','key.pem')}
                 (d/'nginx.conf').write_text(config)
                 exe=compile_fixture(d)
-                started=time.monotonic();p=subprocess.Popen([str(exe),'nginx','1200' if fault=='temporary' else '0'],stdout=subprocess.PIPE,text=True)
+                started=time.monotonic();p=subprocess.Popen([str(exe),'nginx','1200' if fault=='temporary' else '0'],stdout=subprocess.PIPE,text=True,env={**os.environ,'HP_OWNED_RUNTIME':'1'})
                 owned.add(p.pid);tracked={p.pid};stream=None
                 try:
                     line=p.stdout.readline().strip();assert 'rc=0' in line,line
@@ -132,6 +138,9 @@ try:
                     assert b'guarded-backend' in request('::1',port,ctx)
                     watchdog=children(guardian)[0];master=children(watchdog)[0];tracked.update([watchdog,master])
                     workers=wait_for(lambda:children(master) if len(children(master))==2 else None);tracked.update(workers);owned.update(tracked)
+                    assert (d/'runtime').stat().st_mode & 0o777 == 0o700
+                    for n in ('cert.pem','key.pem','nginx.conf','nginx.pid'):
+                        assert (d/'runtime'/n).stat().st_mode & 0o777 == 0o600
                     stream=connect('127.0.0.1',port,ctx);stream.sendall(b'GET /stream HTTP/1.0\r\nHost: service.home\r\n\r\n')
                     wait_for(lambda:b'tick-' in stream.recv(4096))
                     record={'case':fault,'master':master,'workers':workers,'port':port,'TLS_v4_v6':True}
@@ -184,7 +193,12 @@ try:
                     log=(d/'error.log').read_text();(EVIDENCE/(fault+'.error.log')).write_text(log)
                     record['channel_EPERM']=log.count('recvmsg() failed (1: Operation not permitted)')
                     record['internal_errors']=[l for l in log.splitlines() if ('[alert]' in l or '[emerg]' in l) and not (fault=='renew-rebuild' and 'exited on signal 9' in l)]
-                    # Runtime/TLS files currently require harness cleanup, not guardian ownership.
+                    # Observe native-owned runtime before fallback; source fixture copies are separate.
+                    assert not (d/'runtime').exists(), 'D2c1 RED: native-owned TLS/config/pid remain before harness cleanup'
+                    record['native_owned_runtime_absent']=True
+                    assert sentinel.read_text()=='foreign-preserved' and sentinel.stat().st_ino==identity.st_ino
+                    assert all(hashlib.sha256((d/n).read_bytes()).hexdigest()==h for n,h in originals.items())
+                    record['foreign_inode_and_source_TLS_preserved']=True
                     record['files_before_harness_cleanup']=sorted(x.name for x in d.iterdir())
                     results.append(record);print(json.dumps(record),flush=True)
                 finally:

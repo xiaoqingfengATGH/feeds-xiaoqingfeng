@@ -23,6 +23,7 @@ struct startup_state { _Atomic pid_t data; };
 #include <linux/seccomp.h>
 #include <linux/sched.h>
 #include <linux/capability.h>
+#include "owned-runtime.inc"
 /* The provider is trusted fixed native code, never a caller-selected command.
  * Fork/exec inherit this boundary. No credential transitions: supervisors must
  * retain signal permission. Non-root only; privileged Nginx/user directives are
@@ -108,10 +109,10 @@ static int worker_boundary(int private_pair) {
 }
 /* Fail closed without close_range: never rely on CLOEXEC for fork callbacks. */
 static int clean_fds(int a,int b,int c) {
- int keep[3]={a,b,c};
- for(int i=0;i<3;i++) for(int j=i+1;j<3;j++) if(keep[j]<keep[i]) {int t=keep[i];keep[i]=keep[j];keep[j]=t;}
+ int keep[5]={a,b,c,owned_runtime?owned_runtime->dir:-1,owned_runtime?owned_runtime->parent:-1};
+ for(int i=0;i<5;i++) for(int j=i+1;j<5;j++) if(keep[j]<keep[i]) {int t=keep[i];keep[i]=keep[j];keep[j]=t;}
  unsigned first=0;
- for(int i=0;i<3;i++) {
+ for(int i=0;i<5;i++) {
   if(keep[i]<0 || (unsigned)keep[i]<first) continue;
   if((unsigned)keep[i]>first && syscall(SYS_close_range,first,(unsigned)keep[i]-1,0)) return -1;
   first=(unsigned)keep[i]+1;
@@ -180,7 +181,7 @@ static void watchdog(int fd, int ownerfd, void (*child)(int), int arg, int64_t d
   * No caller-supplied PID, path, process group or socket is accepted. */
  kill(-p,SIGKILL); kill(p,SIGKILL);
  syscall(SYS_pidfd_send_signal,ownerfd,SIGKILL,NULL,0);
- reap_bounded(); close(fd); close(ownerfd); _exit(0);
+ reap_bounded(); int residual=hp_owned_cleanup(owned_runtime); close(fd); close(ownerfd); _exit(residual?124:0);
 }
 static int guard_start(struct hp_guard *g, uint64_t gen, uint64_t epoch, unsigned temporary_ms, void (*child)(int), int arg, int private_pair) {
  if(!gen || !epoch || temporary_ms>86400000 || !child) {errno=EINVAL;return -1;}
@@ -202,7 +203,7 @@ static int guard_start(struct hp_guard *g, uint64_t gen, uint64_t epoch, unsigne
    kill(pid,SIGKILL);
    int64_t until=now_ms()+HP_WINDOW_MS;
    while(waitpid(pid,NULL,WNOHANG)==0 && now_ms()<until) poll(NULL,0,5);
-   errno=EIO;return -1;
+   (void)hp_owned_cleanup(owned_runtime);errno=EIO;return -1;
   }
   g->fd=pair[0];g->pid=pid;return 0;
  }
@@ -268,7 +269,7 @@ static int guard_start(struct hp_guard *g, uint64_t gen, uint64_t epoch, unsigne
   * If alive, it holds WNOWAIT until killing us. Never reap before group kill. */
  kill(-data,SIGKILL);
  syscall(SYS_pidfd_send_signal,wfd,SIGKILL,NULL,0);
- close(wfd);close(pair[1]);close(inner[0]);reap_bounded();_exit(0);
+ close(wfd);close(pair[1]);close(inner[0]);reap_bounded();_exit(hp_owned_cleanup(owned_runtime)?124:0);
 }
 int hp_guard_start(struct hp_guard *g, uint64_t gen, uint64_t epoch, unsigned temporary_ms, void (*child)(int), int arg) {
  return guard_start(g,gen,epoch,temporary_ms,child,arg,0);

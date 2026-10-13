@@ -1,0 +1,3 @@
+# Executed Linux scripts must survive Windows checkouts unchanged.
+homepublish/files/usr/share/homepublish/lease-run.sh text eol=lf
+homepublish/files/etc/init.d/homepublish text eol=lf

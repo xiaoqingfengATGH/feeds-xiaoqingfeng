@@ -1,0 +1,57 @@
+-- SPDX-License-Identifier: Apache-2.0
+-- Internal API: callers supply typed requests; storage location is compiled, not client-selected.
+local source=debug.getinfo(1,'S').source:sub(2):match('^(.*)/')
+local model=dofile(source..'/canonical.lua')
+local wire=dofile(source..'/product-wire.lua')
+local store=require('homepublish_store')
+local M={}
+local function initial()
+ return {state_version=1,saved_revision=0,intent_revision=0,desired_state={state='disabled',manual_stop_latch=false},runtime={phase='unsupported'}}
+end
+local function known(t,fields)
+ assert(type(t)=='table','journal object')
+ for k in pairs(t) do assert(fields[k],'unknown journal field') end
+end
+local function revision(n) assert(type(n)=='number' and n%1==0 and n>=0 and n<9007199254740991,'journal revision') end
+local function validate_state(s)
+ known(s,{state_version=true,saved_revision=true,saved_config=true,active_revision=true,active_config=true,intent_revision=true,desired_state=true,runtime=true,approval=true})
+ assert(s.state_version==1,'journal version');revision(s.saved_revision);revision(s.intent_revision)
+ if s.saved_revision>0 then assert(model.validate(s.saved_config),'invalid saved config') else assert(s.saved_config==nil,'unexpected config') end
+ if s.active_revision~=nil then revision(s.active_revision);assert(s.active_revision>0 and s.active_revision<=s.saved_revision and model.validate(s.active_config),'invalid active snapshot') else assert(s.active_config==nil,'orphan active config') end
+ known(s.desired_state,{state=true,manual_stop_latch=true})
+ assert(s.desired_state.state=='disabled' or s.desired_state.state=='enabled','journal desired')
+ assert(type(s.desired_state.manual_stop_latch)=='boolean','journal latch')
+ assert(not s.desired_state.manual_stop_latch or s.desired_state.state=='disabled','latched enabled intent')
+ known(s.runtime,{phase=true});assert(s.runtime.phase=='unsupported' or s.runtime.phase=='cleanup_required','runtime unavailable')
+ if s.approval then known(s.approval,{revision=true});assert(s.approval.revision==s.active_revision,'approval revision') end
+ return s
+end
+local function public(state)
+ local out=wire.decode(wire.encode(state))
+ out.pending_config={saved_revision=state.saved_revision,apply_required=state.saved_revision>0 and state.saved_revision~=state.active_revision}
+ return out
+end
+function M.handle(request)
+ if type(request)~='table' or getmetatable(request)~=nil then return nil,'request object required' end
+ local allowed=request.action=='save' and {action=true,expected_revision=true,config=true} or {action=true}
+ for k in pairs(request) do if not allowed[k] then return nil,'unknown request field' end end
+ if request.action~='save' and request.action~='status' and request.action~='stop' and request.action~='start' and request.action~='apply' then return nil,'unsupported action' end
+ if request.action=='start' or request.action=='apply' then return nil,'unsupported: runtime not implemented' end
+ return store.transaction(function(bytes)
+  local state=validate_state(bytes and wire.decode(bytes) or initial())
+  if request.action=='status' then return nil,public(state) end
+  if request.action=='stop' then
+   state.desired_state={state='disabled',manual_stop_latch=true}
+   state.intent_revision=state.intent_revision+1;state.approval=nil
+   -- No controller exists yet: intent revocation is real, resource cleanup is not claimed.
+   state.runtime={phase=state.active_revision and 'cleanup_required' or 'unsupported'}
+   return wire.encode(state),public(state)
+  end
+  assert(request.action=='save','unsupported action')
+  assert(request.expected_revision==state.saved_revision,'revision conflict')
+  local config,err=model.validate(request.config);assert(config,err)
+  state.saved_revision=state.saved_revision+1;state.saved_config=config
+  return wire.encode(state),public(state)
+ end)
+end
+return M

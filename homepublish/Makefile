@@ -12,7 +12,7 @@ define Package/homepublish
   SECTION:=net
   CATEGORY:=Network
   TITLE:=Bounded independent HomePublish HTTPS service
-  DEPENDS:=+libgcc +lua +libuci-lua +nginx-ssl +natmap +curl +ca-bundle
+  DEPENDS:=+libgcc +liblua +lua +libuci-lua +nginx-ssl +natmap +curl +ca-bundle
 endef
 
 define Package/homepublish/conffiles
@@ -21,16 +21,18 @@ endef
 
 define Build/Prepare
 	mkdir -p $(PKG_BUILD_DIR)
-	$(CP) ./src/lease-supervisor.c ./src/publisher.c $(PKG_BUILD_DIR)/
+	$(CP) ./src/lease-supervisor.c ./src/publisher.c ./src/product-store.c $(PKG_BUILD_DIR)/
 endef
 
 define Build/Compile
+	$(TARGET_CC) $(TARGET_CPPFLAGS) $(TARGET_CFLAGS) -std=c99 -Wall -Wextra -Werror -fPIC -shared -I$(STAGING_DIR)/usr/include -o $(PKG_BUILD_DIR)/homepublish_store.so $(PKG_BUILD_DIR)/product-store.c $(TARGET_LDFLAGS) -llua
 	$(TARGET_CC) $(TARGET_CPPFLAGS) $(TARGET_CFLAGS) -Wall -Wextra -Werror -o $(PKG_BUILD_DIR)/homepublish-publish $(PKG_BUILD_DIR)/publisher.c $(TARGET_LDFLAGS)
 	$(TARGET_CC) $(TARGET_CPPFLAGS) $(TARGET_CFLAGS) -Wall -Wextra -Werror -o $(PKG_BUILD_DIR)/homepublish-lease $(PKG_BUILD_DIR)/lease-supervisor.c $(TARGET_LDFLAGS)
 endef
 
 define Package/homepublish/install
-	$(INSTALL_DIR) $(1)/usr/libexec $(1)/usr/share/homepublish $(1)/etc/config $(1)/etc/init.d $(1)/etc/homepublish
+	$(INSTALL_DIR) $(1)/usr/libexec $(1)/usr/lib/lua $(1)/usr/share/homepublish $(1)/etc/config $(1)/etc/init.d $(1)/etc/homepublish
+	$(INSTALL_DATA) $(PKG_BUILD_DIR)/homepublish_store.so $(1)/usr/lib/lua/homepublish_store.so
 	$(INSTALL_BIN) $(PKG_BUILD_DIR)/homepublish-lease $(1)/usr/libexec/homepublish-lease
 	$(INSTALL_BIN) $(PKG_BUILD_DIR)/homepublish-publish $(1)/usr/libexec/homepublish-publish
 	$(INSTALL_DATA) ./files/usr/share/homepublish/*.lua $(1)/usr/share/homepublish/

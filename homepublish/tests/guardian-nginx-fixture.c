@@ -5,6 +5,7 @@
 #include <fcntl.h>
 #include <poll.h>
 #include <signal.h>
+#include <stddef.h>
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
@@ -17,6 +18,7 @@
 #ifndef HP_NGINX_LOADER
 #error fixed cached loader required
 #endif
+extern int hp_guard_start_private_test(struct hp_guard *,uint64_t,uint64_t,unsigned,void (*)(int),int);
 static void nginx_provider(int fd) {
  close(fd);
  int log=open(HP_NGINX_PREFIX "/stderr",O_CREAT|O_APPEND|O_WRONLY,0600);
@@ -25,11 +27,20 @@ static void nginx_provider(int fd) {
             "-p",HP_NGINX_PREFIX "/","-c","nginx.conf",NULL};
  execv(v[0],v); _exit(127);
 }
+static int abstract_probe;
+static void private_foreign_probe(int report) {
+ errno=0;assert(socket(AF_UNIX,SOCK_STREAM,0)==-1 && errno==EPERM);
+ errno=0;assert(recvmsg(-1,NULL,0)==-1 && errno==EBADF);
+ const char *result="private foreign socket errno=1 recvmsg errno=9\n";
+ assert(write(report,result,strlen(result))==(ssize_t)strlen(result));close(report);
+}
 static void foreign_probe(int report) {
  int s=socket(AF_UNIX,SOCK_STREAM,0);assert(s>=0);
  struct sockaddr_un a={.sun_family=AF_UNIX};
  assert(strlen(HP_FOREIGN_SOCKET)<sizeof(a.sun_path));strcpy(a.sun_path,HP_FOREIGN_SOCKET);
- assert(!connect(s,(struct sockaddr *)&a,sizeof(a)));
+ socklen_t len=sizeof(a);
+ if(abstract_probe){memmove(a.sun_path+1,a.sun_path,strlen(a.sun_path));a.sun_path[0]=0;len=offsetof(struct sockaddr_un,sun_path)+1+strlen(HP_FOREIGN_SOCKET);}
+ assert(!connect(s,(struct sockaddr *)&a,len));
  /* Readiness proves actual ancillary-bearing sendmsg data reached the socket.
   * Do not consume a byte with read(): that would discard SCM_RIGHTS. */
  struct pollfd ready={s,POLLIN,0};assert(poll(&ready,1,150)==1 && (ready.revents&POLLIN));
@@ -43,10 +54,12 @@ static void foreign_probe(int report) {
 }
 int main(int argc,char **argv) {
  assert(argc==3);assert(!prctl(PR_SET_CHILD_SUBREAPER,1));
- int probe=!strcmp(argv[1],"foreign");assert(probe || !strcmp(argv[1],"nginx"));
+ int private_probe=!strcmp(argv[1],"private-foreign");
+ abstract_probe=!strcmp(argv[1],"foreign-abstract");
+ int probe=!strcmp(argv[1],"foreign") || abstract_probe || private_probe;assert(probe || !strcmp(argv[1],"nginx"));
  char *end;unsigned long temporary=strtoul(argv[2],&end,10);assert(!*end && temporary<=8000);
  struct hp_guard g;int p[2];assert(!pipe(p));
- int rc=hp_guard_start(&g,7,9,(unsigned)temporary,probe?foreign_probe:nginx_provider,p[1]);close(p[1]);
+ int rc=private_probe?hp_guard_start_private_test(&g,7,9,(unsigned)temporary,private_foreign_probe,p[1]):probe?hp_guard_start(&g,7,9,(unsigned)temporary,foreign_probe,p[1]):hp_guard_start_private_test(&g,7,9,(unsigned)temporary,nginx_provider,p[1]);close(p[1]);
  printf("guard rc=%d guardian=%d\n",rc,g.pid);fflush(stdout);if(rc)return 2;
  if(probe) {char buf[128];ssize_t n=read(p[0],buf,sizeof(buf));assert(n>0);assert(write(1,buf,n)==n);}
  close(p[0]);

@@ -1,6 +1,10 @@
 # HomePublish 当前检查点
 
-## 最新 D2b2：真实 guardian + Nginx RED gate（BLOCKED，未激活）
+## 最新 D2b3：私有 STREAM socketpair 本地兼容 GREEN（未激活）
+
+真实 `make guardian direct product guardian-nginx` exit0；2worker双栈TLS、动态SCM_RIGHTS/FD复用、worker重建/同master续展、temporary及三监管角色单STOP/KILL、兜底前owned PID/listener清理通过；12 integration records，channel_EPERM0/internal_errors0。generic仍全局拒recvmsg；新private profile仅HP_GUARD_TEST内部fixture可选，禁止socket(AF_UNIX)/其它非INET域及DGRAM/SEQPACKET pair，仅私有STREAM pair。pathname/abstract外来sender旧profile真实入队，新profile创建连接拒绝，三角色foreign inode保全。详见 [D2b3 checkpoint](HOMEPUBLISH-D2B3-CHECKPOINT.md)。生产固定exec/inode authority、native TLS文件cleanup、scope/DNS/health/controller和目标aarch64仍未完成；Start/Apply unsupported、activation_ready=false、helper exit78保持。仅可信固定非root provider契约，不是hostile filesystem sandbox，不包含外部sameUID/root干预隔离。
+
+## 历史 D2b2：真实 guardian + Nginx RED gate（当时BLOCKED，未激活）
 
 接续 `408d963896a33aac076b48cbe4c31896586df05d`；test-first local checkpoint `ba57e816c16efd853de64f0b572e655717246216`。新增固定cached Nginx内部host fixture与 `make -C homepublish/tests guardian-nginx`：真实2worker、worker KILL重建、同master跨600ms多窗口renew、1200ms固定temporary、IPv4/IPv6 loopback TLS、controller/guardian/watchdog各KILL/STOP断流；已读回owned PID/监听在兜底前消失。外来UNIX真实SCM_RIGHTS已入队而guarded recvmsg EPERM，旧三角色foreign inode回归保留。**内部channel仍EPERM，新增target真实RED，不是兼容完成。** TLS/config/pid/temp文件仍靠harness删除，非native guardian清理完成。
 

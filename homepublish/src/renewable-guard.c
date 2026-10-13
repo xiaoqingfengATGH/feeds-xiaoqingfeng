@@ -7,6 +7,7 @@
 #include <sys/prctl.h>
 #include <sys/random.h>
 #include <sys/socket.h>
+#include <sys/stat.h>
 #include <sys/syscall.h>
 #include <sys/wait.h>
 #include <time.h>
@@ -26,7 +27,7 @@ struct startup_state { _Atomic pid_t data; };
  * Fork/exec inherit this boundary. No credential transitions: supervisors must
  * retain signal permission. Non-root only; privileged Nginx/user directives are
  * not supported by this slice. This is not a filesystem or cgroup sandbox. */
-static int worker_boundary(void) {
+static int worker_boundary(int private_pair) {
 #if defined(__x86_64__)
  const unsigned arch=AUDIT_ARCH_X86_64;
 #elif defined(__aarch64__)
@@ -62,7 +63,31 @@ static int worker_boundary(void) {
   BPF_STMT(BPF_RET|BPF_K,SECCOMP_RET_ERRNO|EPERM),
   BPF_STMT(BPF_LD|BPF_W|BPF_ABS,offsetof(struct seccomp_data,nr)),
   DENY(SYS_ptrace), DENY(SYS_process_vm_readv), DENY(SYS_process_vm_writev),
-  DENY(SYS_pidfd_getfd), DENY(SYS_recvmsg), DENY(SYS_recvmmsg),
+  DENY(SYS_pidfd_getfd),
+  DENY(private_pair ? (unsigned)-1 : SYS_recvmsg),
+  DENY(private_pair ? (unsigned)-1 : SYS_recvmmsg),
+  /* Only the internal fixed-provider test path selects this profile. Every
+   * surviving external argument is a pipe, and boot IPC closes before provider
+   * entry. UNIX sockets can then arise only from connected STREAM pairs. Never
+   * permit DGRAM pairs: they can bind/reconnect to foreign UNIX senders. */
+  BPF_JUMP(BPF_JMP|BPF_JEQ|BPF_K,private_pair ? SYS_socket : (unsigned)-1,0,5),
+  BPF_STMT(BPF_LD|BPF_W|BPF_ABS,offsetof(struct seccomp_data,args[0])),
+  BPF_JUMP(BPF_JMP|BPF_JEQ|BPF_K,AF_INET,2,0),
+  BPF_JUMP(BPF_JMP|BPF_JEQ|BPF_K,AF_INET6,1,0),
+  BPF_STMT(BPF_RET|BPF_K,SECCOMP_RET_ERRNO|EPERM),
+  BPF_STMT(BPF_LD|BPF_W|BPF_ABS,offsetof(struct seccomp_data,nr)),
+  BPF_JUMP(BPF_JMP|BPF_JEQ|BPF_K,private_pair ? SYS_socketpair : (unsigned)-1,0,11),
+  BPF_STMT(BPF_LD|BPF_W|BPF_ABS,offsetof(struct seccomp_data,args[0])),
+  BPF_JUMP(BPF_JMP|BPF_JEQ|BPF_K,AF_UNIX,1,0),
+  BPF_STMT(BPF_RET|BPF_K,SECCOMP_RET_ERRNO|EPERM),
+  BPF_STMT(BPF_LD|BPF_W|BPF_ABS,offsetof(struct seccomp_data,args[1])),
+  BPF_STMT(BPF_ALU|BPF_AND|BPF_K,~(SOCK_CLOEXEC|SOCK_NONBLOCK)),
+  BPF_JUMP(BPF_JMP|BPF_JEQ|BPF_K,SOCK_STREAM,1,0),
+  BPF_STMT(BPF_RET|BPF_K,SECCOMP_RET_ERRNO|EPERM),
+  BPF_STMT(BPF_LD|BPF_W|BPF_ABS,offsetof(struct seccomp_data,args[2])),
+  BPF_JUMP(BPF_JMP|BPF_JEQ|BPF_K,0,1,0),
+  BPF_STMT(BPF_RET|BPF_K,SECCOMP_RET_ERRNO|EPERM),
+  BPF_STMT(BPF_LD|BPF_W|BPF_ABS,offsetof(struct seccomp_data,nr)),
   DENY(SYS_io_uring_setup), DENY(SYS_bpf), DENY(SYS_mount), DENY(SYS_umount2),
   DENY(SYS_pivot_root), DENY(SYS_chroot), DENY(SYS_capset),
   DENY(SYS_setuid), DENY(SYS_setgid), DENY(SYS_setreuid), DENY(SYS_setregid),
@@ -108,7 +133,7 @@ static void reap_bounded(void) {
  int64_t until=now_ms()+250;
  do { while(waitpid(-1,NULL,WNOHANG)>0) {} poll(NULL,0,5); } while(now_ms()<until);
 }
-static void watchdog(int fd, int ownerfd, void (*child)(int), int arg, int64_t deadline, struct startup_state *state) {
+static void watchdog(int fd, int ownerfd, void (*child)(int), int arg, int64_t deadline, struct startup_state *state, int private_pair) {
  int boot[2];if(socketpair(AF_UNIX,SOCK_SEQPACKET|SOCK_CLOEXEC,0,boot)) _exit(125);
  pid_t parent=getpid();
  pid_t p=fork();
@@ -117,7 +142,9 @@ static void watchdog(int fd, int ownerfd, void (*child)(int), int arg, int64_t d
   if(prctl(PR_SET_PDEATHSIG,SIGKILL) || getppid()!=parent) _exit(126);
   int go=0;struct pollfd gate={boot[1],POLLIN,0};
   if(poll(&gate,1,HP_WATCHDOG_MS)!=1 || recv(boot[1],&go,sizeof(go),MSG_TRUNC)!=sizeof(go) || go!=1 || setpgid(0,0)) _exit(126);
-  if(clean_fds(arg,boot[1],-1) || worker_boundary()) _exit(126);
+  struct stat argument;
+  if(private_pair && (fstat(arg,&argument) || !S_ISFIFO(argument.st_mode))) _exit(126);
+  if(clean_fds(arg,boot[1],-1) || worker_boundary(private_pair)) _exit(126);
   int ok=1;if(send(boot[1],&ok,sizeof(ok),MSG_NOSIGNAL)!=sizeof(ok)) _exit(126);
   close(boot[1]);
   munmap(state,sizeof(*state));
@@ -155,7 +182,7 @@ static void watchdog(int fd, int ownerfd, void (*child)(int), int arg, int64_t d
  syscall(SYS_pidfd_send_signal,ownerfd,SIGKILL,NULL,0);
  reap_bounded(); close(fd); close(ownerfd); _exit(0);
 }
-int hp_guard_start(struct hp_guard *g, uint64_t gen, uint64_t epoch, unsigned temporary_ms, void (*child)(int), int arg) {
+static int guard_start(struct hp_guard *g, uint64_t gen, uint64_t epoch, unsigned temporary_ms, void (*child)(int), int arg, int private_pair) {
  if(!gen || !epoch || temporary_ms>86400000 || !child) {errno=EINVAL;return -1;}
  memset(g,0,sizeof(*g)); g->generation=gen;g->epoch=epoch;
  if(getrandom(g->token,16,0)!=16) return -1;
@@ -189,7 +216,7 @@ int hp_guard_start(struct hp_guard *g, uint64_t gen, uint64_t epoch, unsigned te
  if(state==MAP_FAILED) _exit(125);
  atomic_init(&state->data,0);
  pid_t w=fork(); if(w<0) _exit(125);
- if(!w) {if(setpgid(0,0) || clean_fds(inner[1],ownerfd,arg)) _exit(125);watchdog(inner[1],ownerfd,child,arg,deadline,state);}
+ if(!w) {if(setpgid(0,0) || clean_fds(inner[1],ownerfd,arg)) _exit(125);watchdog(inner[1],ownerfd,child,arg,deadline,state,private_pair);}
  close(inner[1]);close(ownerfd);
  close(arg);
  int wfd=syscall(SYS_pidfd_open,w,0);pid_t data=0;
@@ -243,6 +270,16 @@ int hp_guard_start(struct hp_guard *g, uint64_t gen, uint64_t epoch, unsigned te
  syscall(SYS_pidfd_send_signal,wfd,SIGKILL,NULL,0);
  close(wfd);close(pair[1]);close(inner[0]);reap_bounded();_exit(0);
 }
+int hp_guard_start(struct hp_guard *g, uint64_t gen, uint64_t epoch, unsigned temporary_ms, void (*child)(int), int arg) {
+ return guard_start(g,gen,epoch,temporary_ms,child,arg,0);
+}
+#ifdef HP_GUARD_TEST
+/* Deliberately absent from public header and production builds. Fixed cached
+ * Nginx fixture only; no production exec/inode authority is claimed. */
+int hp_guard_start_private_test(struct hp_guard *g, uint64_t gen, uint64_t epoch, unsigned temporary_ms, void (*child)(int), int arg) {
+ return guard_start(g,gen,epoch,temporary_ms,child,arg,1);
+}
+#endif
 #ifndef HP_GUARD_TEST
 /* No provider has been integrated: packaged executable cannot start anything. */
 int main(void) { fputs("HomePublish guardian provider unavailable; activation disabled\n",stderr); return 78; }

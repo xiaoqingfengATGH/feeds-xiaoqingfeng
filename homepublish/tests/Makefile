@@ -1,6 +1,9 @@
 .PHONY: direct product guardian guardian-nginx
-# D2b2 acceptance gate: intentionally RED while internal-channel safety is unresolved.
+# Local test-only private-pair profile; production activation remains disabled.
 guardian-nginx:
+	$(CC) -std=c11 -Wall -Wextra -Werror -DHP_GUARD_TEST -I../src ../src/renewable-guard.c private-pair-probe.c -o $(TMPDIR)/hp-private-pair-probe
+	$(TMPDIR)/hp-private-pair-probe
+	$(TMPDIR)/hp-private-pair-probe abstract
 	python3 test-guardian-nginx.py
 guardian:
 	python3 test-renewable-guard.py

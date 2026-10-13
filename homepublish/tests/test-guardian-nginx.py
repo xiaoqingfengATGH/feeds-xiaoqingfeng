@@ -1,8 +1,7 @@
 #!/usr/bin/env python3
-"""D2b2 genuine RED acceptance gate, not an expected-failure green regression.
+"""D2b3 real fixed-provider private-pair acceptance gate.
 Cached fixed Nginx; no installs, production helpers, DNS, firewall or activation.
-The fixture currently exposes channel errors and must remain failing until a
-kernel-enforced, provider-specific foreign-FD exclusion is implemented.
+Channel errors remain hard failures; no production activation is provided.
 """
 import array, hashlib, http.server, json, os, pathlib, signal, socket, ssl
 import subprocess, tempfile, threading, time
@@ -78,8 +77,8 @@ def assert_dead(pids,port,ctx):
             with socket.create_connection((addr,port),timeout=.2):pass
         except OSError:pass
         else:raise AssertionError('listener remains before fallback')
-def foreign_test(d,exe):
-    listener=socket.socket(socket.AF_UNIX,socket.SOCK_STREAM);listener.bind(str(d/'foreign.sock'));listener.listen()
+def foreign_test(d,exe,abstract=False):
+    listener=socket.socket(socket.AF_UNIX,socket.SOCK_STREAM);listener.bind(('\0' if abstract else '')+str(d/'foreign.sock'));listener.listen()
     sentinel=d/'foreign.txt';sentinel.write_text('foreign-preserved')
     errors=[];sent=[]
     def sender():
@@ -89,20 +88,27 @@ def foreign_test(d,exe):
                 sent.append(s.sendmsg([b'F'],[(socket.SOL_SOCKET,socket.SCM_RIGHTS,array.array('i',[f.fileno()]))]))
         except Exception as e:errors.append(repr(e))
     th=threading.Thread(target=sender);th.start()
-    p=subprocess.run([str(exe),'foreign','0'],capture_output=True,text=True,timeout=6)
-    th.join(4);listener.close()
+    p=subprocess.run([str(exe),'foreign-abstract' if abstract else 'foreign','0'],capture_output=True,text=True,timeout=6)
+    th.join(4)
     assert not th.is_alive() and not errors,(errors,p.stdout,p.stderr)
     assert p.returncode==0 and 'recvmsg rc=-1 errno=1' in p.stdout,(p.returncode,p.stdout,p.stderr)
     assert sent==[1] and sentinel.read_text()=='foreign-preserved',sent
     guardian=int(p.stdout.split('guardian=')[1].splitlines()[0]);assert not pathlib.Path('/proc',str(guardian)).exists()
     print('PASS real external pathname UNIX SCM_RIGHTS queued; guarded recvmsg EPERM',flush=True)
-    results.append({'case':'foreign-SCM_RIGHTS','queued_bytes':sent,'recvmsg_errno':1,'guardian_absent':True})
+    results.append({'case':'foreign-SCM_RIGHTS-'+('abstract' if abstract else 'pathname'),'queued_bytes':sent,'recvmsg_errno':1,'guardian_absent':True})
+    # Same live foreign endpoint exists; private profile cannot create a UNIX
+    # connector at all. recvmsg is genuinely enabled, not silently still denied.
+    p=subprocess.run([str(exe),'private-foreign','0'],capture_output=True,text=True,timeout=6)
+    assert p.returncode==0 and 'socket errno=1 recvmsg errno=9' in p.stdout,(p.stdout,p.stderr)
+    assert sentinel.read_text()=='foreign-preserved'
+    listener.close()
+    results.append({'case':'private-foreign-'+('abstract' if abstract else 'pathname'),'socket_errno':1,'recvmsg_invalid_errno':9,'foreign_preserved':True})
 try:
     with tempfile.TemporaryDirectory(prefix='d2b2-nginx-',dir=os.environ.get('TMPDIR','/home/eric/homestun-sdk-check')) as td:
         base=pathlib.Path(td);ctx=certify(base)
         back=Server(('127.0.0.1',0),Backend);th=threading.Thread(target=back.serve_forever);th.start()
         try:
-            probe=base/'probe';probe.mkdir();foreign_test(probe,compile_fixture(probe))
+            probe=base/'probe';probe.mkdir();exe=compile_fixture(probe);foreign_test(probe,exe);foreign_test(probe,exe,True)
             for fault in ('renew-rebuild','temporary','controller-kill','controller-stop','guardian-kill','guardian-stop','watchdog-kill','watchdog-stop'):
                 d=base/fault;d.mkdir()
                 for n in ('cert.pem','key.pem'):(d/n).write_bytes((base/n).read_bytes())
@@ -196,6 +202,6 @@ finally:
              'results':results,'remaining_owned':[p for p in owned if pathlib.Path('/proc',str(p)).exists()]}
     (EVIDENCE/'summary.json').write_text(json.dumps(summary,indent=2)+'\n')
     print('EVIDENCE',EVIDENCE,flush=True)
-assert len(results)==9,results
+assert len(results)==12,results
 assert all(not r.get('channel_EPERM') and not r.get('internal_errors') for r in results), 'D2b2 RED: real Nginx internal channel recvmsg EPERM; unsafe global relaxation forbidden'
 print('PASS guarded Nginx integration including internal channels')

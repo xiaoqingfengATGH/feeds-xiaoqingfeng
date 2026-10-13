@@ -7,11 +7,11 @@
 + 第三方软件包，由HomeLede团队定制后的版本
 + 第三方软件包，固件BASE代码中不包含或者版本与固件代码库及各个Feed中不同的
 
-## HomeDirect（家庭服务直连）
+## HomePublish（家庭服务直连）
 
-HomeDirect以家庭Web HTTPS服务为中心，最终设计采用独立专用Nginx直接IPv4/IPv6监听，单服务IPv4/IPv6/hostname后端确定IPv4优先、不重放写请求。正常发布持续到停用，临时限时可选，UPnP有限网关租约受控续租。默认未发布、Save不启动；明确开启后精确owned TCP INPUT，独立开机恢复默认关。主/旁IPv4固定转发优先，再授权UPnP/STUN；IPv6路由和入站许可非DNAT。残留unknown不fallback/危险端口复用，HomeTunnel不动，真实ACME/DDNS-Go复用、Cloudflare可选。
+HomePublish以家庭Web HTTPS服务为中心，最终设计采用独立专用Nginx直接IPv4/IPv6监听，单服务IPv4/IPv6/hostname后端确定IPv4优先、不重放写请求。正常发布持续到停用，临时限时可选，UPnP有限网关租约受控续租。默认未发布、Save不启动；明确开启后精确owned TCP INPUT，独立开机恢复默认关。主/旁IPv4固定转发优先，再授权UPnP/STUN；IPv6路由和入站许可非DNAT。残留unknown不fallback/危险端口复用，HomeTunnel不动，真实ACME/DDNS-Go复用、Cloudflare可选。
 
-D1命名迁移已完成：`homestun/`→`homedirect/`、`luci-app-homestun/`→`luci-app-homedirect/`，包内路径/宏/UCI名全量原子替换，旧路径全移除。见[需求](REQUIREMENTS.md)、[完整设计](docs/homedirect-product-design.md)、[审查清单](docs/homedirect-design-review-checklist.md)、[续跑历史证据](docs/HOMESTUN-RESUME.md)。
+D1命名迁移已完成（两轮：homestun→homedirect→homepublish，定名避开既有homeredirect）：`homepublish/`、`luci-app-homepublish/`，包内路径/宏/UCI名全量原子替换，旧路径全移除。见[需求](REQUIREMENTS.md)、[完整设计](docs/homepublish-product-design.md)、[审查清单](docs/homepublish-design-review-checklist.md)、[续跑历史证据](docs/HOMESTUN-RESUME.md)。
 
 ## 重点功能说明：
 + 端口转发工具——HomeRedirect（原创）。可以在有Docker环境下支持NAT环回。

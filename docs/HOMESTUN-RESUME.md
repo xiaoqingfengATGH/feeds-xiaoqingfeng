@@ -1,8 +1,8 @@
 # HomeSTUN 关机续跑入口
 
-## 最新授权范围：HomeDirect最终完整设计基线（待独立实现审查）
+## 最新授权范围：HomePublish最终完整设计基线（待独立实现审查）
 
-最终基线：[REQ-001～REQ-005](../REQUIREMENTS.md)、[产品/技术/交互完整设计](homedirect-product-design.md)、[设计审查清单](homedirect-design-review-checklist.md)。本轮只文档，不改代码、安装、映射、路由器、防火墙或Cloudflare，不公网测试，不commit/merge/push/PR。父review后实施，真实操作另定范围，当前新功能未实现。
+最终基线：[REQ-001～REQ-005](../REQUIREMENTS.md)、[产品/技术/交互完整设计](homepublish-product-design.md)、[设计审查清单](homepublish-design-review-checklist.md)。本轮只文档，不改代码、安装、映射、路由器、防火墙或Cloudflare，不公网测试，不commit/merge/push/PR。父review后实施，真实操作另定范围，当前新功能未实现。
 
 用户最后确认正常发布持续直到停用，临时可选；有限UPnP受控续租，独立boot恢复设置。本文默认选择：初始未发布、持续策略、临时30分钟/有界自定义、boot_restore关；Save不Start，明确开启可长期运行，健康维护/同scope恢复不反复确认。持续不是无限guard，native新增有限health capability续授权，失控fail closed；desired enabled/manual-stop锁/gen防旧事件，控制器有界backoff恢复，procd不裸复活旧expired session；boot开启后revalidate才恢复，临时截止持久且时间不可信停。
 

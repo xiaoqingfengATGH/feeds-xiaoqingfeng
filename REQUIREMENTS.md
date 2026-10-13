@@ -2,7 +2,7 @@
 
 ## 当前授权与阶段
 
-**HomeDirect（家庭服务直连）最终设计基线已整理。** 用户确认正常发布持续直到停用，临时限时可选，UPnP有限租约受控续租，开机恢复独立设置；直接双栈专用Nginx，不通用forwarder。详见[完整设计](docs/homedirect-product-design.md)和[审查清单](docs/homedirect-design-review-checklist.md)。本批仅文档，不改源码、不安装、不Add/Delete映射、不公网测试、不操作防火墙/路由/Cloudflare、不commit/merge/push/PR。父任务独立review后实施，真实生产操作另定范围。默认未发布、Save不启动，明确开启可持续运行；产品自动INPUT能力不是本批生产写授权。新功能未实现，历史实验不是生产验收。
+**HomePublish（家庭服务直连）最终设计基线已整理。** 用户确认正常发布持续直到停用，临时限时可选，UPnP有限租约受控续租，开机恢复独立设置；直接双栈专用Nginx，不通用forwarder。详见[完整设计](docs/homepublish-product-design.md)和[审查清单](docs/homepublish-design-review-checklist.md)。本批仅文档，不改源码、不安装、不Add/Delete映射、不公网测试、不操作防火墙/路由/Cloudflare、不commit/merge/push/PR。父任务独立review后实施，真实生产操作另定范围。默认未发布、Save不启动，明确开启可持续运行；产品自动INPUT能力不是本批生产写授权。新功能未实现，历史实验不是生产验收。
 
 ## REQ-001 — 家庭Web HTTPS直连（当前定位）
 
@@ -21,7 +21,7 @@ Status: 产品方向确认；最终设计基线形成，尚未实现新架构或
 
 Status: 最终设计已整理，源码迁移/新交互未实施。
 
-- homedirect/luci-app-homedirect/UCI/ubus/init/path同批迁移，保留旧报告/artifact/hash；不双daemon、不默认copy秘密/启动。
+- homepublish/luci-app-homepublish/UCI/ubus/init/path同批迁移，保留旧报告/artifact/hash；不双daemon、不默认copy秘密/启动。
 - 四页家庭概览/服务/接入方式/设置诊断；四步服务证书→接入scope→只读校验与Save→明确开启及分层结果。
 - canonical同源权威校验；active/saved revision分离，Save后pending，显式Apply受控replace，扩大scope/服务需确认；不每次健康renew/recovery弹窗。
 - 角色read/config/exposure最小权限，无任意exec/file/service/nft；真实rpcd scoped commit测试，不仅UI约束；坏配置禁用恢复/Save不冒称active已停。

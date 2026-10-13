@@ -1,1 +1,0 @@
-{"admin/services/homedirect":{"title":"HomeDirect","order":62,"action":{"type":"view","path":"homedirect/settings"},"depends":{"acl":["luci-app-homedirect"],"uci":{"homedirect":true}}}}

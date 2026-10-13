@@ -1,1 +1,0 @@
-{"luci-app-homedirect":{"description":"HomeDirect configuration and read-only validation status","read":{"uci":["homedirect"],"ubus":{"homedirect":["status"]}},"write":{"uci":["homedirect"],"ubus":{"uci":["commit"]}}}}

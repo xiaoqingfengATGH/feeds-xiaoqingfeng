@@ -16,6 +16,16 @@
 #include <sys/stat.h>
 #include <sys/un.h>
 #include <unistd.h>
+#include <dirent.h>
+static struct stat foreign_objects[5];
+static void role_fds(pid_t pid,int expected) {
+ char path[128];snprintf(path,sizeof(path),"/proc/%d/fd",pid);DIR *d=opendir(path);assert(d);struct dirent *e;int count=0;
+ while((e=readdir(d))) {if(e->d_name[0]=='.')continue;
+  char link[512];snprintf(link,sizeof(link),"%s/%s",path,e->d_name);struct stat st;assert(!stat(link,&st));count++;
+  for(int i=0;i<5;i++)assert(st.st_dev!=foreign_objects[i].st_dev || st.st_ino!=foreign_objects[i].st_ino);
+ }
+ closedir(d);assert(count==expected);printf("FD role pid=%d count=%d: every foreign inode absent\n",pid,count);
+}
 static int foreign_fds[5];
 static void foreign_setup(void) {
  foreign_fds[0]=socket(AF_INET,SOCK_STREAM|SOCK_CLOEXEC,0);assert(foreign_fds[0]>=0);
@@ -24,6 +34,7 @@ static void foreign_setup(void) {
  int pair[2];assert(!socketpair(AF_UNIX,SOCK_STREAM|SOCK_CLOEXEC,0,pair));foreign_fds[1]=pair[0];foreign_fds[2]=pair[1];
  foreign_fds[3]=open("/dev/null",O_RDWR|O_CLOEXEC);assert(foreign_fds[3]>=0);
  foreign_fds[4]=socket(AF_UNIX,SOCK_SEQPACKET|SOCK_CLOEXEC,0);assert(foreign_fds[4]>=0);
+ for(int i=0;i<5;i++)assert(!fstat(foreign_fds[i],&foreign_objects[i]));
 }
 static long long ms(void) { struct timespec t;assert(!clock_gettime(CLOCK_MONOTONIC,&t));return (long long)t.tv_sec*1000+t.tv_nsec/1000000; }
 static void pause_ms(int n) {poll(NULL,0,n);}
@@ -49,6 +60,14 @@ int main(int argc,char **argv) {
  struct {pid_t pid;unsigned port;} info;
  struct pollfd f={p[0],POLLIN,0};assert(poll(&f,1,1000)==1);assert(read(p[0],&info,sizeof(info))==sizeof(info));close(p[0]);
  int s=connect_port(info.port);assert(s>=0);char b[128];assert(recv(s,b,sizeof(b),0)>0);
+ if(!strcmp(argv[1],"foreign-fd")) {
+  char path[128];snprintf(path,sizeof(path),"/proc/%d/task/%d/children",g.pid,g.pid);
+  FILE *fp=fopen(path,"r");assert(fp);int w=0;assert(fscanf(fp,"%d",&w)==1);fclose(fp);
+  role_fds(g.pid,3);role_fds(w,2);role_fds(info.pid,2);
+  for(int i=0;i<5;i++){struct stat st;assert(!fstat(foreign_fds[i],&st));assert(st.st_dev==foreign_objects[i].st_dev && st.st_ino==foreign_objects[i].st_ino);}
+  struct sockaddr_in a;socklen_t n=sizeof(a);assert(!getsockname(foreign_fds[0],(void*)&a,&n));assert(a.sin_family==AF_INET);
+  assert(write(foreign_fds[1],"x",1)==1);char c;assert(read(foreign_fds[2],&c,1)==1 && c=='x');
+ }
  if(!strcmp(argv[1],"renew")) {
   for(int i=0;i<8;i++) {pause_ms(150);assert(!hp_guard_send(&g,1));assert(recv(s,b,sizeof(b),MSG_DONTWAIT)>0);assert(!kill(info.pid,0));}
   assert(ms()-start>HP_WINDOW_MS*2);
@@ -90,6 +109,6 @@ int main(int argc,char **argv) {
  char path[80];snprintf(path,sizeof(path),"/proc/%d",info.pid);assert(access(path,F_OK));
  snprintf(path,sizeof(path),"/proc/%d",g.pid);assert(access(path,F_OK));
  assert(waitpid(-1,NULL,WNOHANG)==-1);
- if(foreign_fds[0]) for(int i=0;i<5;i++) {assert(fcntl(foreign_fds[i],F_GETFD)>=0);close(foreign_fds[i]);}
+ if(foreign_fds[0]) for(int i=0;i<5;i++) {struct stat st;assert(!fstat(foreign_fds[i],&st));assert(st.st_dev==foreign_objects[i].st_dev && st.st_ino==foreign_objects[i].st_ino);close(foreign_fds[i]);}
  printf("PASS %s: stream EOF, listener refused, owned PIDs absent\n",argv[1]);return 0;
 }

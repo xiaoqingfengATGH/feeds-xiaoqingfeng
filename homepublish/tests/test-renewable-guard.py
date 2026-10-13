@@ -8,10 +8,16 @@ class Guardian(unittest.TestCase):
   with tempfile.TemporaryDirectory(prefix='hp-guard-') as d:
    exe=pathlib.Path(d)/'fixture'
    subprocess.run(['cc','-std=c11','-Wall','-Wextra','-Werror','-DHP_GUARD_TEST','-I'+str(ROOT/'src'),str(ROOT/'src/renewable-guard.c'),str(ROOT/'tests/renewable-guard-fixture.c'),'-o',str(exe)],check=True)
+   tree=pathlib.Path(d)/'tree'
+   subprocess.run(['cc','-std=c11','-Wall','-Wextra','-Werror','-DHP_GUARD_TEST','-I'+str(ROOT/'src'),str(ROOT/'src/renewable-guard.c'),str(ROOT/'tests/renewable-tree-fixture.c'),'-o',str(tree)],check=True)
+   if os.environ.get('CASE') in (None,'tree'):
+    for case in ['setsid','setpgid','foreigngroup','doublefork','exec','exec-leader','boundary'] + [prefix+fault for prefix in ['', 'doublefork-', 'exec-'] for fault in ['guardian-kill','guardian-stop','watchdog-kill','watchdog-stop']]:
+     subprocess.run([str(tree),case],check=True,timeout=5)
+    if os.environ.get('CASE')=='tree': return
    faults=pathlib.Path(d)/'faults'
    subprocess.run(['cc','-std=c11','-Wall','-Wextra','-Werror','-DHP_GUARD_TEST','-I'+str(ROOT/'src'),str(ROOT/'src/renewable-guard.c'),str(ROOT/'tests/renewable-start-faults.c'),'-Wl,--wrap=fork','-Wl,--wrap=syscall','-o',str(faults)],check=True)
    if os.environ.get('CASE') in (None,'startup'):
-    for fault in ['1','2','3','pidfd']: subprocess.run([str(faults),fault],check=True,timeout=4)
+    for fault in ['1','2','3','pidfd','stop1','stop2','stop3','kill1','kill2','kill3']: subprocess.run([str(faults),fault],check=True,timeout=4)
     if os.environ.get('CASE')=='startup': return
    foreign=subprocess.Popen(['sleep','60'])
    sentinel=pathlib.Path(d)/'foreign';sentinel.write_bytes(b'foreign-preserved')

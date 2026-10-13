@@ -63,7 +63,8 @@ int main(int argc,char **argv) {
  if(!strcmp(argv[1],"foreign-fd")) {
   char path[128];snprintf(path,sizeof(path),"/proc/%d/task/%d/children",g.pid,g.pid);
   FILE *fp=fopen(path,"r");assert(fp);int w=0;assert(fscanf(fp,"%d",&w)==1);fclose(fp);
-  role_fds(g.pid,3);role_fds(w,2);role_fds(info.pid,2);
+  /* Each supervisor now retains an additional provider pidfd for EMFILE-safe cleanup. */
+  role_fds(g.pid,4);role_fds(w,3);role_fds(info.pid,2);
   for(int i=0;i<5;i++){struct stat st;assert(!fstat(foreign_fds[i],&st));assert(st.st_dev==foreign_objects[i].st_dev && st.st_ino==foreign_objects[i].st_ino);}
   struct sockaddr_in a;socklen_t n=sizeof(a);assert(!getsockname(foreign_fds[0],(void*)&a,&n));assert(a.sin_family==AF_INET);
   assert(write(foreign_fds[1],"x",1)==1);char c;assert(read(foreign_fds[2],&c,1)==1 && c=='x');

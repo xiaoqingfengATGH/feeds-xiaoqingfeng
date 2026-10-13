@@ -17,7 +17,13 @@
 #include <stddef.h>
 #include <sys/mman.h>
 #include <stdatomic.h>
-struct startup_state { _Atomic pid_t data; };
+struct startup_state { _Atomic pid_t data, watchdog; };
+#ifdef HP_GUARD_TEST
+extern int hp_guard_fault_test(const char *) __attribute__((weak));
+static int fault(const char *stage) { return hp_guard_fault_test ? hp_guard_fault_test(stage) : 0; }
+#else
+static int fault(const char *stage) { (void)stage;return 0; }
+#endif
 #include <linux/audit.h>
 #include <linux/filter.h>
 #include <linux/seccomp.h>
@@ -150,33 +156,49 @@ static int provider_exited(pid_t pid) {
  } while(now_ms()<until);
  close(fd);return ready;
 }
+/* Required pidfds are retained through cleanup; never reopen under EMFILE. */
+static int exited_fd(int fd) {
+ struct pollfd p={fd,POLLIN,0};int rc;
+ do { rc=poll(&p,1,250); } while(rc<0 && errno==EINTR);
+ return rc>0 && (p.revents&POLLIN);
+}
+static int cleanup_data(pid_t data,int datafd) {
+ if(data>0) {kill(-data,SIGKILL);kill(data,SIGKILL);}
+ if(data>0 && !(datafd>=0?exited_fd(datafd):provider_exited(data)))return 1;
+ return hp_owned_cleanup(owned_runtime);
+}
+static int receive_int(int fd,int expected) {
+ struct pollfd p={fd,POLLIN,0};int v=0;
+ return poll(&p,1,HP_WATCHDOG_MS)==1 && recv(fd,&v,sizeof(v),MSG_TRUNC)==sizeof(v) && v==expected ? 0 : -1;
+}
+static int send_int(int fd,int v) {return send(fd,&v,sizeof(v),MSG_NOSIGNAL)==sizeof(v)?0:-1;}
 static void watchdog(int fd, int ownerfd, void (*child)(int), int arg, int64_t deadline, struct startup_state *state, int private_pair) {
- int boot[2];if(socketpair(AF_UNIX,SOCK_SEQPACKET|SOCK_CLOEXEC,0,boot)) _exit(125);
- pid_t parent=getpid();
- pid_t p=fork();
- if(p<0) _exit(125);
+ int boot[2]={-1,-1},datafd=-1;pid_t p=0;
+ /* Guardian owns our pidfd and has isolated its FDs before this grant. */
+ if(fault("watchdog-isolated") || receive_int(fd,1))goto fail;
+ if(socketpair(AF_UNIX,SOCK_SEQPACKET|SOCK_CLOEXEC,0,boot))goto fail;
+ pid_t parent=getpid();p=fork();
+ if(p<0){p=0;goto fail;}
  if(!p) {
   if(prctl(PR_SET_PDEATHSIG,SIGKILL) || getppid()!=parent) _exit(126);
-  int go=0;struct pollfd gate={boot[1],POLLIN,0};
-  if(poll(&gate,1,HP_WATCHDOG_MS)!=1 || recv(boot[1],&go,sizeof(go),MSG_TRUNC)!=sizeof(go) || go!=1 || setpgid(0,0)) _exit(126);
+  if(receive_int(boot[1],1) || setpgid(0,0)) _exit(126);
   struct stat argument;
   if(private_pair && (fstat(arg,&argument) || !S_ISFIFO(argument.st_mode))) _exit(126);
-  if(clean_fds(arg,boot[1],-1) || worker_boundary(private_pair)) _exit(126);
-  int ok=1;if(send(boot[1],&ok,sizeof(ok),MSG_NOSIGNAL)!=sizeof(ok)) _exit(126);
-  close(boot[1]);
-  munmap(state,sizeof(*state));
-  child(arg); _exit(0);
+  if(clean_fds(arg,boot[1],-1) || worker_boundary(private_pair) || fault("provider-isolated")) _exit(126);
+  if(fault("provider-ready") || send_int(boot[1],1)) _exit(126);
+  /* Server-owned second gate: no callback writes/listens after isolation
+   * alone. All three supervising roles must have their required pidfds. */
+  if(receive_int(boot[1],2))_exit(126);
+  close(boot[1]);munmap(state,sizeof(*state));child(arg);_exit(0);
  }
  atomic_store_explicit(&state->data,p,memory_order_release);
- int go=1;
- if(send(boot[0],&go,sizeof(go),MSG_NOSIGNAL)!=sizeof(go)) {kill(p,SIGKILL);_exit(125);}
- (void)setpgid(p,p);
- close(boot[1]);struct pollfd bf={boot[0],POLLIN,0};int ok=0;
- if(poll(&bf,1,HP_WATCHDOG_MS)!=1 || recv(boot[0],&ok,sizeof(ok),MSG_TRUNC)!=sizeof(ok) || ok!=1) {
-  kill(-p,SIGKILL);kill(p,SIGKILL);close(boot[0]);_exit(125);
- }
- close(boot[0]);close(arg);
- if(send(fd,&p,sizeof(p),MSG_NOSIGNAL)!=sizeof(p)) {kill(-p,SIGKILL);kill(p,SIGKILL);_exit(125);}
+ datafd=syscall(SYS_pidfd_open,p,0);if(datafd<0)goto fail;
+ (void)setpgid(p,p);close(boot[1]);boot[1]=-1;
+ if(send_int(boot[0],1) || receive_int(boot[0],1))goto fail;
+ close(arg);
+ if(send(fd,&p,sizeof(p),MSG_NOSIGNAL)!=sizeof(p) || receive_int(fd,2))goto fail;
+ if(send_int(boot[0],2))goto fail;
+ close(boot[0]);boot[0]=-1;
  int64_t alive=now_ms()+HP_WATCHDOG_MS;
  for(;;) {
   if(now_ms()>=deadline || now_ms()>=alive) break;
@@ -195,65 +217,81 @@ static void watchdog(int fd, int ownerfd, void (*child)(int), int arg, int64_t d
  }
  /* This group is created here, with its unreaped leader still owned here.
   * No caller-supplied PID, path, process group or socket is accepted. */
- kill(-p,SIGKILL); kill(p,SIGKILL);
- /* Never kill the reciprocal cleaner before completing our own cleanup.
-  * Both guards may reach this tail together; killing first can kill BOTH
-  * cleaners with every owned secret still linked. Pinned identities plus
-  * ENOENT-tolerant unlink make concurrent cleanup idempotent, not a lock. */
- int residual=provider_exited(p)?hp_owned_cleanup(owned_runtime):1;
+fail:
+ /* Every startup/runtime exit follows kill -> observe -> native cleanup ->
+  * peer kill -> reap. Pinned identities make overlapping cleanup idempotent. */
+ int residual=cleanup_data(p,datafd);
  syscall(SYS_pidfd_send_signal,ownerfd,SIGKILL,NULL,0);
- reap_bounded();close(fd); close(ownerfd); _exit(residual?124:0);
+ reap_bounded();close(fd);close(ownerfd);if(datafd>=0)close(datafd);_exit(residual?124:0);
 }
+
 static int guard_start(struct hp_guard *g, uint64_t gen, uint64_t epoch, unsigned temporary_ms, void (*child)(int), int arg, int private_pair) {
  if(!gen || !epoch || temporary_ms>86400000 || !child) {errno=EINVAL;return -1;}
  memset(g,0,sizeof(*g)); g->generation=gen;g->epoch=epoch;
- if(getrandom(g->token,16,0)!=16) return -1;
- int probe=syscall(SYS_pidfd_open,getpid(),0);if(probe<0) return -1;close(probe);
- int pair[2]; if(socketpair(AF_UNIX,SOCK_SEQPACKET|SOCK_CLOEXEC,0,pair)) return -1;
+ if(getrandom(g->token,16,0)!=16) {hp_owned_cleanup(owned_runtime);return -1;}
+ int probe=syscall(SYS_pidfd_open,getpid(),0);if(probe<0) {hp_owned_cleanup(owned_runtime);return -1;}close(probe);
+ int pair[2]; if(socketpair(AF_UNIX,SOCK_SEQPACKET|SOCK_CLOEXEC,0,pair)) {hp_owned_cleanup(owned_runtime);return -1;}
  int64_t started=now_ms(), deadline=started+HP_WINDOW_MS;
  int64_t limit=temporary_ms?started+temporary_ms:INT64_MAX;
  if(deadline>limit) deadline=limit;
- pid_t pid=fork();
- if(pid<0) {close(pair[0]);close(pair[1]);return -1;}
- if(pid) {
-  close(pair[1]);int ok=0;struct pollfd r={pair[0],POLLIN,0};
-  if(poll(&r,1,HP_WINDOW_MS)!=1 || recv(pair[0],&ok,sizeof(ok),MSG_DONTWAIT|MSG_TRUNC)!=sizeof(ok) || ok!=1) {
-   close(pair[0]);
-   /* Direct unreaped child identity, not caller PID or kernel fallback. A
-    * pre-fork SIGSTOP cannot be recovered by closing IPC alone. */
-   kill(pid,SIGKILL);
-   int64_t until=now_ms()+HP_WINDOW_MS;
-   while(waitpid(pid,NULL,WNOHANG)==0 && now_ms()<until) poll(NULL,0,5);
-   errno=EIO;return -1;
-  }
-  g->fd=pair[0];g->pid=pid;return 0;
- }
- close(pair[0]);
- if(prctl(PR_SET_CHILD_SUBREAPER,1) || setpgid(0,0)) _exit(125);
- if(clean_fds(pair[1],arg,-1)) _exit(125);
- int ownerfd=syscall(SYS_pidfd_open,getpid(),0);
- int inner[2];
- if(ownerfd<0 || socketpair(AF_UNIX,SOCK_SEQPACKET|SOCK_CLOEXEC,0,inner)) _exit(125);
+ /* Parent retains the same pinned ledger and startup identities as a final
+  * bounded cleaner. Only this native handshake grants provisioning, not flags
+  * in client frames. Empty-anchor failures are also owned by this invocation. */
  struct startup_state *state=mmap(NULL,sizeof(*state),PROT_READ|PROT_WRITE,MAP_SHARED|MAP_ANONYMOUS,-1,0);
- if(state==MAP_FAILED) _exit(125);
- atomic_init(&state->data,0);
- pid_t w=fork(); if(w<0) _exit(125);
- if(!w) {if(setpgid(0,0) || clean_fds(inner[1],ownerfd,arg)) _exit(125);watchdog(inner[1],ownerfd,child,arg,deadline,state,private_pair);}
- close(inner[1]);close(ownerfd);
- close(arg);
- int wfd=syscall(SYS_pidfd_open,w,0);pid_t data=0;
- struct pollfd ready={inner[0],POLLIN,0};
- if(wfd<0 || poll(&ready,1,HP_WATCHDOG_MS)!=1 || recv(inner[0],&data,sizeof(data),MSG_TRUNC)!=sizeof(data) || data<=0) {
-  pid_t pending=atomic_load_explicit(&state->data,memory_order_acquire);
-  /* Both identities still unreaped here; include pre-isolation children in
-   * the watchdog group and the separately registered provider group. */
-  if(pending>0) {kill(-pending,SIGKILL);kill(pending,SIGKILL);}
-  kill(-w,SIGKILL);kill(w,SIGKILL);
-  if(wfd>=0) syscall(SYS_pidfd_send_signal,wfd,SIGKILL,NULL,0);
-  close(pair[1]);close(inner[0]);reap_bounded();_exit(125);
+ if(state==MAP_FAILED){hp_owned_cleanup(owned_runtime);close(pair[0]);close(pair[1]);return -1;}
+ atomic_init(&state->data,0);atomic_init(&state->watchdog,0);
+ pid_t pid=fork();
+ if(pid<0) {hp_owned_cleanup(owned_runtime);munmap(state,sizeof(*state));close(pair[0]);close(pair[1]);return -1;}
+ if(pid) {
+  close(pair[1]);pid_t data=0;int datafd=-1;
+  struct pollfd r={pair[0],POLLIN,0};
+  int valid=poll(&r,1,HP_WINDOW_MS)==1 && recv(pair[0],&data,sizeof(data),MSG_TRUNC)==sizeof(data) && data>0;
+  if(valid) {datafd=syscall(SYS_pidfd_open,data,0);valid=datafd>=0 && !send_int(pair[0],2) && !receive_int(pair[0],1);}
+  if(!valid) {
+   /* Never signal shared numeric descendant IDs here: a supervisor may
+    * already have reaped them. Before the retained pidfd/ACK, provisioning
+    * is impossible. Afterwards the reserved pidfd anchors our cleanup. The
+    * reciprocal native supervisors own descendant termination/reaping. */
+   /* Parent never numerically signals the indirect provider. Its retained
+    * pidfd observes exit even if a supervisor already reaped the identity. */
+   int residual=datafd>=0?(exited_fd(datafd)?hp_owned_cleanup(owned_runtime):1):hp_owned_cleanup(owned_runtime);
+   close(pair[0]);
+   int64_t until=now_ms()+HP_WATCHDOG_MS;int status,finished=0;
+   while(now_ms()<until) {
+    pid_t observed=waitpid(pid,&status,WNOHANG);
+    if(observed==pid || (observed<0 && errno==ECHILD)){finished=1;break;}
+    poll(NULL,0,5);
+   }
+   if(!finished) {kill(pid,SIGKILL);reap_bounded();}
+   if(datafd>=0)close(datafd);
+   munmap(state,sizeof(*state));errno=residual?ENOTRECOVERABLE:EIO;return -1;
+  }
+  close(datafd);munmap(state,sizeof(*state));g->fd=pair[0];g->pid=pid;return 0;
  }
+ close(pair[0]);int ownerfd=-1,wfd=-1,datafd=-1,inner[2]={-1,-1};pid_t w=0,data=0;
+ if(prctl(PR_SET_CHILD_SUBREAPER,1) || setpgid(0,0) || clean_fds(pair[1],arg,-1) || fault("guardian-isolated"))goto guard_fail;
+ ownerfd=syscall(SYS_pidfd_open,getpid(),0);
+ if(ownerfd<0 || socketpair(AF_UNIX,SOCK_SEQPACKET|SOCK_CLOEXEC,0,inner))goto guard_fail;
+ w=fork();if(w<0){w=0;goto guard_fail;}
+ if(!w) {
+  if(setpgid(0,0) || clean_fds(inner[1],ownerfd,arg)) {
+   hp_owned_cleanup(owned_runtime);_exit(125);
+  }
+  watchdog(inner[1],ownerfd,child,arg,deadline,state,private_pair);
+ }
+ atomic_store_explicit(&state->watchdog,w,memory_order_release);
+ close(inner[1]);close(ownerfd);ownerfd=-1;close(arg);
+ wfd=syscall(SYS_pidfd_open,w,0);
+ if(wfd<0 || send_int(inner[0],1))goto guard_fail;
+ struct pollfd ready={inner[0],POLLIN,0};
+ if(poll(&ready,1,HP_WATCHDOG_MS)!=1 || recv(inner[0],&data,sizeof(data),MSG_TRUNC)!=sizeof(data) || data<=0)goto guard_fail;
+ datafd=syscall(SYS_pidfd_open,data,0);
+ if(datafd<0 || fault("guardian-ready"))goto guard_fail;
+ /* Reciprocal identities, isolation and cleanup responsibility are ready.
+  * Parent must anchor the provider before activation can reach the callback. */
+ if(send(pair[1],&data,sizeof(data),MSG_NOSIGNAL)!=sizeof(data) || receive_int(pair[1],2) || send_int(inner[0],2) || fault("activated"))goto guard_fail;
  int64_t peer_until=now_ms()+HP_WATCHDOG_MS;
- int ok=1;if(now_ms()>=deadline || send(pair[1],&ok,sizeof(ok),MSG_DONTWAIT|MSG_NOSIGNAL)!=sizeof(ok)) peer_until=0;
+ if(now_ms()>=deadline || send_int(pair[1],1))peer_until=0;
  for(;;) {
   if(now_ms()>=deadline || now_ms()>=peer_until) break;
   struct pollfd peers[2]={{inner[0],POLLIN,0},{wfd,POLLIN,0}};
@@ -284,17 +322,16 @@ static int guard_start(struct hp_guard *g, uint64_t gen, uint64_t epoch, unsigne
   }
   if(send(inner[0],&deadline,sizeof(deadline),MSG_DONTWAIT|MSG_NOSIGNAL)!=sizeof(deadline)) break;
  }
- /* The watchdog reserves the leader until it has killed this guardian.
-  * While watchdog is alive this is an owned, unreaped group, never caller PID. */
- /* If watchdog died, subreaper adoption reserves the data leader here.
-  * If alive, it holds WNOWAIT until killing us. Never reap before group kill. */
- kill(-data,SIGKILL);
- close(pair[1]);close(inner[0]);
- /* As above, cleanup must precede killing the other possible cleaner. */
- int residual=provider_exited(data)?hp_owned_cleanup(owned_runtime):1;
- syscall(SYS_pidfd_send_signal,wfd,SIGKILL,NULL,0);close(wfd);
+guard_fail:
+ if(data<=0)data=atomic_load_explicit(&state->data,memory_order_acquire);
+ int residual=cleanup_data(data,datafd);
+ /* Cleanup before peer termination, including every startup error. */
+ if(wfd>=0)syscall(SYS_pidfd_send_signal,wfd,SIGKILL,NULL,0);
+ else if(w>0){kill(-w,SIGKILL);kill(w,SIGKILL);}
+ close(pair[1]);if(inner[0]>=0)close(inner[0]);
  reap_bounded();_exit(residual?124:0);
 }
+
 int hp_guard_start(struct hp_guard *g, uint64_t gen, uint64_t epoch, unsigned temporary_ms, void (*child)(int), int arg) {
  return guard_start(g,gen,epoch,temporary_ms,child,arg,0);
 }

@@ -1,4 +1,6 @@
-.PHONY: direct product guardian guardian-nginx owned-runtime
+.PHONY: direct product guardian guardian-nginx owned-runtime startup-owned
+startup-owned:
+	python3 test-startup-owned.py
 owned-runtime:
 	python3 test-owned-runtime.py
 # Local test-only private-pair profile; production activation remains disabled.

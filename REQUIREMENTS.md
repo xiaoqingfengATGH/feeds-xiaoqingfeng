@@ -40,7 +40,7 @@ Status: 正式模式方向确认；最终生命周期设计已整理，adapter�
 
 ## REQ-004 — 持续/临时发布、内部有限能力及恢复
 
-Status: continuous/temporary产品设计已确认；D2b1审查修复本地回归18生命周期场景+fork1/2/3及pidfd ENOSYS启动故障通过。双向有限heartbeat、watchdog pidfd、FD allowlist及bounded原生READY已加入；READY不等于provider health就绪。详见docs/HOMEPUBLISH-D2B1-CHECKPOINT.md最新审查checkpoint；F2逃逸进程树边界仍未关闭，guardian/watchdog FD inode读回与startup suspension矩阵待补。尚无Nginx provider、controller全量health/scope验证、TLS秘密/journal/fw整合、恢复/boot/UPnP。两guardian同时STOP不在用户态覆盖范围，需活跃第三/内核边界或故障域限制。Start/Apply unsupported与activation_ready=false保留，产品未激活，非生产完成。
+Status: continuous/temporary产品设计已确认；D2b1本地受控worker F2边界新增实际setsid逃逸RED→GREEN，fork/doublefork/exec树及单guardian/watchdog STOP/KILL关闭；19树场景+10启动故障+18生命周期、三角色foreign FD逐inode读回通过，core commit 4628cfcfa6d5a1101e70f6510badc404093cdea6。仅可信固定非root同UID/GID前台worker，继承seccomp/NNP，禁止逃组/namespace/凭据迁移/FD导入；非任意hostile代码或cgroup sandbox。READY仅native隔离监管就绪，typed ERROR packets待补；详见docs/HOMEPUBLISH-D2B1-CHECKPOINT.md。尚无真实Nginx guard integrated master/worker验证、生产provider、controller health/scope、TLS/journal/fw、恢复/boot/UPnP及target架构/时延验收。两guardian同时STOP/KILL和内核失调度不在用户态覆盖范围。Start/Apply unsupported、activation_ready=false、helper exit78保留，产品未激活、非生产完成。
 
 - continuous无用户总deadline；temporary默认30分钟、15/30/60快捷、自定义1分钟～24小时，后端验证，准备/Add计入首次批准截止，Apply/recovery/reboot不得续时。
 - desired enabled/disabled与runtime/generation独立，manual_stop_latch持久化优先。guard capability始终有限，controller健康核验续授权，失控fail closed；不能TTL=0/循环旧fixed-deadline达成持续。

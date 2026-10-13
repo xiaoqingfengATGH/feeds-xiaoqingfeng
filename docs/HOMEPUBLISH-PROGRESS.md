@@ -1,5 +1,12 @@
 # HomePublish 当前检查点
 
+## 最新 D2b1 F2 受控worker边界（local gate）
+
+核心checkpoint commit `4628cfcfa6d5a1101e70f6510badc404093cdea6`，基线 `20eb7cf90422dc098c2461667010fbd9e5474ad7`。真实项目 setsid RED escape=1/listener开放；继承seccomp+NNP GREEN。watchdog KILL descendants RED、startup stop1/stop3残留RED分别以guardian subreaper/owned group kill与bootstrap注册/清理关闭。最终WSL `TMPDIR=/home/eric/homestun-sdk-check make -C homepublish/tests guardian direct product` exit0：19进程树、10启动故障、18原生命周期；FD三角色逐foreign dev/inode核验通过，controller对象保留。详见[最新D2b1](HOMEPUBLISH-D2B1-CHECKPOINT.md)。
+
+只支持可信固定非root、同UID/GID、daemon-off前台worker树，允许fork/普通exec，不许setsid/setpgid/namespace/credential/FD导入；非通用hostile sandbox/cgroup。x86_64 WSL验证，aarch64源码分支未实测，其余arch fail closed。双guardian同时停调度/双故障、内核D-state不保证。exec原leader PDEATHSIG=9，fork及fork-exec worker=0实际观察；关子孙靠整组。**未做真实Nginx guard integrated master/worker验收**；direct真实Nginx测试是独立数据面gate，不能替代集成。产品Start/Apply unsupported、activation_ready=false、helper exit78保留。typed ERROR packet、生产provider/health/TLS/journal/fw/SDK/procd及目标预算仍待实现，无生产/公网/安装/push/merge/PR。旧fixed-TTL源码不变。
+
+
 ## 范围与结论
 
 worktree `D:/DevPortal/homelede/homepublish-product`，分支 `feature/homepublish-product`，接续基线 `2f508fcca89150f1425b8a8555e240e731260500`。

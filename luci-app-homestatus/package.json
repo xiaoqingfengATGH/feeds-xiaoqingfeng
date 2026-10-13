@@ -1,0 +1,8 @@
+{
+  "name": "homestatus-phase1-tests",
+  "private": true,
+  "packageManager": "pnpm@12.5.1",
+  "engines": {"node": ">=22.12"},
+  "scripts": {"test": "node --test tests/migration.test.cjs tests/regression.test.cjs tests/dom.test.cjs tests/connectivity.test.cjs tests/global-success.test.cjs"},
+  "devDependencies": {"jsdom": "27.0.1"}
+}

@@ -1,0 +1,35 @@
+✔ global success colors healthy Internet and generic KPI text and dot after generated census (5051.9374ms)
+✔ Internet KPI has a dedicated stable scope without changing reachability semantics (793.9386ms)
+✔ LAN preserves conntrack capacity, conditional WiFi and DHCP link (243.2043ms)
+✔ body panel copies palette variables and retains ngov component scope (248.9244ms)
+✔ LAN preview explains upstream-inclusive counts without changing the client headline (290.5495ms)
+✔ LAN summary uses three single-line columns and compact statistics, not detail density (193.2619ms)
+✔ LAN preview limits devices to four and opens complete independent panel (308.7213ms)
+✔ device list is Tab reachable in the focus trap and retains focus and scroll on refresh (338.1169ms)
+✔ device search survives polling without replacing controls or list scroller (253.3178ms)
+✔ device panel traps focus and restores background, page position and refreshed opener (533.4918ms)
+✔ network grouping filter persists on refresh and keeps empty and unclassified facts (237.8609ms)
+✔ IPv6 details use actual host hints without changing online or lease classification (183.9676ms)
+✔ empty devices and a disappearing selected group recover without losing filter or focus (230.0598ms)
+✔ closing repeatedly removes exact document listeners and restores preexisting background attributes (219.439ms)
+✔ compact summary CSS wraps statistics but not device rows without a height cap (2.383ms)
+✔ wide panel CSS owns its scroll area, sticky header and mobile full screen (4.2631ms)
+✔ real DOM mount renders cards and moves native includes without losing identity (202.2124ms)
+✔ global luminous success tokens own all healthy dashboard text without app overrides (6.5803ms)
+✔ compact LAN summary increments application release to four (4.1761ms)
+✔ palette generator requires an explicit application stylesheet outside SDK (297.8814ms)
+✔ theme has no dashboard source duplicates and palette census reads app source (3.3711ms)
+✔ overview assets are owned and loaded from application resources (3.9416ms)
+✔ fallback stylesheet uses application resource and does not duplicate footer link (9.5813ms)
+✔ outside explicit LAN presentation changes, data/actions/polling/classic drawer remain baseline-identical (6.3989ms)
+✔ normalization and health parity for WAN, side router, toggles, readonly disks and disabled services (15.1303ms)
+✔ non-overview route exits before touching DOM or loading RPC (5.2952ms)
+✔ CSS outside the LAN detail region and authorized natural grid stretch remains baseline-identical (107.7692ms)
+ℹ tests 27
+ℹ suites 0
+ℹ pass 27
+ℹ fail 0
+ℹ cancelled 0
+ℹ skipped 0
+ℹ todo 0
+ℹ duration_ms 7413.782

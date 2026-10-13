@@ -1,0 +1,286 @@
+✔ compact LAN summary increments application release to four (1.1687ms)
+✔ palette generator requires an explicit application stylesheet outside SDK (98.6962ms)
+✖ overview assets are owned and loaded from application resources (2.1818ms)
+✖ fallback stylesheet uses application resource and does not duplicate footer link (37.2924ms)
+ℹ tests 4
+ℹ suites 0
+ℹ pass 2
+ℹ fail 2
+ℹ cancelled 0
+ℹ skipped 0
+ℹ todo 0
+ℹ duration_ms 231.1754
+
+✖ failing tests:
+
+test at tests\migration.test.cjs:29:1
+✖ overview assets are owned and loaded from application resources (2.1818ms)
+  AssertionError [ERR_ASSERTION]: The input did not match the regular expression /\{\{ resource \}\}\/view\/homestatus\/overview.js\?v=3/. Input:
+
+  '{#\r\n' +
+    '\tInfinityFreedom-NG (Next Generation) is a clean HTML5 theme for LuCI.\r\n' +
+    '\r\n' +
+    '\tluci-theme-infinityfreedom-ng (ucode migration)\r\n' +
+    '\tCopyright 2024 Eric <xiaoqingfengatgm@gmail.com>\r\n' +
+    '\r\n' +
+    '\tHave a bug? Please create an issue here on GitHub!\r\n' +
+    '\thttps://github.com/xiaoqingfengATGH/luci-theme-infinityfreedom/issues\r\n' +
+    '\r\n' +
+    '\tLicensed to the public under the Apache License 2.0\r\n' +
+    '-#}\r\n' +
+    '\r\n' +
+    '                </div><!-- container-fluid -->\r\n' +
+    '\r\n' +
+    '       </div> <!-- content -->\r\n' +
+    '\t   <script src="{{ media }}/assets/js/ngRender.js"></script>\r\n' +
+    "{% if (ctx.path?.[1] == 'status' && ctx.path?.[2] == 'overview'): %}\r\n" +
+    '\t   <!-- status-first overview relayout; only meaningful on the overview page -->\r\n' +
+    '\t   <link rel="stylesheet" type="text/css" href="{{ resource }}/view/homestatus/overview.css?v=1" />\r\n' +
+    '\t   <script src="{{ resource }}/view/homestatus/overview.js?v=2"></script>\r\n' +
+    '{% endif %}\r\n' +
+    '        <!-- Footer Start -->\r\n' +
+    '        <footer class="footer">\r\n' +
+    '            <div class="container-fluid">\r\n' +
+    '                <div class="row">\r\n' +
+    '                    <div class="col-md-9" style="overflow: hidden; white-space: nowrap; text-overflow: ellipsis;"\r\n' +
+    '\t\t\t\t\t\t title="{{ localtime(time()).year }} &copy; {{ version.luciname }} ({{ version.luciversion }} / {{ version.distversion }})">\r\n' +
+    '                        {{ localtime(time()).year }} &copy; {{ version.luciname }} ({{ version.luciversion }} / {{ version.distversion }})\r\n' +
+    '                    </div>\r\n' +
+    '                    <div class="col-md-3">\r\n' +
+    '                        <div class="text-md-end footer-links d-none d-sm-block">\r\n' +
+    `                            <a href="https://github.com/xiaoqingfengATGH/HomeLede" target="_blank">{{ _('固件源码') }}</a>\r\n` +
+    `                            <a href="https://github.com/xiaoqingfengATGH/HomeLede/wiki" target="_blank">{{ _('交流讨论') }}</a>\r\n` +
+    '                        </div>\r\n' +
+    '                    </div>\r\n' +
+    '                </div>\r\n' +
+    '            </div>\r\n' +
+    '        </footer>\r\n' +
+    '        <!-- end Footer -->\r\n' +
+    '\r\n' +
+    '    </div> <!-- content-page -->\r\n' +
+    '</div> <!-- END wrapper -->\r\n' +
+    '\r\n' +
+    '<script>\r\n' +
+    '\t/* run the bootstrap-ification once the client side view is in place.\r\n' +
+    '\t   - for legacy pages (server rendered template actions) the DOM is\r\n' +
+    '\t     already there when this script executes\r\n' +
+    '\t   - for modern client rendered views #view is filled asynchronously;\r\n' +
+    '\t     wait for it to settle, then render ONCE (renderPage() is not\r\n' +
+    '\t     idempotent - re-running would nest the card wrappers) */\r\n' +
+    '\t(function() {\r\n' +
+    '\t\t/* full-template app pages (e.g. passwall2) render their CBI\r\n' +
+    '\t\t   markup straight into the page with no #view container - fall\r\n' +
+    '\t\t   back to the .cbi-map root so the bootstrap-ification runs */\r\n' +
+    "\t\tlet viewEl = document.getElementById('view') || document.querySelector('.cbi-map');\r\n" +
+    '\r\n' +
+    '\t\tif (!viewEl || typeof(renderPage) == "undefined")\r\n' +
+    '\t\t\treturn;\r\n' +
+    '\r\n' +
+    '\t\t/* declared before ngFullRender() so the synchronous path below\r\n' +
+    '\t\t   cannot hit the temporal dead zone of a later `let` binding */\r\n' +
+    '\t\tvar obs = null;\r\n' +
+    '\t\tlet ngDone = false;\r\n' +
+    '\r\n' +
+    '\t\tfunction ngFullRender() {\r\n' +
+    '\t\t\tif (ngDone)\r\n' +
+    '\t\t\t\treturn;\r\n' +
+    '\t\t\tngDone = true;\r\n' +
+    '\t\t\tobs?.disconnect();\r\n' +
+    '\r\n' +
+    '\t\t\tlet t = (typeof(luciLocation) != "undefined")\r\n' +
+    '\t\t\t\t&& luciLocation.length == 3\r\n' +
+    '\t\t\t\t&& luciLocation[1] == "status"\r\n' +
+    '\t\t\t\t&& luciLocation[2] == "overview";\r\n' +
+    '\r\n' +
+    '\t\t\t/* modern client rendered views use <div class="cbi-section">\r\n' +
+    '\t\t\t   where legacy server rendered CBI used <fieldset> - apply the\r\n' +
+    '\t\t\t   same card treatment before the legacy renderer runs */\r\n' +
+    '\t\t\tfunction wrapSections() {\r\n' +
+    '\t\t\t\t/* tabbed maps (network/network) render one section per tab\r\n' +
+    '\t\t\t\t   panel as direct children of .cbi-map-tabbed, with the\r\n' +
+    "\t\t\t\t   tab menu as the group's preceding sibling - ui.tabs\r\n" +
+    '\t\t\t\t   switchTab() resolves panels via menu.nextElementSibling\r\n' +
+    '\t\t\t\t   and group.childNodes[data-tab], so panels must stay\r\n' +
+    '\t\t\t\t   direct children: wrap the WHOLE group (menu + panels)\r\n' +
+    '\t\t\t\t   as a single card instead */\r\n' +
+    '\t\t\t\tjQuery(".cbi-map-tabbed").each(function(i, e) {\r\n' +
+    '\t\t\t\t\tlet mt = jQuery(e);\r\n' +
+    "\t\t\t\t\tif (mt.closest('.card').length > 0)\r\n" +
+    '\t\t\t\t\t\treturn;\r\n' +
+    "\t\t\t\t\tlet menu = mt.prev('ul.cbi-tabmenu');\r\n" +
+    '\t\t\t\t\tlet target = (menu.length > 0 ? menu : jQuery()).add(mt);\r\n' +
+    `\t\t\t\t\ttarget.wrapAll('<div class="card"></div>').wrapAll('<div class="col-12"></div>');\r\n` +
+    "\t\t\t\t\tmt.children('.cbi-section').addClass('card-body');\r\n" +
+    '\t\t\t\t});\r\n' +
+    '\r\n' +
+    '\t\t\t\tjQuery("div.cbi-section:not(fieldset)").each(function(i, e) {\r\n' +
+    '\t\t\t\t\tlet el = jQuery(e);\r\n' +
+    '\t\t\t\t\t/* already wrapped, or a nested section inside a tab\r\n' +
+    '\t\t\t\t\t   panel (1.2 keeps those inside the tab content area,\r\n' +
+    '\t\t\t\t\t   not as separate cards). form.js always renders the\r\n' +
+    '\t\t\t\t\t   node as a CHILD of its .cbi-section; hand-rolled\r\n' +
+    '\t\t\t\t\t   views (partexp) emit a top-level div carrying BOTH\r\n' +
+    '\t\t\t\t\t   classes on the same element - that one IS the\r\n' +
+    '\t\t\t\t\t   section and must be cardified. */\r\n' +
+    "\t\t\t\t\tif (el.closest('.card').length > 0\r\n" +
+    "\t\t\t\t\t    || (el.hasClass('cbi-section-node') && !el.hasClass('cbi-section')))\r\n" +
+    '\t\t\t\t\t\treturn;\r\n' +
+    "\t\t\t\t\tif (el.closest('.cbi-tabcontainer').length > 0)\r\n" +
+    '\t\t\t\t\t\treturn;\r\n' +
+    "\t\t\t\t\tif (el.closest('.cbi-map-tabbed').length > 0)\r\n" +
+    '\t\t\t\t\t\treturn;\r\n' +
+    '\t\t\t\t\t/* ui.tabs panes (nlbw display, status/iptables, ...) carry\r\n' +
+    '\t\t\t\t\t   data-tab themselves and MUST stay direct children of\r\n' +
+    '\t\t\t\t\t   their group container: switchTab() resolves panes via\r\n' +
+    '\t\t\t\t\t   menu.nextElementSibling.childNodes. Cardifying them\r\n' +
+    '\t\t\t\t\t   individually here would defeat the shared-card path in\r\n' +
+    "\t\t\t\t\t   wrapBareView() below (group.children('[data-tab]') would\r\n" +
+    '\t\t\t\t\t   find only col-12 wrappers) and the menu would get its\r\n' +
+    '\t\t\t\t\t   own card - breaking menu/group adjacency so tabs change\r\n' +
+    '\t\t\t\t\t   the highlight but never the content. */\r\n' +
+    "\t\t\t\t\tif (el.attr('data-tab') !== undefined)\r\n" +
+    '\t\t\t\t\t\treturn;\r\n' +
+    `\t\t\t\t\tlet col = jQuery('<div class="col-12"></div>');\r\n` +
+    `\t\t\t\t\tlet card = jQuery('<div class="card"></div>');\r\n` +
+    '\t\t\t\t\tel.wrap(col);\r\n' +
+    '\t\t\t\t\tel.wrap(card);\r\n' +
+    "\t\t\t\t\tel.addClass('card-body');\r\n" +
+    '\t\t\t\t});\r\n' +
+    '\t\t\t}\r\n' +
+    '\r\n' +
+    '\t\t\t/* "bare" modern views (crontab, processes, startup, ...) have\r\n' +
+    '\t\t\t   no cbi-section markup at all - wrap their main content in a\r\n' +
+    '\t\t\t   card so they get the same look the legacy server rendered\r\n' +
+    '\t\t\t   CBI pages had */\r\n' +
+    '\t\t\tfunction wrapBareView() {\r\n' +
+    '\t\t\t\t/* Bare views may use ui.tabs directly (status/iptables,\r\n' +
+    '\t\t\t\t   nlw display ...): #view contains a generated\r\n' +
+    '\t\t\t\t   ul.cbi-tabmenu immediately followed by one plain div\r\n' +
+    '\t\t\t\t   whose direct children are [data-tab] panes.\r\n' +
+    '\t\t\t\t   ui.tabs.switchTab() resolves panes strictly through\r\n' +
+    '\t\t\t\t   menu.nextElementSibling.childNodes. Wrapping menu and\r\n' +
+    '\t\t\t\t   group as separate cards breaks that contract: the tab\r\n' +
+    '\t\t\t\t   highlight changes but data-tab-active/content never\r\n' +
+    '\t\t\t\t   does. Keep both as adjacent siblings inside one shared\r\n' +
+    '\t\t\t\t   card-body.\r\n' +
+    '\r\n' +
+    '\t\t\t\t   This must run BEFORE the bare-view early exit below:\r\n' +
+    '\t\t\t\t   ui.tabs panes are div.cbi-section[data-tab] themselves\r\n' +
+    '\t\t\t\t   (nlbw display), so the .cbi-section probe would wrongly\r\n' +
+    '\t\t\t\t   classify the view as non-bare and return before ever\r\n' +
+    '\t\t\t\t   wrapping - leaving menu and panes sitting directly on\r\n' +
+    '\t\t\t\t   the wallpaper background. */\r\n' +
+    "\t\t\t\tjQuery(viewEl).children('ul.cbi-tabmenu').each(function(i, e) {\r\n" +
+    '\t\t\t\t\tlet menu = jQuery(e);\r\n' +
+    '\t\t\t\t\tlet group = menu.next();\r\n' +
+    "\t\t\t\t\tif (group.length == 0 || group.children('[data-tab]').length == 0)\r\n" +
+    '\t\t\t\t\t\treturn;\r\n' +
+    '\t\t\t\t\t/* already cardified (this run, an observer re-run or a\r\n' +
+    '\t\t\t\t\t   poll rebuild): wrapAll on a wrapped pair would nest\r\n' +
+    '\t\t\t\t\t   another card layer on every pass */\r\n' +
+    "\t\t\t\t\tif (menu.closest('.card').length > 0)\r\n" +
+    '\t\t\t\t\t\treturn;\r\n' +
+    '\t\t\t\t\tlet target = menu.add(group);\r\n' +
+    `\t\t\t\t\ttarget.wrapAll('<div class="card-body"></div>');\r\n` +
+    '\t\t\t\t\tlet body = menu.parent();\r\n' +
+    `\t\t\t\t\tbody.wrap('<div class="card"></div>');\r\n` +
+    `\t\t\t\t\tbody.parent().wrap('<div class="col-12"></div>');\r\n` +
+    '\t\t\t\t});\r\n' +
+    '\r\n' +
+    '\t\t\t\t/* anything already cardified (incl. our own col-12/card\r\n' +
+    '\t\t\t\t   wrappers - matching them here again would nest a new\r\n' +
+    '\t\t\t\t   card layer on every poll and grow the DOM forever) */\r\n' +
+    "\t\t\t\tif (viewEl.querySelector('.cbi-section, .cbi-map .card') != null\r\n" +
+    "\t\t\t\t    || viewEl.firstElementChild?.classList.contains('col-12'))\r\n" +
+    '\t\t\t\t\treturn;\r\n' +
+    '\r\n' +
+    '\t\t\t\tlet main = jQuery(viewEl).children().filter(function(i, e) {\r\n' +
+    "\t\t\t\t\treturn !e.matches('h2, .cbi-map-descr, .cbi-section-descr, .cbi-page-actions, script, .spinning, .col-12');\r\n" +
+    '\t\t\t\t});\r\n' +
+    '\r\n' +
+    '\t\t\t\t/* Two shapes of bare content:\r\n' +
+    '\t\t\t\t   - structural containers (form, div, table, textarea...):\r\n' +
+    '\t\t\t\t     one card EACH - diagnostics shows one card per tool,\r\n' +
+    '\t\t\t\t     processes one card for its table. Keep as-is.\r\n' +
+    '\t\t\t\t   - small flow elements only (system/reboot is\r\n' +
+    '\t\t\t\t     p + hr + button): wrap them TOGETHER in ONE shared\r\n' +
+    '\t\t\t\t     card. Cardifying each separately made three slivers,\r\n' +
+    "\t\t\t\t     and addClass('card-body') on the <button> itself put\r\n" +
+    '\t\t\t\t     card padding + block display on it - a full-width\r\n' +
+    '\t\t\t\t     70px slab instead of a button. */\r\n' +
+    '\t\t\t\tlet smallOnly = main.length > 0 && main.toArray().every(function(e) {\r\n' +
+    "\t\t\t\t\treturn e.matches('p, hr, button, a, span, small, em, strong');\r\n" +
+    '\t\t\t\t});\r\n' +
+    '\r\n' +
+    '\t\t\t\tif (smallOnly) {\r\n' +
+    "\t\t\t\t\tif (main.closest('.card').length > 0)\r\n" +
+    '\t\t\t\t\t\treturn;\r\n' +
+    `\t\t\t\t\tmain.wrapAll('<div class="card-body"></div>');\r\n` +
+    '\t\t\t\t\tlet body = main.parent();\r\n' +
+    `\t\t\t\t\tbody.wrap('<div class="card"></div>');\r\n` +
+    `\t\t\t\t\tbody.parent().wrap('<div class="col-12"></div>');\r\n` +
+    '\t\t\t\t\treturn;\r\n' +
+    '\t\t\t\t}\r\n' +
+    '\r\n' +
+    '\t\t\t\tmain.each(function(i, e) {\r\n' +
+    '\t\t\t\t\tlet el = jQuery(e);\r\n' +
+    "\t\t\t\t\tif (el.closest('.card').length > 0)\r\n" +
+    '\t\t\t\t\t\treturn;\r\n' +
+    `\t\t\t\t\tel.wrap('<div class="col-12"></div>');\r\n` +
+    `\t\t\t\t\tel.wrap('<div class="card"></div>');\r\n` +
+    "\t\t\t\t\tel.addClass('card-body');\r\n" +
+    '\r\n' +
+    '\t\t\t\t\t/* renderPage only wraps table.cbi-section-table in\r\n' +
+    '\t\t\t\t\t   .table-responsive - plain view tables need it too */\r\n' +
+    "\t\t\t\t\tel.find('table').addBack('table').each(function(j, tb) {\r\n" +
+    "\t\t\t\t\t\tif (jQuery(tb).closest('.table-responsive').length == 0)\r\n" +
+    `\t\t\t\t\t\t\tjQuery(tb).wrap('<div class="table-responsive"></div>');\r\n` +
+    '\t\t\t\t\t});\r\n' +
+    '\t\t\t\t});\r\n' +
+    '\t\t\t}\r\n' +
+    `\t\t\tjQuery("div.cbi-section > h3, div.cbi-section > h4").addClass('header-title mb-3');\r\n` +
+    `\t\t\tjQuery("div.cbi-map > .cbi-section > h3:first-child").css('font-size', 'large');\r\n` +
+    '\r\n' +
+    '\t\t\twrapSections();\r\n' +
+    '\t\t\twrapBareView();\r\n' +
+    '\t\t\tstyl'... 15052 more characters
+
+      at TestContext.<anonymous> (D:\DevPortal\homelede\wt-palette-global-emerald-app\luci-app-homestatus\tests\migration.test.cjs:33:9)
+      at Test.runInAsyncScope (node:async_hooks:226:14)
+      at Test.run (node:internal/test_runner/test:1397:25)
+      at Test.processPendingSubtests (node:internal/test_runner/test:969:18)
+      at Test.postRun (node:internal/test_runner/test:1537:19)
+      at node:internal/test_runner/test:1300:31
+      at node:internal/process/task_queues:151:7
+      at AsyncResource.runInAsyncScope (node:async_hooks:226:14)
+      at AsyncResource.runMicrotask (node:internal/process/task_queues:148:8) {
+    generatedMessage: true,
+    code: 'ERR_ASSERTION',
+    actual: '{#\r\n\tInfinityFreedom-NG (Next Generation) is a clean HTML5 theme for LuCI.\r\n\r\n\tluci-theme-infinityfreedom-ng (ucode migration)\r\n\tCopyright 2024 Eric <xiaoqingfengatgm@gmail.com>\r\n\r\n\tHave a bug? Please create an issue here on GitHub!\r\n\thttps://github.com/xiaoqingfengATGH/luci-theme-infinityfreedom/issues\r\n\r\n\tLicensed to the public under the Apache License 2.0\r\n-#}\r\n\r\n                </div><!-- container-fluid -->\r\n\r\n       </div> <!-- content -->\r\n\t   <script src="{{ media }}/assets/js/ngRender.js"></script>\r\n{% if (ctx.path?.[1] == \'status\' && ctx.path?.[2] == \'overview\'): %}\r\n\t   <!-- status-first overview relayout; only meaningful on the overview page -->\r\n\t   <link rel="stylesheet" type="text/css" href="{{ resource }}/view/homestatus/overview.css?v=1" />\r\n\t   <script src="{{ resource }}/view/homestatus/overview.js?v=2"></script>\r\n{% endif %}\r\n        <!-- Footer Start -->\r\n        <footer class="footer">\r\n            <div class="container-fluid">\r\n                <div class="row">\r\n                    <div class="col-md-9" style="overflow: hidden; white-space: nowrap; text-overflow: ellipsis;"\r\n\t\t\t\t\t\t title="{{ localtime(time()).year }} &copy; {{ version.luciname }} ({{ version.luciversion }} / {{ version.distversion }})">\r\n                        {{ localtime(time()).year }} &copy; {{ version.luciname }} ({{ version.luciversion }} / {{ version.distversion }})\r\n                    </div>\r\n                    <div class="col-md-3">\r\n                        <div class="text-md-end footer-links d-none d-sm-block">\r\n                            <a href="https://github.com/xiaoqingfengATGH/HomeLede" target="_blank">{{ _(\'固件源码\') }}</a>\r\n                            <a href="https://github.com/xiaoqingfengATGH/HomeLede/wiki" target="_blank">{{ _(\'交流讨论\') }}</a>\r\n                        </div>\r\n                    </div>\r\n                </div>\r\n            </div>\r\n        </footer>\r\n        <!-- end Footer -->\r\n\r\n    </div> <!-- content-page -->\r\n</div> <!-- END wrapper -->\r\n\r\n<script>\r\n\t/* run the bootstrap-ification once the client side view is in place.\r\n\t   - for legacy pages (server rendered template actions) the DOM is\r\n\t     already there when this script executes\r\n\t   - for modern client rendered views #view is filled asynchronously;\r\n\t     wait for it to settle, then render ONCE (renderPage() is not\r\n\t     idempotent - re-running would nest the card wrappers) */\r\n\t(function() {\r\n\t\t/* full-template app pages (e.g. passwall2) render their CBI\r\n\t\t   markup straight into the page with no #view container - fall\r\n\t\t   back to the .cbi-map root so the bootstrap-ification runs */\r\n\t\tlet viewEl = document.getElementById(\'view\') || document.querySelector(\'.cbi-map\');\r\n\r\n\t\tif (!viewEl || typeof(renderPage) == "undefined")\r\n\t\t\treturn;\r\n\r\n\t\t/* declared before ngFullRender() so the synchronous path below\r\n\t\t   cannot hit the temporal dead zone of a later `let` binding */\r\n\t\tvar obs = null;\r\n\t\tlet ngDone = false;\r\n\r\n\t\tfunction ngFullRender() {\r\n\t\t\tif (ngDone)\r\n\t\t\t\treturn;\r\n\t\t\tngDone = true;\r\n\t\t\tobs?.disconnect();\r\n\r\n\t\t\tlet t = (typeof(luciLocation) != "undefined")\r\n\t\t\t\t&& luciLocation.length == 3\r\n\t\t\t\t&& luciLocation[1] == "status"\r\n\t\t\t\t&& luciLocation[2] == "overview";\r\n\r\n\t\t\t/* modern client rendered views use <div class="cbi-section">\r\n\t\t\t   where legacy server rendered CBI used <fieldset> - apply the\r\n\t\t\t   same card treatment before the legacy renderer runs */\r\n\t\t\tfunction wrapSections() {\r\n\t\t\t\t/* tabbed maps (network/network) render one section per tab\r\n\t\t\t\t   panel as direct children of .cbi-map-tabbed, with the\r\n\t\t\t\t   tab menu as the group\'s preceding sibling - ui.tabs\r\n\t\t\t\t   switchTab() resolves panels via menu.nextElementSibling\r\n\t\t\t\t   and group.childNodes[data-tab], so panels must stay\r\n\t\t\t\t   direct children: wrap the WHOLE group (menu + panels)\r\n\t\t\t\t   as a single card instead */\r\n\t\t\t\tjQuery(".cbi-map-tabbed").each(function(i, e) {\r\n\t\t\t\t\tlet mt = jQuery(e);\r\n\t\t\t\t\tif (mt.closest(\'.card\').length > 0)\r\n\t\t\t\t\t\treturn;\r\n\t\t\t\t\tlet menu = mt.prev(\'ul.cbi-tabmenu\');\r\n\t\t\t\t\tlet target = (menu.length > 0 ? menu : jQuery()).add(mt);\r\n\t\t\t\t\ttarget.wrapAll(\'<div class="card"></div>\').wrapAll(\'<div class="col-12"></div>\');\r\n\t\t\t\t\tmt.children(\'.cbi-section\').addClass(\'card-body\');\r\n\t\t\t\t});\r\n\r\n\t\t\t\tjQuery("div.cbi-section:not(fieldset)").each(function(i, e) {\r\n\t\t\t\t\tlet el = jQuery(e);\r\n\t\t\t\t\t/* already wrapped, or a nested section inside a tab\r\n\t\t\t\t\t   panel (1.2 keeps those inside the tab content area,\r\n\t\t\t\t\t   not as separate cards). form.js always renders the\r\n\t\t\t\t\t   node as a CHILD of its .cbi-section; hand-rolled\r\n\t\t\t\t\t   views (partexp) emit a top-level div carrying BOTH\r\n\t\t\t\t\t   classes on the same element - that one IS the\r\n\t\t\t\t\t   section and must be cardified. */\r\n\t\t\t\t\tif (el.closest(\'.card\').length > 0\r\n\t\t\t\t\t    || (el.hasClass(\'cbi-section-node\') && !el.hasClass(\'cbi-section\')))\r\n\t\t\t\t\t\treturn;\r\n\t\t\t\t\tif (el.closest(\'.cbi-tabcontainer\').length > 0)\r\n\t\t\t\t\t\treturn;\r\n\t\t\t\t\tif (el.closest(\'.cbi-map-tabbed\').length > 0)\r\n\t\t\t\t\t\treturn;\r\n\t\t\t\t\t/* ui.tabs panes (nlbw display, status/iptables, ...) carry\r\n\t\t\t\t\t   data-tab themselves and MUST stay direct children of\r\n\t\t\t\t\t   their group container: switchTab() resolves panes via\r\n\t\t\t\t\t   menu.nextElementSibling.childNodes. Cardifying them\r\n\t\t\t\t\t   individually here would defeat the shared-card path in\r\n\t\t\t\t\t   wrapBareView() below (group.children(\'[data-tab]\') would\r\n\t\t\t\t\t   find only col-12 wrappers) and the menu would get its\r\n\t\t\t\t\t   own card - breaking menu/group adjacency so tabs change\r\n\t\t\t\t\t   the highlight but never the content. */\r\n\t\t\t\t\tif (el.attr(\'data-tab\') !== undefined)\r\n\t\t\t\t\t\treturn;\r\n\t\t\t\t\tlet col = jQuery(\'<div class="col-12"></div>\');\r\n\t\t\t\t\tlet card = jQuery(\'<div class="card"></div>\');\r\n\t\t\t\t\tel.wrap(col);\r\n\t\t\t\t\tel.wrap(card);\r\n\t\t\t\t\tel.addClass(\'card-body\');\r\n\t\t\t\t});\r\n\t\t\t}\r\n\r\n\t\t\t/* "bare" modern views (crontab, processes, startup, ...) have\r\n\t\t\t   no cbi-section markup at all - wrap their main content in a\r\n\t\t\t   card so they get the same look the legacy server rendered\r\n\t\t\t   CBI pages had */\r\n\t\t\tfunction wrapBareView() {\r\n\t\t\t\t/* Bare views may use ui.tabs directly (status/iptables,\r\n\t\t\t\t   nlw display ...): #view contains a generated\r\n\t\t\t\t   ul.cbi-tabmenu immediately followed by one plain div\r\n\t\t\t\t   whose direct children are [data-tab] panes.\r\n\t\t\t\t   ui.tabs.switchTab() resolves panes strictly through\r\n\t\t\t\t   menu.nextElementSibling.childNodes. Wrapping menu and\r\n\t\t\t\t   group as separate cards breaks that contract: the tab\r\n\t\t\t\t   highlight changes but data-tab-active/content never\r\n\t\t\t\t   does. Keep both as adjacent siblings inside one shared\r\n\t\t\t\t   card-body.\r\n\r\n\t\t\t\t   This must run BEFORE the bare-view early exit below:\r\n\t\t\t\t   ui.tabs panes are div.cbi-section[data-tab] themselves\r\n\t\t\t\t   (nlbw display), so the .cbi-section probe would wrongly\r\n\t\t\t\t   classify the view as non-bare and return before ever\r\n\t\t\t\t   wrapping - leaving menu and panes sitting directly on\r\n\t\t\t\t   the wallpaper background. */\r\n\t\t\t\tjQuery(viewEl).children(\'ul.cbi-tabmenu\').each(function(i, e) {\r\n\t\t\t\t\tlet menu = jQuery(e);\r\n\t\t\t\t\tlet group = menu.next();\r\n\t\t\t\t\tif (group.length == 0 || group.children(\'[data-tab]\').length == 0)\r\n\t\t\t\t\t\treturn;\r\n\t\t\t\t\t/* already cardified (this run, an observer re-run or a\r\n\t\t\t\t\t   poll rebuild): wrapAll on a wrapped pair would nest\r\n\t\t\t\t\t   another card layer on every pass */\r\n\t\t\t\t\tif (menu.closest(\'.card\').length > 0)\r\n\t\t\t\t\t\treturn;\r\n\t\t\t\t\tlet target = menu.add(group);\r\n\t\t\t\t\ttarget.wrapAll(\'<div class="card-body"></div>\');\r\n\t\t\t\t\tlet body = menu.parent();\r\n\t\t\t\t\tbody.wrap(\'<div class="card"></div>\');\r\n\t\t\t\t\tbody.parent().wrap(\'<div class="col-12"></div>\');\r\n\t\t\t\t});\r\n\r\n\t\t\t\t/* anything already cardified (incl. our own col-12/card\r\n\t\t\t\t   wrappers - matching them here again would nest a new\r\n\t\t\t\t   card layer on every poll and grow the DOM forever) */\r\n\t\t\t\tif (viewEl.querySelector(\'.cbi-section, .cbi-map .card\') != null\r\n\t\t\t\t    || viewEl.firstElementChild?.classList.contains(\'col-12\'))\r\n\t\t\t\t\treturn;\r\n\r\n\t\t\t\tlet main = jQuery(viewEl).children().filter(function(i, e) {\r\n\t\t\t\t\treturn !e.matches(\'h2, .cbi-map-descr, .cbi-section-descr, .cbi-page-actions, script, .spinning, .col-12\');\r\n\t\t\t\t});\r\n\r\n\t\t\t\t/* Two shapes of bare content:\r\n\t\t\t\t   - structural containers (form, div, table, textarea...):\r\n\t\t\t\t     one card EACH - diagnostics shows one card per tool,\r\n\t\t\t\t     processes one card for its table. Keep as-is.\r\n\t\t\t\t   - small flow elements only (system/reboot is\r\n\t\t\t\t     p + hr + button): wrap them TOGETHER in ONE shared\r\n\t\t\t\t     card. Cardifying each separately made three slivers,\r\n\t\t\t\t     and addClass(\'card-body\') on the <button> itself put\r\n\t\t\t\t     card padding + block display on it - a full-width\r\n\t\t\t\t     70px slab instead of a button. */\r\n\t\t\t\tlet smallOnly = main.length > 0 && main.toArray().every(function(e) {\r\n\t\t\t\t\treturn e.matches(\'p, hr, button, a, span, small, em, strong\');\r\n\t\t\t\t});\r\n\r\n\t\t\t\tif (smallOnly) {\r\n\t\t\t\t\tif (main.closest(\'.card\').length > 0)\r\n\t\t\t\t\t\treturn;\r\n\t\t\t\t\tmain.wrapAll(\'<div class="card-body"></div>\');\r\n\t\t\t\t\tlet body = main.parent();\r\n\t\t\t\t\tbody.wrap(\'<div class="card"></div>\');\r\n\t\t\t\t\tbody.parent().wrap(\'<div class="col-12"></div>\');\r\n\t\t\t\t\treturn;\r\n\t\t\t\t}\r\n\r\n\t\t\t\tmain.each(function(i, e) {\r\n\t\t\t\t\tlet el = jQuery(e);\r\n\t\t\t\t\tif (el.closest(\'.card\').length > 0)\r\n\t\t\t\t\t\treturn;\r\n\t\t\t\t\tel.wrap(\'<div class="col-12"></div>\');\r\n\t\t\t\t\tel.wrap(\'<div class="card"></div>\');\r\n\t\t\t\t\tel.addClass(\'card-body\');\r\n\r\n\t\t\t\t\t/* renderPage only wraps table.cbi-section-table in\r\n\t\t\t\t\t   .table-responsive - plain view tables need it too */\r\n\t\t\t\t\tel.find(\'table\').addBack(\'table\').each(function(j, tb) {\r\n\t\t\t\t\t\tif (jQuery(tb).closest(\'.table-responsive\').length == 0)\r\n\t\t\t\t\t\t\tjQuery(tb).wrap(\'<div class="table-responsive"></div>\');\r\n\t\t\t\t\t});\r\n\t\t\t\t});\r\n\t\t\t}\r\n\t\t\tjQuery("div.cbi-section > h3, div.cbi-section > h4").addClass(\'header-title mb-3\');\r\n\t\t\tjQuery("div.cbi-map > .cbi-section > h3:first-child").css(\'font-size\', \'large\');\r\n\r\n\t\t\twrapSections();\r\n\t\t\twrapBareView();\r\n\t\t\tstyl'... 15052 more characters,
+    expected: /\{\{ resource \}\}\/view\/homestatus\/overview.js\?v=3/,
+    operator: 'match',
+    diff: 'simple'
+  }
+
+test at tests\migration.test.cjs:36:1
+✖ fallback stylesheet uses application resource and does not duplicate footer link (37.2924ms)
+  AssertionError [ERR_ASSERTION]: Expected values to be strictly equal:
+  + actual - expected
+
+  + '/luci-static/resources/view/homestatus/overview.css?v=5'
+  - '/luci-static/resources/view/homestatus/overview.css?v=6'
+
+      at TestContext.<anonymous> (D:\DevPortal\homelede\wt-palette-global-emerald-app\luci-app-homestatus\tests\migration.test.cjs:44:10)
+      at Test.runInAsyncScope (node:async_hooks:226:14)
+      at Test.run (node:internal/test_runner/test:1397:25)
+      at Test.processPendingSubtests (node:internal/test_runner/test:969:18)
+      at Test.postRun (node:internal/test_runner/test:1537:19)
+      at Test.run (node:internal/test_runner/test:1462:12)
+      at async Test.processPendingSubtests (node:internal/test_runner/test:969:7) {
+    generatedMessage: true,
+    code: 'ERR_ASSERTION',
+    actual: '/luci-static/resources/view/homestatus/overview.css?v=5',
+    expected: '/luci-static/resources/view/homestatus/overview.css?v=6',
+    operator: 'strictEqual',
+    diff: 'simple'
+  }

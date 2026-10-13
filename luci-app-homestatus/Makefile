@@ -8,7 +8,7 @@ include $(TOPDIR)/rules.mk
 
 PKG_NAME:=luci-app-homestatus
 PKG_VERSION:=1.0.0
-PKG_RELEASE:=1
+PKG_RELEASE:=4
 
 PKG_LICENSE:=Apache-2.0
 PKG_MAINTAINER:=xiaoqingfeng <xiaoqingfengatgm@gmail.com>
@@ -18,11 +18,15 @@ LUCI_TITLE:=LuCI app for HomeLede 驾驶舱 extensions
 LUCI_DESCRIPTION:=Backend and settings page for the HomeLede 驾驶舱 cards: disk capacity \
  (disk -> partition -> mount point tree), key application status monitoring with per-app \
  service restart, and network wake-on-LAN.
-LUCI_DEPENDS:=+rpcd-mod-ucode +ucode +ucode-mod-fs +ucode-mod-ubus
+LUCI_DEPENDS:=+luci-base +luci-mod-status +rpcd-mod-ucode +ucode +ucode-mod-fs +ucode-mod-ubus
 
 define Package/$(PKG_NAME)/conffiles
 /etc/config/homestatus
 endef
+
+# Preserve the theme's original no-minification contract during ownership migration.
+LUCI_MINIFY_JS:=0
+LUCI_MINIFY_CSS:=0
 
 include $(TOPDIR)/feeds/luci/luci.mk
 

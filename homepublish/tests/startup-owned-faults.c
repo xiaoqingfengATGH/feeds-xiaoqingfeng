@@ -2,6 +2,8 @@
 #include "renewable-guard.h"
 #include "owned-runtime.h"
 #include <assert.h>
+#include <arpa/inet.h>
+#include <sys/socket.h>
 #include <errno.h>
 #include <fcntl.h>
 #include <poll.h>
@@ -60,16 +62,28 @@ ssize_t __wrap_send(int fd,const void *buf,size_t len,int flags) {
   return __real_send(fd,buf,1,flags);
  return __real_send(fd,buf,len,flags);
 }
-static void child(int fd){assert(!hp_owned_file(r,1,"synthetic-test-secret",21));*written=1;assert(write(fd,"R",1)==1);for(;;)pause();}
+static void child(int fd){
+ assert(!hp_owned_file(r,1,"synthetic-test-secret",21));
+ int s=socket(AF_INET,SOCK_STREAM,0);assert(s>=0);
+ struct sockaddr_in a={.sin_family=AF_INET,.sin_addr.s_addr=htonl(INADDR_LOOPBACK)};
+ assert(!bind(s,(void*)&a,sizeof(a)));assert(!listen(s,2));socklen_t n=sizeof(a);assert(!getsockname(s,(void*)&a,&n));
+ written[1]=ntohs(a.sin_port);*written=1;assert(write(fd,"R",1)==1);for(;;)pause();
+}
 int main(int argc,char **argv){
  assert(argc==3);mode=argv[2];controller=getpid();assert(!prctl(PR_SET_CHILD_SUBREAPER,1));
- written=mmap(NULL,sizeof(int),PROT_READ|PROT_WRITE,MAP_SHARED|MAP_ANONYMOUS,-1,0);assert(written!=MAP_FAILED);
+ written=mmap(NULL,2*sizeof(int),PROT_READ|PROT_WRITE,MAP_SHARED|MAP_ANONYMOUS,-1,0);assert(written!=MAP_FAILED);
  int root=open(argv[1],O_RDONLY|O_DIRECTORY|O_CLOEXEC);assert(root>=0);r=hp_owned_prepare(root);assert(r);hp_guard_bind_owned_test(r);
  int p[2];assert(!pipe(p));struct hp_guard g;int rc=hp_guard_start(&g,7,9,0,child,p[1]);close(p[1]);if(!rc){close(g.fd);}
  for(int i=0;i<400;i++){while(waitpid(-1,NULL,WNOHANG)>0){}poll(NULL,0,5);}
  struct stat s;int residual=!fstatat(root,"runtime",&s,AT_SYMLINK_NOFOLLOW);
  printf("case=%s start_rc=%d written=%d runtime_present=%d children=%d\n",mode,rc,*written,residual,waitpid(-1,NULL,WNOHANG)!=-1);fflush(stdout);
  /* Metadata above precedes any fallback: no secret contents logged. */
+ if(written[1]) {
+  int sock=socket(AF_INET,SOCK_STREAM,0);assert(sock>=0);
+  struct sockaddr_in a={.sin_family=AF_INET,.sin_addr.s_addr=htonl(INADDR_LOOPBACK),.sin_port=htons(written[1])};
+  assert(connect(sock,(void*)&a,sizeof(a))==-1);close(sock);
+ }
+ printf("listener_absent=1 recorded_port=%d\n",written[1]);
  assert(rc==-1);assert(!residual);assert(waitpid(-1,NULL,WNOHANG)==-1);
  if(!strcmp(mode,"wfd"))assert(!*written);
  if(!strcmp(mode,"after-write"))assert(*written);

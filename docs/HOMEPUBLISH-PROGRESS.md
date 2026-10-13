@@ -1,5 +1,9 @@
 # HomePublish 当前检查点
 
+## 最新 D2c2：启动秘密残留 review 修复（local gate，未激活）
+
+独立 watchdog pidfd EMFILE 注入重现 start_rc=-1/key size21 残留；正式项目 regression 先 RED，再加入 server-owned preprovision barrier、全部必需 pidfd 锚定和统一 startup/runtime cleanup-before-peer-kill。24 startup ownership faults（含真实写入后/短 READY/各 pidfd/单 STOP-KILL）与 committed-source 全套/三连续真实 Nginx 矩阵本地通过；原有 residual/foreign 保全不改。详见 [D2c2 checkpoint](HOMEPUBLISH-D2C2-CHECKPOINT.md)，最终 hash/复验由完成报告读回。固定 exec/loader libs/source/SAN/health/controller/typed durable crash manifest/target SDK 仍未有，产品继续禁激活。
+
 ## 最新 D2c1：FD-pinned native cleanup 竞态关闭（本地 gate，未激活）
 
 接续 `ed646fc03a8ba5b1e7af5a1e7acd23747d158b92`，父复验 controller-stop 真失败，本轮独立重复第三轮同样 exit2：所有 owned 文件/目录残留而 PID 已消失。根因是双guard在cleanup前互杀，可同时杀死两个cleaner；改为kill provider group→pidfd观察真实退出→native cleanup→kill reciprocal guard→bounded reap。所有文件/目录在fork前FD-pinned，减少inode reuse；不加断言延迟、不拿harness删除当native通过。14 native cases+100 Stop压力、5连续真实Nginx全fault矩阵以及完整 `make owned-runtime guardian direct product guardian-nginx` exit0；每矩阵12 records/8 native runtime absent，foreign inode/source TLS保全。失败/成功均保留兜底前metadata证据。最终committed-source复验命令与root cause/evidence详见 [D2c1 checkpoint](HOMEPUBLISH-D2C1-CHECKPOINT.md)。固定exec authority、生产SAN/health/controller/typed residual/crash recovery仍gate；Start/Apply unsupported、activation_ready=false、helper exit78不改。

@@ -44,6 +44,8 @@ Status: continuous/temporary产品设计已确认；D2b1本地受控worker F2边
 
 追加当前review pointer（保留上述D2b2历史RED）：D2b3 private STREAM socketpair真实Nginx内部channel兼容本地GREEN，generic仍拒recvmsg，test-only新profile拒外来UNIX连接；详见 docs/HOMEPUBLISH-D2B3-CHECKPOINT.md。D2c1父controller-stop清理失败已独立重复RED，根因双guard cleanup前互杀；FD-pinned文件/目录与cleanup-before-peer-kill关闭本地竞态，14 native cases+100 Stop重复、5连续Nginx矩阵及一次全套make exit0；兜底前metadata记录、foreign保全见 docs/HOMEPUBLISH-D2C1-CHECKPOINT.md。固定exec authority、生产SAN/health/controller、typed residual/durable crash recovery和目标验收仍未完成；禁激活不变。
 
+追加 D2c2 startup review 修复见 docs/HOMEPUBLISH-D2C2-CHECKPOINT.md：pidfd EMFILE 注入在真实写入后残留已正式 RED→GREEN；server-owned provisioning barrier 与 startup cleanup责任闭环本地验证，24新增fault+三连续committed-source真实Nginx矩阵；非自然资源耗尽证据，typed durable residual/生产authority/target gates仍blocked，禁激活不变。
+
 - continuous无用户总deadline；temporary默认30分钟、15/30/60快捷、自定义1分钟～24小时，后端验证，准备/Add计入首次批准截止，Apply/recovery/reboot不得续时。
 - desired enabled/disabled与runtime/generation独立，manual_stop_latch持久化优先。guard capability始终有限，controller健康核验续授权，失控fail closed；不能TTL=0/循环旧fixed-deadline达成持续。
 - 合法enabled同scope自动健康恢复，每轮有限尝试/指数backoff/上限、超阈值blocked，不thrash/blind Add。Stop/过期/stale事件不得复活；STUN仍有界无自动常驻。

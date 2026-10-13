@@ -1,7 +1,0 @@
-#!/bin/sh
-# Fixed read-only RPC; no request parameters, paths, commands or secrets.
-case "$1:$2" in
- list:) printf '%s\n' '{"status":{}}' ;;
- call:status) exec /usr/bin/lua /usr/share/homestun/config-cli.lua status ;;
- *) exit 1 ;;
-esac

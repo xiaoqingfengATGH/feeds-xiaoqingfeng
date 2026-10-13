@@ -1,1 +1,0 @@
-{"admin/services/homestun":{"title":"HomeSTUN","order":62,"action":{"type":"view","path":"homestun/settings"},"depends":{"acl":["luci-app-homestun"],"uci":{"homestun":true}}}}

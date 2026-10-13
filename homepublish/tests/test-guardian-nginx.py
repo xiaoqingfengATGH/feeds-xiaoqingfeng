@@ -129,6 +129,9 @@ try:
                     stream=connect('127.0.0.1',port,ctx);stream.sendall(b'GET /stream HTTP/1.0\r\nHost: service.home\r\n\r\n')
                     wait_for(lambda:b'tick-' in stream.recv(4096))
                     record={'case':fault,'master':master,'workers':workers,'port':port,'TLS_v4_v6':True}
+                    record['fd_roles']={str(pid):{q.name:os.readlink(q) for q in pathlib.Path('/proc',str(pid),'fd').iterdir()} for pid in (guardian,watchdog,master,*workers)}
+                    record['worker_boundary']={str(pid):{line.split(':')[0]:line.split(':',1)[1].strip() for line in pathlib.Path('/proc',str(pid),'status').read_text().splitlines() if line.startswith(('Uid:','Gid:','NoNewPrivs:','Seccomp:'))} for pid in (master,*workers)}
+                    assert all(v['NoNewPrivs']=='1' and v['Seccomp']=='2' for v in record['worker_boundary'].values())
                     if fault=='renew-rebuild':
                         os.kill(workers[0],signal.SIGKILL)
                         new=wait_for(lambda:children(master) if len(children(master))==2 and workers[0] not in children(master) else None)

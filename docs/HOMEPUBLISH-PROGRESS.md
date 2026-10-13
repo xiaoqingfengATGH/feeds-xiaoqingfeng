@@ -1,10 +1,16 @@
 # HomePublish 当前检查点
 
+## 最新 D2b2：真实 guardian + Nginx RED gate（BLOCKED，未激活）
+
+接续 `408d963896a33aac076b48cbe4c31896586df05d`；test-first local checkpoint `ba57e816c16efd853de64f0b572e655717246216`。新增固定cached Nginx内部host fixture与 `make -C homepublish/tests guardian-nginx`：真实2worker、worker KILL重建、同master跨600ms多窗口renew、1200ms固定temporary、IPv4/IPv6 loopback TLS、controller/guardian/watchdog各KILL/STOP断流；已读回owned PID/监听在兜底前消失。外来UNIX真实SCM_RIGHTS已入队而guarded recvmsg EPERM，旧三角色foreign inode回归保留。**内部channel仍EPERM，新增target真实RED，不是兼容完成。** TLS/config/pid/temp文件仍靠harness删除，非native guardian清理完成。
+
+生产guard未改，seccomp是默认ALLOW的syscall denylist，recvmsg全局禁令保留；没有用静态FD例外或可信callback标志绕过。cached Nginx源码确认每次spawn/respawn动态socketpair、SCM_RIGHTS OPEN_CHANNEL与close/reuse。当前WSL非rootuserns/mountns、Landlock ABI7及ancestor pidfd_getfd探测成功，**未证明内核不可实现**；block是provider-specific kernel对象边界/broker尚未实现。设计、实跑命令/hash与剩余门槛见[最新D2b2](HOMEPUBLISH-D2B2-CHECKPOINT.md)。Start/Apply unsupported、activation_ready=false、helper exit78保持，无生产/安装/网络安装/fw/UPnP/push/merge/PR。
+
 ## 最新 D2b1 F2 受控worker边界（local gate）
 
 核心checkpoint commit `4628cfcfa6d5a1101e70f6510badc404093cdea6`，基线 `20eb7cf90422dc098c2461667010fbd9e5474ad7`。真实项目 setsid RED escape=1/listener开放；继承seccomp+NNP GREEN。watchdog KILL descendants RED、startup stop1/stop3残留RED分别以guardian subreaper/owned group kill与bootstrap注册/清理关闭。最终WSL `TMPDIR=/home/eric/homestun-sdk-check make -C homepublish/tests guardian direct product` exit0：19进程树、10启动故障、18原生命周期；FD三角色逐foreign dev/inode核验通过，controller对象保留。详见[最新D2b1](HOMEPUBLISH-D2B1-CHECKPOINT.md)。
 
-只支持可信固定非root、同UID/GID、daemon-off前台worker树，允许fork/普通exec，不许setsid/setpgid/namespace/credential/FD导入；非通用hostile sandbox/cgroup。x86_64 WSL验证，aarch64源码分支未实测，其余arch fail closed。双guardian同时停调度/双故障、内核D-state不保证。exec原leader PDEATHSIG=9，fork及fork-exec worker=0实际观察；关子孙靠整组。**未做真实Nginx guard integrated master/worker验收**；direct真实Nginx测试是独立数据面gate，不能替代集成。产品Start/Apply unsupported、activation_ready=false、helper exit78保留。typed ERROR packet、生产provider/health/TLS/journal/fw/SDK/procd及目标预算仍待实现，无生产/公网/安装/push/merge/PR。旧fixed-TTL源码不变。
+只支持可信固定非root、同UID/GID、daemon-off前台worker树，允许fork/普通exec，不许setsid/setpgid/namespace/credential/FD导入；非通用hostile sandbox/cgroup。x86_64 WSL验证，aarch64源码分支未实测，其余arch fail closed。双guardian同时停调度/双故障、内核D-state不保证。exec原leader PDEATHSIG=9，fork及fork-exec worker=0实际观察；关子孙靠整组。**D2b1当时未做真实Nginx guard integrated master/worker验收；D2b2已新增真实集成RED，内部通道仍未通过**；direct真实Nginx测试是独立数据面gate，不能替代集成。产品Start/Apply unsupported、activation_ready=false、helper exit78保留。typed ERROR packet、生产provider/health/TLS/journal/fw/SDK/procd及目标预算仍待实现，无生产/公网/安装/push/merge/PR。旧fixed-TTL源码不变。
 
 
 ## 范围与结论

@@ -10,6 +10,7 @@
 | 包 | 版本 | 类别 | 一句话 |
 |---|---|---|---|
 | homelede-autoconfig | 20261001-6 | 系统基础 | 首启自动配置（时区/主机名/语言/镜像源/版本标识） |
+| homelede-keyring | 20261013-1 | 系统基础 | 预置 OpenWrt release usign 公钥，使官方源 `opkg update` 签名校验通过 |
 | HomeRedirect | 2.0-1 | 端口转发 | socat 前端的跨协议端口转发，CGNAT/IPv6 时代方案 |
 | luci-app-homeredirect | 2.0-r1-20260930 | LuCI (Lua/CBI) | HomeRedirect 管理页（含 zh-cn） |
 | hometunnel | 1.0.0-1 | 内网穿透 | Cloudflare Tunnel 按需启停的免费内网穿透 |
@@ -36,6 +37,16 @@
 - 版本标识：从 `/etc/buildmark` + `DISTRIB_RELEASE` 生成 `DISTRIB_REVISION='v2026.10.01 based on OpenWrt 24.10.5'`
 
 **v20261001-6 变更**：移除了遗留 Go 二进制 `homeledeCore`（29MB，mosdns/AdGuardHome 旧体系遗留，全树无引用），包体积从 10.4MB 降到 17KB；同包 `/etc/brand` 为装饰性 PNG，无脚本引用，保留。
+
+## homelede-keyring — 官方 release 源信任公钥
+
+**问题**：HomeLede 构建树是 OpenWrt 主线，上游 `openwrt-keyring` 只装 snapshot key（`b5043e70f9a75cde`）；而 `include/version.mk` 让 distfeeds 指向 OpenWrt 24.10.5 release，其 `Packages.sig` 由 24.10 release key（`d310c6f2833e97f7`）签名。缺这把 key 时 `opkg update` 全部报 `Signature check failed`。
+
+**做法**：独立包，不改上游 keyring（同步上游零冲突），也不混入 autoconfig（信任根不随首启配置脚本增删）。按 `VERSION_NUMBER` 的 release 系列（如 `24.10`）选 key，只装 `/etc/opkg/keys/<keyid>`。经 `include/target.mk` DEFAULT_PACKAGES.router 选包。
+
+**升级 OpenWrt 基线时必须同步**：`VERSION_NUMBER` 换到未登记的系列（如 25.12）时，本包构建会故意失败并提示。补法：从 `https://git.openwrt.org/keyring.git` 复制 `usign/<keyid>` 到 `files/usign/`，在 Makefile 增加 `HOMELEDE_KEY_<series>:=<keyid>`。启用 APK 包管理器时也会失败，需另行登记 apk release key。若上游 keyring 将来自己安装同名 key，镜像构建会报文件冲突，届时删除本包即可。
+
+**范围限制**：只解决索引签名。HomeLede 内核（6.18）与官方 release kmod 的 vermagic 不一致，官方源的 `kmod-*` 仍无法安装；主线与 24.10 用户态库也可能存在 ABI 差异。
 
 ## HomeRedirect — CGNAT 时代端口转发
 

@@ -21,11 +21,11 @@
 static struct hp_owned_runtime *r;
 static int *written, calls;
 static const char *mode;
-static pid_t controller;
+static pid_t controller; static int fork_depth;
 long __real_syscall(long,...);
 long __wrap_syscall(long n,...) {
  va_list v;va_start(v,n);
- if(n==SYS_close_range){unsigned a=va_arg(v,unsigned),b=va_arg(v,unsigned);int c=va_arg(v,int);va_end(v);return __real_syscall(n,a,b,c);}
+ if(n==SYS_close_range){unsigned a=va_arg(v,unsigned),b=va_arg(v,unsigned);int c=va_arg(v,int);va_end(v);int role=fork_depth; if((!strcmp(mode,"clean-guardian") && role==1) || (!strcmp(mode,"clean-watchdog") && role==2) || (!strcmp(mode,"clean-provider") && role==3)){errno=EIO;return -1;} return __real_syscall(n,a,b,c);}
  if(n==SYS_capset){void *a=va_arg(v,void*),*b=va_arg(v,void*);va_end(v);return __real_syscall(n,a,b);}
  int fd=va_arg(v,int);
  if(n==SYS_pidfd_open){int f=va_arg(v,int);va_end(v);calls++;
@@ -60,6 +60,7 @@ ssize_t __real_send(int,const void *,size_t,int);
 ssize_t __wrap_send(int fd,const void *buf,size_t len,int flags) {
  if(!strcmp(mode,"short-ready") && getpid()!=controller && len==sizeof(int) && *(const int*)buf==1)
   return __real_send(fd,buf,1,flags);
+ if(!strcmp(mode,"late-grant") && getpid()==controller && len==sizeof(int) && *(const int*)buf==2)poll(NULL,0,120);
  return __real_send(fd,buf,len,flags);
 }
 static void child(int fd){
@@ -73,7 +74,13 @@ int main(int argc,char **argv){
  assert(argc==3);mode=argv[2];controller=getpid();assert(!prctl(PR_SET_CHILD_SUBREAPER,1));
  written=mmap(NULL,2*sizeof(int),PROT_READ|PROT_WRITE,MAP_SHARED|MAP_ANONYMOUS,-1,0);assert(written!=MAP_FAILED);
  int root=open(argv[1],O_RDONLY|O_DIRECTORY|O_CLOEXEC);assert(root>=0);r=hp_owned_prepare(root);assert(r);hp_guard_bind_owned_test(r);
- int p[2];assert(!pipe(p));struct hp_guard g;int rc=hp_guard_start(&g,7,9,0,child,p[1]);close(p[1]);if(!rc){close(g.fd);}
+ int p[2];assert(!pipe(p));struct hp_guard g={.pid=getpid(),.fd=p[0]};struct hp_guard untouched=g;
+ int invalid=!strncmp(mode,"invalid-",8);
+ int rc=hp_guard_start(!strcmp(mode,"invalid-nullguard")?NULL:&g,
+  !strcmp(mode,"invalid-gen")?0:7,!strcmp(mode,"invalid-epoch")?0:9,
+  !strcmp(mode,"invalid-bound")?86400001:!strcmp(mode,"late-grant")?40:0,
+  !strcmp(mode,"invalid-child")?NULL:child,p[1]);
+ close(p[1]);if(!rc){close(g.fd);}
  for(int i=0;i<400;i++){while(waitpid(-1,NULL,WNOHANG)>0){}poll(NULL,0,5);}
  struct stat s;int residual=!fstatat(root,"runtime",&s,AT_SYMLINK_NOFOLLOW);
  printf("case=%s start_rc=%d written=%d runtime_present=%d children=%d\n",mode,rc,*written,residual,waitpid(-1,NULL,WNOHANG)!=-1);fflush(stdout);
@@ -85,7 +92,16 @@ int main(int argc,char **argv){
  }
  printf("listener_absent=1 recorded_port=%d\n",written[1]);
  assert(rc==-1);assert(!residual);assert(waitpid(-1,NULL,WNOHANG)==-1);
- if(!strcmp(mode,"wfd"))assert(!*written);
+ if(invalid){assert(!*written);assert(!memcmp(&g,&untouched,sizeof(g)));assert(!kill(getpid(),0));}
+ if(!strcmp(mode,"wfd") || !strcmp(mode,"late-grant"))assert(!*written);
  if(!strcmp(mode,"after-write"))assert(*written);
  hp_owned_release(r);close(root);close(p[0]);return 0;
 }
+ssize_t __real_getrandom(void*,size_t,unsigned);
+ssize_t __wrap_getrandom(void *b,size_t n,unsigned f){if(!strcmp(mode,"random")){errno=EIO;return -1;}return __real_getrandom(b,n,f);}
+int __real_socketpair(int,int,int,int*);
+int __wrap_socketpair(int d,int t,int p,int *sv){static int c; c++;if((!strcmp(mode,"pair-controller")&&c==1)||(!strcmp(mode,"pair-guardian")&&c==2)||(!strcmp(mode,"pair-watchdog")&&c==3)){errno=EMFILE;return -1;}return __real_socketpair(d,t,p,sv);}
+pid_t __real_fork(void);
+pid_t __wrap_fork(void){static int c;c++;if((!strcmp(mode,"fork-guardian")&&c==1)||(!strcmp(mode,"fork-watchdog")&&c==2)||(!strcmp(mode,"fork-provider")&&c==3)){errno=EAGAIN;return -1;}pid_t r=__real_fork();if(!r)fork_depth++;return r;}
+void *__real_mmap(void*,size_t,int,int,int,off_t);
+void *__wrap_mmap(void*a,size_t l,int p,int f,int d,off_t o){static int c;c++;if(!strcmp(mode,"map-state")&&c==3){errno=ENOMEM;return MAP_FAILED;}return __real_mmap(a,l,p,f,d,o);}

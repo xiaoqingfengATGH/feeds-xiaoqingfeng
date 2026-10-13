@@ -225,8 +225,11 @@ fail:
  reap_bounded();close(fd);close(ownerfd);if(datafd>=0)close(datafd);_exit(residual?124:0);
 }
 
-static int guard_start(struct hp_guard *g, uint64_t gen, uint64_t epoch, unsigned temporary_ms, void (*child)(int), int arg, int private_pair) {
- if(!gen || !epoch || temporary_ms>86400000 || !child) {errno=EINVAL;return -1;}
+static int start_bound(struct hp_guard *g, uint64_t gen, uint64_t epoch, unsigned temporary_ms, void (*child)(int), int arg, int private_pair) {
+ if(!g || !gen || !epoch || temporary_ms>86400000 || !child) {
+  int residual=hp_owned_cleanup(owned_runtime);
+  errno=residual?ENOTRECOVERABLE:EINVAL;return -1;
+ }
  memset(g,0,sizeof(*g)); g->generation=gen;g->epoch=epoch;
  if(getrandom(g->token,16,0)!=16) {hp_owned_cleanup(owned_runtime);return -1;}
  int probe=syscall(SYS_pidfd_open,getpid(),0);if(probe<0) {hp_owned_cleanup(owned_runtime);return -1;}close(probe);
@@ -332,6 +335,31 @@ guard_fail:
  reap_bounded();_exit(residual?124:0);
 }
 
+/* Process-local, single outstanding start; callers must serialize this test
+ * API. A binding is consumed on every call, never inferred from g's fields.
+ * Forked supervisors retain their own bound ledger, the controller does not.
+ * A claimed ledger cannot be reclaimed by a later failed/reentrant start. */
+static pid_t active_guard;
+static int guard_start(struct hp_guard *g, uint64_t gen, uint64_t epoch, unsigned temporary_ms, void (*child)(int), int arg, int private_pair) {
+ if(owned_runtime && atomic_load(&owned_runtime->claimed)) {
+  owned_runtime=NULL;errno=EBUSY;return -1;
+ }
+ if(active_guard>0) {
+  siginfo_t info={0};
+  int rc=waitid(P_PID,active_guard,&info,WEXITED|WNOHANG|WNOWAIT);
+  if((!rc && !info.si_pid) || (rc && errno!=ECHILD)) {
+   int residual=hp_owned_cleanup(owned_runtime);owned_runtime=NULL;
+   errno=residual?ENOTRECOVERABLE:EBUSY;return -1;
+  }
+  active_guard=0;
+ }
+ if(owned_runtime && g && gen && epoch && temporary_ms<=86400000 && child)
+  atomic_store(&owned_runtime->claimed,1);
+ int rc=start_bound(g,gen,epoch,temporary_ms,child,arg,private_pair);
+ owned_runtime=NULL;
+ if(!rc)active_guard=g->pid;
+ return rc;
+}
 int hp_guard_start(struct hp_guard *g, uint64_t gen, uint64_t epoch, unsigned temporary_ms, void (*child)(int), int arg) {
  return guard_start(g,gen,epoch,temporary_ms,child,arg,0);
 }

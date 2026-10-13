@@ -8,6 +8,7 @@ static const char *owned_names[]={"cert.pem","key.pem","nginx.conf","nginx.pid"}
 struct owned_entry { dev_t dev; ino_t ino; int fd; _Atomic int registered; _Atomic int written; };
 struct hp_owned_runtime {
  int parent,dir; dev_t dev; ino_t ino;
+ _Atomic int claimed; /* One invocation only; never rebind an active ledger. */
  struct owned_entry entries[4];
  struct owned_entry dirs[5];
 };

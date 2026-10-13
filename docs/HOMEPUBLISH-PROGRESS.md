@@ -1,6 +1,10 @@
 # HomePublish 当前检查点
 
-## 最新 D2c2：启动秘密残留 review 修复（local gate，未激活）
+## 最新 D2c2 LOW 收尾（local gate，未激活）
+
+原秘密残留修复独立复审通过；LOW 无效启动参数遗留 empty runtime 已正式五项 RED→GREEN关闭，nullguard不再崩溃。绑定仅转交本次prepared empty清理责任并在返回时消费；active重入/claimed ledger拒绝且不误删，不从无效g取得PID信号权限，foreign replacement保留并报residual。11新增故障纳入正式regression，25 delayed ACK重复保留；65 startup runs + 两ownership contracts，不冒称每项都有RED。全套/最终committed-source复验及清理责任详见 [D2c2 LOW checkpoint](HOMEPUBLISH-D2C2-CHECKPOINT.md#independent-re-review-low-closure-after-f311c114)。新修复仍须独立复审；生产authority另切片，Start/Apply unsupported、activation_ready=false、helper exit78不变。
+
+## 历史 D2c2：启动秘密残留 review 修复（local gate，未激活）
 
 独立 watchdog pidfd EMFILE 注入重现 start_rc=-1/key size21 残留；正式项目 regression 先 RED，再加入 server-owned preprovision barrier、全部必需 pidfd 锚定和统一 startup/runtime cleanup-before-peer-kill。24 startup ownership faults（含真实写入后/短 READY/各 pidfd/单 STOP-KILL）与 committed-source 全套/三连续真实 Nginx 矩阵本地通过；原有 residual/foreign 保全不改。详见 [D2c2 checkpoint](HOMEPUBLISH-D2C2-CHECKPOINT.md)，最终 hash/复验由完成报告读回。固定 exec/loader libs/source/SAN/health/controller/typed durable crash manifest/target SDK 仍未有，产品继续禁激活。
 

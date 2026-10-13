@@ -24,7 +24,7 @@ int main(int argc,char **argv) {
   step=!strcmp(mode,"stop")?4:mode[7]-'0';
   struct hp_guard g;int p[2];assert(!pipe(p));hp_guard_bind_owned_test(r);
   int invalid=!strcmp(mode,"invalid");int rc=hp_guard_start(&g,invalid?0:7,9,0,provision,p[1]);close(p[1]);
-  if(invalid) {assert(rc==-1);assert(!fstatat(d,"key.pem",&s,AT_SYMLINK_NOFOLLOW) && s.st_size==0);assert(!hp_owned_cleanup(r));}
+  if(invalid) {assert(rc==-1);assert(fstatat(root,"runtime",&s,AT_SYMLINK_NOFOLLOW)==-1);assert(!hp_owned_cleanup(r));}
   else {
    assert(!rc);char ready;assert(read(p[0],&ready,1)==1);
    if(step==4)assert(!hp_guard_send(&g,2));

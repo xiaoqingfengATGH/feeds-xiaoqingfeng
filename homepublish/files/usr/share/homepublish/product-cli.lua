@@ -17,7 +17,6 @@ if enabled and ({start=true,apply=true,stop=true,status=true})[request.action] t
  package.path=source..'/?.lua;'..package.path
  local J=require('product-json')
  handled,response=pcall(function()return J.decode(require('product-channel').request(J.encode(request)))end)
- if handled and response and request.action=='status' and not response.error then response.capabilities={start=true,apply=true,stop=true,scope='fixed device-test allowlist; provider revalidates saved revision'} end
 else
  if enabled then enabled:close() end
  handled,response,err=pcall(provider.handle,request)

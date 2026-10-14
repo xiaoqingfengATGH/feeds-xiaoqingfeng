@@ -98,7 +98,7 @@ end
 local function validate(c)
  object(c,{schema_version=true,services=true,access_profile=true,publication_policy=true,default_certificate_ref=true})
  check(c.schema_version==1,'unsupported schema')
- array(c.services,1,16)
+ array(c.services,0,16) -- r9: 空 services 可保存（入口先行）；Start 由 runtime_plan 'no enabled services' 拒
  local r={schema_version=1,services={}}; local ids,hosts={},{}
  local function certificate(ref)
   check(type(ref)=='string','certificate reference required')

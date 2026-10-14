@@ -29,7 +29,7 @@ with tempfile.TemporaryDirectory(prefix='canonical-suite.',dir=BASE) as tmp:
     config={'schema_version':1,'services':[{'service_id':'nas','name':'NAS','hostname':'nas.example.test','backend':{'host':'192.168.1.10','port':8080,'allowed_ranges':['192.168.1.0/24']},'certificate_ref':'acme:nas','authentication_review':{'authentication':'confirmed','management':False}}],'access_profile':{'methods_allowed':['manual_ipv4'],'listeners':[{'family':'ipv4','address':'192.168.1.2','interface':'wan','zone':'wan','protocol':'tcp','internal_port':8443,'external_port':18443}]}}
     call({'action':'save','expected_revision':0,'config':config})
     saved=call({'action':'status'}).stdout
-    assert 'nas.example.test' in saved and 'active_revision' not in saved and 'unsupported' in saved
+    assert 'nas.example.test' in saved and 'active_revision' not in saved and 'pending_config' in saved
     for field in ['path','desired_state','approval','active_revision']:
         call({'action':'save','expected_revision':1,'config':config,field:'forbidden'},False)
         assert call({'action':'status'}).stdout==saved
@@ -40,8 +40,8 @@ with tempfile.TemporaryDirectory(prefix='canonical-suite.',dir=BASE) as tmp:
     call({'action':'save','expected_revision':1,'config':config})
     status=call({'action':'status'}).stdout
     assert 'manual_stop_latchb1' in status and 'pending' in status and 'active_revision' not in status
-    assert 'unsupported' in call({'action':'start'},False).stderr
-    assert 'unsupported' in call({'action':'apply'},False).stderr
+    assert 'runtime requires the device controller channel' in call({'action':'start'},False).stderr
+    assert 'runtime requires the device controller channel' in call({'action':'apply'},False).stderr
     p=subprocess.run([LUA,str(cli),'--path=/etc/config/firewall'],input='HP1'+wire({'action':'stop'}),text=True,capture_output=True,env=env)
     assert p.returncode!=0 and call({'action':'status'}).stdout==status
     call({'action':'status','path':'/etc/config/firewall'},False)

@@ -74,7 +74,7 @@ def main():
      url=self.path.split('?')[0]
      if url=='/':
       body=('''<!doctype html><html><body><div id="maincontent"><div id="view"></div></div><script>window._=s=>s;window.cbi_init=()=>{};</script><script src="/luci-static/resources/cbi.js"></script><script src="/luci-static/resources/luci.js"></script><script>
-window.L=Object.create(LuCI.prototype);Object.assign(L.env,{base_url:'/luci-static/resources',resource:'/luci-static/resources',scriptname:'/cgi-bin/luci',cgi_base:'/cgi-bin',requestpath:[],documentroot:'/www',ubuspath:'/ubus',sessionid:SID,apply_display:0});L.loaded=true;window.result={};L.probeRPCBaseURL().then(()=>L.require('ui')).then(()=>L.require(location.search.includes('overview')?'view.homepublish.overview':'view.homepublish.settings')).then(v=>{window.settings=v;L.Poll.start();result.loader='PASS';}).catch(e=>{result.loader='FAIL';result.error=e.message;});
+window.L=Object.create(LuCI.prototype);Object.assign(L.env,{base_url:'/luci-static/resources',resource:'/luci-static/resources',scriptname:'/cgi-bin/luci',cgi_base:'/cgi-bin',requestpath:[],documentroot:'/www',ubuspath:'/ubus',sessionid:SID,apply_display:0});L.loaded=true;window.result={};L.probeRPCBaseURL().then(()=>L.require('ui')).then(()=>L.require(location.search.includes('overview')?'view.homepublish.overview':'view.homepublish.services')).then(v=>{window.settings=v;return v.load().then(d=>v.render(d));}).then(n=>{document.querySelector('#view').appendChild(n);result.loader='PASS';}).catch(e=>{result.loader='FAIL';result.error=e.message;});
 </script></body></html>''').replace('SID',json.dumps(sid)).encode()
      else:
       p=(ROOT/'luci-app-homepublish/htdocs'/url.lstrip('/')) if '/view/homepublish/' in url else TARGET/'www'/url.lstrip('/')

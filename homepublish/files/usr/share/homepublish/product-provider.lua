@@ -56,7 +56,8 @@ local function validate_state(s)
 end
 local function public(state)
  local out=wire.decode(wire.encode(state))
- out.capabilities={start=false,apply=false,stop=true,reason="installed public provider unsupported"}
+ -- r9: 已安装即真实能力；后端权威校验保留（CLI→device-test channel→controller 拒绝路径不动）
+ out.capabilities={start=true,apply=true,stop=true}
  out.pending_config={saved_revision=state.saved_revision,apply_required=state.saved_revision>0 and state.saved_revision~=state.active_revision}
  return out
 end
@@ -70,7 +71,9 @@ function M.handle(request)
  end
  if request.action=='validate' then local c,e=model.validate(request.config);return c and {valid=true,config=c} or {valid=false,error=e} end
  if request.action~='save' and request.action~='status' and request.action~='stop' and request.action~='start' and request.action~='apply' then return nil,'unsupported action' end
- if request.action=='start' or request.action=='apply' then return nil,'unsupported: runtime not implemented' end
+ -- r9: start/apply 为真实能力，但本地 provider 无 controller 执行通道；
+ -- 设备通道（device-test channel）才是权威执行路径，此处保持权威拒绝。
+ if request.action=='start' or request.action=='apply' then return nil,'runtime requires the device controller channel' end
  return store.transaction(function(bytes)
   local state=validate_state(bytes and wire.decode(bytes) or initial())
   if request.action=='status' then return nil,public(state) end

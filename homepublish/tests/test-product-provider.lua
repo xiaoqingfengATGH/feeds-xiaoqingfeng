@@ -44,7 +44,7 @@ assert(stopped.active_revision==1 and stopped.runtime.phase=='cleanup_required')
 local later=assert(provider.handle({action='save',expected_revision=2,config=fixture()}))
 assert(later.saved_revision==3 and later.active_revision==1 and later.desired_state.manual_stop_latch==true)
 for _,action in ipairs({'start','apply'}) do
- local value,error=provider.handle({action=action});assert(value==nil and error=='unsupported: runtime not implemented')
+ local value,error=provider.handle({action=action});assert(value==nil and error=='runtime requires the device controller channel')
 end
 assert(assert(provider.handle({action='status'})).desired_state.state=='disabled')
 print('PASS immutable active/pending split, persistent Stop latch, unsupported Start/Apply')

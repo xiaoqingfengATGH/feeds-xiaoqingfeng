@@ -51,5 +51,11 @@ end
 local dns=fixture(); dns.services[1].backend.addressFamily='hostname'; dns.services[1].backend.host='nas.lan'
 assert(model.validate(dns))
 local detached=fixture(); local copy=assert(model.validate(detached)); detached.services[1].name='changed'; assert(copy.services[1].name=='NAS')
+-- r9：配置可先存入口后加服务（services 可为空数组）；Start 仍由 runtime_plan 的
+-- 'no enabled services' 拒绝空发布，安全语义不弱化。
+local empty=fixture(); empty.services={}; local emptyPlan=assert(model.validate(empty))
+assert(#emptyPlan.services==0,'empty services allowed at save time')
+local _,emptyErr=model.runtime_plan(empty); assert(not _ and emptyErr=='no enabled services','runtime_plan rejects empty')
+print('PASS empty services saveable, runtime plan still rejects empty publication')
 print('PASS address scope, IPv6, methods, duration bounds and detached plans')
 return {model=model,fixture=fixture,path=path}

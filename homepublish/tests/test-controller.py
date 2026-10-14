@@ -67,7 +67,7 @@ def main():
    return False
   try:
    state=cli({'action':'save','expected_revision':0,'config':config});assert state['saved_revision']==1 and 'active_revision' not in state and absent()
-   assert 'unsupported' in cli({'action':'start'},False)
+   assert 'runtime requires the device controller channel' in cli({'action':'start'},False)
    def run(*args):subprocess.run(args,check=True,stdout=subprocess.PIPE,stderr=subprocess.PIPE)
    run('openssl','req','-x509','-newkey','rsa:2048','-nodes','-keyout',str(d/'key.pem'),'-out',str(d/'cert.pem'),'-days','1','-subj','/CN=service.home','-addext','subjectAltName=DNS:service.home')
    compile_adapter(d)

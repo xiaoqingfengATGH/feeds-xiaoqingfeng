@@ -12,6 +12,16 @@ return baseclass.extend({
  start:rpc.declare({object:'homepublish',method:'start',params:['revision','approved'],expect:{},reject:true}),
  apply:rpc.declare({object:'homepublish',method:'apply',params:['revision','approved'],expect:{},reject:true}),
  checked:function(s){if(!s || s.error)throw new Error(s && s.error || 'State unavailable');return s;},
+ actionDialog:function(root,s,kind,updated,failed){
+  var api=this,d=E('dialog'),busy=false;
+  function button(id,text,fn){return E('button',{id:id,type:'button',class:'cbi-button',click:fn},text);}
+  var config=kind==='stop'?s.active_config:s.saved_config;
+  var diff=kind==='stop'?['停止当前整组服务；关闭所有已建立连接，撤销发布意图。']:api.diff(s.active_config,s.saved_config);
+  d.append(E('h3',{},kind==='stop'?'停止全部服务':kind==='apply'?'整组应用变更':'开启已保存服务'),E('ul',{id:'hp-confirm-diff'},(diff.length?diff:['整个已保存运行组']).map(function(x){return E('li',{},x);})),E('p',{},'整组连接将关闭 / 替换，应用存在短暂停机；临时截止不延长：'+((s.runtime || {}).expires_at || '首次开启建立截止')),E('p',{},'监听与接入范围：'+JSON.stringify(config && config.access_profile || {})),E('p',{role:'alert'}),button('hp-edit-cancel','取消',function(){if(!busy)d.close();}),button('hp-edit-submit','确认',function(){
+   if(busy)return;busy=true;d.querySelector('#hp-edit-submit').disabled=true;
+   return Promise.resolve().then(function(){return kind==='stop'?api.stop():api[kind](s.saved_revision,true);}).then(api.checked).then(function(){return api.status();}).then(api.checked).then(function(st){updated(st);d.close();}).catch(function(e){d.querySelector('[role=alert]').textContent='操作失败 / 状态未知：'+e.message;failed(e);}).finally(function(){busy=false;var submit=d.querySelector('#hp-edit-submit');if(submit)submit.disabled=false;});
+  }));root.appendChild(d);d.addEventListener('close',function(){d.remove();});d.showModal();return d;
+ },
  diff:function(before,after){
   before=before || {};after=after || {};var out=[];
   function changed(label,a,b){if(JSON.stringify(a)!==JSON.stringify(b))out.push(label+'：'+(a==null?'无':JSON.stringify(a))+' → '+(b==null?'无':JSON.stringify(b)));}

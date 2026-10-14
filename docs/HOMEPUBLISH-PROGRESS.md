@@ -218,3 +218,7 @@ done
 ## 剩余门槛
 
 D1尚缺真实rpcd scoped权限/角色及迁移工具；D2a仅renderer/静态backend完成本地切片，D2-D7 controller/guardian生产整合、权威DNS/TLS/归属管理核验与TTL刷新、精确INPUT/UPnP受控续租恢复、真实四页LuCI/RPC、ACME/DNS维护/Passwall2、matching SDK/IPK/真BusyBox-procd-fw4及另授权实网均未完成。Start/Apply继续unsupported，provider不宣称running。禁止以本切片或legacy PASS称产品可发布。
+
+## r8 actual overview correction
+Previous UI completion claims described the settings-internal tab; the actual menu overview route still used a 15-line English diagnostic text renderer. This was an omission, not accepted overview UI. The dedicated overview now renders Chinese cards, saved service table, entry/certificate summary, pending notice, shared capability-gated Start/Apply/Stop confirmation, retryable unknown errors and collapsed diagnostics. No settings editor duplicated or redirect used. RED Chrome official installed loader (one view node) failed waiting for hp-overview-services. Local source GREEN passed against genuine target RPC; final SDK/install/readback evidence is recorded in docs/HOMEPUBLISH-R8-OVERVIEW-ACCEPTANCE.md. Public activation/reachability/firewall/UPnP remain unsupported/unverified.
+

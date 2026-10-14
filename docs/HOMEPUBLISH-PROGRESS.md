@@ -1,6 +1,9 @@
 # HomePublish 当前检查点
 
-## 最新 D2d1 fixed-provider runnable subset（local，未激活）
+## 最新 D2d2 fixed OpenSSL/provider authority subset（local，未激活）
+
+接续 `cdfa83503216bc0840932a29afcca86261d9e95d`：新增 native-owned 固定空 `openssl.cnf`、固定 `OPENSSL_CONF`/`OPENSSL_MODULES`/`OPENSSL_ENGINES` 环境及非秘密 `provider-init.trace`；同步13文件槽、FD allowlist、prepare/cleanup。真实 TLS/renew/respawn/temporary/controller-guardian-watchdog STOP/KILL 回归通过；所有master/worker及respawn worker逐进程精确ELF映射集合（五私有依赖+sealed loader/Nginx memfd）及FD/NNP/seccomp元数据通过，非SDK路径/unknown不接受。新增断言先RED后GREEN；`test-guardian-nginx.py`、`test-trusted-provider.py`、`test-owned-runtime.py`均exit0。详见 [D2d2 checkpoint](HOMEPUBLISH-D2D2-CHECKPOINT.md)。**仍是真实vertical subset，不是完整依赖/目标authority闭合：target安装manifest/签名、不可变路径/mount gate、各支持OpenSSL版本provider布局、aarch64/BusyBox/procd及Nginx配置语义来源仍未验；不把trace/ptrace/maps当sameUID边界，不宣称通用load_module/include解析闭合。** production `ENOTSUP`、Start/Apply unsupported、`activation_ready=false`、helper78保持。
+
 
 新增 server-owned host-test manifest + FD exact-byte digest copy + sealed loader/Nginx memfd + 五实际依赖私有readonly native-owned snapshot，真实 maps 验闭包、恶意LD/OPENSSL环境清除。14拒绝回归（exec替换正式RED→GREEN，其余补充覆盖）、完整make七targets exit0、8真实Nginx lifecycle native cleanup通过。详见 [D2d1 checkpoint](HOMEPUBLISH-D2D1-CHECKPOINT.md)。**库snapshot仍经private path，未对sameUID/root或runtime-parent替换建立kernel immutable authority；target安装manifest/namespace能力尚未验，production API ENOTSUP。不是production trust closed。** Start/Apply unsupported/activation_ready=false/helper78保持；parent验证与独立review待做。
 

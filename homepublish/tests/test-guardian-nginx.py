@@ -12,6 +12,8 @@ LUA='/home/eric/homestun-sdk-check/local-tools/usr/bin/lua5.1'
 SHARE=ROOT/'homepublish/files/usr/share/homepublish'
 EVIDENCE=pathlib.Path(os.environ.get('HP_D2B2_EVIDENCE','/home/eric/homestun-sdk-check/d2b2-nginx-evidence'))
 EVIDENCE.mkdir(parents=True,exist_ok=True)
+assert 'OPENSSL_CONF=' in (SRC/'trusted-nginx.c').read_text()
+assert 'openssl.cnf' in (SRC/'owned-runtime.inc').read_text()
 results=[]
 def cleanup_snapshot(d, tracked, p):
     runtime=d/'runtime'
@@ -42,6 +44,16 @@ def wait_for(fn,seconds=3):
         except (OSError,ssl.SSLError):pass
         time.sleep(.02)
     raise AssertionError('bounded condition not reached')
+def elf_map_set(pid,runtime):
+    """Return only file-backed ELF candidates, not a substring exclusion."""
+    out=set()
+    for line in pathlib.Path('/proc',str(pid),'maps').read_text().splitlines():
+        fields=line.split(None,5)
+        if len(fields)<6: continue
+        path=fields[5].strip()
+        if path.startswith('/memfd:') or path.startswith(str(runtime)+'/'):
+            out.add(path)
+    return out
 def compile_fixture(d):
     files=["lib/libc.so","usr/sbin/nginx","usr/lib/libpcre2-8.so.0.11.2","usr/lib/libssl.so.3","usr/lib/libcrypto.so.3","usr/lib/libz.so.1.3.1","lib/libgcc_s.so.1"]
     names=["loader","nginx","libpcre2-8.so.0","libssl.so.3","libcrypto.so.3","libz.so.1","libgcc_s.so.1"]
@@ -165,13 +177,19 @@ try:
                     environ=pathlib.Path('/proc',str(master),'environ').read_bytes().split(b'\0')
                     # Nginx rewrites argv/environ for its process title; forbidden markers
                     # must not survive, but PATH visibility is not promised.
-                    assert not any(b'/not-trusted' in x or x.startswith((b'LD_',b'OPENSSL_',b'HP_')) for x in environ),environ
-                    maps=pathlib.Path('/proc',str(master),'maps').read_text()
-                    assert '/memfd:hp-loader' in maps and '/memfd:hp-nginx' in maps,maps
-                    for name in ('libpcre2-8.so.0','libssl.so.3','libcrypto.so.3','libz.so.1','libgcc_s.so.1'):
-                        assert str(d/'runtime'/name) in maps,(name,maps)
-                    assert str(SDK) not in maps,maps
-                    record['verified_actual_dependency_maps']=True;record['environment_injection_removed']=True
+                    assert not any(b'/not-trusted' in x or x.startswith((b'LD_',b'HP_')) for x in environ),environ
+                    trace=(d/'runtime/provider-init.trace').read_text()
+                    assert 'OPENSSL_CONF='+str(d/'runtime/openssl.cnf') in trace,trace
+                    assert 'OPENSSL_MODULES='+str(d/'runtime') in trace,trace
+                    assert '/not-trusted' not in trace and 'OPENSSL_ENGINES='+str(d/'runtime') in trace,trace
+                    record['fixed_execve_environment_evidence']=trace
+                    expected={str(d/'runtime'/name) for name in ('libpcre2-8.so.0','libssl.so.3','libcrypto.so.3','libz.so.1','libgcc_s.so.1')}
+                    expected.add('/memfd:hp-loader (deleted)')
+                    expected.add('/memfd:hp-nginx (deleted)')
+                    map_records={str(pid):sorted(elf_map_set(pid,d/'runtime')) for pid in (master,*workers)}
+                    assert all(set(values)==expected for values in map_records.values()),map_records
+                    assert all(str(SDK) not in values for values in map_records.values()),map_records
+                    record['verified_actual_dependency_maps']=map_records;record['environment_injection_removed']=True
                     record['fd_roles']={str(pid):{q.name:os.readlink(q) for q in pathlib.Path('/proc',str(pid),'fd').iterdir()} for pid in (guardian,watchdog,master,*workers)}
                     record['worker_boundary']={str(pid):{line.split(':')[0]:line.split(':',1)[1].strip() for line in pathlib.Path('/proc',str(pid),'status').read_text().splitlines() if line.startswith(('Uid:','Gid:','NoNewPrivs:','Seccomp:'))} for pid in (master,*workers)}
                     assert all(v['NoNewPrivs']=='1' and v['Seccomp']=='2' for v in record['worker_boundary'].values())
@@ -179,6 +197,9 @@ try:
                         os.kill(workers[0],signal.SIGKILL)
                         new=wait_for(lambda:children(master) if len(children(master))==2 and workers[0] not in children(master) else None)
                         tracked.update(new);owned.update(new);record['rebuilt_workers']=new
+                        rebuilt_maps={str(pid):sorted(elf_map_set(pid,d/'runtime')) for pid in new}
+                        assert all(set(values)==expected for values in rebuilt_maps.values()),rebuilt_maps
+                        record['respawn_worker_dependency_maps']=rebuilt_maps
                         # The deliberately killed worker may own the first stream.
                         # Start a new measured stream only after worker rebuild.
                         stream.close();stream=connect('127.0.0.1',port,ctx)

@@ -4,7 +4,7 @@
  * Unknown/replaced/hardlinked entries are residuals, never deletion authority. */
 #include "owned-runtime.h"
 #include <fcntl.h>
-static const char *owned_names[]={"cert.pem","key.pem","nginx.conf","nginx.pid","loader","nginx","libpcre2-8.so.0","libssl.so.3","libcrypto.so.3","libz.so.1","libgcc_s.so.1"};
+static const char *owned_names[]={"cert.pem","key.pem","nginx.conf","nginx.pid","loader","nginx","libpcre2-8.so.0","libssl.so.3","libcrypto.so.3","libz.so.1","libgcc_s.so.1","openssl.cnf","provider-init.trace"};
 #define HP_OWNED_FILES (sizeof(owned_names)/sizeof(owned_names[0]))
 struct owned_entry { dev_t dev; ino_t ino; int fd; _Atomic int registered; _Atomic int written; };
 struct hp_owned_runtime {

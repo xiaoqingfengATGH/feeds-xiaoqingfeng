@@ -55,12 +55,28 @@ int hp_trusted_nginx_exec(struct hp_owned_runtime *r,const char *prefix) {
   free(p);if(rc)return -1;
   if(fchmodat(hp_owned_dirfd(r),hp_trust_entries[i].name,i<2?0500:0400,0))return -1;
  }
+ /* The provider must not consume the host's /etc/ssl/openssl.cnf.  Publish a
+  * fixed, empty configuration through the same owned ledger and point every
+  * OpenSSL consumer at that inode.  The module and engine search roots are
+  * the owned runtime, which contains no loadable module. */
+ static const char empty_openssl_conf[]="# HomePublish fixed empty OpenSSL configuration\n";
+ if(hp_owned_file(r,11,empty_openssl_conf,sizeof(empty_openssl_conf)-1))return -1;
+ if(fchmodat(hp_owned_dirfd(r),"openssl.cnf",0400,0))return -1;
  char loader[4096],exe[4096],libs[4096];
- if(snprintf(libs,sizeof(libs),"%s/runtime",prefix)>=(int)sizeof(libs) || snprintf(loader,sizeof(loader),"/proc/self/fd/%d",execfds[0])>=(int)sizeof(loader) || snprintf(exe,sizeof(exe),"/proc/self/fd/%d",execfds[1])>=(int)sizeof(exe)){errno=EOVERFLOW;return -1;}
+ char conf[4096],modules[4096],engines[4096];
+ if(snprintf(libs,sizeof(libs),"%s/runtime",prefix)>=(int)sizeof(libs) ||
+    snprintf(conf,sizeof(conf),"OPENSSL_CONF=%s/runtime/openssl.cnf",prefix)>=(int)sizeof(conf) ||
+    snprintf(modules,sizeof(modules),"OPENSSL_MODULES=%s/runtime",prefix)>=(int)sizeof(modules) ||
+    snprintf(engines,sizeof(engines),"OPENSSL_ENGINES=%s/runtime",prefix)>=(int)sizeof(engines) ||
+    snprintf(loader,sizeof(loader),"/proc/self/fd/%d",execfds[0])>=(int)sizeof(loader) ||
+    snprintf(exe,sizeof(exe),"/proc/self/fd/%d",execfds[1])>=(int)sizeof(exe)){errno=EOVERFLOW;return -1;}
+ char trace[8192];
+ int tn=snprintf(trace,sizeof(trace),"execve-env PATH=/usr/bin:/bin LANG=C %s %s %s\nOPENSSL_CONF=%s/runtime/openssl.cnf\nOPENSSL_MODULES=%s/runtime\nOPENSSL_ENGINES=%s/runtime\n",conf,modules,engines,prefix,prefix,prefix);
+ if(tn<0 || (size_t)tn>=sizeof(trace) || hp_owned_file(r,12,trace,(size_t)tn))return -1;
  /* A verified private readonly snapshot under the trusted-provider contract,
   * NOT immutable against same-UID/root interference. Target mount gate open. */
  char *argv[]={loader,"--library-path",libs,exe,"-p",libs,"-c","nginx.conf",NULL};
- char *env[]={"PATH=/usr/bin:/bin","LANG=C",NULL};
+ char *env[]={"PATH=/usr/bin:/bin","LANG=C",conf,modules,engines,NULL};
  execve(loader,argv,env);return -1;
 }
 #else

@@ -1,6 +1,6 @@
 # Requirements
 
-本轮 observer-finally medium 修复已正式TDD：raw.maps/metadata JSON/observation JSON写失败均不再跳过owned tracee终止/reap/runtime及源TLS清理；原错误、evidence_errors、cleanup_residual分列，有界secret-free stderr fallback，写失败仍非零。旧P1完整maps修复保持closed。Stop-repeat历史readiness失败仍unresolved；仅加下次失败兜底前role/read errno/单调timing/inode诊断，不以本轮未复现关闭。受影响audit-regressions/owned-runtime/openssl-engine/guardian-nginx通过；确切命令、日志及发布禁激活gate见D2d2 checkpoint。下一步转功能controller内部状态/Save-pending/Stop-intent切片，不扩大安全底座；production ENOTSUP/helper78/Start Apply unsupported/activation_ready=false保持。父复验与独立review待。
+当前功能主线：D2内部controller可运行纵向切片已完成本地验证（非生产激活）。canonical committed revision→内部Lua controller→固定HP_GUARD_TEST native adapter→真实受监管Nginx TLS；Save不启动，运行中Save保持active并显示pending；内部显式approval/exact host scope Start，controller自主有限renew跨1.4秒多个窗口；Stop先持久撤意图再停provider，native runtime/子进程清理确认、旧generation与Stop后Save不复活，跨进程CLI Stop由controller观察执行。源码commit 2717852；全套controller/product/direct/guardian-nginx exit0，日志controller-full-verified.log。Apply controlled replace、temporary真实deadline验收、健康/readiness权威与恢复是下一功能切片，不半实现；安全深化暂停，最终统一复评。production CLI Start/Apply unsupported、ENOTSUP/helper78、activation_ready=false保持。详见D2 controller checkpoint。
 
 ## 当前授权与阶段
 
@@ -42,7 +42,7 @@ Status: 正式模式方向确认；最终生命周期设计已整理，adapter�
 
 ## REQ-004 — 持续/临时发布、内部有限能力及恢复
 
-当前安全底座收尾：observer证据写失败阻断cleanup的medium已TDD修复，旧maps P1保持closed，Stop-repeat仍unresolved并补兜底前诊断。下一功能切片实现内部controller plan/state、Save-pending与Stop-intent/status；manifest/immutablelibs/target能力列为发布禁激活gate，不继续扩安全长链。Start/Apply unsupported、ENOTSUP/helper78、activation_ready=false保持，细节见D2d2 checkpoint。
+当前功能主线：D2内部controller可运行纵向切片已完成本地验证（非生产激活）。canonical committed revision→内部Lua controller→固定HP_GUARD_TEST native adapter→真实受监管Nginx TLS；Save不启动，运行中Save保持active并显示pending；内部显式approval/exact host scope Start，controller自主有限renew跨1.4秒多个窗口；Stop先持久撤意图再停provider，native runtime/子进程清理确认、旧generation与Stop后Save不复活，跨进程CLI Stop由controller观察执行。源码commit 2717852；全套controller/product/direct/guardian-nginx exit0，日志controller-full-verified.log。Apply controlled replace、temporary真实deadline验收、健康/readiness权威与恢复是下一功能切片，不半实现；安全深化暂停，最终统一复评。production CLI Start/Apply unsupported、ENOTSUP/helper78、activation_ready=false保持。详见D2 controller checkpoint。
 
 最新恢复补充：`7c9e8d2` 后正式接入 actual-Nginx `openssl-engine` 回归，SDK constructor恶意module在旧环境fixture RED真实open/maps/marker，当前固定空config GREEN无ambient/module访问；八target完整本地make exit0，证据与命令见 docs/HOMEPUBLISH-D2D2-CHECKPOINT.md，当前入口 docs/HOMEPUBLISH-RESUME-CHECKPOINT.md。observer仅隔离观测、bind前终止，不代表native guardian cleanup或sameUID边界。仍仅本地subset/自检，父独立审查待；production ENOTSUP、helper78、Start/Apply unsupported、activation_ready=false保持；安装签名、不可变库路径/musl fallback、controller/TLS、typed durable residual/partial prepare与matching SDK/真目标仍blocked。
 

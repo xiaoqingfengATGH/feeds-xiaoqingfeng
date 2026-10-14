@@ -1,6 +1,6 @@
 # HomePublish 已恢复：当前续跑入口
 
-本轮 observer-finally medium 修复已正式TDD：raw.maps/metadata JSON/observation JSON写失败均不再跳过owned tracee终止/reap/runtime及源TLS清理；原错误、evidence_errors、cleanup_residual分列，有界secret-free stderr fallback，写失败仍非零。旧P1完整maps修复保持closed。Stop-repeat历史readiness失败仍unresolved；仅加下次失败兜底前role/read errno/单调timing/inode诊断，不以本轮未复现关闭。受影响audit-regressions/owned-runtime/openssl-engine/guardian-nginx通过；确切命令、日志及发布禁激活gate见D2d2 checkpoint。下一步转功能controller内部状态/Save-pending/Stop-intent切片，不扩大安全底座；production ENOTSUP/helper78/Start Apply unsupported/activation_ready=false保持。父复验与独立review待。
+当前功能主线：D2内部controller可运行纵向切片已完成本地验证（非生产激活）。canonical committed revision→内部Lua controller→固定HP_GUARD_TEST native adapter→真实受监管Nginx TLS；Save不启动，运行中Save保持active并显示pending；内部显式approval/exact host scope Start，controller自主有限renew跨1.4秒多个窗口；Stop先持久撤意图再停provider，native runtime/子进程清理确认、旧generation与Stop后Save不复活，跨进程CLI Stop由controller观察执行。源码commit 2717852；全套controller/product/direct/guardian-nginx exit0，日志controller-full-verified.log。Apply controlled replace、temporary真实deadline验收、健康/readiness权威与恢复是下一功能切片，不半实现；安全深化暂停，最终统一复评。production CLI Start/Apply unsupported、ENOTSUP/helper78、activation_ready=false保持。详见D2 controller checkpoint。
 
 本轮已按用户恢复指令续跑，不再处于关机暂停状态。独占 worktree `D:/DevPortal/homelede/homepublish-product`，branch `feature/homepublish-product`，恢复基线 `7c9e8d2907b90ad013dae2750eb484e983e6e50e`。当前修复提交可由 `git log -1` 读取；父任务应先独立复跑并审查，再进入下一slice。
 

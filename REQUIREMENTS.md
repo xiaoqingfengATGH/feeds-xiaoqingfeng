@@ -1,6 +1,6 @@
 # Requirements
 
-当前功能主线：D2内部controller可运行纵向切片已完成本地验证（非生产激活）。canonical committed revision→内部Lua controller→固定HP_GUARD_TEST native adapter→真实受监管Nginx TLS；Save不启动，运行中Save保持active并显示pending；内部显式approval/exact host scope Start，controller自主有限renew跨1.4秒多个窗口；Stop先持久撤意图再停provider，native runtime/子进程清理确认、旧generation与Stop后Save不复活，跨进程CLI Stop由controller观察执行。源码commit 2717852；全套controller/product/direct/guardian-nginx exit0，日志controller-full-verified.log。Apply controlled replace、temporary真实deadline验收、健康/readiness权威与恢复是下一功能切片，不半实现；安全深化暂停，最终统一复评。production CLI Start/Apply unsupported、ENOTSUP/helper78、activation_ready=false保持。详见D2 controller checkpoint。
+当前功能主线：D2 controlled Apply/temporary/readiness 本地切片完成，源码 `926311e`。内部明确approval与固定scope核验后stop/reap旧代、启动新generation，真实TLS+HTTP readiness成功才提交active/running；失败保留历史active、attempted/candidate并标active_verified=false、stage/error/cleanup，不假保旧仍运行。两backend marker/counter证明Save仍旧流量、Apply真实切换。真实60秒temporary首次绝对截止经Save/Apply不延，持续stream与新listener到原截止关闭、desired撤销；修复长会话双guard心跳队列累积导致约9秒误关。committed源码 `make controller product direct guardian-nginx` exit0（64条PASS输出，非64独立用例），证据 `/home/eric/homestun-sdk-check/controller-apply-committed.log` 及 `.exit`。下一功能方向scoped RPC/UI状态/Save/Stop与内部受控入口；双栈多服务controller、bounded recovery/时钟可信/重启仍未完成。安全深化暂停，最终统一复评清单保持未完成；production CLI Start/Apply unsupported、ENOTSUP/helper78、activation_ready=false不变，非产品完成。
 
 ## 当前授权与阶段
 
@@ -42,7 +42,7 @@ Status: 正式模式方向确认；最终生命周期设计已整理，adapter�
 
 ## REQ-004 — 持续/临时发布、内部有限能力及恢复
 
-当前功能主线：D2内部controller可运行纵向切片已完成本地验证（非生产激活）。canonical committed revision→内部Lua controller→固定HP_GUARD_TEST native adapter→真实受监管Nginx TLS；Save不启动，运行中Save保持active并显示pending；内部显式approval/exact host scope Start，controller自主有限renew跨1.4秒多个窗口；Stop先持久撤意图再停provider，native runtime/子进程清理确认、旧generation与Stop后Save不复活，跨进程CLI Stop由controller观察执行。源码commit 2717852；全套controller/product/direct/guardian-nginx exit0，日志controller-full-verified.log。Apply controlled replace、temporary真实deadline验收、健康/readiness权威与恢复是下一功能切片，不半实现；安全深化暂停，最终统一复评。production CLI Start/Apply unsupported、ENOTSUP/helper78、activation_ready=false保持。详见D2 controller checkpoint。
+当前功能主线：D2 controlled Apply/temporary/readiness 本地切片完成，源码 `926311e`。内部明确approval与固定scope核验后stop/reap旧代、启动新generation，真实TLS+HTTP readiness成功才提交active/running；失败保留历史active、attempted/candidate并标active_verified=false、stage/error/cleanup，不假保旧仍运行。两backend marker/counter证明Save仍旧流量、Apply真实切换。真实60秒temporary首次绝对截止经Save/Apply不延，持续stream与新listener到原截止关闭、desired撤销；修复长会话双guard心跳队列累积导致约9秒误关。committed源码 `make controller product direct guardian-nginx` exit0（64条PASS输出，非64独立用例），证据 `/home/eric/homestun-sdk-check/controller-apply-committed.log` 及 `.exit`。下一功能方向scoped RPC/UI状态/Save/Stop与内部受控入口；双栈多服务controller、bounded recovery/时钟可信/重启仍未完成。安全深化暂停，最终统一复评清单保持未完成；production CLI Start/Apply unsupported、ENOTSUP/helper78、activation_ready=false不变，非产品完成。
 
 最新恢复补充：`7c9e8d2` 后正式接入 actual-Nginx `openssl-engine` 回归，SDK constructor恶意module在旧环境fixture RED真实open/maps/marker，当前固定空config GREEN无ambient/module访问；八target完整本地make exit0，证据与命令见 docs/HOMEPUBLISH-D2D2-CHECKPOINT.md，当前入口 docs/HOMEPUBLISH-RESUME-CHECKPOINT.md。observer仅隔离观测、bind前终止，不代表native guardian cleanup或sameUID边界。仍仅本地subset/自检，父独立审查待；production ENOTSUP、helper78、Start/Apply unsupported、activation_ready=false保持；安装签名、不可变库路径/musl fallback、controller/TLS、typed durable residual/partial prepare与matching SDK/真目标仍blocked。
 

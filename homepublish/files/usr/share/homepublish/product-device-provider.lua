@@ -34,7 +34,8 @@ function M.renew()
  return run("test -f "..root.."/nginx.pid && kill -0 $(cat "..root.."/nginx.pid)")
 end
 function M.stop()
- if not run('/etc/init.d/homepublish-nginx stop') then return false end
+ local stopped=run('/etc/init.d/homepublish-nginx stop')
+ if not stopped and M.renew() then return false end
  -- procd terminates the master, which terminates its workers and connections.
  for i=1,10 do
   if not M.renew() then

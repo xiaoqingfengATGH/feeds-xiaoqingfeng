@@ -13,9 +13,9 @@ local function read(s)
  end
 end
 function M.listen()
- assert(fs.mkdir('/var/run/homepublish',448) or fs.stat('/var/run/homepublish','type')=='dir')
- assert(fs.chmod('/var/run/homepublish',448));fs.unlink(path)
- local s=assert(n.socket('unix','stream'));assert(s:bind(path));assert(fs.chmod(path,384));assert(s:listen(8));return s
+ assert(fs.mkdir('/var/run/homepublish','700') or fs.stat('/var/run/homepublish','type')=='dir')
+ assert(fs.chmod('/var/run/homepublish','700'));fs.unlink(path)
+ local s=assert(n.socket('unix','stream'));assert(s:bind(path));assert(fs.chmod(path,'600'));assert(s:listen(8));return s
 end
 function M.receive(server)
  if not ready(server,1000) then return nil end

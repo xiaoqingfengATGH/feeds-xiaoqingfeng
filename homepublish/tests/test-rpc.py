@@ -12,13 +12,15 @@ def main():
   script=PLUGIN.read_text().replace('/usr/bin/lua',c.LUA).replace('/usr/share/homepublish',str(c.SHARE))
   p=d/'homepublish';p.write_text(script);p.chmod(0o755)
   env={**os.environ,'LUA_CPATH':str(d/'?.so')}
-  methods=json.loads(subprocess.check_output([str(p),'list'],env=env));assert set(methods)=={'status','validate','save','stop'},methods
+  methods=json.loads(subprocess.check_output([str(p),'list'],env=env));assert set(methods)=={'status','validate','save','stop','start','apply'},methods
   def rpc(method,args={}):
    r=subprocess.run([str(p),'call',method],input=json.dumps(args),text=True,capture_output=True,env=env,timeout=3)
    assert r.returncode==0,(r.stdout,r.stderr);return json.loads(r.stdout)
   cfg={'schema_version':1,'services':[{'service_id':'nas','name':'NAS','hostname':'nas.example.test','backend':{'host':'192.168.1.10','port':8080,'allowed_ranges':['192.168.1.0/24']},'certificate_ref':'acme:nas','authentication_review':{'authentication':'confirmed','management':False}}],'access_profile':{'methods_allowed':['manual_ipv4'],'listeners':[{'family':'ipv4','address':'192.168.1.2','interface':'wan','zone':'wan','protocol':'tcp','internal_port':8443,'external_port':18443}]}}
   assert rpc('status',{'ubus_rpc_session':'a'*32})['saved_revision']==0
   assert rpc('status')['saved_revision']==0
+  assert 'error' in rpc('start',{'revision':0,'approved':True})
+  assert 'error' in rpc('apply',{'revision':0,'approved':True})
   v=rpc('validate',{'config':cfg});assert v['valid'] and v['config']['publication_policy']=={'mode':'continuous','boot_restore':False}
   assert rpc('status')['saved_revision']==0
   s=rpc('save',{'expected_revision':0,'config':cfg});assert s['saved_revision']==1 and s['pending_config']['apply_required'] and 'active_revision' not in s

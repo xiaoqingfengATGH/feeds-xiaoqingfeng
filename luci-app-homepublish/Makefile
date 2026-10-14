@@ -6,6 +6,8 @@ PKG_RELEASE:=7
 PKG_LICENSE:=Apache-2.0
 PKGARCH:=all
 LUCI_TITLE:=HomePublish settings and configuration status
+LUCI_MINIFY_JS:=0
+LUCI_MINIFY_CSS:=0
 LUCI_DEPENDS:=+homepublish +luci-base
 include $(TOPDIR)/feeds/luci/luci.mk
 

@@ -1,5 +1,7 @@
 # Requirements
 
+Latest Feature3 partial device DNS/TLS/certificate-replacement acceptance and HomeVPN adapter steering: see docs/HOMEPUBLISH-DEVICE-INTEGRATIONS-CHECKPOINT.md (relative to repository root). Business ACME activation, DNS-answer-change, independent LAN return path and proxy reload remain unverified; do not call Feature3 complete.
+
 > **Current simplified architecture (supersedes historical guard/security gates below):** Lua controller + standard procd dedicated foreground Nginx, ordinary process lifecycle and private permissions; no device C broker/dual guardians/seccomp/memfd/short capability in active package. Normal Stop/temporary/controller lifecycle does not guarantee millisecond hard interruption or independent frozen-controller fail-close. Persisted Stop latch, Save pending, explicit Apply, original temporary deadline and bounded recovery remain. Real device scoped ubus Start/TLS A → Save pending A → Apply TLS B → Stop/keepalive EOF and SDK r3 source binding passed; fixed loopback test profile only. UI Start/Apply still disabled and public production unsupported. Feature3 ACME/DDNS/DNS/Passwall2 integration remains. See [simplified acceptance checkpoint](docs/HOMEPUBLISH-DEVICE-SIMPLIFY-CHECKPOINT.md).
 
 

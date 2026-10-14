@@ -3,26 +3,15 @@
 -- No issuance, provider credentials, DDNS mutations or proxy configuration.
 local M={}
 local function hostname(s)return type(s)=='string' and #s<=253 and s:match('^[a-z0-9][a-z0-9.%-]*$') and not s:find('..',1,true) end
-function M.acme_source(ref,host,get)
- local section=type(ref)=='string' and ref:match('^acme:([a-zA-Z0-9_][a-zA-Z0-9_%-]*)$')
- if not section or not hostname(host) then return nil,'invalid ACME reference' end
- get=get or function(s,k)return require('uci').cursor():get('acme',s,k)end
- if get(section,'enabled')=='0' then return nil,'ACME section disabled' end
- local domains=get(section,'domains');if type(domains)=='string' then local a={};for d in domains:gmatch('%S+') do a[#a+1]=d end;domains=a end
- if type(domains)~='table' or not hostname(domains[1]) then return nil,'ACME domains unavailable' end
- local match=false;for _,d in ipairs(domains) do if d==host then match=true end end
- if not match then return nil,'hostname not in ACME section' end
- local kind=get(section,'key_type');local old=get(section,'keylength')
- if not kind then kind=old and (old:match('^ec%-') and old:gsub('ec%-','ec') or 'rsa'..old) or 'ec256' end
- if not kind:match('^ec%d+$') and not kind:match('^rsa%d+$') then return nil,'unsupported ACME key type' end
- local dir='/etc/acme'
- if not get or type(get)~='function' then return nil,'ACME reader' end
- -- Current device uses default state_dir; refuse rather than guess custom roots.
- local global=require('uci').cursor();local custom
- global:foreach('acme','acme',function(s)custom=custom or s.state_dir end)
- if custom and custom~='/etc/acme' then return nil,'custom ACME state_dir unsupported' end
- dir=dir..'/'..domains[1]..(kind:match('^ec') and '_ecc' or '')
- return {certificate=dir..'/fullchain.cer',key=dir..'/'..domains[1]..'.key',reference=ref,hostname=host}
+function M.acme_source(domain,kind)
+ -- HomeVPN identity: explicit domain + rsa/ecc, never infer or cross-type fallback.
+ -- Call only after explicit certificate choice; resolver reads keys server-side.
+ if not hostname(domain) or (kind~='rsa' and kind~='ecc') then return nil,'explicit HomeVPN domain/key type required' end
+ local f=io.popen(". /usr/share/homevpn/acme-resolve.sh; homevpn_acme_resolve '"..domain.."' '"..kind.."' && printf '%s\\n%s\\n' \"$HV_ACME_CRT\" \"$HV_ACME_KEY\"")
+ if not f then return nil,'HomeVPN resolver unavailable' end
+ local cert=f:read('*l');local key=f:read('*l');f:close()
+ if not cert or not key or cert=='' or key=='' then return nil,'HomeVPN resolver rejected certificate' end
+ return {certificate=cert,key=key,domain=domain,key_type=kind}
 end
 function M.resolve(host)
  if not hostname(host) then return nil,'invalid resolver hostname' end

@@ -71,3 +71,16 @@
 ## Worker 分工
 - **Worker A（源码）**：只做步骤 1-5 + 步骤 10 的 docs/commit。不碰设备、不跑 SDK。
 - **Worker B（构建+实机）**：读 Worker A 的 commit 与本文件，做步骤 6-9 + 最终 docs/commit。
+
+## 进度快照（2026-10-15 收工，commit e40a679）
+- 步骤 1-6 已完成：r9 源码全量落地 + SDK 双 IPK 构建并安装实机（127.0.0.1:222，capabilities 全 true，四 tab 正常）。
+- **用户新指令（覆盖上文本地测试流程）**：
+  1. 禁止一切本地测试（WSL Lua/chroot fixture/node 全套）——脚本直接上实机跑。
+  2. 日常迭代不编 IPK：改完源码 scp 直传实机安装路径（如 /usr/share/homepublish/*.lua、/www/luci-static/resources/view/homepublish/*.js），重启 daemon（rpcd reload 等）后实机验证。IPK 仅里程碑版本用。
+  3. 每阶段完成即停，无用户指令不进下一步。
+- **步骤 7/8 中断点**：实机 lifecycle 跑到「入口页 Save」被 `保存失败：array size` 拒。
+  - 根因：canonical `array(c.services,1,16)` 与 r9「先存入口后加服务」拆页流程冲突。
+  - 修复（已 commit e40a679，**未上机**）：canonical.lua L101 → `array(c.services,0,16)`（Start 空配置仍被 runtime_plan `no enabled services` 拒，test-canonical.lua 已锁语义）；r9-device-lifecycle.cjs 会话 ACL 补 `uci get`。
+  - 本地曾跑过 canonical/product/rpc 回归全绿（controller 基线失败为 pre-existing 环境问题，非本次引入）。
+- **明天续接（等用户指令后）**：scp canonical.lua + r9-device-lifecycle.cjs 相关改动到实机 → rpcd reload → 跑 run-r9-device.py（或直接 node r9-device-lifecycle.cjs）继续步骤 8 全链路。
+- 实机脚本：`homepublish/tests/run-r9-device.py`（pre/setup/node lifecycle/finally cleanup 还原）+ `luci-app-homepublish/tests/r9-device-lifecycle.cjs`（选择器已按 r9 form.Map UI 适配：modal `.cbi-button-add`/`[data-field$=".xxx"]`、`.cbi-button-positive`、行编辑 `.cbi-button-edit`、双 input 用 .first()）。

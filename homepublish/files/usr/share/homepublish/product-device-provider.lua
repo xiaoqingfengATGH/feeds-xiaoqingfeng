@@ -11,27 +11,38 @@ local function run(s)return os.execute(s)==0 end
 local function write(name,bytes)local f=assert(io.open(root..'/'..name,'w'));assert(f:write(bytes));assert(f:close())end
 function M.plan(c)
  c=require('product-wire').decode(require('product-wire').encode(c))
- if #c.services~=1 or #c.access_profile.listeners~=1 then return nil,'device test scope denied' end
- local s=c.services[1];local l=c.access_profile.listeners[1]
- local business=s.hostname=='home.iwonderful.top' and s.certificate_ref=='acme:home_rsa'
- if s.service_id~='fixture' or (not business and (s.hostname~='service.home' or s.certificate_ref~='import:fixture')) or (s.backend.host~='127.0.0.1' and not (s.backend.addressFamily=='hostname' and s.backend.host=='localhost.lan')) or (s.backend.port~=49285 and s.backend.port~=49286) or s.authentication_review.authentication~='confirmed' or s.authentication_review.management then return nil,'device test service denied' end
+ if #c.services<1 or #c.services>2 or #c.access_profile.listeners~=1 then return nil,'device test scope denied' end
+ local l=c.access_profile.listeners[1];local services={};local hosts={}
+ for i,s in ipairs(c.services) do
+  local business=s.hostname=='home.iwonderful.top' and s.certificate_ref=='acme:home_rsa'
+  local fixture=s.hostname=='service.home' and s.certificate_ref=='import:fixture'
+  if (s.service_id~='fixture' and s.service_id~='fixture2') or hosts[s.hostname] or (not business and not fixture) or (s.backend.host~='127.0.0.1' and not (s.backend.addressFamily=='hostname' and s.backend.host=='localhost.lan')) or (s.backend.port~=49285 and s.backend.port~=49286) or s.authentication_review.authentication~='confirmed' or s.authentication_review.management then return nil,'device test service denied' end
+  hosts[s.hostname]=true
+  local source={certificate='/etc/homepublish/device-test/cert.pem',key='/etc/homepublish/device-test/key.pem'}
+  if business then local e;source,e=I.acme_source('home.iwonderful.top','rsa');if not source then return nil,e end end
+  for _,v in ipairs({source.certificate,source.key}) do if not v:match('^/[a-zA-Z0-9_./%-]+$') or v:find('..',1,true) then return nil,'trusted HomeVPN source path required' end end
+  services[i]={backend=s.backend,hostname=s.hostname,system_trust=business,certificate_source=source,cert_identity=cert_identity(source),certificate=root..'/cert'..i..'.pem',key=root..'/key'..i..'.pem'}
+ end
  if #c.access_profile.methods_allowed~=1 or c.access_profile.methods_allowed[1]~='manual_ipv4' or l.family~='ipv4' or l.address~='192.168.1.2' or l.interface~='br-lan' or l.zone~='lan' or l.internal_port~=49284 or l.external_port~=49284 then return nil,'device test listener denied' end
  -- Canonical intentionally disallows loopback publication. This server-owned
  -- profile narrows the approved model to loopback; it never broadens it.
  l.address='127.0.0.1';l.interface='lo'
- local plan,e=R.render(c,{resolve=I.resolve,authorize_listener=function(v)return v.address=='127.0.0.1' and v.internal_port==49284 end,authorize_backend=function(v)return v=='127.0.0.1' or v=='::1' end,healthy=function()return true end,certificate_snapshot=function()return {certificate='/tmp/homepublish-device/runtime/cert.pem',key='/tmp/homepublish-device/runtime/key.pem'}end})
+ local plan,e=R.render(c,{resolve=I.resolve,authorize_listener=function(v)return v.address=='127.0.0.1' and v.internal_port==49284 end,authorize_backend=function(v)return v=='127.0.0.1' or v=='::1' end,healthy=function()return true end,certificate_snapshot=function(ref,host)
+  for _,v in ipairs(services) do if v.hostname==host then return {certificate=v.certificate,key=v.key} end end
+ end})
  if plan then
-  local source={certificate='/etc/homepublish/device-test/cert.pem',key='/etc/homepublish/device-test/key.pem'}
-  if business then source,e=I.acme_source('home.iwonderful.top','rsa');if not source then return nil,e end end
-  for _,v in ipairs({source.certificate,source.key}) do if not v:match('^/[a-zA-Z0-9_./%-]+$') or v:find('..',1,true) then return nil,'trusted HomeVPN source path required' end end
-  plan.backend=s.backend;plan.certificate_source=source;plan.hostname=s.hostname;plan.system_trust=business;plan.cert_identity=cert_identity(source)
+  plan.services=services
+  -- Retain the historical single-service diagnostic fields for consumers.
+  for k,v in pairs(services[1]) do plan[k]=v end
  end
  return plan,e
 end
 function M.start(plan,g,t)
  if not run("test -f /etc/homepublish/device-test/enabled") then return false end
- local source=plan.certificate_source
- if not source or not run("umask 077; mkdir -p "..root.." && chmod 0700 "..root.." && cp "..source.certificate.." "..root.."/cert.pem && cp "..source.key.." "..root.."/key.pem && chmod 0600 "..root.."/*.pem") then return false end
+ if not run('umask 077; mkdir -p '..root..' && chmod 0700 '..root) then return false end
+ for _,v in ipairs(plan.services) do
+  if not run('umask 077; cp '..v.certificate_source.certificate..' '..v.certificate..' && cp '..v.certificate_source.key..' '..v.key..' && chmod 0600 '..v.certificate..' '..v.key) then return false end
+ end
  active_plan=plan
  -- Root master reads the private key; normal Nginx workers are nobody.
  write('nginx.conf','user nobody nogroup;\n'..plan.configuration)
@@ -40,23 +51,28 @@ function M.start(plan,g,t)
 end
 function M.readiness()
  if not active_plan then return false end
- local host=active_plan.hostname
- local trust=active_plan.system_trust and '' or ' --cacert /etc/homepublish/device-test/cert.pem'
- for i=1,30 do
-  if os.execute("env -u CURL_CA_BUNDLE -u SSL_CERT_FILE -u SSL_CERT_DIR /usr/bin/curl -q --noproxy '*' --connect-timeout 1 --max-time 1"..trust.." --resolve "..host..":49284:127.0.0.1 --fail --silent --output /dev/null https://"..host..":49284/")==0 then return true end
-  os.execute('sleep 1')
+ for _,v in ipairs(active_plan.services) do
+  local trust=v.system_trust and '' or ' --cacert /etc/homepublish/device-test/cert.pem'
+  local ready=false
+  for i=1,30 do
+   if os.execute("env -u CURL_CA_BUNDLE -u SSL_CERT_FILE -u SSL_CERT_DIR /usr/bin/curl -q --noproxy '*' --connect-timeout 1 --max-time 1"..trust.." --resolve "..v.hostname..":49284:127.0.0.1 --fail --silent --output /dev/null https://"..v.hostname..":49284/")==0 then ready=true;break end
+   os.execute('sleep 1')
+  end
+  if not ready then return false end
  end
- return false
+ return true
 end
 function M.renew()
  -- A changed certificate or DNS selection closes this generation; controller
  -- bounded recovery re-plans approved ACTIVE config, never pending saved edits.
  if active_plan and os.time()>=(next_check or 0) then
   next_check=os.time()+30
-  if not active_plan.cert_identity or cert_identity(active_plan.certificate_source)~=active_plan.cert_identity then return false end
-  if active_plan.backend.addressFamily=='hostname' then
-   local b=require('direct-backend').select(active_plan.backend,{resolve=I.resolve,authorize_backend=function(a)return a=='127.0.0.1' or a=='::1' end,healthy=function()return true end})
-   if not b or b.address~=active_plan.backends[1].address then return false end
+  for i,v in ipairs(active_plan.services) do
+   if not v.cert_identity or cert_identity(v.certificate_source)~=v.cert_identity then return false end
+   if v.backend.addressFamily=='hostname' then
+    local b=require('direct-backend').select(v.backend,{resolve=I.resolve,authorize_backend=function(a)return a=='127.0.0.1' or a=='::1' end,healthy=function()return true end})
+    if not b or b.address~=active_plan.backends[i].address then return false end
+   end
   end
  end
  -- Ordinary health observation, not a short capability/authorization heartbeat.

@@ -1,5 +1,12 @@
 # HomePublish 已恢复：当前续跑入口
 
+## 当前安装包切片（2026-10-14，本地，不是目标部署）
+
+实际官方 OpenWrt 24.10.5 x86/64 SDK 构建两只 IPK，源码归档 ec46452/6798609，无测试 adapter 入包。修复真实解包发现的 rpcd plugin 0644（RED）为 Git executable 0755（GREEN）。全部 product Lua（含 JSON/RPC/controller/lifecycle）、native ELF、依赖、menu/ACL/default disabled 已实际解包验收。详见 [安装包 checkpoint](HOMEPUBLISH-PACKAGE-CHECKPOINT.md)。
+
+init 不再走旧 UCI→NATMap lease：固定 lifecycle start 在 disabled 时无实例无曝光；stop 调真实 controller，先持久撤意图/latch，再固定 system provider；status 读持久 journal。生产 provider 尚缺，历史 active/attempted 不能证明清理时保留 unknown/blocked，不伪报成功；生产 Start/Apply 仍 unsupported。未注册/运行 procd daemon，未做真实 BusyBox/procd 目标安装验收；此项明确待验，不以 shell/包测试替代。普通用户 make product rpc 与实际 IPK 验收 exit0。fw4/UPnP、DNS/ACME/Passwall2、生产 provider/目标部署/公网及统一安全复评仍未完成。SSH 未恢复未重试，未部署/映射/防火墙/push/merge/PR。
+
+
 ## 当前功能入口：访问配置向导与分层状态（本地完成，非生产激活）
 
 服务/域名/证书 → 接入方式与策略 → canonical 只读预检/Save → 独立 Start 与分层结果为同页四步向导，前后导航保留输入；保留服务及双栈监听增删编辑。旁路由 manual IPv4 优先；direct IPv6 路由/入站许可非 DNAT；UPnP/STUN 只保存现有 schema 允许方式，明确适配器未接入、不执行映射或实验。生产 Start/Apply 继续 disabled/unsupported、activation_ready=false。

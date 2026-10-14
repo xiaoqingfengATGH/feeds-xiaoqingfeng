@@ -12,6 +12,17 @@ return baseclass.extend({
  start:rpc.declare({object:'homepublish',method:'start',params:['revision','approved'],expect:{},reject:true}),
  apply:rpc.declare({object:'homepublish',method:'apply',params:['revision','approved'],expect:{},reject:true}),
  checked:function(s){if(!s || s.error)throw new Error(s && s.error || 'State unavailable');return s;},
+ diff:function(before,after){
+  before=before || {};after=after || {};var out=[];
+  function changed(label,a,b){if(JSON.stringify(a)!==JSON.stringify(b))out.push(label+'：'+(a==null?'无':JSON.stringify(a))+' → '+(b==null?'无':JSON.stringify(b)));}
+  function cert(c,v){return {mode:v.certificate_mode || 'override',binding:v.certificate_mode==='inherit'?'继承入口默认':'独立指定',resolved:v.certificate_mode==='inherit'?c.default_certificate_ref:v.certificate_ref};}
+  changed('入口默认证书',before.default_certificate_ref,after.default_certificate_ref);
+  var old=before.services || [],next=after.services || [];
+  old.forEach(function(v){var n=next.find(function(x){return x.service_id===v.service_id;});if(!n){out.push('删除 '+v.hostname+'（应用关闭其连接，并替换整组）');return;}
+   var prefix=v.hostname+' / ';changed(prefix+'名称',v.name,n.name);changed(prefix+'域名',v.hostname,n.hostname);changed(prefix+'后端 / 家庭网段',v.backend,n.backend);changed(prefix+'证书绑定 / 解析证书',cert(before,v),cert(after,n));changed(prefix+'参与发布',v.enabled!==false,n.enabled!==false);changed(prefix+'业务鉴权 / 管理服务',v.authentication_review,n.authentication_review);
+  });next.forEach(function(v){if(!old.some(function(x){return x.service_id===v.service_id;}))out.push('新增 '+v.hostname+'：'+JSON.stringify(v)+'；证书 '+JSON.stringify(cert(after,v)));});
+  changed('监听 / 接入方式',before.access_profile,after.access_profile);changed('发布策略 / 开机恢复',before.publication_policy,after.publication_policy);return out;
+ },
  text:function(s){
   if(!s || s.error || !s.runtime || !s.desired_state)return 'State unavailable / unknown; not running';
   var r=s.runtime, running=r.phase==='running' && r.active_verified===true && s.desired_state.state==='enabled' && !s.desired_state.manual_stop_latch;

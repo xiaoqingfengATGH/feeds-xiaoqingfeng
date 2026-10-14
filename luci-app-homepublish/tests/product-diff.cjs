@@ -1,0 +1,10 @@
+const fs=require('node:fs'),assert=require('node:assert/strict');
+const api=Function('rpc','baseclass',fs.readFileSync(__dirname+'/../htdocs/luci-static/resources/view/homepublish/product.js','utf8'))({declare:()=>()=>{}},{extend:x=>x});
+const before=api.defaults();before.default_certificate_ref='acme:rsa';before.services[0].certificate_mode='inherit';
+const after=JSON.parse(JSON.stringify(before));after.default_certificate_ref='acme:ecc';after.services[0].name='Photos';after.services[0].hostname='photos.example.test';after.services[0].enabled=false;after.services[0].backend.port=9090;after.services[0].authentication_review.authentication='confirmed';after.access_profile.listeners[0].external_port=19443;after.publication_policy.mode='temporary';after.publication_policy.temporary_duration=600;
+const text=api.diff(before,after).join('\n');
+for(const value of ['名称','域名','后端','证书','acme:rsa','acme:ecc','继承','参与','监听','策略','鉴权','9090','19443'])assert.ok(text.includes(value),value+': '+text);
+assert.ok(api.diff(before,{...after,services:[]}).join('\n').includes('删除'));
+assert.ok(api.diff(null,after).join('\n').includes('新增'));
+assert.equal(api.diff(before,before).length,0);
+console.log('PASS complete concrete Apply diff / add / delete / unchanged');

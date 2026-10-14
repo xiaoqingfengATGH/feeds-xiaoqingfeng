@@ -10,6 +10,8 @@ controller:
 	python3 test-controller-multi.py
 controller-multi:
 	python3 test-controller-multi.py
+controller-recovery:
+	python3 test-controller-recovery.py
 audit-regressions:
 	python3 test-audit-regressions.py maps
 	python3 test-audit-regressions.py compiler

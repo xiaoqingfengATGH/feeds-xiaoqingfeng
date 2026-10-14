@@ -4,6 +4,7 @@ local root=arg[2];local port=tonumber(arg[3]);local backend=tonumber(arg[4]);loc
 local native=require('homepublish_controller_test');local renderer=require('direct-renderer');local wire=require('product-wire')
 local p={};local fault=nil
 function p.plan(c)
+ if fault=='plan' then return nil,'fixture revalidation failed' end
  if #c.services<1 or #c.services>2 or #c.access_profile.listeners<1 or #c.access_profile.listeners>2 then return nil,'fixture scope denied' end
  local methods={};for _,m in ipairs(c.access_profile.methods_allowed) do if m~='manual_ipv4' and m~='direct_ipv6' then return nil,'fixture scope denied' end;methods[m]=true end
  for _,s in ipairs(c.services) do
@@ -37,13 +38,17 @@ function p.readiness(plan)
 end
 function p.renew()return native.renew()end
 function p.stop()local ok=native.stop();return ok and fault~='cleanup'end
-local c=require('product-controller').new(p)
+local offset=0;local trusted=true;local boot='fixture-boot'
+local c=require('product-controller').new(p,{clock=function()return {now=os.time()+offset,boot_id=boot,trusted=trusted}end})
+c.restore()
 io.stdout:setvbuf('no');io.stdin:setvbuf('no')
 while true do
  if native.ready() then
   local line=io.stdin:read('*l');if not line then c.stop();break end
   local req=wire.decode(line);local response
   if req.action=='fault' then fault=req.stage;response=c.status()
+  elseif req.action=='clock' then offset=req.offset or offset;trusted=req.trusted~=false;boot=req.boot_id or boot;response=c.status()
+  elseif req.action=='detach' then response=c.status()
   elseif req.action=='start' then response=c.start(req.revision,req.approved)
   elseif req.action=='apply' then response=c.apply(req.revision,req.approved)
   elseif req.action=='stop' then response=c.stop()
@@ -51,6 +56,6 @@ while true do
   elseif req.action=='exit' then response=c.stop()
   else response=c.status() end
   io.stdout:write(wire.encode(response),'\n')
-  if req.action=='exit' then break end
+  if req.action=='exit' or req.action=='detach' then break end
  else c.tick() end
 end

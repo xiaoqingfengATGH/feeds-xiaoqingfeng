@@ -29,8 +29,8 @@ local function validate_state(s)
  assert(s.desired_state.state=='disabled' or s.desired_state.state=='enabled','journal desired')
  assert(type(s.desired_state.manual_stop_latch)=='boolean','journal latch')
  assert(not s.desired_state.manual_stop_latch or s.desired_state.state=='disabled','latched enabled intent')
- known(s.runtime,{phase=true,generation=true,last_error=true,cleanup=true,expires_at=true,stage=true,active_verified=true,services=true})
- local phases={unsupported=true,cleanup_required=true,starting=true,running=true,stopping=true,stopped=true,blocked=true}
+ known(s.runtime,{phase=true,generation=true,last_error=true,cleanup=true,expires_at=true,stage=true,active_verified=true,services=true,attempt_count=true,next_retry=true,reason=true,running_since=true,boot_id=true,clock_at=true,clock_trusted=true})
+ local phases={unsupported=true,cleanup_required=true,starting=true,running=true,stopping=true,stopped=true,blocked=true,retry_wait=true}
  assert(phases[s.runtime.phase],'runtime unavailable')
  if s.runtime.generation~=nil then revision(s.runtime.generation) end
  if s.runtime.last_error~=nil then assert(type(s.runtime.last_error)=='string' and #s.runtime.last_error<=128,'runtime error') end
@@ -38,6 +38,11 @@ local function validate_state(s)
  if s.runtime.expires_at~=nil then revision(s.runtime.expires_at) end
  if s.runtime.stage then assert(type(s.runtime.stage)=='string' and #s.runtime.stage<=32,'runtime stage') end
  if s.runtime.active_verified~=nil then assert(type(s.runtime.active_verified)=='boolean','runtime verification') end
+ for _,k in ipairs({'attempt_count','next_retry','running_since','clock_at'}) do if s.runtime[k]~=nil then revision(s.runtime[k]) end end
+ if s.runtime.attempt_count then assert(s.runtime.attempt_count<=3,'retry budget') end
+ if s.runtime.reason then assert(type(s.runtime.reason)=='string' and #s.runtime.reason<=128,'retry reason') end
+ if s.runtime.boot_id then assert(type(s.runtime.boot_id)=='string' and #s.runtime.boot_id<=128,'boot identity') end
+ if s.runtime.clock_trusted~=nil then assert(type(s.runtime.clock_trusted)=='boolean','clock trust') end
  if s.runtime.services then
   local allowed={};for _,service in ipairs((s.attempted_config or s.active_config).services) do allowed[service.service_id]=service.hostname end
   for id,result in pairs(s.runtime.services) do

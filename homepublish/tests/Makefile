@@ -1,10 +1,12 @@
-.PHONY: direct product guardian guardian-nginx owned-runtime startup-owned trusted-provider
+.PHONY: direct product guardian guardian-nginx owned-runtime startup-owned trusted-provider openssl-engine
 trusted-provider:
 	python3 test-trusted-provider.py
 startup-owned:
 	python3 test-startup-owned.py
 owned-runtime:
 	python3 test-owned-runtime.py
+openssl-engine:
+	python3 test-openssl-engine.py
 # Local test-only private-pair profile; production activation remains disabled.
 guardian-nginx:
 	$(CC) -std=c11 -Wall -Wextra -Werror -DHP_GUARD_TEST -I../src ../src/renewable-guard.c private-pair-probe.c -o $(TMPDIR)/hp-private-pair-probe

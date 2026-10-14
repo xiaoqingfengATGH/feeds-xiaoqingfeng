@@ -1,5 +1,9 @@
 # HomePublish 当前检查点
 
+## 关机恢复：正式 actual-Nginx OpenSSL engine 回归接入（local，未激活）
+
+接续 `7c9e8d2907b90ad013dae2750eb484e983e6e50e`，正式 `openssl-engine` target 不再依赖scratch脚本或host ENGINE ABI：matching SDK gcc constructor模块、真实Nginx固定provider、ptrace实际open/raw maps/exec前env。旧exec环境仅复制fixture mutant作RED：ambient config→manifest外module open/maps/marker均真；HEAD固定空config作GREEN：无ambient/module/marker访问。bind前observer SIGKILL/status9是设计，非product failure，不修改系统/etc。完整 `make owned-runtime guardian direct product startup-owned guardian-nginx trusted-provider openssl-engine` exit0；日志 `/home/eric/homestun-sdk-check/resume-openssl-final-full.log`，探针证据 `openssl-engine-regression/run-7rbelw4a`。详见[D2d2](HOMEPUBLISH-D2D2-CHECKPOINT.md)及[恢复入口](HOMEPUBLISH-RESUME-CHECKPOINT.md)。仅自检，父独立复跑/审查后继续下一slice；生产manifest/签名、immutable library paths/musl fallback、TLS/SAN/health/scope controller、typed durable residual/crash recovery、partial prepare accounting、matching target SDK仍gate。ENOTSUP/helper78/Start-Apply unsupported/activation_ready=false保持。
+
 ## 最新 D2d2 fixed OpenSSL/provider authority subset（local，未激活）
 
 接续 `cdfa83503216bc0840932a29afcca86261d9e95d`：新增 native-owned 固定空 `openssl.cnf`、固定 `OPENSSL_CONF`/`OPENSSL_MODULES`/`OPENSSL_ENGINES` 环境及非秘密 `provider-init.trace`；同步13文件槽、FD allowlist、prepare/cleanup。真实 TLS/renew/respawn/temporary/controller-guardian-watchdog STOP/KILL 回归通过；所有master/worker及respawn worker逐进程精确ELF映射集合（五私有依赖+sealed loader/Nginx memfd）及FD/NNP/seccomp元数据通过，非SDK路径/unknown不接受。新增断言先RED后GREEN；`test-guardian-nginx.py`、`test-trusted-provider.py`、`test-owned-runtime.py`均exit0。详见 [D2d2 checkpoint](HOMEPUBLISH-D2D2-CHECKPOINT.md)。**仍是真实vertical subset，不是完整依赖/目标authority闭合：target安装manifest/签名、不可变路径/mount gate、各支持OpenSSL版本provider布局、aarch64/BusyBox/procd及Nginx配置语义来源仍未验；不把trace/ptrace/maps当sameUID边界，不宣称通用load_module/include解析闭合。** production `ENOTSUP`、Start/Apply unsupported、`activation_ready=false`、helper78保持。

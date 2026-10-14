@@ -8,6 +8,7 @@ Baseline: `cdfa83503216bc0840932a29afcca86261d9e95d` plus the local D2d2 changes
 - The same native ledger now reserves `openssl.cnf` and non-secret `provider-init.trace` (13 fixed file slots total; five existing temp-directory slots). Cleanup, FD allowlists, preparation, and fixture ownership all follow the ledger; no recursive deletion was added.
 - The real cached Nginx TLS fixture passed IPv4/IPv6 TLS, renewal/worker respawn, temporary cutoff, controller/guardian/watchdog STOP/KILL, stream closure, listener refusal, native runtime absence before fallback, foreign inode/source TLS preservation, and 0 internal channel errors.
 - Test-first evidence: the new D2d2 assertions initially failed because `OPENSSL_CONF` and `openssl.cnf` authority were absent; after implementation `test-guardian-nginx.py`, `test-trusted-provider.py`, and `test-owned-runtime.py` passed. The integration trace is a product-side fixed-exec payload record, not a claim that ptrace itself is a same-UID contract boundary.
+- Formal actual-Nginx regression: `make -C homepublish/tests openssl-engine` builds a matching cached SDK gcc constructor-only shared module. Both cases execute the actual trusted Nginx provider with native preparation/seccomp. RED mutates only a copied fixture to its pre-fix exec environment; ptrace observes its ambient config access and redirects that owned tracee to scratch malicious config. The unmanifested module is actually opened, mapped, and executes its marker constructor. GREEN uses unchanged current provider source: fixed owned empty config is opened, ambient configs/module/marker are never accessed. No host ENGINE registration/ABI or `openssl engine` CLI is used; host `openssl req` only generates fixture TLS. Evidence is unique per-run `attack-summary.json`, red/green `actual-open.json`, `observation.json` (kernel-observed pre-exec environment and inode metadata), and `raw.maps` under `HP_OPENSSL_ENGINE_EVIDENCE` (default `/home/eric/homestun-sdk-check/openssl-engine-regression`). No scratch script or git worktree dependency. `HP_TEST_SDK` can select the matching cached x86_64 SDK; non-root x86_64 Linux, ptrace, host cc/libcrypto/openssl and that SDK are explicit prerequisites.
 - ELF map checks are exact-set checks for every live master and worker and for respawned workers: the five owned runtime libraries plus sealed loader/Nginx memfds, with no cached SDK path or unknown candidate. FD-role maps and worker NoNewPrivs/seccomp metadata are retained in the D2d2 evidence JSON. This is stronger than a grep-only SDK exclusion.
 
 ## Exact local verification
@@ -18,9 +19,23 @@ WSL non-root:
 python3 test-guardian-nginx.py                         exit 0
 python3 test-trusted-provider.py                       exit 0
 python3 test-owned-runtime.py                          exit 0
+python3 test-openssl-engine.py                         exit 0
 ```
 
 The guardian integration produced eight lifecycle cases plus renewal/respawn records and `provider-init.trace` evidence under `/home/eric/homestun-sdk-check/d2b2-nginx-evidence` during the run. The final run’s output included `PASS guarded Nginx integration including internal channels`.
+
+## Resumed formal regression verification
+
+Recovered from shutdown at `7c9e8d2907b90ad013dae2750eb484e983e6e50e`. The abandoned host OpenSSL engine CLI attempt failed with dynamic-engine ABI version incompatibility (`eng_dyn.c:481`); it is replaced, not counted as PASS. Constructor-only module loading proves the authority violation before ENGINE registration is needed. First recovered formal run and final full run both observed RED marker/maps true, GREEN false, bind intercepted true (117/115 observed file accesses respectively).
+
+```sh
+# Ubuntu-24.04, uid1000; cwd /mnt/d/DevPortal/homelede/homepublish-product
+export TMPDIR=/home/eric/homestun-sdk-check
+timeout 560 make -C homepublish/tests owned-runtime guardian direct product startup-owned guardian-nginx trusted-provider openssl-engine
+# exit 0; full output: /home/eric/homestun-sdk-check/resume-openssl-final-full.log
+```
+
+Formal full-run probe evidence: `/home/eric/homestun-sdk-check/openssl-engine-regression/run-7rbelw4a`. Observer kills at bind syscall entry before any listener: raw status 9 is designed observer completion, not failed product startup. This standalone probe has no guardians; inode metadata is saved before observer fallback cleanup and source TLS is removed in finally. Native guardian cleanup is proved only by the separate complete guardian-nginx matrix, not by observer rmtree. No system `/etc` was changed. Existing cached Lua recipe `tmpnam` linker warning remains unrelated and is not a clean-warning claim. Post-commit verification runs `openssl-engine guardian-nginx` against the same committed source; its exact commit/result is returned in the handoff. Independent parent review remains required.
 
 ## Remaining gates / safe claim
 

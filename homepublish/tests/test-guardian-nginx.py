@@ -44,16 +44,14 @@ def wait_for(fn,seconds=3):
         except (OSError,ssl.SSLError):pass
         time.sleep(.02)
     raise AssertionError('bounded condition not reached')
-def elf_map_set(pid,runtime):
-    """Return only file-backed ELF candidates, not a substring exclusion."""
-    out=set()
-    for line in pathlib.Path('/proc',str(pid),'maps').read_text().splitlines():
-        fields=line.split(None,5)
-        if len(fields)<6: continue
-        path=fields[5].strip()
-        if path.startswith('/memfd:') or path.startswith(str(runtime)+'/'):
-            out.add(path)
-    return out
+from dependency_maps import collect_maps
+def dependency_record(pid,runtime,case):
+    raw=pathlib.Path('/proc',str(pid),'maps').read_text()
+    (EVIDENCE/(case+'.'+str(pid)+'.raw.maps')).write_text(raw)
+    raw,metadata=collect_maps(pid,runtime,SDK)
+    (EVIDENCE/(case+'.'+str(pid)+'.raw.maps')).write_text(raw)
+    (EVIDENCE/(case+'.'+str(pid)+'.maps.json')).write_text(json.dumps(metadata,indent=2)+'\n')
+    return metadata
 def compile_fixture(d):
     files=["lib/libc.so","usr/sbin/nginx","usr/lib/libpcre2-8.so.0.11.2","usr/lib/libssl.so.3","usr/lib/libcrypto.so.3","usr/lib/libz.so.1.3.1","lib/libgcc_s.so.1"]
     names=["loader","nginx","libpcre2-8.so.0","libssl.so.3","libcrypto.so.3","libz.so.1","libgcc_s.so.1"]
@@ -186,9 +184,8 @@ try:
                     expected={str(d/'runtime'/name) for name in ('libpcre2-8.so.0','libssl.so.3','libcrypto.so.3','libz.so.1','libgcc_s.so.1')}
                     expected.add('/memfd:hp-loader (deleted)')
                     expected.add('/memfd:hp-nginx (deleted)')
-                    map_records={str(pid):sorted(elf_map_set(pid,d/'runtime')) for pid in (master,*workers)}
-                    assert all(set(values)==expected for values in map_records.values()),map_records
-                    assert all(str(SDK) not in values for values in map_records.values()),map_records
+                    map_records={str(pid):dependency_record(pid,d/'runtime',fault) for pid in (master,*workers)}
+                    assert all(set(values['objects'])==expected for values in map_records.values()),map_records
                     record['verified_actual_dependency_maps']=map_records;record['environment_injection_removed']=True
                     record['fd_roles']={str(pid):{q.name:os.readlink(q) for q in pathlib.Path('/proc',str(pid),'fd').iterdir()} for pid in (guardian,watchdog,master,*workers)}
                     record['worker_boundary']={str(pid):{line.split(':')[0]:line.split(':',1)[1].strip() for line in pathlib.Path('/proc',str(pid),'status').read_text().splitlines() if line.startswith(('Uid:','Gid:','NoNewPrivs:','Seccomp:'))} for pid in (master,*workers)}
@@ -197,8 +194,8 @@ try:
                         os.kill(workers[0],signal.SIGKILL)
                         new=wait_for(lambda:children(master) if len(children(master))==2 and workers[0] not in children(master) else None)
                         tracked.update(new);owned.update(new);record['rebuilt_workers']=new
-                        rebuilt_maps={str(pid):sorted(elf_map_set(pid,d/'runtime')) for pid in new}
-                        assert all(set(values)==expected for values in rebuilt_maps.values()),rebuilt_maps
+                        rebuilt_maps={str(pid):dependency_record(pid,d/'runtime',fault+'-respawn') for pid in new}
+                        assert all(set(values['objects'])==expected for values in rebuilt_maps.values()),rebuilt_maps
                         record['respawn_worker_dependency_maps']=rebuilt_maps
                         # The deliberately killed worker may own the first stream.
                         # Start a new measured stream only after worker rebuild.

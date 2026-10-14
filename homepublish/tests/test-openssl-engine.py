@@ -90,31 +90,35 @@ try:
             provider.write_text(value.replace(fixed, 'char *env[]={"PATH=/usr/bin:/bin","LANG=C",NULL};'))
         (d / 'profile.h').write_text('#define HP_TRUST_ROOT ' + json.dumps(str(SDK)) + '\nstatic const struct hp_trust_entry hp_trust_entries[]={' + ','.join(('{' + ','.join((json.dumps(x) for x in (f, n, hashlib.sha256((SDK / f).read_bytes()).hexdigest()))) + '}' for f, n in zip(F, N))) + '};')
         prefix = d / 'owned'
-        prefix.mkdir(mode=0o700, exist_ok=True)
-        cfg = 'daemon off; error_log stderr; pid ' + str(prefix / 'runtime/nginx.pid') + '; events {} http { access_log off; client_body_temp_path body; proxy_temp_path proxy; fastcgi_temp_path fastcgi; uwsgi_temp_path uwsgi; scgi_temp_path scgi; server { listen 127.0.0.1:49284 ssl; ssl_certificate ' + str(BASE / 'cert.pem') + '; ssl_certificate_key ' + str(BASE / 'key.pem') + '; } }'
-        (d / 'wrap.c').write_text('#include "' + str(src / 'renewable-guard.c') + '"\n#include "trusted-nginx.h"\nextern unsigned char *SHA256(const unsigned char *,size_t,unsigned char *);\nint main(){const char *p=' + json.dumps(str(prefix)) + ';int fd=open(p,O_RDONLY|O_DIRECTORY);struct hp_owned_runtime *r=hp_owned_prepare(fd);if(!r)return 10;unsigned char digest[32];SHA256((const unsigned char *)"",0,digest);setenv("OPENSSL_CONF",' + json.dumps(str(BASE / 'injected.cnf')) + ',1);const char *cfg=' + json.dumps(cfg) + ';if(hp_owned_file(r,2,cfg,strlen(cfg))||worker_boundary(1))return 11;return hp_trusted_nginx_exec(r,p);}')
-        run(['cc', '-std=c11', '-Werror=implicit-function-declaration', '-DHP_GUARD_TEST', '-DHP_TRUST_PROFILE_HEADER=' + json.dumps(str(d / 'profile.h')), '-I' + str(src), str(d / 'wrap.c'), str(src / 'trusted-nginx.c'), '-l:libcrypto.so.3', '-o', str(d / 'wrapper')], check=True)
-        (BASE / 'UNVERIFIED_DLOPEN').unlink(missing_ok=True)
-        paths = []
-        execs = []
-        status = None
-        maps = ''
-        bound = False
-        p = os.fork()
-        if not p:
-            try:
-                f = os.open(str(d / 'stderr'), os.O_CREAT | os.O_WRONLY | os.O_TRUNC, 0o600)
-                os.dup2(f, 2)
-                ptrace(0, 0, None, None)
-                os.kill(os.getpid(), signal.SIGSTOP)
-                # Warm host manifest hashing under /dev/null; only SDK Nginx sees attack.
-                os.execve(str(d / 'wrapper'), [str(d / 'wrapper')], {'PATH': '/usr/bin:/bin', 'LANG': 'C', 'OPENSSL_CONF': '/dev/null', 'OPENSSL_MODULES': str(BASE), 'OPENSSL_ENGINES': str(BASE)})
-            except BaseException:
-                os._exit(125)
-        enter = True
-        pending = None
-        deadline = time.monotonic() + 20
+        p=None; paths=[]; execs=[]; status=None; maps=''; bound=False; failure=None
         try:
+            prefix.mkdir(mode=0o700, exist_ok=True)
+            cfg = 'daemon off; error_log stderr; pid ' + str(prefix / 'runtime/nginx.pid') + '; events {} http { access_log off; client_body_temp_path body; proxy_temp_path proxy; fastcgi_temp_path fastcgi; uwsgi_temp_path uwsgi; scgi_temp_path scgi; server { listen 127.0.0.1:49284 ssl; ssl_certificate ' + str(BASE / 'cert.pem') + '; ssl_certificate_key ' + str(BASE / 'key.pem') + '; } }'
+            (d / 'wrap.c').write_text('#include "' + str(src / 'renewable-guard.c') + '"\n#include "trusted-nginx.h"\nextern unsigned char *SHA256(const unsigned char *,size_t,unsigned char *);\nint main(){const char *p=' + json.dumps(str(prefix)) + ';int fd=open(p,O_RDONLY|O_DIRECTORY);struct hp_owned_runtime *r=hp_owned_prepare(fd);if(!r)return 10;unsigned char digest[32];SHA256((const unsigned char *)"",0,digest);setenv("OPENSSL_CONF",' + json.dumps(str(BASE / 'injected.cnf')) + ',1);const char *cfg=' + json.dumps(cfg) + ';if(hp_owned_file(r,2,cfg,strlen(cfg))||worker_boundary(1))return 11;return hp_trusted_nginx_exec(r,p);}')
+            run([os.environ.get('HP_OBSERVER_CC','cc'), '-std=c11', '-Werror=implicit-function-declaration', '-DHP_GUARD_TEST', '-DHP_TRUST_PROFILE_HEADER=' + json.dumps(str(d / 'profile.h')), '-I' + str(src), str(d / 'wrap.c'), str(src / 'trusted-nginx.c'), '-l:libcrypto.so.3', '-o', str(d / 'wrapper')], check=True)
+            (BASE / 'UNVERIFIED_DLOPEN').unlink(missing_ok=True)
+            paths = []
+            execs = []
+            status = None
+            maps = ''
+            bound = False
+            p = os.fork()
+            if not p:
+                try:
+                    f = os.open(str(d / 'stderr'), os.O_CREAT | os.O_WRONLY | os.O_TRUNC, 0o600)
+                    os.dup2(f, 2)
+                    ptrace(0, 0, None, None)
+                    os.kill(os.getpid(), signal.SIGSTOP)
+                    # Warm host manifest hashing under /dev/null; only SDK Nginx sees attack.
+                    os.execve(str(d / 'wrapper'), [str(d / 'wrapper')], {'PATH': '/usr/bin:/bin', 'LANG': 'C', 'OPENSSL_CONF': '/dev/null', 'OPENSSL_MODULES': str(BASE), 'OPENSSL_ENGINES': str(BASE)})
+                except BaseException:
+                    os._exit(125)
+            enter = True
+            pending = None
+            deadline = time.monotonic() + 20
+            if os.environ.get('HP_OBSERVER_FAULT') in ('trace-error','trace-timeout'):
+                if os.environ['HP_OBSERVER_FAULT']=='trace-timeout':raise TimeoutError('injected trace timeout')
+                raise RuntimeError('injected trace exception')
             wait_owned(p)
             ptrace(0x4200, p, None, ctypes.c_void_p(1))
             while True:
@@ -163,32 +167,41 @@ try:
                             pass
                     pending = None
                 enter = not enter
+        except BaseException as error:
+            failure=type(error).__name__+': '+str(error)
+            raise
         finally:
-            try:
-                os.kill(p, signal.SIGKILL)
-            except ProcessLookupError:
-                pass
-            cleanup_error = None
-            try:
-                wait_owned(p, 3)
-            except ChildProcessError:
-                pass
-            except TimeoutError as error:
-                cleanup_error = str(error)
             # Persist observed syscalls, exec env, maps and inode metadata before fallback.
             (d / 'raw.maps').write_text(maps)
             st = []
             for q in sorted((prefix / 'runtime').iterdir()) if (prefix / 'runtime').is_dir() else []:
                 z = q.lstat()
                 st.append({'name': q.name, 'device': z.st_dev, 'inode': z.st_ino, 'mode': oct(z.st_mode), 'size': z.st_size})
+            fixture_metadata=[]
+            for q in [prefix, BASE/'key.pem', BASE/'cert.pem']:
+                if q.exists():
+                    z=q.lstat()
+                    fixture_metadata.append({'name':str(q.relative_to(BASE)),'device':z.st_dev,'inode':z.st_ino,'mode':oct(z.st_mode),'links':z.st_nlink})
+            (d/'before-fallback.json').write_text(json.dumps({'failure':failure,'pid':p,'runtime':st,'fixture':fixture_metadata,'execs':execs,'file_access':paths,'scope':'single tracee observer; no guardian cleanup'},indent=2))
+            try:
+                if p is not None:os.kill(p, signal.SIGKILL)
+            except ProcessLookupError:
+                pass
+            cleanup_error = None
+            try:
+                if p is not None:wait_owned(p, 3)
+            except ChildProcessError:
+                pass
+            except TimeoutError as error:
+                cleanup_error = str(error)
             marker = (BASE / 'UNVERIFIED_DLOPEN').exists()
-            out = {'case': label, 'provider_source_sha256': hashlib.sha256((src / 'trusted-nginx.c').read_bytes()).hexdigest(), 'status': status, 'bind_intercepted_before_listener': bound, 'execs': execs, 'file_access': paths, 'module_marker': marker, 'runtime_metadata_before_observer_cleanup': st, 'cleanup_owner': 'observer probe only; no guardians', 'status_explanation': 'observer SIGKILL at bind entry before any listener, not provider startup failure', 'module_in_maps': str(BASE / 'module.so') in maps, 'pid': p, 'observer_fallback_cleanup': cleanup_error is None, 'cleanup_error': cleanup_error}
+            out = {'case': label, 'failure': failure, 'trace_scope': 'single owned tracee only; stopped before bind; no process-tree claim', 'provider_source_sha256': hashlib.sha256((src / 'trusted-nginx.c').read_bytes()).hexdigest(), 'status': status, 'bind_intercepted_before_listener': bound, 'execs': execs, 'file_access': paths, 'module_marker': marker, 'runtime_metadata_before_observer_cleanup': st, 'cleanup_owner': 'observer probe only; no guardians', 'status_explanation': 'observer SIGKILL at bind entry before any listener, not provider startup failure', 'module_in_maps': str(BASE / 'module.so') in maps, 'pid': p, 'observer_fallback_cleanup': cleanup_error is None, 'cleanup_error': cleanup_error}
             (d / 'observation.json').write_text(json.dumps(out, indent=2))
             results.append(out)
             (d / 'actual-open.json').write_text(json.dumps(paths, indent=2))
             # A stuck tracee is residual/unknown: retain its runtime and evidence.
             assert cleanup_error is None, cleanup_error
-            shutil.rmtree(prefix)
+            if prefix.exists():shutil.rmtree(prefix)
             assert not prefix.exists()
         print(label, 'marker', marker, 'module_maps', out['module_in_maps'], 'bind', bound, 'paths', len(paths), flush=True)
     assert all((x['bind_intercepted_before_listener'] and x['status'] == 9 for x in results))

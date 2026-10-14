@@ -1,5 +1,7 @@
 # HomePublish 当前检查点
 
+最新独立审查修复：9af952f 的 P1 prefix-filtered maps 假exact-set与 P2 pre-trace编译失败 owned 泄漏已正式 RED→GREEN；完整inventory/shared parser及compiler/trace异常/timeout回归见 docs/HOMEPUBLISH-D2D2-CHECKPOINT.md（docs内链接同名文件）。旧exact-set声明不充分已撤回；observer仅single tracee/bind前，非native guardian清理。八target完整retry exit0，首轮既有Stop重复91 readiness失败日志保留、不算PASS、不在本轮扩修。最终source guardian-nginx/openssl-engine与localcommit以交接实测为准。禁激活、ENOTSUP/helper78/Start Apply unsupported/activation_ready=false以及manifest/immutablepaths/muslfallback/controllerTLS/residual/target gates保持；新两修独立review待。
+
 ## 关机恢复：正式 actual-Nginx OpenSSL engine 回归接入（local，未激活）
 
 接续 `7c9e8d2907b90ad013dae2750eb484e983e6e50e`，正式 `openssl-engine` target 不再依赖scratch脚本或host ENGINE ABI：matching SDK gcc constructor模块、真实Nginx固定provider、ptrace实际open/raw maps/exec前env。旧exec环境仅复制fixture mutant作RED：ambient config→manifest外module open/maps/marker均真；HEAD固定空config作GREEN：无ambient/module/marker访问。bind前observer SIGKILL/status9是设计，非product failure，不修改系统/etc。完整 `make owned-runtime guardian direct product startup-owned guardian-nginx trusted-provider openssl-engine` exit0；日志 `/home/eric/homestun-sdk-check/resume-openssl-final-full.log`，探针证据 `openssl-engine-regression/run-7rbelw4a`。详见[D2d2](HOMEPUBLISH-D2D2-CHECKPOINT.md)及[恢复入口](HOMEPUBLISH-RESUME-CHECKPOINT.md)。仅自检，父独立复跑/审查后继续下一slice；生产manifest/签名、immutable library paths/musl fallback、TLS/SAN/health/scope controller、typed durable residual/crash recovery、partial prepare accounting、matching target SDK仍gate。ENOTSUP/helper78/Start-Apply unsupported/activation_ready=false保持。

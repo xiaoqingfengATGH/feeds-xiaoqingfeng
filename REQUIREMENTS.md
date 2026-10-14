@@ -1,5 +1,7 @@
 # Requirements
 
+最新独立审查修复：9af952f 的 P1 prefix-filtered maps 假exact-set与 P2 pre-trace编译失败 owned 泄漏已正式 RED→GREEN；完整inventory/shared parser及compiler/trace异常/timeout回归见 docs/HOMEPUBLISH-D2D2-CHECKPOINT.md（docs内链接同名文件）。旧exact-set声明不充分已撤回；observer仅single tracee/bind前，非native guardian清理。八target完整retry exit0，首轮既有Stop重复91 readiness失败日志保留、不算PASS、不在本轮扩修。最终source guardian-nginx/openssl-engine与localcommit以交接实测为准。禁激活、ENOTSUP/helper78/Start Apply unsupported/activation_ready=false以及manifest/immutablepaths/muslfallback/controllerTLS/residual/target gates保持；新两修独立review待。
+
 ## 当前授权与阶段
 
 **HomePublish（家庭服务直连）最终设计基线已整理。** 用户确认正常发布持续直到停用，临时限时可选，UPnP有限租约受控续租，开机恢复独立设置；直接双栈专用Nginx，不通用forwarder。详见[完整设计](docs/homepublish-product-design.md)和[审查清单](docs/homepublish-design-review-checklist.md)。当前用户已授权隔离分支源码开发、本机/WSL测试与local commit；禁止生产操作、安装、Add/Delete映射、公网测试、防火墙/路由/Cloudflare操作，以及merge/push/PR。先前仅文档授权已由本次源码授权取代，真实生产操作仍须另定范围。默认未发布、Save不启动，明确开启可持续运行；产品自动INPUT能力不是本批生产写授权。命名迁移源码已完成；canonical校验、固定stdin CLI及原生私有持久化最小切片已本地验证，产品仍未完成，历史实验不是生产验收。当前证据与续跑入口见[checkpoint](docs/HOMEPUBLISH-PROGRESS.md)。

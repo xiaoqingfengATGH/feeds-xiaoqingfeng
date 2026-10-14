@@ -40,6 +40,7 @@ direct:
 	python3 test-direct.py
 	python3 test-direct-boundary.py
 product:
+	python3 test-product-lifecycle.py
 	python3 test-product-review.py
 	python3 test-product.py
 	python3 test-recipe.py

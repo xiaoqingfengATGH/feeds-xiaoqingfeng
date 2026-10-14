@@ -20,7 +20,7 @@ function M.match(sans,host)
  end
  return wildcard and 'wildcard' or nil
 end
-local function path(s)return type(s)=='string' and s:match('^/[a-zA-Z0-9_./%-]+$') and not s:find('..',1,true) end
+local function path(s)return type(s)=='string' and s:match('^/[a-zA-Z0-9_./%*%-]+$') and not s:find('..',1,true) end
 local function command(s)
  local f=io.popen(s..' 2>/dev/null');if not f then return nil end
  local out=f:read(65537);f:close();if not out or #out>65536 then return nil end;return out
@@ -42,7 +42,7 @@ end
 function M.read(file)
  -- Internal trusted resolver path only; NEVER expose file as an RPC parameter.
  if not path(file) then return nil,'trusted certificate path required' end
- local text=command('openssl x509 -in '..file..' -noout -dates -ext subjectAltName')
+ local text=command("openssl x509 -in '"..file.."' -noout -dates -ext subjectAltName")
  if not text or not text:find('notAfter=',1,true) then return nil,'certificate parse failed' end
  local sans={};for san in text:gmatch('DNS:([^,%s]+)') do sans[#sans+1]=san:lower() end
  local before,after=text:match('notBefore=([^\n]+)'),text:match('notAfter=([^\n]+)')

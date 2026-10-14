@@ -35,9 +35,9 @@ def main():
     (d/'dev'/name).touch();subprocess.run(['mount','--bind','/dev/'+name,str(d/'dev'/name)],check=True);mounted.append(d/'dev'/name)
    for p in (ROOT/'homepublish/files/usr/share/homepublish').glob('*.lua'):shutil.copy(p,d/'usr/share/homepublish'/p.name)
    # Test-only metadata injection; not installed certificates or target acceptance.
-   (d/'etc/config/acme').write_text("config cert 'rsa'\n option domains 'photos.example.test'\n option key_type 'rsa2048'\nconfig cert 'ecc'\n option domains 'photos.example.test'\n option key_type 'ec256'\n")
+   (d/'etc/config/acme').write_text("config cert 'nas'\n option domains 'nas.example.test'\n option key_type 'rsa2048'\nconfig cert 'rsa'\n option domains 'photos.example.test'\n option key_type 'rsa2048'\nconfig cert 'ecc'\n option domains 'photos.example.test'\n option key_type 'ec256'\n")
    integration=d/'usr/share/homepublish/device-integrations.lua'
-   text=integration.read_text().replace('return M',"M.acme_source=function(domain,kind)return {certificate='/fixture/'..kind,key='/fixture/key',domain=domain,key_type=kind}end;require('certificate-metadata').read=function()return {sans={'photos.example.test'},status='within_validity',not_before='fixture start',not_after='fixture expiry',tls_validated=false}end;return M")
+   text=integration.read_text().replace('return M',"M.acme_source=function(domain,kind)return {certificate='/fixture/'..kind,key='/fixture/key',domain=domain,key_type=kind}end;require('certificate-metadata').read=function()return {sans={'photos.example.test','nas.example.test'},status='within_validity',not_before='fixture start',not_after='fixture expiry',tls_validated=false}end;return M")
    integration.write_text(text)
    shutil.copy(ROOT/'luci-app-homepublish/root/usr/libexec/rpcd/homepublish',d/'usr/libexec/rpcd/homepublish');(d/'usr/libexec/rpcd/homepublish').chmod(0o755)
    shutil.copy(ROOT/'luci-app-homepublish/root/usr/share/rpcd/acl.d/luci-app-homepublish.json',d/'usr/share/rpcd/acl.d')

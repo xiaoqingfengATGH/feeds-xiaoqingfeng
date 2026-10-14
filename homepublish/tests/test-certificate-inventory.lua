@@ -12,6 +12,7 @@ C.read=function()return {sans={'*.example.test','example.test'},status='within_v
 local source,e=I.certificate_source('acme:shared','photos.example.test');assert(source,e);assert(source.domain=='*.example.test' and source.key_type=='rsa')
 assert(not I.certificate_source('acme:shared','a.b.example.test'))
 assert(not I.certificate_source('acme:shared','unrelated.test'))
+assert(require('product-json').encode({certificates={}}):find('\"certificates\":%[%]'),'empty inventory must be JSON array')
 local rows=I.certificate_inventory().certificates;assert(#rows==2 and rows[1].certificate_ref=='acme:shared')
 assert(rows[1].domain=='*.example.test' and rows[1].key_type=='rsa' and #rows[1].sans==2)
 local json=require('product-json').encode(rows);assert(not json:find('/fixture',1,true) and not json:find('key.pem',1,true))

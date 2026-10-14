@@ -40,6 +40,10 @@ guardian:
 direct:
 	python3 test-direct.py
 	python3 test-direct-boundary.py
+shared-runtime:
+	$(LUA_TEST) test-shared-provider.lua ../files/usr/share/homepublish
+	$(LUA_TEST) test-business-provider.lua ../files/usr/share/homepublish
+	python3 test-shared-runtime.py
 product:
 	$(LUA_TEST) test-certificate-model.lua ../..
 	$(LUA_TEST) test-certificate-san.lua ../..

@@ -48,13 +48,14 @@ function M.decode(s)
  local r=value(0);ws();assert(i==#s+1,'JSON trailing');return r
 end
 function M.encode(v)
- local function enc(x)
+ local function enc(x,field)
   if type(x)=='string' then return '"'..x:gsub('[%z\1-\31\\"]',function(c) return string.format('\\u%04x',c:byte()) end)..'"' end
   if type(x)=='boolean' then return x and 'true' or 'false' end
   if type(x)=='number' then return string.format('%.0f',x) end
   assert(type(x)=='table','JSON type');local out={}
+  if #x==0 and (field=='certificates' or field=='sans') then return '[]' end
   if #x>0 then for _,y in ipairs(x) do out[#out+1]=enc(y) end;return '['..table.concat(out,',')..']' end
-  for k,y in pairs(x) do assert(type(k)=='string','JSON key');out[#out+1]=enc(k)..':'..enc(y) end
+  for k,y in pairs(x) do assert(type(k)=='string','JSON key');out[#out+1]=enc(k)..':'..enc(y,k) end
   return '{'..table.concat(out,',')..'}'
  end
  return enc(v)

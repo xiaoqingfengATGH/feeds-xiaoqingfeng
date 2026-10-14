@@ -1,5 +1,7 @@
 # Unified ingress / certificate slice — local source only
 
+Latest shared-runtime follow-up: see [shared runtime checkpoint](HOMEPUBLISH-SHARED-RUNTIME-CHECKPOINT.md). Actual local HomeVPN resolver + RSA/ECC wildcard/SNI/readiness, JSON empty-array and global LuCI Save coverage pass. SDK/target and capability-enabled browser Start/Apply/Stop remain unfinished; earlier remaining-provider statements below describe the previous baseline.
+
 ## Current UI/RPC follow-up (supersedes inheritance/metadata limitations below)
 - Persistent `certificate_mode=inherit|override` now survives journal normalization. Old explicit refs imply override; omitted ref implies inherit. Derived reference is recomputed from the stored default on every canonical validation. Default changes retarget inherited services, not overrides. Runtime plans filter configuration-disabled services and reject no enabled service.
 - Metadata states are `within_validity`, `not_yet_valid`, `expired`, `unavailable`, with `tls_validated=false`. UTC notBefore and notAfter are checked; neither state claims full chain/readiness.

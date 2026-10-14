@@ -307,9 +307,14 @@ static int start_bound(struct hp_guard *g, uint64_t gen, uint64_t epoch, unsigne
   struct pollfd peers[2]={{inner[0],POLLIN,0},{wfd,POLLIN,0}};
   if(poll(peers,2,0)<0 || peers[1].revents) break;
   if(peers[0].revents) {
-   pid_t beat=0;
-   if(recv(inner[0],&beat,sizeof(beat),MSG_DONTWAIT|MSG_TRUNC)!=sizeof(beat) || beat!=data) break;
-   peer_until=now_ms()+HP_WATCHDOG_MS;
+   /* Consume queued reciprocal beats; one per loop accumulates during long
+    * healthy controller sessions and eventually fills the peer socket. */
+   for(int i=0;i<32;i++) {
+    pid_t beat=0;ssize_t n=recv(inner[0],&beat,sizeof(beat),MSG_DONTWAIT|MSG_TRUNC);
+    if(n<0 && (errno==EAGAIN || errno==EWOULDBLOCK))break;
+    if(n!=sizeof(beat) || beat!=data)goto guard_fail;
+    peer_until=now_ms()+HP_WATCHDOG_MS;
+   }
   }
   struct pollfd f={pair[1],POLLIN,0};
   if(poll(&f,1,25)<0 && errno!=EINTR) break;

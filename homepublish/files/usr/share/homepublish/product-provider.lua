@@ -14,25 +14,31 @@ local function known(t,fields)
 end
 local function revision(n) assert(type(n)=='number' and n%1==0 and n>=0 and n<9007199254740991,'journal revision') end
 local function validate_state(s)
- known(s,{state_version=true,saved_revision=true,saved_config=true,active_revision=true,active_config=true,intent_revision=true,desired_state=true,runtime=true,approval=true})
+ known(s,{state_version=true,saved_revision=true,saved_config=true,active_revision=true,active_config=true,intent_revision=true,desired_state=true,runtime=true,approval=true,attempted_revision=true,attempted_config=true,candidate_revision=true,candidate_config=true})
  assert(s.state_version==1,'journal version');revision(s.saved_revision);revision(s.intent_revision)
  if s.saved_revision>0 then s.saved_config=assert(model.validate(s.saved_config),'invalid saved config') else assert(s.saved_config==nil,'unexpected config') end
  if s.active_revision~=nil then
   revision(s.active_revision);assert(s.active_revision>0 and s.active_revision<=s.saved_revision,'invalid active revision')
   s.active_config=assert(model.validate(s.active_config),'invalid active snapshot')
  else assert(s.active_config==nil,'orphan active config') end
+ for _,prefix in ipairs({'attempted','candidate'}) do
+  local r,c=s[prefix..'_revision'],s[prefix..'_config']
+  if r then revision(r);assert(r>0 and r<=s.saved_revision,'invalid attempt revision');s[prefix..'_config']=assert(model.validate(c),'invalid attempt snapshot') else assert(c==nil,'orphan attempt') end
+ end
  known(s.desired_state,{state=true,manual_stop_latch=true})
  assert(s.desired_state.state=='disabled' or s.desired_state.state=='enabled','journal desired')
  assert(type(s.desired_state.manual_stop_latch)=='boolean','journal latch')
  assert(not s.desired_state.manual_stop_latch or s.desired_state.state=='disabled','latched enabled intent')
- known(s.runtime,{phase=true,generation=true,last_error=true,cleanup=true,expires_at=true})
+ known(s.runtime,{phase=true,generation=true,last_error=true,cleanup=true,expires_at=true,stage=true,active_verified=true})
  local phases={unsupported=true,cleanup_required=true,starting=true,running=true,stopping=true,stopped=true,blocked=true}
  assert(phases[s.runtime.phase],'runtime unavailable')
  if s.runtime.generation~=nil then revision(s.runtime.generation) end
  if s.runtime.last_error~=nil then assert(type(s.runtime.last_error)=='string' and #s.runtime.last_error<=128,'runtime error') end
  if s.runtime.cleanup~=nil then assert(s.runtime.cleanup=='confirmed' or s.runtime.cleanup=='unknown','runtime cleanup') end
  if s.runtime.expires_at~=nil then revision(s.runtime.expires_at) end
- if s.approval then known(s.approval,{revision=true});assert(s.approval.revision==s.active_revision,'approval revision') end
+ if s.runtime.stage then assert(type(s.runtime.stage)=='string' and #s.runtime.stage<=32,'runtime stage') end
+ if s.runtime.active_verified~=nil then assert(type(s.runtime.active_verified)=='boolean','runtime verification') end
+ if s.approval then known(s.approval,{revision=true});assert(s.approval.revision==(s.attempted_revision or s.active_revision),'approval revision') end
  return s
 end
 local function public(state)
@@ -54,8 +60,9 @@ function M.handle(request)
    assert(state.intent_revision<9007199254740990,'intent revision exhausted')
    state.intent_revision=state.intent_revision+1;state.approval=nil
    -- Preserve the owned generation so the internal controller observes revocation.
-   state.runtime.phase=state.active_revision and 'cleanup_required' or 'unsupported'
-   if state.active_revision then state.runtime.cleanup='unknown' end
+   state.runtime.active_verified=false
+   state.runtime.phase=(state.active_revision or state.attempted_revision) and 'cleanup_required' or 'unsupported'
+   if state.active_revision or state.attempted_revision then state.runtime.cleanup='unknown' end
    return wire.encode(state),public(state)
   end
   assert(request.action=='save','unsupported action')

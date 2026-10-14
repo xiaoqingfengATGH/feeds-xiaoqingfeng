@@ -1,5 +1,8 @@
 # HomePublish · 家庭服务直连：最终产品、技术与交互设计
 
+> **Current simplified architecture (supersedes historical guard/security gates below):** Lua controller + standard procd dedicated foreground Nginx, ordinary process lifecycle and private permissions; no device C broker/dual guardians/seccomp/memfd/short capability in active package. Normal Stop/temporary/controller lifecycle does not guarantee millisecond hard interruption or independent frozen-controller fail-close. Persisted Stop latch, Save pending, explicit Apply, original temporary deadline and bounded recovery remain. Real device scoped ubus Start/TLS A → Save pending A → Apply TLS B → Stop/keepalive EOF and SDK r3 source binding passed; fixed loopback test profile only. UI Start/Apply still disabled and public production unsupported. Feature3 ACME/DDNS/DNS/Passwall2 integration remains. See [simplified acceptance checkpoint](HOMEPUBLISH-DEVICE-SIMPLIFY-CHECKPOINT.md).
+
+
 **最终设计基线，待独立实现审查；不是已实现、已部署或生产发布证明。** 本文整体替代旧强制短时、常驻延期、通用forwarder、所有会话固定deadline设计。需求：[REQ-001～REQ-005](../REQUIREMENTS.md)；自查：[设计审查清单](homepublish-design-review-checklist.md)。
 
 ## 1. 定位、决策与范围

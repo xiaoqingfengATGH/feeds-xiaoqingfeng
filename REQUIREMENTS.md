@@ -1,5 +1,8 @@
 # Requirements
 
+> **Current simplified architecture (supersedes historical guard/security gates below):** Lua controller + standard procd dedicated foreground Nginx, ordinary process lifecycle and private permissions; no device C broker/dual guardians/seccomp/memfd/short capability in active package. Normal Stop/temporary/controller lifecycle does not guarantee millisecond hard interruption or independent frozen-controller fail-close. Persisted Stop latch, Save pending, explicit Apply, original temporary deadline and bounded recovery remain. Real device scoped ubus Start/TLS A → Save pending A → Apply TLS B → Stop/keepalive EOF and SDK r3 source binding passed; fixed loopback test profile only. UI Start/Apply still disabled and public production unsupported. Feature3 ACME/DDNS/DNS/Passwall2 integration remains. See [simplified acceptance checkpoint](docs/HOMEPUBLISH-DEVICE-SIMPLIFY-CHECKPOINT.md).
+
+
 ## 当前安装包切片（2026-10-14，本地，不是目标部署）
 
 实际官方 OpenWrt 24.10.5 x86/64 SDK 构建两只 IPK，源码归档 ec46452/6798609，无测试 adapter 入包。修复真实解包发现的 rpcd plugin 0644（RED）为 Git executable 0755（GREEN）。全部 product Lua（含 JSON/RPC/controller/lifecycle）、native ELF、依赖、menu/ACL/default disabled 已实际解包验收。详见 [安装包 checkpoint](docs/HOMEPUBLISH-PACKAGE-CHECKPOINT.md)。

@@ -1,5 +1,8 @@
 # HomePublish 当前检查点
 
+> **Current simplified architecture (supersedes historical guard/security gates below):** Lua controller + standard procd dedicated foreground Nginx, ordinary process lifecycle and private permissions; no device C broker/dual guardians/seccomp/memfd/short capability in active package. Normal Stop/temporary/controller lifecycle does not guarantee millisecond hard interruption or independent frozen-controller fail-close. Persisted Stop latch, Save pending, explicit Apply, original temporary deadline and bounded recovery remain. Real device scoped ubus Start/TLS A → Save pending A → Apply TLS B → Stop/keepalive EOF and SDK r3 source binding passed; fixed loopback test profile only. UI Start/Apply still disabled and public production unsupported. Feature3 ACME/DDNS/DNS/Passwall2 integration remains. See [simplified acceptance checkpoint](HOMEPUBLISH-DEVICE-SIMPLIFY-CHECKPOINT.md).
+
+
 ## 真实目标已安装与 RPC 验收（2026-10-14，最新）
 
 用户追加授权 natmap 安装后，已安装 `natmap 20250924-r1`、`homepublish 0.1.0-r1`、`luci-app-homepublish 0.1.0-r1`。先检查实际 control/data/init/default_postinst；用 `IPKG_NO_SCRIPT=1` 避免 opkg 自动 enable/start，再明确禁用两个 init，仅 reload rpcd。实际目标无 stat，真实 ubus validate/Save revision1/Stop latch=true 与 intent_revision1 全通过，无需源码兼容修复。测试 journal 已备份后删除，读回新 app 默认 revision0/disabled/latch=false/no active。四个 LuCI 静态 JS 经现有 HTTP200获取并与安装文件逐字一致；完整目标 browser 登录/loader 尚未验。独立 SSH 重连、完整 TCP监听/IPv4及IPv6路由、firewall hash 均保持。未运行 NATMap/STUN、未改 fw/UPnP/代理/管理，生产 Start/Apply unsupported/activation_ready=false 不变。证据与回滚见 [真实目标部署 checkpoint](HOMEPUBLISH-TARGET-DEPLOY-CHECKPOINT.md)。下文未部署描述属于历史。

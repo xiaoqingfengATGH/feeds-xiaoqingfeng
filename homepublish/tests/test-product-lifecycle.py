@@ -21,6 +21,6 @@ with tempfile.TemporaryDirectory(prefix='lifecycle-product-',dir=BASE) as td:
  assert 'manual_stop_latchb1' in run('status')
  run('arbitrary-command',1)
  init=(ROOT/'homepublish/files/etc/init.d/homepublish').read_text()
- assert 'product-lifecycle.lua' in init and 'stop_service()' in init and 'status_service()' in init,'init not bridged to product lifecycle'
+ assert 'product-device-cli.lua' in init and 'stop_service()' in init and 'status_service()' in init,'init not bridged to product lifecycle'
  assert 'natmap' not in init and '--provision' not in init,'legacy exposure path still reachable'
  print('PASS fixed lifecycle persisted status/disabled start/controller Stop latch; no production activation')

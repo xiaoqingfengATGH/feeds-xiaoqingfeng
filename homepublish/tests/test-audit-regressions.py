@@ -31,6 +31,14 @@ def observer_fault(kind):
         text=text.replace("SRC = pathlib.Path(__file__).resolve().parents[1] / 'src'",'SRC = pathlib.Path('+repr(str(ROOT.parent/'src'))+')')
         # Compiler injection uses the actual observer entry point, not a mock.
         cc_env={'HP_OBSERVER_CC':'/bin/false'} if kind=='compiler' else {}
+        if kind.startswith('write-'):
+            stage,cut=kind[6:].rsplit('-',1)
+            target={'maps':'raw.maps','metadata':'before-fallback.json','observation':'observation.json','all':'*'}[stage]
+            injection="\n_original_write = pathlib.Path.write_text\ndef _fault_write(self, *a, **k):\n    if self.name == "+repr(target)+" or ("+repr(target)+" == '*' and self.suffix in ('.json', '.maps')): raise PermissionError('injected evidence storage failure')\n    return _original_write(self, *a, **k)\npathlib.Path.write_text = _fault_write\n"
+            text=text.replace('results = []','results = []'+injection.replace('\n','\n    ').rstrip())
+            text=text.replace('if not p:\n                try:', 'if not p:\n                os.dup2(os.open("/dev/null",os.O_WRONLY),1)\n                try:')
+            if cut=='live':
+                text=text.replace('bound = True','bound = True\n                    raise RuntimeError("injected live trace cut")')
         probe.write_text(text)
         foreign=d/'foreign sentinel';foreign.write_text('preserve');foreign_inode=foreign.stat().st_ino
         env={**os.environ,**cc_env,'HP_OPENSSL_ENGINE_EVIDENCE':str(d/'evidence'),'HP_OBSERVER_FAULT':kind}
@@ -38,6 +46,42 @@ def observer_fault(kind):
         assert p.returncode!=0,(kind,p.stdout)
         runs=list((d/'evidence').glob('run-*'));assert len(runs)==1
         base=runs[0]
+        if kind.startswith('write-'):
+            # Inspect actual failure before reviewer fallback. Never count fallback as probe cleanup.
+            residual=list(base.glob('*/owned'))
+            pids=[]
+            for q in pathlib.Path('/proc').glob('[0-9]*/cmdline'):
+                try:
+                    if str(base).encode() in q.read_bytes() or any(str(base) in os.readlink(fd) for fd in (q.parent/'fd').iterdir()): pids.append(int(q.parent.name))
+                except OSError: pass
+            summary={'kind':kind,'owned_residual':[str(q) for q in residual],'live_pids':pids,'stderr':p.stderr[-12000:]}
+            retained=pathlib.Path('/home/eric/homestun-sdk-check/audit-fault-evidence')/base.name
+            retained.mkdir(parents=True)
+            (retained/'write-result.json').write_text(json.dumps(summary,indent=2))
+            # RED can leak a ptraced child. Owned-only reviewer rescue after readback.
+            if residual or pids:
+                import signal,shutil,time
+                for pid in pids:
+                    try:os.kill(pid,signal.SIGKILL)
+                    except ProcessLookupError:pass
+                time.sleep(.05)
+                for q in residual:shutil.rmtree(q)
+            assert not residual and not pids, 'RED: evidence exception skipped observer cleanup'
+            fallback=[x for x in p.stderr.splitlines() if x.startswith('OBSERVER_FALLBACK ')]
+            assert fallback,'missing bounded stderr fallback'
+            out=json.loads(fallback[-1].split(' ',1)[1])
+            assert out['evidence_errors'] and out['cleanup_residual']==[]
+            assert out['cleanup_owner']=='observer probe only; no guardians'
+            assert out['failure'] is not None if cut=='live' else out['failure'] is None
+            assert out['pid'] and not pathlib.Path('/proc',str(out['pid'])).exists()
+            assert not (base/'key.pem').exists() and not (base/'cert.pem').exists()
+            assert foreign.read_text()=='preserve' and foreign.stat().st_ino==foreign_inode
+            import socket
+            with socket.socket() as sock:
+                sock.settimeout(.3)
+                assert sock.connect_ex(('127.0.0.1',49284))!=0
+            print('PASS observer evidence failure',kind,'evidence',retained)
+            return
         assert not list(base.glob('*/owned')), 'RED: pre-trace owned directory leaked'
         observations=list(base.glob('*/observation.json'))
         assert observations,'RED: failed probe has no pre-cleanup metadata'

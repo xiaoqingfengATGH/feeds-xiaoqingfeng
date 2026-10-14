@@ -49,6 +49,34 @@ Formal full-run probe evidence: `/home/eric/homestun-sdk-check/openssl-engine-re
 
 Production ENOTSUP, helper78, Start/Apply unsupported and activation_ready=false stay unchanged. Target manifest/signature, immutable library paths/musl fallback, production controller/TLS/SAN/health, durable typed residual/partial prepare and matching SDK/BusyBox/procd target acceptance remain blocked. No install/download/public/firewall/UPnP/push/merge/PR.
 
+## Observer evidence-write medium closure / Stop-repeat still open
+
+Baseline `56947054536b514120cb2347b50b6e80ada23df8`. Old P1 complete maps correction stays closed; no maps/namespace/immutable-library expansion.
+
+- Formal test-first RED: actual copied observer injected `PermissionError` at raw.maps (live bind-entry tracee), before-fallback.json and observation.json (already bind-truncated). All three exit 1 with `red/owned` remaining. Retained readback: `audit-fault-evidence/run-s2gvloff`, `run-kl_g6sd8`, `run-_zwmv5b2` / `write-result.json`. Initial RED reviewer PID scan used exe only and missed sealed memfd loader; the escaped live RED tracee subsequently spawned a worker/listener. Exact deleted fixture FD/cmdline ownership was read back and reviewer-only SIGKILL rescue performed (704/707/1165); this is RED residual, NOT probe cleanup. Harness now scans matching fixture cmdline/FDs before rescue and bounds connect readback to 300ms. Failed early GREEN attempts caused by that RED listener and unbounded connect were not counted PASS.
+- GREEN separates best-effort evidence/metadata/JSON serialization from outermost kill + bounded reap + owned fixture cleanup finally. Evidence failures cannot prevent those steps. Original failure type, evidence_errors and cleanup_residual remain distinct; no exception messages/secret bytes in bounded stderr metadata fallback. All JSON/maps unavailable still exits nonzero with fallback; if stderr also unavailable reporting is explicitly unknown (not tested as a storage guarantee). Source key/cert unlink attempts are independent. Unreaped tracee retains runtime as residual/unknown. Scope remains single tracee stopped before bind, no native guardian or process-tree cleanup claim.
+- Formal regression covers maps/metadata/observation/all-file-storage failures at both live and bind-truncated cuts: verifies no matching PID/FD, no listener, no owned runtime/source TLS, foreign bytes/inode preserved, incomplete evidence reported and fallback owner distinct from native guardians. Existing compiler/trace-error/trace-timeout and actual SDK Nginx constructor RED/GREEN remain passing.
+- Stop-repeat is **unresolved**: historical Stop91 `audit-fixes-full.log` readiness abort retained. No native timing change, assert suppression or root-cause closure. On readiness read failure, native test probe emits bounded role topology/state (missing roles absent-or-unobserved), read count/errno, absolute/elapsed monotonic timing and unchanged 600ms window/200ms watchdog. Python harness saves failure/inode metadata before TemporaryDirectory fallback. Formal callback-readiness EOF injection first failed missing diagnostic (`readiness-diag-red.log`), then passed diagnostic assertion and separately verified native runtime absence. Diagnostic topology is observation, not PID signaling authority. Five existing 100-repeat rounds passed before the user requested scope reduction (`observer-stop-repeat-1..5.log`); no further pressure expansion. Non-reproduction does NOT close the incident.
+
+WSL uid1000, cached tools only; export `TMPDIR=/home/eric/homestun-sdk-check`:
+
+```sh
+# Full suite before final diagnostic-role/TLS-tail polish, exit 0:
+timeout 560 make -C homepublish/tests audit-regressions owned-runtime guardian direct product startup-owned guardian-nginx trusted-provider openssl-engine
+# observer-finally-full.log; constructor run-hi6xskr7
+# Final affected source, exit 0:
+timeout 180 make -C homepublish/tests audit-regressions owned-runtime openssl-engine guardian-nginx
+# observer-finally-affected.log; constructor run-4zpot_op
+```
+
+Final affected run: eight evidence-write scenarios plus existing maps/compiler/trace faults passed; readiness injection evidence `owned-readiness-evidence/hp-owned-23hw8xrg-0.json`; real constructor RED marker/maps true, GREEN false, both bind intercepted; native guardian-nginx complete lifecycle/TLS/channel matrix passed. Post-localcommit same affected targets re-run and exact hash/log returned in handoff. Parent independent re-run/review remains required; tests/__pycache__ is not source and excluded from commit.
+
+### Next functional slice (not production activation)
+
+Proceed with an internal controller plan/state API over canonical committed config + revision/approval/scope + desired disabled/enabled/manual_stop_latch + runtime generation/active_revision + journal adapter. First TDD vertical slice: Save only persists pending config, never starts/applies; Stop persists disabled/manual-stop intent and revokes internal capability idempotently; status distinguishes saved/active/pending/cleanup unknown. Provider adapter may return structured unsupported; Start/Apply stay unsupported and test-only guardian/provider entry points do not become production activation. Existing `hp_guard_start`/`hp_guard_send` are serialized internal inherited-channel APIs; do not expose arbitrary PID/command/config authority via controller.
+
+Manifest/signature, immutable-library/musl fallback, target SDK/BusyBox/procd, production TLS/SAN/health/scope and typed durable recovery stay publication/activation gates, not a reason to keep extending this safety slice. Do not bypass a real safety blocker: production ENOTSUP/helper78/activation_ready=false remain until separately accepted. No install/download/production/public/firewall/UPnP/push/merge/PR.
+
 ## Remaining gates / safe claim
 
 This is a real vertical subset, not complete dependency authority. The target installation manifest/signature, target kernel-supported immutable path or mount gate, target OpenSSL provider/engine/module layout across supported OpenSSL versions, target aarch64/musl SDK, BusyBox/procd, and production controller/TLS/SAN/health/scope/journal integration remain unverified. Nginx config semantic provenance still belongs to the trusted renderer; this test does not turn arbitrary Nginx text into a trusted parser or claim generic `load_module`/`include` policy closure. Do not infer a hostile-filesystem or same-UID/root boundary from ptrace/maps.

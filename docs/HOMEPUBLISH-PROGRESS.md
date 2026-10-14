@@ -1,6 +1,6 @@
 # HomePublish 当前检查点
 
-最新独立审查修复：9af952f 的 P1 prefix-filtered maps 假exact-set与 P2 pre-trace编译失败 owned 泄漏已正式 RED→GREEN；完整inventory/shared parser及compiler/trace异常/timeout回归见 docs/HOMEPUBLISH-D2D2-CHECKPOINT.md（docs内链接同名文件）。旧exact-set声明不充分已撤回；observer仅single tracee/bind前，非native guardian清理。八target完整retry exit0，首轮既有Stop重复91 readiness失败日志保留、不算PASS、不在本轮扩修。最终source guardian-nginx/openssl-engine与localcommit以交接实测为准。禁激活、ENOTSUP/helper78/Start Apply unsupported/activation_ready=false以及manifest/immutablepaths/muslfallback/controllerTLS/residual/target gates保持；新两修独立review待。
+本轮 observer-finally medium 修复已正式TDD：raw.maps/metadata JSON/observation JSON写失败均不再跳过owned tracee终止/reap/runtime及源TLS清理；原错误、evidence_errors、cleanup_residual分列，有界secret-free stderr fallback，写失败仍非零。旧P1完整maps修复保持closed。Stop-repeat历史readiness失败仍unresolved；仅加下次失败兜底前role/read errno/单调timing/inode诊断，不以本轮未复现关闭。受影响audit-regressions/owned-runtime/openssl-engine/guardian-nginx通过；确切命令、日志及发布禁激活gate见D2d2 checkpoint。下一步转功能controller内部状态/Save-pending/Stop-intent切片，不扩大安全底座；production ENOTSUP/helper78/Start Apply unsupported/activation_ready=false保持。父复验与独立review待。
 
 ## 关机恢复：正式 actual-Nginx OpenSSL engine 回归接入（local，未激活）
 

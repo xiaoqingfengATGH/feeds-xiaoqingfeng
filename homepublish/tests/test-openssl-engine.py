@@ -168,41 +168,70 @@ try:
                     pending = None
                 enter = not enter
         except BaseException as error:
-            failure=type(error).__name__+': '+str(error)
+            failure=type(error).__name__
             raise
         finally:
-            # Persist observed syscalls, exec env, maps and inode metadata before fallback.
-            (d / 'raw.maps').write_text(maps)
-            st = []
-            for q in sorted((prefix / 'runtime').iterdir()) if (prefix / 'runtime').is_dir() else []:
-                z = q.lstat()
-                st.append({'name': q.name, 'device': z.st_dev, 'inode': z.st_ino, 'mode': oct(z.st_mode), 'size': z.st_size})
-            fixture_metadata=[]
-            for q in [prefix, BASE/'key.pem', BASE/'cert.pem']:
-                if q.exists():
-                    z=q.lstat()
-                    fixture_metadata.append({'name':str(q.relative_to(BASE)),'device':z.st_dev,'inode':z.st_ino,'mode':oct(z.st_mode),'links':z.st_nlink})
-            (d/'before-fallback.json').write_text(json.dumps({'failure':failure,'pid':p,'runtime':st,'fixture':fixture_metadata,'execs':execs,'file_access':paths,'scope':'single tracee observer; no guardian cleanup'},indent=2))
+            # Evidence is best effort, never a prerequisite to resource release.
+            evidence_errors=[]; cleanup_residual=[]; st=[]; fixture_metadata=[]
+            def evidence_write(name, value):
+                try:
+                    (d/name).write_text(json.dumps(value,indent=2) if name.endswith('.json') else value)
+                except BaseException as error:
+                    evidence_errors.append({'stage':name,'error':type(error).__name__})
             try:
-                if p is not None:os.kill(p, signal.SIGKILL)
-            except ProcessLookupError:
-                pass
-            cleanup_error = None
-            try:
-                if p is not None:wait_owned(p, 3)
-            except ChildProcessError:
-                pass
-            except TimeoutError as error:
-                cleanup_error = str(error)
-            marker = (BASE / 'UNVERIFIED_DLOPEN').exists()
+                evidence_write('raw.maps',maps)
+                try:
+                    for q in sorted((prefix/'runtime').iterdir()) if (prefix/'runtime').is_dir() else []:
+                        z=q.lstat()
+                        st.append({'name':q.name,'device':z.st_dev,'inode':z.st_ino,'mode':oct(z.st_mode),'size':z.st_size})
+                    for q in [prefix, BASE/'key.pem', BASE/'cert.pem']:
+                        if q.exists():
+                            z=q.lstat()
+                            fixture_metadata.append({'name':str(q.relative_to(BASE)),'device':z.st_dev,'inode':z.st_ino,'mode':oct(z.st_mode),'links':z.st_nlink})
+                except BaseException as error:
+                    evidence_errors.append({'stage':'metadata-read','error':type(error).__name__})
+                evidence_write('before-fallback.json',{'failure':failure,'pid':p,'runtime':st,'fixture':fixture_metadata,'execs':execs,'file_access':paths,'scope':'single tracee observer; no guardian cleanup'})
+            finally:
+                # Most outer resource finally: no write/serialization can skip kill/reap/rmtree.
+                cleanup_error=None
+                try:
+                    if p is not None:os.kill(p,signal.SIGKILL)
+                except ProcessLookupError:
+                    pass
+                except BaseException as error:
+                    cleanup_residual.append('kill:'+type(error).__name__)
+                reaped=p is None
+                try:
+                    if p is not None:wait_owned(p,3)
+                    reaped=True
+                except ChildProcessError:
+                    reaped=True
+                except BaseException as error:
+                    cleanup_residual.append('reap:'+type(error).__name__)
+                if reaped:
+                    try:
+                        if prefix.exists():shutil.rmtree(prefix)
+                        if prefix.exists():cleanup_residual.append('owned-runtime-present')
+                    except BaseException as error:
+                        cleanup_residual.append('runtime:'+type(error).__name__)
+                else:
+                    cleanup_residual.append('owned-runtime-retained-reap-unknown')
+                cleanup_error=','.join(cleanup_residual) or None
+            marker=(BASE/'UNVERIFIED_DLOPEN').exists()
             out = {'case': label, 'failure': failure, 'trace_scope': 'single owned tracee only; stopped before bind; no process-tree claim', 'provider_source_sha256': hashlib.sha256((src / 'trusted-nginx.c').read_bytes()).hexdigest(), 'status': status, 'bind_intercepted_before_listener': bound, 'execs': execs, 'file_access': paths, 'module_marker': marker, 'runtime_metadata_before_observer_cleanup': st, 'cleanup_owner': 'observer probe only; no guardians', 'status_explanation': 'observer SIGKILL at bind entry before any listener, not provider startup failure', 'module_in_maps': str(BASE / 'module.so') in maps, 'pid': p, 'observer_fallback_cleanup': cleanup_error is None, 'cleanup_error': cleanup_error}
-            (d / 'observation.json').write_text(json.dumps(out, indent=2))
+            out.update({'evidence_errors':evidence_errors,'cleanup_residual':cleanup_residual})
+            evidence_write('actual-open.json',paths)
+            evidence_write('observation.json',out)
             results.append(out)
-            (d / 'actual-open.json').write_text(json.dumps(paths, indent=2))
-            # A stuck tracee is residual/unknown: retain its runtime and evidence.
-            assert cleanup_error is None, cleanup_error
-            if prefix.exists():shutil.rmtree(prefix)
-            assert not prefix.exists()
+            if evidence_errors or cleanup_residual:
+                # Bounded, secret-free summary; no argv/env/file bytes/exception messages.
+                fallback={'case':label,'failure':failure,'pid':p,'evidence_errors':evidence_errors[:8],'cleanup_residual':cleanup_residual[:8],'cleanup_owner':'observer probe only; no guardians','runtime_metadata_before_observer_cleanup':st[:32],'fixture':fixture_metadata[:8],'evidence_storage':'incomplete; stderr fallback attempted'}
+                try:
+                    import sys
+                    print('OBSERVER_FALLBACK '+json.dumps(fallback),file=sys.stderr,flush=True)
+                except BaseException:
+                    pass # All storage unavailable: nonzero remains; reporting state is unknown.
+                if failure is None:raise RuntimeError('observer evidence incomplete or cleanup residual; see fallback if available')
         print(label, 'marker', marker, 'module_maps', out['module_in_maps'], 'bind', bound, 'paths', len(paths), flush=True)
     assert all((x['bind_intercepted_before_listener'] and x['status'] == 9 for x in results))
     assert results[0]['module_marker'] and results[0]['module_in_maps']
@@ -216,5 +245,12 @@ try:
     (BASE / 'attack-summary.json').write_text(json.dumps({'passed': True, 'cases': [{'case': x['case'], 'module_marker': x['module_marker'], 'module_in_maps': x['module_in_maps'], 'bind_intercepted_before_listener': x['bind_intercepted_before_listener']} for x in results]}, indent=2))
     print('PASS real Nginx actual-open SDK constructor RED -> GREEN; evidence ' + str(BASE), flush=True)
 finally:
-    (BASE / 'key.pem').unlink(missing_ok=True)
-    (BASE / 'cert.pem').unlink(missing_ok=True)
+    tls_errors=[]
+    for name in ('key.pem','cert.pem'):
+        try:(BASE/name).unlink(missing_ok=True)
+        except BaseException as error:tls_errors.append(name+':'+type(error).__name__)
+    if tls_errors:
+        try:
+            import sys
+            print('OBSERVER_TLS_RESIDUAL '+json.dumps(tls_errors),file=sys.stderr,flush=True)
+        finally:raise RuntimeError('observer source TLS residual; reporting unknown if stderr unavailable')

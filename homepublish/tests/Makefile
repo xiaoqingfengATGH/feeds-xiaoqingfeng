@@ -4,11 +4,13 @@ audit-regressions:
 	python3 test-audit-regressions.py compiler
 	python3 test-audit-regressions.py trace-error
 	python3 test-audit-regressions.py trace-timeout
+	@for stage in maps metadata observation all; do for cut in live bind; do python3 test-audit-regressions.py write-$$stage-$$cut || exit $$?; done; done
 trusted-provider:
 	python3 test-trusted-provider.py
 startup-owned:
 	python3 test-startup-owned.py
 owned-runtime:
+	HP_OWNED_DIAG_TEST=1 python3 test-owned-runtime.py
 	python3 test-owned-runtime.py
 openssl-engine:
 	python3 test-openssl-engine.py

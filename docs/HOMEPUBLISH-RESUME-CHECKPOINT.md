@@ -1,5 +1,9 @@
 # HomePublish 已恢复：当前续跑入口
 
+> **Current DNS closure (installed r5, tests/docs only):** Controlled libc getaddrinfo feed A+AAAA→AAAA drives the unchanged installed resolver/selection, real 30-second renew and bounded controller recovery: old master stops, new generation serves IPv6 backend TLS marker, pending Save is not consumed, original temporary deadline persists, POST executes once per backend and Stop removes private snapshots. Non-installed fixed fixture adapter narrows canonical ULA range to ::1; this is controlled answer-change acceptance, NOT changed public DNS records. Source `make controller-multi product rpc` exit0; previous two historical multi failures remain unresolved intermittent evidence (original raw failed logs not recovered). Installed simplified provider explicitly rejects >1 service; no runtime change/rebuild/deploy. Features1–3 are not fully complete: production/UI Start/Apply, installed multi-service, independent LAN/proxy reload, firewall/UPnP/public remain unimplemented/unverified. See DNS section of device integrations checkpoint.
+
+
+
 > **Current r5 acceptance:** authorized HomeVPN RSA business certificate now connected and installed: system-CA/hostname TLS A→Save pending A→Apply B→Stop old/new connections and private snapshot cleanup pass; original source cert/key hash+permissions equal server-only. Runtime commit59b7af8, installed homepublish0.1.0-r5; final revision0/disabled/stopped. Passwall enabled/xray16371 unchanged. Historical local multi-controller regression failed; controlled DNS-answer-change, independent LAN/proxy reload and production/public readiness remain unverified. See [current device integration checkpoint](HOMEPUBLISH-DEVICE-INTEGRATIONS-CHECKPOINT.md).
 
 

@@ -87,6 +87,15 @@ def main():
    assert all(s.count>0 for s in servers)
    print('PASS multi-controller: independent SAN/key TLS; 4 ingress/backend combinations; exact per-service generation readiness; Save pending; whole-generation Apply; deleted SNI rejected; second readiness failure closes all; original temporary deadline; Stop dual listeners/native runtime absent')
   finally:
+   # Capture bounded owned-fixture diagnostics BEFORE kill/tempdir deletion.
+   # Do not retry markers or broaden readiness deadlines to hide failures.
+   import sys
+   if sys.exc_info()[0] is not None:
+    print('MULTI FAILURE controller_poll=',p.poll() if p else None,flush=True)
+    for log in sorted(d.rglob('*')):
+     if log.is_file() and log.name.endswith(('.log','.trace','.conf')):
+      try: print('OWNED DIAGNOSTIC',log.relative_to(d),log.read_text(errors='replace')[-12000:],flush=True)
+      except OSError as exc: print('diagnostic unavailable',exc,flush=True)
    if p and p.poll() is None:p.kill();p.wait(timeout=3)
    if p:print(p.stderr.read())
    for s in servers:s.shutdown();s.server_close()

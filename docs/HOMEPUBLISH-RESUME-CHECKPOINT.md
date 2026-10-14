@@ -1,6 +1,17 @@
 # HomePublish 已恢复：当前续跑入口
 
-当前bounded recovery/boot本地功能切片完成：approved active snapshot恢复不偷用Save pending，确认清理后1/2/4秒退避、每轮3次budget耗尽blocked；Stop抢占retry/stale事件、cleanup unknown禁恢复。boot_restore默认关，开启后固定scope重验/readiness新generation；temporary仅注入可信同boot时钟恢复且原expires_at不变，不确定/变boot/到期关闭。真实Nginx PID KILL后短断、新代TLS marker和跨controller重启continuous off/on/latch已验证。详见[恢复checkpoint](HOMEPUBLISH-CONTROLLER-RECOVERY-CHECKPOINT.md)。生产adapter/向导/部署未完成，生产禁激活与统一安全复评风险清单不变。
+## 当前功能入口：访问配置向导与分层状态（本地完成，非生产激活）
+
+服务/域名/证书 → 接入方式与策略 → canonical 只读预检/Save → 独立 Start 与分层结果为同页四步向导，前后导航保留输入；保留服务及双栈监听增删编辑。旁路由 manual IPv4 优先；direct IPv6 路由/入站许可非 DNAT；UPnP/STUN 只保存现有 schema 允许方式，明确适配器未接入、不执行映射或实验。生产 Start/Apply 继续 disabled/unsupported、activation_ready=false。
+
+概览轮询真实 status 的 saved/active/pending/attempted/candidate、内部 phase/active_verified/generation/readiness/cleanup、recovery attempt_count(预算3)/next_retry/reason、原 deadline、saved/active boot_restore、restore stage/clock/boot_id；外网 IPv4/IPv6 始终未验证，无假网络探测。Stop 原合同不变。
+
+验收：真实 Windows Chrome → 官方 LuCI loader → loopback uhttpd/rpcd/ubus → fixed CLI/native journal。RED `wizard-red.log` 缺 hp-wizard-step 超时，make 非零（包装 shell rc 打印错误，不以包装 rc 作为 make 证据）。GREEN `wizard-final.log` browser exit0；只读 validate 不改 revision0、Save revisions1/2/3、两服务/双栈/UPnP gateway readback、back steps 未保存输入保留、reload、编辑/删除、duplicate/empty canonical 禁保存、pending 无 active、独立 Start 禁用、分层未知外网及 DOM Stop latch 全部 PASS；owned processes/mounts/listeners=[]、fixture directory_absent=true。普通 WSL 用户 `make product rpc` exit0，日志 `wizard-product-rpc.log`。日志在 `/home/eric/homestun-sdk-check/`；localcommit 后另跑 `wizard-committed.log`，结果由最终交接读回。
+
+剩余功能：production provider/Start/Apply 权威 adapter、fw4/UPnP 有限租约、DNS/ACME/Passwall2 集成、真实 procd/BusyBox/matching SDK 和目标部署验收；SSH127.0.0.1:222 未恢复、不重试。安全统一复评留后，不展开安全深化。没有生产安装/fw/映射/公网/push/merge/PR。内部恢复/Nginx功能沿用已验切片，不把 UI 生产 unsupported 状态说成 running。
+
+
+当前bounded recovery/boot本地功能切片完成：approved active snapshot恢复不偷用Save pending，确认清理后1/2/4秒退避、每轮3次budget耗尽blocked；Stop抢占retry/stale事件、cleanup unknown禁恢复。boot_restore默认关，开启后固定scope重验/readiness新generation；temporary仅注入可信同boot时钟恢复且原expires_at不变，不确定/变boot/到期关闭。真实Nginx PID KILL后短断、新代TLS marker和跨controller重启continuous off/on/latch已验证。详见[恢复checkpoint](HOMEPUBLISH-CONTROLLER-RECOVERY-CHECKPOINT.md)。历史恢复切片时生产adapter/向导/部署未完成（向导现已由顶部本地验收更新），生产禁激活与统一安全复评风险清单不变。
 
 
 当前多服务controller本地功能切片通过（接续56bc5fa）：canonical保存的两服务进入同一专用guarded Nginx实例，独立SAN/证书/key、IPv4/IPv6入口到IPv4/IPv6 backend四组合真实TLS marker通过；逐服务readiness绑定整体generation，全部成功才提交active/running。Save修改单服务仍pending旧流量，Apply先stop/reap旧整代再启动新整代（有短暂停机，非零停机reload）；删除服务后旧SNI不再提供业务。第二服务readiness失败关闭全实例，历史active仅记录、attempted/candidate独立、active_verified=false。Stop断两服务已建立stream并关闭双栈listener/native runtime。temporary首次deadline经Save/Apply保持；原单服务60秒自然到期回归本轮一次通过。详见[多服务checkpoint](HOMEPUBLISH-CONTROLLER-MULTI-CHECKPOINT.md)。production Start/Apply unsupported与activation_ready=false不变；内部固定test-only adapter不等生产支持。安全深化暂停，下一步bounded recovery/可信时钟/boot接口、向导/生产provider/目标验收；SSH127.0.0.1:222仍未恢复未重试，未安装/公网/fw/UPnP/push/merge/PR。

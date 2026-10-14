@@ -1,6 +1,10 @@
 # HomePublish 已恢复：当前续跑入口
 
-## 真实目标部署预检（2026-10-14，最新）
+## 真实目标已安装与 RPC 验收（2026-10-14，最新）
+
+已按追加授权安装 natmap 20250924-r1 及 HomePublish/LuCI 0.1.0-r1，真实无 stat 目标 validate/Save revision1/Stop latch与intent_revision1通过；测试 state 已备份并移除，最终 revision0/disabled/no active，两个 init 均 disabled。四个 LuCI 静态 JS 经 HTTP 精确字节核验；browser 登录/loader 尚未验。独立 SSH、原管理/代理监听、两族路由及 firewall hash 保持。仅 reload rpcd，未运行 NATMap/STUN、未改 firewall/UPnP/管理/代理。生产 Start/Apply unsupported、activation_ready=false 保持。证据、包与回滚路径见 [真实目标部署 checkpoint](HOMEPUBLISH-TARGET-DEPLOY-CHECKPOINT.md)。下一步继续生产 provider 功能主线或由用户体验 UI，不将静态资源验收冒称完整 browser 验收。下文未部署描述属历史。
+
+## 历史真实目标部署预检（2026-10-14）
 
 SSH `127.0.0.1:222` 已恢复。两只 0.1.0-r1 IPK 已上传并核对真实 SHA256；`opkg --noaction` 发现缺 `natmap (20250924-r1)`，遵循缺依赖报告约束停止，未实际安装任何包、未重载 rpcd。目标 RPC/Save/Stop/default-disabled/LuCI browser 尚未验收。独立 SSH 重连确认管理80/443/LAN22、xray、路由及 firewall hash 保持，无 fw/UPnP/公网写入。详见 [真实目标部署 checkpoint](HOMEPUBLISH-TARGET-DEPLOY-CHECKPOINT.md)。需确认确切缺失依赖的安装权限或另行源码/SDK修复；下文 SSH 未恢复描述属历史。
 

@@ -1,6 +1,9 @@
 -- SPDX-License-Identifier: Apache-2.0
 -- Installed, root-only device test profile. Production/public activation denied.
-local N=require('homepublish_device');local R=require('direct-renderer');local M={}
+local R=require('direct-renderer');local M={}
+local root='/tmp/homepublish-device/runtime'
+local function run(s)return os.execute(s)==0 end
+local function write(name,bytes)local f=assert(io.open(root..'/'..name,'w'));assert(f:write(bytes));assert(f:close())end
 function M.plan(c)
  if #c.services~=1 or #c.access_profile.listeners~=1 then return nil,'device test scope denied' end
  local s=c.services[1];local l=c.access_profile.listeners[1]
@@ -11,15 +14,34 @@ function M.plan(c)
  l.address='127.0.0.1';l.interface='lo'
  return R.render(c,{authorize_listener=function(v)return v.address=='127.0.0.1' and v.internal_port==49284 end,authorize_backend=function(v)return v=='127.0.0.1' end,healthy=function()return true end,certificate_snapshot=function()return {certificate='/tmp/homepublish-device/runtime/cert.pem',key='/tmp/homepublish-device/runtime/key.pem'}end})
 end
-function M.start(plan,g,t)return N.start(plan.configuration,g,t)end
+function M.start(plan,g,t)
+ if not run("test -f /etc/homepublish/device-test/enabled") then return false end
+ if not run("mkdir -p "..root.." && chmod 0700 "..root.." && cp /etc/homepublish/device-test/cert.pem /etc/homepublish/device-test/key.pem "..root.."/ && chmod 0600 "..root.."/*.pem") then return false end
+ -- Root master reads the private key; normal Nginx workers are nobody.
+ write('nginx.conf','user nobody nogroup;\n'..plan.configuration)
+ if not run('/usr/sbin/nginx -t -p '..root..'/ -c nginx.conf >'..root..'/config-test.log 2>&1') then return false end
+ return run('/etc/init.d/homepublish-nginx start')
+end
 function M.readiness()
  for i=1,30 do
-  if not N.renew() then return false end
-  local rc=os.execute("/usr/bin/curl -q --noproxy '*' --connect-timeout 0.05 --max-time 0.1 --cacert /etc/homepublish/device-test/cert.pem --resolve service.home:49284:127.0.0.1 --fail --silent --output /dev/null https://service.home:49284/")
-  if rc==0 then return true end
+  if os.execute("/usr/bin/curl -q --noproxy '*' --connect-timeout 1 --max-time 1 --cacert /etc/homepublish/device-test/cert.pem --resolve service.home:49284:127.0.0.1 --fail --silent --output /dev/null https://service.home:49284/")==0 then return true end
+  os.execute('sleep 1')
  end
  return false
 end
-function M.renew()return N.renew()end
-function M.stop()return N.stop()end
+function M.renew()
+ -- Ordinary health observation, not a short capability/authorization heartbeat.
+ return run("test -f "..root.."/nginx.pid && kill -0 $(cat "..root.."/nginx.pid)")
+end
+function M.stop()
+ if not run('/etc/init.d/homepublish-nginx stop') then return false end
+ -- procd terminates the master, which terminates its workers and connections.
+ for i=1,10 do
+  if not M.renew() then
+   return run('rm -rf '..root)
+  end
+  os.execute('sleep 1')
+ end
+ return false
+end
 return M

@@ -1,5 +1,18 @@
 # Scoped RPC / LuCI 本地切片完成检查点
 
+## 最新结构化表单切片（取代下方旧服务增删/JSON待做描述）
+
+当前结构化LuCI功能切片通过：服务新增/删除/编辑、IPv4/IPv6/hostname后端及备用表单、CIDR逐行输入、鉴权/证书引用、接入方式与listener地址/接口/区域/内外端口已替换JSON编辑；continuous默认/temporary可选。真实Chrome→LuCI loader→官方rpcd→CLI→native保存两服务并刷新读回，编辑删除后revision3/中文emoji保持，重复id/hostname及空服务列表由原canonical拒绝（当前至少1服务），Stop仍独立、Start禁用。Save仅本应用/pending，不启动、不global commit、不改fw/UPnP。普通用户make rpc product controller及root make browser exit0，清理读回无owned进程/挂载/18993/18994/fixture目录。多服务仅配置保存，runtime未宣称支持；下一步多服务controller、bounded recovery/可信时钟/boot、访问向导及目标部署（SSH127.0.0.1:222 refused未恢复，未重试安装）。安全深化暂停、最终风险复评清单保留不扩大；production Start/Apply unsupported、activation_ready=false保持，完整产品未完成。
+
+### 本轮证据与边界
+
+- 基线 `6f37c4797011f5e3ac4bd3d48828ff4f2c2b8641`；只改LuCI表单、正式browser验收及进度文档，无controller/provider/validator安全扩展。
+- RED：正式browser exit2，`access_profile` JSON textarea count=1，不满足结构化表单要求；fixture finally cleanup PASS。
+- GREEN：正式browser exit0。DOM添加第二服务，真实Save revision2读取两服务/双族监听；刷新仍保持。重复id与hostname显示服务器原始 `duplicate service or hostname`，revision不变；编辑中文emoji、删除第一服务、临时1800秒Save revision3并刷新；删除全部服务触发原canonical至少1服务限制，不伪造空配置保存成功。DOM Stop latch=true、Start disabled保留。
+- Windows scratch证据：`C:/Users/xiaoq/AppData/Local/hermes/profiles/ta/cache/scratch/hp-forms-red.log`、`hp-forms-green.log`、`hp-forms-regression.log`；普通用户 `make rpc product controller` exit0（后续git diff --check只发现EOF空行，已删除），真实60秒原deadline/运行中Save pending回归通过。
+- 无生产安装、公网、fw/UPnP写入、push/merge/PR；cached overlay复用，无重建框架。最终localcommit后正式browser再跑，结果由handoff读取。`__pycache__`不提交。剩余统一风险清单不扩展。
+
+
 ## 最新收尾（以下旧blocked段仅保留历史，已被本节取代）
 
 父真实browser与本轮正式 `make browser` 均exit0：实际LuCI loader、DOM Save `家庭 NAS 😀`、saved_revision=1、pending=true、无active revision、DOM Stop latch=true、Start disabled。实际官方rpcd/ubus/uhttpd业务，不是HTTP fake；静态frontend loader外壳仅fixture支持，非完整目标BusyBox/procd证明。uhttpd注入的 `ubus_rpc_session` 已在canonical前剔除。runner有ready/browser/退出deadline及finally清理读回，最后cleanup PASS，owned_processes/mounts/listeners=[]、directory_absent=true。SIGTERM触发KeyboardInterrupt诊断traceback但runner exit0，未扩修。

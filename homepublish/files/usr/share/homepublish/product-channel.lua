@@ -2,7 +2,10 @@
 -- Standard root-private Unix socket; fixed small JSON requests, no exec broker.
 local n=require('nixio');local fs=require('nixio.fs');local M={}
 local path='/var/run/homepublish/control.sock'
-local function ready(s,ms)return n.poll({{fd=s,events=n.poll_flags('in')}},ms)>0 end
+local function ready(s,ms)
+ local f={{fd=s,events=n.poll_flags('in')}}
+ local ok=n.poll(f,ms);return ok and f[1].revents and f[1].revents~=0
+end
 local function read(s)
  local out=''
  while #out<262145 do

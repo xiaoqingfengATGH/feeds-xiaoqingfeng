@@ -18,6 +18,7 @@ local function identifier(s)
  check(type(s)=='string' and #s>=1 and #s<=64 and s:match('^[a-zA-Z0-9_][a-zA-Z0-9_.%-]*$'),'invalid identifier'); return s
 end
 local function hostname(s)
+ if type(s)=='string' then s=s:lower() end -- ASCII DNS / IDNA A-labels; no guessed Unicode conversion.
  check(type(s)=='string' and #s<=253 and #s>0 and not s:find('[^a-z0-9.%-]') and not s:find('..',1,true) and s:sub(1,1)~='.' and s:sub(-1)~='.','invalid hostname')
  for label in s:gmatch('[^.]+') do check(#label<=63 and label:match('^[a-z0-9]') and label:match('[a-z0-9]$'),'invalid hostname label') end
  return s
@@ -95,22 +96,27 @@ local function endpoint(b,backup)
  return r
 end
 local function validate(c)
- object(c,{schema_version=true,services=true,access_profile=true,publication_policy=true})
+ object(c,{schema_version=true,services=true,access_profile=true,publication_policy=true,default_certificate_ref=true})
  check(c.schema_version==1,'unsupported schema')
  array(c.services,1,16)
  local r={schema_version=1,services={}}; local ids,hosts={},{}
+ local function certificate(ref)
+  check(type(ref)=='string','certificate reference required')
+  local provider,id=ref:match('^(%a+):([a-zA-Z0-9_.%-]+)$')
+  check(provider=='acme' or provider=='import','certificate reference provider');identifier(id)
+  return ref
+ end
+ if c.default_certificate_ref~=nil then r.default_certificate_ref=certificate(c.default_certificate_ref) end
  for i,s in ipairs(c.services) do
   object(s,{service_id=true,name=true,hostname=true,backend=true,certificate_ref=true,authentication_review=true})
   local id=identifier(s.service_id); local host=hostname(s.hostname)
   check(not ids[id] and not hosts[host],'duplicate service or hostname'); ids[id]=true; hosts[host]=true
   check(type(s.name)=='string' and #s.name>=1 and #s.name<=128 and not s.name:find('[%z\1-\31\127]'),'invalid service name')
-  check(type(s.certificate_ref)=='string','certificate reference required')
-  local provider,ref=s.certificate_ref:match('^(%a+):([a-zA-Z0-9_.%-]+)$')
-  check(provider=='acme' or provider=='import','certificate reference provider'); identifier(ref)
+  local binding=certificate(s.certificate_ref or r.default_certificate_ref)
   object(s.authentication_review,{authentication=true,management=true})
   check(s.authentication_review.authentication=='confirmed' or s.authentication_review.authentication=='unconfirmed','authentication review')
   check(type(s.authentication_review.management)=='boolean','management review')
-  r.services[i]={service_id=id,name=s.name,hostname=host,backend=endpoint(s.backend),certificate_ref=s.certificate_ref,authentication_review={authentication=s.authentication_review.authentication,management=s.authentication_review.management}}
+  r.services[i]={service_id=id,name=s.name,hostname=host,backend=endpoint(s.backend),certificate_ref=binding,authentication_review={authentication=s.authentication_review.authentication,management=s.authentication_review.management}}
  end
  local a=c.access_profile
  object(a,{methods_allowed=true,listeners=true,gateway_ref=true})

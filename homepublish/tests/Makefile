@@ -1,3 +1,4 @@
+LUA_TEST ?= /home/eric/homestun-sdk-check/local-tools/usr/bin/lua5.1
 .PHONY: browser rpc controller controller-multi direct product guardian guardian-nginx owned-runtime startup-owned trusted-provider openssl-engine audit-regressions
 # WSL root + Windows node.exe/Chrome/Playwright; see RPC checkpoint prerequisites.
 # HP_PLAYWRIGHT is optional when Windows Node can resolve 'playwright'.
@@ -40,6 +41,10 @@ direct:
 	python3 test-direct.py
 	python3 test-direct-boundary.py
 product:
+	$(LUA_TEST) test-certificate-model.lua ../..
+	$(LUA_TEST) test-certificate-san.lua ../..
+	$(LUA_TEST) test-certificate-inventory.lua ../..
+	python3 test-certificate-metadata.py
 	python3 test-product-lifecycle.py
 	python3 test-product-review.py
 	python3 test-product.py

@@ -1,5 +1,9 @@
 # Requirements
 
+## REQ-006 — 家庭统一入口与证书共享（源码切片，待完整验收）
+
+Nginx 是家庭统一入口；入口监听/IPv4-IPv6策略/端口/发布期限为全局设置，服务是域名→后端→证书绑定的虚拟主机。证书库存域名与服务域名分开；支持通配符单层匹配、多SAN、多服务共用引用以及服务独立覆写。私钥仅服务端，不接受客户端路径或上传。推荐 A 原生LuCI列表/编辑对话框，B仅首次新增辅助。本轮先落 canonical/证书匹配与库存内部适配器切片，RPC/UI/安装provider共享运行与真实浏览器仍未完成，详见 [证书UE checkpoint](docs/HOMEPUBLISH-CERTIFICATE-UE-CHECKPOINT.md)。无公网操作。
+
 > **Current r6 simplified-device multi-service acceptance:** Installed conventional Lua provider now renders the complete approved canonical set (two distinct allowed hostnames) into one procd-managed dedicated Nginx generation. Actual target Start/readiness → Save-pending old marker → Apply → two established TLS connections closed on Stop → delete/Apply old-SNI rejection → second-service readiness failure closes the whole generation passed. Business certificate is ONLY `home.iwonderful.top` / `acme:home_rsa` (RSA, system CA); `service.home` uses a separate fixture certificate. Not the historical guardian adapter. Final revision0/disabled/stopped/cleanup confirmed, fixture/runtime absent, both init disabled, routes/listeners/firewall and proxy PID unchanged. SDK r6 source `92c8e33`, package/extracted/installed bytes verified. See [r6 checkpoint](docs/HOMEPUBLISH-DEVICE-MULTI-CHECKPOINT.md). Production/public activation, UI Start/Apply, independent LAN return path and proxy reload remain unverified/unimplemented; no firewall/UPnP/DNS configuration/public writes. Historical r5 single-service limitations below are superseded by this acceptance.
 
 

@@ -46,6 +46,24 @@ function fixture(initial = 'unbound') {
     setDeployJob: s => { deployJob = s; }, getState: () => state, nodes };
 }
 
+test('wizard content omits duplicate title while retaining banner and six steps', () => {
+  const f = fixture();
+  f.wizard.certOk = false;
+  f.wizard.bound = false;
+  const root = f.wizard.renderInner();
+  const descendants = [];
+  function walk(node) {
+    if (!node || typeof node !== 'object' || !node.tag) return;
+    descendants.push(node);
+    (node.children || []).forEach(walk);
+  }
+  walk(root);
+  assert.equal(descendants.filter(n => n.tag === 'h2' && String(n.textContent) === 'HomeTunnel Access').length, 0);
+  assert.equal(descendants.filter(n => (n.attrs.class || '').split(' ').includes('ht-info-banner')).length, 1);
+  assert.equal(descendants.filter(n => (n.attrs.class || '').split(' ').includes('ht-stepbar')).length, 1);
+  assert.equal(descendants.filter(n => (n.attrs.class || '').split(' ').includes('ht-step')).length, 6);
+});
+
 test('pending after reload offers verify without upload or rebind', async () => {
   const f = fixture('pending');
   await f.wizard.probeState();

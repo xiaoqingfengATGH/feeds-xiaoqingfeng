@@ -227,13 +227,9 @@ return view.extend({
 		var container = htui.apply(E('div', {}, [
 			E('h2', {}, _('HomeTunnel')),
 			E('div', {
-				'class': 'd-flex align-items-center flex-wrap',
-				'style': 'gap:.5rem;padding:.6rem 1rem;border-radius:.5rem;'
-					+ 'background:linear-gradient(rgba(52,140,212,.14),rgba(52,140,212,.14)),rgba(54,64,74,.9);'
-					+ 'border:1px solid rgba(52,140,212,.3);'
-					+ 'color:inherit'
+				'class': 'ht-info-banner d-flex align-items-center flex-wrap'
 			}, [
-				E('span', { 'class': 'dripicons-graph-line', 'style': 'font-size:16px;margin-right:8px;color:#348cd4' }),
+				E('span', { 'class': 'ht-info-icon dripicons-graph-line', 'aria-hidden': 'true' }),
 				_('Live topology generated from your configuration.')
 			])
 		]));

@@ -103,15 +103,10 @@ return view.extend({
 	renderInner: function () {
 		var step = this.getStep();
 		var container = htui.apply(E('div', {}, [
-			E('h2', {}, _('HomeTunnel Access')),
 			E('div', {
-				'class': 'd-flex align-items-center flex-wrap',
-				'style': 'gap:.5rem;padding:.6rem 1rem;border-radius:.5rem;'
-					+ 'background:linear-gradient(rgba(52,140,212,.14),rgba(52,140,212,.14)),rgba(54,64,74,.9);'
-					+ 'border:1px solid rgba(52,140,212,.3);'
-					+ 'color:inherit'
+				'class': 'ht-info-banner d-flex align-items-center flex-wrap'
 			}, [
-				E('span', { 'class': 'dripicons-information', 'style': 'font-size:16px;margin-right:8px;color:#348cd4' }),
+				E('span', { 'class': 'ht-info-icon dripicons-information', 'aria-hidden': 'true' }),
 				this.bound ? _('The access wizard is complete. Adjust exposed intranet services in "Ingress Rules". Revoke only when you need to change the tunnel domain.')
 					: _('Open a browser and log into your Cloudflare account. Then follow the steps below to set up the intranet-exposure tunnel.')
 				])
@@ -126,25 +121,17 @@ return view.extend({
 			_('⑥ Verify & Finish')
 		];
 
-		/* 步骤指示器（stepper）: 已完成=绿勾徽章 / 当前=蓝胶囊 / 未到=灰。
-		 * 配色对齐主题: badge-soft-success(#78c350 on 18% green) + 主题蓝 #348cd4 + 卡片深底。
-		 * 标题自带 ①-⑧ 编号，不再重复加数字；箭头与后续胶囊绑成单元，换行时成对移动 */
+		/* Role-based stepper: done=check/success border, active=inverted ink/surface,
+		 * idle=readable neutral. Arrows travel with the next pill when wrapping. */
 		var stepBar = E('div', {
-			'class': 'd-flex align-items-center flex-wrap',
-			'style': 'gap:.3rem;padding:.5rem .65rem;border-radius:.5rem;'
-				+ 'background:rgba(54,64,74,.9);border:1px solid rgba(255,255,255,.07)'
+			'class': 'ht-stepbar d-flex align-items-center flex-wrap'
 		});
 		titles.forEach(function (t, i) {
 			var done = i < step - 1;
 			var active = i === step - 1;
 			var pill = E('span', {
-				'class': 'd-inline-flex align-items-center',
-				'style': 'gap:.3rem;padding:.22rem .6rem;border-radius:999px;font-size:12.5px;white-space:nowrap;'
-					+ (done
-						? 'color:#78c350;background-color:rgba(120,195,80,.18);'
-						: active
-							? 'color:#fff;background-color:#348cd4;font-weight:600;'
-							: 'color:rgba(148,160,173,.55);background-color:rgba(255,255,255,.05);')
+				'class': 'ht-step d-inline-flex align-items-center ' + (done ? 'is-done' : active ? 'is-active' : 'is-idle'),
+				'aria-current': active ? 'step' : 'false'
 			}, [
 				done ? E('span', { 'class': 'dripicons-checkmark', 'style': 'font-size:12px' }) : null,
 				E('span', {}, t)
@@ -155,8 +142,8 @@ return view.extend({
 				/* 连接箭头：通向已完成步骤的段绿色，否则暗灰；与胶囊绑成整体防孤行 */
 				stepBar.appendChild(E('span', { 'class': 'd-inline-flex align-items-center', 'style': 'white-space:nowrap' }, [
 					E('span', {
-						'class': 'dripicons-arrow-thin-right',
-						'style': 'font-size:11px;margin:0 .2rem;color:' + (i < step ? '#78c350' : 'rgba(148,160,173,.35)')
+						'class': 'ht-step-arrow dripicons-arrow-thin-right ' + (i < step ? 'is-done' : 'is-idle'),
+						'aria-hidden': 'true'
 					}),
 					pill
 				]));

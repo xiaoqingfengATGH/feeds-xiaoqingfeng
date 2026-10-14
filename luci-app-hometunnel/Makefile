@@ -8,7 +8,7 @@ include $(TOPDIR)/rules.mk
 
 PKG_NAME:=luci-app-hometunnel
 PKG_VERSION:=1.0.0
-PKG_RELEASE:=1
+PKG_RELEASE:=3
 PKG_LICENSE:=Apache-2.0
 PKG_MAINTAINER:=xiaoqingfeng <xiaoqingfengatgm@gmail.com>
 PKGARCH:=all
@@ -17,10 +17,10 @@ LUCI_TITLE:=LuCI support for hometunnel
 LUCI_DESCRIPTION:=HomeLede-tailored Cloudflare Tunnel intranet exposure: wizard, \
  ingress rules, on-demand control plane (Worker), auto-renew on traffic, fail-closed.
 LUCI_DEPENDS:=+hometunnel
+# Preserve the reviewed JavaScript bytes in the published package.
+LUCI_MINIFY_JS:=0
 
-define Package/$(PKG_NAME)/conffiles
-/etc/config/hometunnel
-endef
+# /etc/config/hometunnel is owned by the hometunnel runtime package.
 
 include $(TOPDIR)/feeds/luci/luci.mk
 

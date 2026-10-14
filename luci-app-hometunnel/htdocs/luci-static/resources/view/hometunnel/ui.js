@@ -71,9 +71,50 @@ var CSS = `
 .ht-ui pre{background:rgba(0,0,0,.3);border:1px solid rgba(255,255,255,.09);border-radius:4px;
  padding:.55em .75em;color:#a9b7c6;white-space:pre-wrap}
 /* ---- 原生 select (cbi-input-select): ng.css 无规则, 对齐主题下拉配色 ---- */
-.ht-ui select.cbi-input-select{background:linear-gradient(#3b4651,#333d47);border:1px solid #424e5a;
- border-radius:3px;color:#c0cbd4;padding:.42rem .6rem;min-width:220px;outline:none}
-.ht-ui select.cbi-input-select:focus{border-color:#348cd4}
+/* Live role bridge: brand marks are separate from readable ink/surface. */
+.ht-ui{--ht-ink:var(--bs-gray-700,#dee2e6);--ht-surface:var(--bs-gray-200,#36404a);
+ --ht-raised:var(--bs-gray-100,#323a46);--ht-line:var(--bs-gray-500,#8c98a5);
+ --ht-brand:var(--bs-primary,#348cd4);--ht-good:var(--bs-success,#78c350)}
+/* Own the entire pair, even when the footer adds .form-select. */
+.ht-ui.ht-ui select.cbi-input-select{background-color:var(--ht-surface);background-image:none;
+ color:var(--ht-ink);border:1px solid var(--ht-line);border-radius:3px;
+ padding:.42rem .6rem;min-width:220px;outline:none;appearance:auto}
+.ht-ui.ht-ui select.cbi-input-select:focus{background-color:var(--ht-surface);background-image:none;
+ color:var(--ht-ink);border-color:var(--ht-brand);outline:2px solid var(--ht-ink);
+ outline-offset:2px;box-shadow:none}
+.ht-ui .ht-stepbar{gap:.3rem;padding:.5rem .65rem;border-radius:.5rem;
+ background:var(--ht-surface);color:var(--ht-ink);border:1px solid var(--ht-line)}
+.ht-ui .ht-step{gap:.3rem;padding:.22rem .6rem;border-radius:999px;font-size:12.5px;
+ white-space:nowrap;background:var(--ht-raised);color:var(--ht-ink);border:1px solid var(--ht-line)}
+.ht-ui .ht-step.is-done{background:var(--ht-surface);color:var(--ht-ink);border-color:var(--ht-good)}
+/* Invert the proven ink/surface pair, not white on an arbitrary brand fill. */
+.ht-ui .ht-step.is-active{background:var(--ht-ink);color:var(--ht-surface);
+ border-color:var(--ht-brand);font-weight:600}
+.ht-ui .ht-step-arrow{font-size:11px;margin:0 .2rem;color:var(--ht-ink)}
+.ht-ui .ht-step-arrow.is-done{color:var(--ht-good)}
+.ht-ui .ht-info-banner{gap:.5rem;padding:.6rem 1rem;border-radius:.5rem;
+ background:var(--ht-surface);color:var(--ht-ink);border:1px solid var(--ht-brand)}
+.ht-ui .ht-info-icon{font-size:16px;margin-right:8px;vertical-align:-2px;color:var(--ht-brand)}
+/* Existing shared compatibility components: keep each ink/background pair
+ * together; semantic meaning stays in borders/icons, not low-contrast text. */
+.ht-ui.ht-ui .alert-message,.ht-ui.ht-ui .label,.ht-ui.ht-ui pre,
+.ht-ui.ht-ui .alert-message pre,.ht-ui.ht-ui .btn.cbi-button,
+.ht-ui.ht-ui .btn.cbi-button:hover{background:var(--ht-surface);color:var(--ht-ink);
+ border-color:var(--ht-line)}
+.ht-ui.ht-ui .alert-message.warning{border-color:var(--bs-warning,#ff9800)}
+.ht-ui.ht-ui .alert-message.success,.ht-ui.ht-ui .label.success{border-color:var(--ht-good)}
+.ht-ui.ht-ui .alert-message.error{border-color:var(--bs-danger,#f7531f)}
+.ht-ui.ht-ui .label{border:1px solid var(--ht-line)}
+.ht-ui.ht-ui .btn.cbi-button-apply,.ht-ui.ht-ui .btn.cbi-button-apply:hover,
+.ht-ui.ht-ui .btn.cbi-button-save,.ht-ui.ht-ui .btn.cbi-button-save:hover,
+.ht-ui.ht-ui .btn.cbi-button-edit,.ht-ui.ht-ui .btn.cbi-button-edit:hover{
+ background:var(--ht-ink);color:var(--ht-surface);border-color:var(--ht-brand)}
+.ht-ui.ht-ui .btn.cbi-button-add{border-color:var(--ht-good)}
+.ht-ui.ht-ui .btn.cbi-button-reset{border-color:var(--bs-warning,#ff9800)}
+.ht-ui.ht-ui .btn.cbi-button-negative,.ht-ui.ht-ui .btn.cbi-button-remove{border-color:var(--bs-danger,#f7531f)}
+#view:has(.ht-ui) .cbi-dropdown.cbi-button-apply,
+#view:has(.ht-ui) .cbi-dropdown.cbi-button-apply:hover{
+ background:var(--bs-gray-700,#dee2e6);color:var(--bs-gray-200,#36404a);border-color:var(--bs-primary,#348cd4)}
 `;
 
 return baseclass.extend({

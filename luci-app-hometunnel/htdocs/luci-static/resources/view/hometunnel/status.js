@@ -75,18 +75,14 @@ return view.extend({
 			var cfState = parseCfState(backendStatus);
 
 			var descrChildren = [
-				E('span', { 'class': 'dripicons-cloud', 'style': 'font-size:16px;margin-right:8px;vertical-align:-2px;color:#348cd4' }),
+				E('span', { 'class': 'ht-info-icon dripicons-cloud', 'aria-hidden': 'true' }),
 				_('HomeTunnel is the Homelede intranet-exposure solution built on Cloudflare Tunnel. It works with or without a public IP, and is secure and free.')
 			];
 
 			var container = htui.apply(E('div', {}, [
 				E('h2', {}, _('HomeTunnel')),
 				E('div', {
-					'class': 'd-flex align-items-center flex-wrap',
-					'style': 'gap:.5rem;padding:.6rem 1rem;border-radius:.5rem;'
-						+ 'background:linear-gradient(rgba(52,140,212,.14),rgba(52,140,212,.14)),rgba(54,64,74,.9);'
-						+ 'border:1px solid rgba(52,140,212,.3);'
-						+ 'color:inherit'
+					'class': 'ht-info-banner d-flex align-items-center flex-wrap'
 				}, descrChildren)
 			]));
 

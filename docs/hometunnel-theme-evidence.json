@@ -1,0 +1,50 @@
+{
+  "five_palettes": {
+    "palettes": 5,
+    "slice": "all",
+    "checks": 915,
+    "failures": [],
+    "source_sha256": {
+      "D:\\DevPortal\\homelede\\wt-hometunnel-theme-unified\\luci-app-hometunnel\\htdocs\\luci-static\\resources\\view\\hometunnel\\ui.js": "127f2dfda3d189ade259439cfabda80d0c1bee6230415081dfba439f8f9dfc65",
+      "D:\\DevPortal\\homelede\\wt-hometunnel-theme-unified\\luci-app-hometunnel\\htdocs\\luci-static\\resources\\view\\hometunnel\\settings.js": "fb55681517c1527c4edb8bfad6c6b3805cc2b20b008575944a9cc9ba7845a150",
+      "D:\\DevPortal\\homelede\\wt-hometunnel-theme-unified\\luci-app-hometunnel\\htdocs\\luci-static\\resources\\view\\hometunnel\\wizard.js": "46a9289bf57b889983d423d570d3b40077cadb0c1de8c01ba0168fe05fc76cd7",
+      "D:\\DevPortal\\homelede\\wt-hometunnel-theme-unified\\luci-app-hometunnel\\htdocs\\luci-static\\resources\\view\\hometunnel\\status.js": "70186a1166def684129e789ee4afed04b909a5d4e19e19b6888c042323cf8855",
+      "D:\\DevPortal\\homelede\\wt-hometunnel-theme-unified\\luci-app-hometunnel\\htdocs\\luci-static\\resources\\view\\hometunnel\\diagram.js": "6e6be69efe7cb2a6e041a7d6e5154295a1d46453057028753d3625b866cc3055"
+    },
+    "native_option_popup": "not visually validated",
+    "browser": "real headless Microsoft Edge",
+    "theme_css_sha256": {
+      "D:\\DevPortal\\homelede\\luci-theme-infinityfreedom\\luci-theme-infinityfreedom-ng\\htdocs\\luci-static\\infinityfreedom-ng\\assets\\css\\app-dark.min.css": "b583c6ffc110173963d2c297b722e57b673a91deb812bc282c6c33b66de69a90",
+      "D:\\DevPortal\\homelede\\luci-theme-infinityfreedom\\luci-theme-infinityfreedom-ng\\htdocs\\luci-static\\infinityfreedom-ng\\assets\\css\\app.min.css": "43ed4d9a4c57b8587be32c419371fb6df05aa0796544d350e8ff3b518a9c02e3",
+      "D:\\DevPortal\\homelede\\luci-theme-infinityfreedom\\luci-theme-infinityfreedom-ng\\htdocs\\luci-static\\infinityfreedom-ng\\assets\\css\\bootstrap-dark.min.css": "46e64913413b4aeea15921ece0d9760068de56b82a6a63c72d5815aedb493523",
+      "D:\\DevPortal\\homelede\\luci-theme-infinityfreedom\\luci-theme-infinityfreedom-ng\\htdocs\\luci-static\\infinityfreedom-ng\\assets\\css\\bootstrap.min.css": "ca4c1b1a9d5086c268f9fb0c437b42178933d1d175813d193be75c81901fa131",
+      "D:\\DevPortal\\homelede\\luci-theme-infinityfreedom\\luci-theme-infinityfreedom-ng\\htdocs\\luci-static\\infinityfreedom-ng\\assets\\css\\ng.css": "c1d5f95b9bdad6a19d1d536d88a8ed082496634687ed9141b414d6758ab0623c",
+      "D:\\DevPortal\\homelede\\luci-theme-infinityfreedom\\luci-theme-infinityfreedom-ng\\htdocs\\luci-static\\infinityfreedom-ng\\assets\\css\\palette-blackgold.min.css": "7175d1e988128eadd45ed8e8b1130993dad91a678ec007e0c747f2e872e821e5",
+      "D:\\DevPortal\\homelede\\luci-theme-infinityfreedom\\luci-theme-infinityfreedom-ng\\htdocs\\luci-static\\infinityfreedom-ng\\assets\\css\\palette-canyon.min.css": "819e2384855019e4d628e924201e4178bb95eb63a9878cc1445cb6cb5ea9c500",
+      "D:\\DevPortal\\homelede\\luci-theme-infinityfreedom\\luci-theme-infinityfreedom-ng\\htdocs\\luci-static\\infinityfreedom-ng\\assets\\css\\palette-luminousblue-light.min.css": "d0d850517b8ae37080c1d595feeca524908fabfa8de07ae89a6a0ca0ce9141e7",
+      "D:\\DevPortal\\homelede\\luci-theme-infinityfreedom\\luci-theme-infinityfreedom-ng\\htdocs\\luci-static\\infinityfreedom-ng\\assets\\css\\palette-luminousblue.min.css": "e54d89d954e8aec974bad0759f568cf5f36a99fa780684d818729003959857ed"
+    }
+  },
+  "unthemed": {
+    "palettes": 1,
+    "slice": "all",
+    "checks": 183,
+    "failures": [],
+    "source_sha256": {
+      "D:\\DevPortal\\homelede\\wt-hometunnel-theme-unified\\luci-app-hometunnel\\htdocs\\luci-static\\resources\\view\\hometunnel\\ui.js": "127f2dfda3d189ade259439cfabda80d0c1bee6230415081dfba439f8f9dfc65",
+      "D:\\DevPortal\\homelede\\wt-hometunnel-theme-unified\\luci-app-hometunnel\\htdocs\\luci-static\\resources\\view\\hometunnel\\settings.js": "fb55681517c1527c4edb8bfad6c6b3805cc2b20b008575944a9cc9ba7845a150",
+      "D:\\DevPortal\\homelede\\wt-hometunnel-theme-unified\\luci-app-hometunnel\\htdocs\\luci-static\\resources\\view\\hometunnel\\wizard.js": "46a9289bf57b889983d423d570d3b40077cadb0c1de8c01ba0168fe05fc76cd7",
+      "D:\\DevPortal\\homelede\\wt-hometunnel-theme-unified\\luci-app-hometunnel\\htdocs\\luci-static\\resources\\view\\hometunnel\\status.js": "70186a1166def684129e789ee4afed04b909a5d4e19e19b6888c042323cf8855",
+      "D:\\DevPortal\\homelede\\wt-hometunnel-theme-unified\\luci-app-hometunnel\\htdocs\\luci-static\\resources\\view\\hometunnel\\diagram.js": "6e6be69efe7cb2a6e041a7d6e5154295a1d46453057028753d3625b866cc3055"
+    },
+    "native_option_popup": "not visually validated",
+    "browser": "real headless Microsoft Edge",
+    "theme_css_sha256": {
+      "D:\\DevPortal\\homelede\\luci-theme-infinityfreedom\\luci-theme-infinityfreedom-ng\\htdocs\\luci-static\\infinityfreedom-ng\\assets\\css\\app-dark.min.css": "b583c6ffc110173963d2c297b722e57b673a91deb812bc282c6c33b66de69a90",
+      "D:\\DevPortal\\homelede\\luci-theme-infinityfreedom\\luci-theme-infinityfreedom-ng\\htdocs\\luci-static\\infinityfreedom-ng\\assets\\css\\app.min.css": "43ed4d9a4c57b8587be32c419371fb6df05aa0796544d350e8ff3b518a9c02e3",
+      "D:\\DevPortal\\homelede\\luci-theme-infinityfreedom\\luci-theme-infinityfreedom-ng\\htdocs\\luci-static\\infinityfreedom-ng\\assets\\css\\bootstrap-dark.min.css": "46e64913413b4aeea15921ece0d9760068de56b82a6a63c72d5815aedb493523",
+      "D:\\DevPortal\\homelede\\luci-theme-infinityfreedom\\luci-theme-infinityfreedom-ng\\htdocs\\luci-static\\infinityfreedom-ng\\assets\\css\\bootstrap.min.css": "ca4c1b1a9d5086c268f9fb0c437b42178933d1d175813d193be75c81901fa131",
+      "D:\\DevPortal\\homelede\\luci-theme-infinityfreedom\\luci-theme-infinityfreedom-ng\\htdocs\\luci-static\\infinityfreedom-ng\\assets\\css\\ng.css": "c1d5f95b9bdad6a19d1d536d88a8ed082496634687ed9141b414d6758ab0623c"
+    }
+  }
+}

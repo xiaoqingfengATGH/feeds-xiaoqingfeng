@@ -29,3 +29,13 @@
 - 本地验收：Node 三份共20/20、JS/测试语法、WSL资源打包 fixture 1/1、现有四配色生成器只读 `--check`、`git diff --check`。
 - 文档：`luci-app-homestatus/README.md` 与 `docs/homestatus-phase2-verification.md`。
 - 未执行：浏览器布局/视觉、真实 LuCI/RPC/设备、SDK/IPK、部署、合并、推送、PR。CSS契约/jsdom不是视觉验收。
+
+## REQ-HT-001 — HomeTunnel 横幅、设置下拉与向导主题适配
+
+- 状态：已验收修复及重复标题移除已冻结为 `luci-app-hometunnel 1.0.0-r3` 源码，准备 squash 发布 master；本轮不构建、不安装 r3。
+- 基线：Feed `9730a0a`；主题只读 `0bc8b5a` r13；分支 `fix/hometunnel-theme-unified`。
+- 范围：共享 ui.js 实时 --bs-* 角色桥，三视图说明横幅，原生设置/domain select 完整颜色配对与焦点环，六步向导状态 class；移除内容区重复 h2，保留外壳标题、说明、步骤与控件。保留 QR 白底与后端行为；既有共享 alert/button/label/pre 成对兼容。
+- 验收：五配色 Edge 915 检查零失败；无主题 fallback 183 检查零失败；wizard 10/10；diagram 30/30。测试机此前 r2 加 wizard 热修复已验收六步、说明与控件，内容 h2=0；不是 r3 安装证据。原生 OS option 弹层视觉及真实主题菜单缓存切换未验，不扩大声明。
+- 缓存：模块 ?v= 使用 LuCI 全局 resource_version，不随应用 release 自动变化；不修改全站键，不声称 r3 自动失效缓存。
+- 包边界：仅 LuCI 包 release 2→3；runtime hometunnel 版本/源码不改，配置仍由 runtime 所有；保留 LUCI_MINIFY_JS:=0。r2 IPK 不含标题移除，r3 尚未构建，不能声明字节等价或已部署。
+- 证据与命令：`docs/hometunnel-theme-unified.md`；`docs/hometunnel-r3-publication.md`；`luci-app-hometunnel/test/theme-browser-test.py`。

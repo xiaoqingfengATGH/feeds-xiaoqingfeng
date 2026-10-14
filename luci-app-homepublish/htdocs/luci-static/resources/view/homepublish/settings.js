@@ -1,85 +1,29 @@
 /* SPDX-License-Identifier: Apache-2.0 */
 'use strict';
 'require view';
-'require form';
-'require rpc';
-'require uci';
-'require view.homepublish.schema as schema';
-
-var status = rpc.declare({object: 'homepublish', method: 'status', expect: {}});
-var commit = rpc.declare({object: 'uci', method: 'commit', params: ['config'], reject: true});
+'require view.homepublish.product as api';
 return view.extend({
- handleSave: function() {
-  var self = this;
-  return this.map.save().then(function() { return commit('homepublish'); }).then(function() {
-   return status().catch(function() { return {state: 'unavailable'}; });
-  }).then(function(st) { self.statusNode.textContent = self.statusText(st); });
- },
- statusText: function(st) {
-  var states = {disabled: _('disabled'), configured: _('configured (not proof of a running lease)'), invalid: _('invalid configuration'), unavailable: _('unavailable')};
-  return _('Configuration') + ': ' + (states[st.state] || states.unavailable) + '; ' + _('Publication configuration') + ': ' + (states[st.publication] || states.unavailable);
- },
- load: function() {
-  return Promise.all([status().catch(function() { return {state: 'unavailable'}; }), uci.load('homepublish')]);
- },
- render: function(data) {
-  var st = data[0] || {}, m = new form.Map('homepublish', _('HomePublish — Settings'),
-   _('Configuration only. Saving does not open a lease. Enabling permits a later manual service start (and boot start if separately enabled). Each lease has a fixed TTL, no automatic renewal or respawn.'));
-  var service = m.section(form.NamedSection, 'main', 'service', _('Lease configuration'));
-  var s = service;
-  var originalSave = m.save;
-  m.save = function(cb, silent) {
-   // TypedSection add/remove uses save(null, true) before new inputs exist.
-   // That only stages session edits and renders; explicit Save validates the
-   // complete form before staging or committing any enabled configuration.
-   if (silent === true)
-    return originalSave.call(this, cb, silent);
-   var c = {}, hosts = [];
-   ['enabled', 'exposure_approved', 'ttl', 'port', 'bind_port', 'stun_server', 'http_server'].forEach(function(k) { c[k] = service.formvalue('main', k); });
-   hostSection.cfgsections().forEach(function(id) { hosts.push({name: hostSection.formvalue(id, 'name'), upstream: hostSection.formvalue(id, 'upstream')}); });
-   var valid = schema.configuration(c, hosts);
-   return valid === true ? originalSave.call(this, cb, silent) : Promise.reject(new Error(_(valid)));
-  };
-  function flag(name, label, description) {
-   var o = s.option(form.Flag, name, label, description); o.default = '0'; o.rmempty = false; return o;
-  }
-  flag('enabled', _('Permit HomePublish'));
-  flag('exposure_approved', _('I have reviewed direct exposure'), _('Every upstream must enforce its own authentication. Entry-page authentication and Cloudflare protection do NOT protect direct services. Do not expose router management, NAS administration or printers.'));
-  flag('publication_enabled', _('Permit authenticated entry publication'), _('Publication is independent of public reachability. Provision the dedicated root-owned 0600 credential outside this UI. No token is accepted here.'));
-  function value(name, label, datatype, validate) {
-   var o = s.option(form.Value, name, label); o.rmempty = false; o.retain = true;
-   o.depends('homepublish.main.enabled', '1');
-   if (validate) o.validate = function(section, v) { return validate(v) || _('Invalid or unsafe value'); };
-   return o;
-  }
-  value('ttl', _('Fixed lease TTL (seconds)'), 'range(1,120)');
-  value('port', _('Isolated loopback TLS port'), 'range(1024,65535)');
-  var bind = value('bind_port', _('Dedicated NATMap bind port'), 'range(1024,65535)');
-  bind.validate = function(section, v) {
-   return v !== this.section.formvalue(section, 'port') || _('The two isolated ports must differ');
-  };
-  value('stun_server', _('STUN discovery server'), null, schema.server);
-  value('http_server', _('Discovery HTTP server'), null, schema.server);
-  // Fixed references are not editable file access capabilities.
-  var refs = s.option(form.DummyValue, '_private_paths', _('Private file references'));
-  refs.rawhtml = false;
-  refs.cfgvalue = function() { return '/etc/homepublish/router.token (root-owned 0600); /etc/homepublish/cert.pem; /etc/homepublish/key.pem; listen: 127.0.0.1'; };
-  s = m.section(form.TypedSection, 'host', _('Direct services'), _('1–16 distinct lowercase fully qualified hostnames. Private IPv4 HTTP upstreams only, explicit ports 1024–65535. TLS and service authentication must be prepared independently. Backend validation remains authoritative.'));
-  var hostSection = s;
-  s.anonymous = true; s.addremove = true;
-  value('name', _('Service hostname'), null, schema.hostname);
-  value('upstream', _('Private HTTP upstream'), null, schema.upstream);
-  this.map = m;
-  this.statusNode = E('p', {}, this.statusText(st));
-  var self = this;
-  return m.render().then(function(node) {
-   return E('div', {}, [
-    E('h3', {}, _('Configuration status (committed configuration)')),
-    self.statusNode,
-    E('p', {}, _('Live lease: not observed. Mapped endpoint: unknown. Public reachability: unverified. No live integration claim is made.')),
-    node
-   ]);
+ api:api,
+ load:function(){return api.status().then(api.checked);},
+ render:function(s){
+  var self=this,c=JSON.parse(JSON.stringify(s.saved_config || api.defaults())),fields=[],root=E('div'),message=E('p',{id:'hp-message'},api.text(s));
+  this.revision=s.saved_revision;
+  root.appendChild(E('h2',{},_('HomePublish services')));root.appendChild(E('p',{},_('Canonical configuration only. Save persists this application without starting or applying. Stop is separate. Access profile is explicit JSON until the access wizard is implemented.')));root.appendChild(message);
+  function field(container,key,label,value,type,assign){var input=E(type==='textarea'?'textarea':'input',{'data-field':key,type:type==='checkbox'?'checkbox':'text'});if(type==='checkbox')input.checked=!!value;else input.value=value;fields.push(function(){assign(type==='checkbox'?input.checked:input.value);});container.appendChild(E('label',{},[label,input]));container.appendChild(E('br'));return input;}
+  c.services.forEach(function(service){var box=E('fieldset',{},E('legend',{},service.service_id));root.appendChild(box);
+   ['service_id','name','hostname','certificate_ref'].forEach(function(k){field(box,k,k,service[k],null,function(v){service[k]=v;});});
+   ['addressFamily','host','port'].forEach(function(k){field(box,'backend_'+k,'Backend '+k,service.backend[k],null,function(v){service.backend[k]=k==='port'?Number(v):v;});});
+   field(box,'ranges','Allowed backend ranges (JSON)',JSON.stringify(service.backend.allowed_ranges),'textarea',function(v){service.backend.allowed_ranges=JSON.parse(v);});
+   field(box,'backup','Optional backup (JSON or empty)',service.backend.backup?JSON.stringify(service.backend.backup):'','textarea',function(v){if(v.trim())service.backend.backup=JSON.parse(v);else delete service.backend.backup;});
+   field(box,'authentication','Authentication review: confirmed / unconfirmed',service.authentication_review.authentication,null,function(v){service.authentication_review.authentication=v;});
+   field(box,'management','Management service',service.authentication_review.management,'checkbox',function(v){service.authentication_review.management=v;});
   });
- },
- handleSaveApply: null
+  field(root,'access_profile','Access profile (canonical JSON)',JSON.stringify(c.access_profile,null,2),'textarea',function(v){c.access_profile=JSON.parse(v);});
+  field(root,'mode','Publication policy: continuous / temporary',c.publication_policy.mode,null,function(v){c.publication_policy.mode=v;});
+  var duration=field(root,'temporary_duration','Temporary duration seconds (60–86400; ignored for continuous)',c.publication_policy.temporary_duration || 1800,null,function(v){if(c.publication_policy.mode==='temporary')c.publication_policy.temporary_duration=Number(v);else delete c.publication_policy.temporary_duration;});
+  field(root,'boot_restore','Boot restore (default off; production activation unsupported)',c.publication_policy.boot_restore,'checkbox',function(v){c.publication_policy.boot_restore=v;});
+  var button=E('button',{id:'hp-save',class:'cbi-button cbi-button-save',click:function(){return self.handleSave();}},_('Save configuration'));root.appendChild(button);
+  this.handleSave=function(){button.disabled=true;var committed=false;return Promise.resolve().then(function(){fields.forEach(function(f){f();});return api.validate(c);}).then(function(v){api.checked(v);if(!v.valid)throw new Error('Invalid configuration');return api.save(self.revision,v.config);}).then(function(st){api.checked(st);committed=true;self.revision=st.saved_revision;return api.status();}).then(function(st){api.checked(st);message.textContent='Saved revision '+self.revision+' (not applied). '+api.text(st);}).catch(function(e){message.textContent=(committed?'Save committed; status refresh failed: ':'Save failed: ')+e.message;}).finally(function(){button.disabled=false;});};
+  return root;
+ },handleSaveApply:null,handleReset:null
 });

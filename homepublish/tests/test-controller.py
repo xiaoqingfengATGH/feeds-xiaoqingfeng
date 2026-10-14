@@ -113,7 +113,13 @@ def main():
    old=call({'action':'event','generation':generation});assert old['desired_state']['manual_stop_latch'] and absent()
    restarted=call({'action':'start','revision':2,'approved':True});assert restarted['runtime']['phase']=='running',restarted
    assert restarted['runtime']['generation']>generation
-   cli({'action':'stop'}) # separate process revokes intent; controller cleans it
+   plugin=ROOT/'luci-app-homepublish/root/usr/libexec/rpcd/homepublish'
+   script=plugin.read_text().replace('/usr/bin/lua',LUA).replace('/usr/share/homepublish',str(SHARE))
+   rpc_plugin=d/'rpc-homepublish';rpc_plugin.write_text(script);rpc_plugin.chmod(0o755)
+   revoked=subprocess.run([str(rpc_plugin),'call','stop'],input='{}',text=True,capture_output=True,env=env,timeout=3)
+   assert revoked.returncode==0,(revoked.stdout,revoked.stderr)
+   revoked=json.loads(revoked.stdout)
+   assert revoked['desired_state']['manual_stop_latch'] and revoked['runtime']['phase']=='cleanup_required',revoked
    time.sleep(.4)
    stopped=call({'action':'status'});assert stopped['runtime']['phase']=='stopped' and absent(),stopped
    config['services'][0]['name']='after-stop';cli({'action':'save','expected_revision':2,'config':config});time.sleep(.25);assert absent()

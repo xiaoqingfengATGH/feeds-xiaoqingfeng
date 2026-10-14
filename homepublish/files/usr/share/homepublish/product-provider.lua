@@ -48,8 +48,9 @@ local function public(state)
 end
 function M.handle(request)
  if type(request)~='table' or getmetatable(request)~=nil then return nil,'request object required' end
- local allowed=request.action=='save' and {action=true,expected_revision=true,config=true} or {action=true}
+ local allowed=request.action=='save' and {action=true,expected_revision=true,config=true} or request.action=='validate' and {action=true,config=true} or {action=true}
  for k in pairs(request) do if not allowed[k] then return nil,'unknown request field' end end
+ if request.action=='validate' then local c,e=model.validate(request.config);return c and {valid=true,config=c} or {valid=false,error=e} end
  if request.action~='save' and request.action~='status' and request.action~='stop' and request.action~='start' and request.action~='apply' then return nil,'unsupported action' end
  if request.action=='start' or request.action=='apply' then return nil,'unsupported: runtime not implemented' end
  return store.transaction(function(bytes)

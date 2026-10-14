@@ -1,1 +1,1 @@
-{"luci-app-homepublish":{"description":"HomePublish configuration and read-only validation status","read":{"uci":["homepublish"],"ubus":{"homepublish":["status"]}},"write":{"uci":["homepublish"],"ubus":{"uci":["commit"]}}}}
+{"luci-app-homepublish":{"description":"HomePublish canonical status, validation, scoped save and durable stop","read":{"ubus":{"homepublish":["status","validate"]}},"write":{"ubus":{"homepublish":["save","stop"]}}}}

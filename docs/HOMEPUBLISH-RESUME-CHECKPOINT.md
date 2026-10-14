@@ -1,5 +1,7 @@
 # HomePublish 已恢复：当前续跑入口
 
+当前RPC/LuCI本地切片通过：真实plugin→CLI→native Save/Stop、运行中controller撤意图/TLS关闭及中文+emoji JSON pair回归通过；官方24.10.5依赖已获准download到私有overlay。父真实browser及本轮正式browser target均exit0，loader/DOM Save revision1 pending/DOM Stop latch通过，最终owned进程/挂载/18993/18994/目录无残留。普通用户make rpc controller product exit0，生产仍禁激活，完整产品与目标BusyBox/procd尚未完成。详情及下一依赖见 [RPC checkpoint](HOMEPUBLISH-RPC-CHECKPOINT.md)。其余向导/服务增删/四页仍下一功能段，禁生产激活不变。
+
 当前功能主线：D2 controlled Apply/temporary/readiness 本地切片完成，源码 `926311e`。内部明确approval与固定scope核验后stop/reap旧代、启动新generation，真实TLS+HTTP readiness成功才提交active/running；失败保留历史active、attempted/candidate并标active_verified=false、stage/error/cleanup，不假保旧仍运行。两backend marker/counter证明Save仍旧流量、Apply真实切换。真实60秒temporary首次绝对截止经Save/Apply不延，持续stream与新listener到原截止关闭、desired撤销；修复长会话双guard心跳队列累积导致约9秒误关。committed源码 `make controller product direct guardian-nginx` exit0（64条PASS输出，非64独立用例），证据 `/home/eric/homestun-sdk-check/controller-apply-committed.log` 及 `.exit`。下一功能方向scoped RPC/UI状态/Save/Stop与内部受控入口；双栈多服务controller、bounded recovery/时钟可信/重启仍未完成。安全深化暂停，最终统一复评清单保持未完成；production CLI Start/Apply unsupported、ENOTSUP/helper78、activation_ready=false不变，非产品完成。
 
 本轮已按用户恢复指令续跑，不再处于关机暂停状态。独占 worktree `D:/DevPortal/homelede/homepublish-product`，branch `feature/homepublish-product`，恢复基线 `7c9e8d2907b90ad013dae2750eb484e983e6e50e`。当前修复提交可由 `git log -1` 读取；父任务应先独立复跑并审查，再进入下一slice。

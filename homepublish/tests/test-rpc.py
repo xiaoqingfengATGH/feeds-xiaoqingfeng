@@ -12,7 +12,7 @@ def main():
   script=PLUGIN.read_text().replace('/usr/bin/lua',c.LUA).replace('/usr/share/homepublish',str(c.SHARE))
   p=d/'homepublish';p.write_text(script);p.chmod(0o755)
   env={**os.environ,'LUA_CPATH':str(d/'?.so')}
-  methods=json.loads(subprocess.check_output([str(p),'list'],env=env));assert set(methods)=={'status','validate','save','stop','start','apply'},methods
+  methods=json.loads(subprocess.check_output([str(p),'list'],env=env));assert set(methods)=={'status','validate','save','stop','start','apply','certificates'},methods
   def rpc(method,args={}):
    r=subprocess.run([str(p),'call',method],input=json.dumps(args),text=True,capture_output=True,env=env,timeout=3)
    assert r.returncode==0,(r.stdout,r.stderr);return json.loads(r.stdout)

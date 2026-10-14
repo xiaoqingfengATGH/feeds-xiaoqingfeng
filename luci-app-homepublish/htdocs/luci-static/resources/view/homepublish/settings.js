@@ -3,61 +3,43 @@
 'require view';
 'require view.homepublish.product as api';
 return view.extend({
- api:api,load:function(){return api.status().then(api.checked);},
- render:function(s){
-  var self=this,c=JSON.parse(JSON.stringify(s.saved_config || api.defaults())),root=E('div'),message=E('p',{id:'hp-message'},api.text(s)),readers=[];
-  self.revision=s.saved_revision;
-  root.appendChild(E('h2',{},'家庭服务与接入配置'));root.appendChild(E('p',{},'保存只更新本应用，不启动、不应用、不修改防火墙或 UPnP。运行中修改保持待应用。内部多服务运行已本地验收，生产开启尚未接入。旁路由优先在主路由设置固定 IPv4 转发；随后才考虑明确授权的 UPnP。'));root.appendChild(message);
-  function field(box,key,label,value,options,assign){
-   var input=E(options==='checkbox'?'input':Array.isArray(options)?'select':options==='lines'?'textarea':'input',{'data-field':key,type:options==='checkbox'?'checkbox':'text'});
-   if(Array.isArray(options))options.forEach(function(o){input.appendChild(E('option',{value:o[0]},o[1]));});
-   if(options==='checkbox')input.checked=!!value;else input.value=value==null?'':value;
-   readers.push({box:box,read:function(){assign(options==='checkbox'?input.checked:input.value);}});
-   box.appendChild(E('label',{},[label+' ',input]));box.appendChild(E('br'));return input;
-  }
-  function sync(){readers.forEach(function(r){if(root.contains(r.box))r.read();});}
-  function action(box,label,attrs,fn){box.appendChild(E('button',Object.assign({type:'button',class:'cbi-button',click:fn},attrs),label));}
-  var families=[['ipv4','IPv4（默认优先）'],['ipv6','IPv6'],['hostname','主机名（运行时优先 IPv4）']];
-  var steps=[E('section'),E('section'),E('section'),E('section')],step=0;
-  var progress=E('h3',{id:'hp-wizard-step'});root.appendChild(progress);steps.forEach(function(n){root.appendChild(n);});
-  var services=E('div');steps[0].appendChild(services);
-  function endpoint(box,b,prefix){field(box,prefix+'addressFamily','后端地址类型',b.addressFamily || 'ipv4',families,function(v){b.addressFamily=v;});field(box,prefix+'host','后端地址 / 主机名',b.host,null,function(v){b.host=v;});field(box,prefix+'port','后端端口',b.port,null,function(v){b.port=Number(v);});}
-  function serviceRow(service){
-   var box=E('fieldset',{'data-service':true},E('legend',{},'Web 服务'));services.appendChild(box);
-   [['service_id','唯一服务标识'],['name','显示名称'],['hostname','直连域名（不含协议或端口）'],['certificate_ref','证书引用（acme:标识 / import:标识，不填私钥）']].forEach(function(k){field(box,k[0],k[1],service[k[0]],null,function(v){service[k[0]]=v;});});
-   endpoint(box,service.backend,'backend_');
-   field(box,'ranges','允许的家庭后端网段（CIDR，每行一个）',service.backend.allowed_ranges.join('\n'),'lines',function(v){service.backend.allowed_ranges=v.split(/[\n,]+/).map(function(x){return x.trim();}).filter(Boolean);});
-   var backup=service.backend.backup || {addressFamily:'ipv4',host:'',port:8080};
-   field(box,'backup_enabled','使用备用后端（不重放请求）',!!service.backend.backup,'checkbox',function(v){if(v)service.backend.backup=backup;else delete service.backend.backup;});endpoint(box,backup,'backup_');
-   field(box,'authentication','业务鉴权确认',service.authentication_review.authentication,[['unconfirmed','尚未确认'],['confirmed','已确认服务自身有鉴权']],function(v){service.authentication_review.authentication=v;});
-   field(box,'management','这是管理服务（不绕过运行校验）',service.authentication_review.management,'checkbox',function(v){service.authentication_review.management=v;});
-   action(box,'删除此服务（保存后生效，停止运行需单独操作）',{'data-action':'remove-service'},function(){sync();c.services.splice(c.services.indexOf(service),1);box.remove();});
-  }
-  c.services.forEach(serviceRow);
-  action(steps[0],'添加服务',{id:'hp-add-service'},function(){sync();var service=JSON.parse(JSON.stringify(api.defaults().services[0]));service.service_id='service'+(c.services.length+1);service.name='新服务';service.hostname=service.service_id+'.example.test';service.certificate_ref='acme:'+service.service_id;c.services.push(service);serviceRow(service);});
-  steps[1].appendChild(E('h3',{},'接入方式与监听范围'));steps[1].appendChild(E('p',{},'这里只保存配置，不检测公网、不添加映射、不开放端口。IPv4 固定转发由上级路由配置；IPv6 需要路由和入站许可，不使用 DNAT，内外端口必须相同。'));
-  var a=c.access_profile,selected={};a.methods_allowed.forEach(function(m){selected[m]=true;});
-  [['manual_ipv4','手动 IPv4 / 上级固定转发'],['direct_ipv6','直接 IPv6'],['upnp_ipv4','授权 UPnP IPv4（仅保存允许方式，不执行映射；适配器未接入）'],['stun_experimental','高级 STUN（仅保存允许方式，产品适配器未实现；不执行实验）']].forEach(function(m){field(steps[1],m[0],m[1],selected[m[0]],'checkbox',function(v){selected[m[0]]=v;});});
-  field(steps[1],'gateway_ref','UPnP 网关标识（选择 UPnP 时必填）',a.gateway_ref || '',null,function(v){if(v)a.gateway_ref=v;else delete a.gateway_ref;});
-  var listeners=E('div');steps[1].appendChild(listeners);
-  function listenerRow(l){var box=E('fieldset',{'data-listener':true},E('legend',{},'专用 TCP 监听'));listeners.appendChild(box);
-   field(box,'listener_family','入站地址族',l.family,[['ipv4','IPv4'],['ipv6','IPv6']],function(v){l.family=v;});
-   [['address','明确监听地址'],['interface','网络接口'],['zone','防火墙区域'],['internal_port','专用内网端口（1024–65535）'],['external_port','对外端口（IPv6 与内网端口相同）']].forEach(function(k){field(box,'listener_'+k[0],k[1],l[k[0]],null,function(v){l[k[0]]=k[0].indexOf('port')>=0?Number(v):v;});});
-   action(box,'删除监听（保存后生效）',{'data-action':'remove-listener'},function(){sync();a.listeners.splice(a.listeners.indexOf(l),1);box.remove();});
-  }
-  a.listeners.forEach(listenerRow);action(steps[1],'添加监听',{id:'hp-add-listener'},function(){sync();var l={family:'ipv4',address:'',interface:'wan',zone:'wan',protocol:'tcp',internal_port:8443,external_port:18443};a.listeners.push(l);listenerRow(l);});
-  steps[1].appendChild(E('h3',{},'发布策略'));
-  field(steps[1],'mode','发布期限',c.publication_policy.mode,[['continuous','持续发布直到停用（默认）'],['temporary','临时限时发布']],function(v){c.publication_policy.mode=v;});
-  field(steps[1],'temporary_duration','临时期限（秒，60–86400；持续时忽略）',c.publication_policy.temporary_duration || 1800,null,function(v){if(c.publication_policy.mode==='temporary')c.publication_policy.temporary_duration=Number(v);else delete c.publication_policy.temporary_duration;});
-  field(steps[1],'boot_restore','开机恢复（默认关闭，生产激活未支持）',c.publication_policy.boot_restore,'checkbox',function(v){c.publication_policy.boot_restore=v;});
-  var button=E('button',{id:'hp-save',type:'button',class:'cbi-button cbi-button-save',click:function(){return self.handleSave();}},'保存配置');steps[2].appendChild(E('p',{},'预检只调用 canonical 配置校验，不探测网络、证书或公网。保存不代表开启。'));steps[2].appendChild(button);
-  action(steps[2],'只读预检',{id:'hp-validate'},function(){sync();a.methods_allowed=Object.keys(selected).filter(function(m){return selected[m];});return api.validate(c).then(api.checked).then(function(v){message.textContent=v.valid?'配置预检通过；网络 / TLS / 外网未验证，尚未保存。':'预检失败: '+v.error;}).catch(function(e){message.textContent='预检失败: '+e.message;});});
-  var results=E('div',{id:'hp-results'});steps[3].appendChild(E('button',{id:'hp-start',type:'button',disabled:true,title:api.reason},'独立开启 Start（生产未支持）'));steps[3].appendChild(E('p',{},api.reason));steps[3].appendChild(results);
-  function result(st){results.replaceChildren(api.layers(st));}result(s);
-  var back=E('button',{id:'hp-back',type:'button',click:function(){move(-1);}},'上一步'),next=E('button',{id:'hp-next',type:'button',click:function(){move(1);}},'下一步');root.appendChild(back);root.appendChild(next);
-  function show(){steps.forEach(function(n,i){n.hidden=i!==step;});progress.textContent=(step+1)+' / 4 · '+['服务、域名与证书','接入方式与发布策略','预检与保存','独立开启与分层结果'][step];progress.setAttribute('data-step',step+1);back.disabled=step===0;next.disabled=step===3;}
-  function move(delta){sync();step=Math.max(0,Math.min(3,step+delta));show();}show();
-  self.handleSave=function(){button.disabled=true;var committed=false;return Promise.resolve().then(function(){sync();a.methods_allowed=Object.keys(selected).filter(function(m){return selected[m];});return api.validate(c);}).then(function(v){api.checked(v);if(!v.valid)throw new Error(v.error || 'Invalid configuration');return api.save(self.revision,v.config);}).then(function(st){api.checked(st);committed=true;self.revision=st.saved_revision;return api.status();}).then(function(st){api.checked(st);result(st);message.textContent='Saved revision '+self.revision+' (not applied). 已保存，未应用。 '+api.text(st);}).catch(function(e){message.textContent=(committed?'Save committed; status refresh failed: ':'Save failed: ')+e.message;}).finally(function(){button.disabled=false;});};
-  return root;
+ load:function(){return Promise.all([api.status().then(api.checked),api.certificates().then(api.checked)]);},
+ render:function(data){
+ var self=this,s=data[0],inventory=Array.isArray(data[1].certificates)?data[1].certificates:[],c=JSON.parse(JSON.stringify(s.saved_config || api.defaults())),baseline=JSON.stringify(c),root=E('div',{class:'hp-native'}),panels={},table=E('div'),message=E('p',{id:'hp-message','aria-live':'polite'}),readers=[];
+ root.appendChild(E('style',{},'.hp-native{max-width:100%;overflow-wrap:anywhere}.hp-native label{display:block;margin:12px 0}.hp-native input,.hp-native select,.hp-native textarea{max-width:100%;box-sizing:border-box}.hp-native dialog{width:560px;max-width:calc(100vw - 32px);max-height:85vh;overflow:auto;box-sizing:border-box}.hp-native .hp-table{overflow-x:auto}.hp-native table{width:100%;min-width:520px}.hp-native button{margin:4px}.hp-native [role=alert]{color:#b22}.hp-native details{margin:16px 0}'));
+ function button(id,text,fn){return E('button',{id:id,type:'button',class:'cbi-button',click:fn},text);}
+ function field(box,key,label,value,options,set){var n=E(Array.isArray(options)?'select':options==='lines'?'textarea':'input',{'data-field':key,type:options==='checkbox'?'checkbox':'text'});if(Array.isArray(options))options.forEach(function(o){n.appendChild(E('option',{value:o[0]},o[1]));});if(options==='checkbox')n.checked=!!value;else n.value=value==null?'':value;var read=function(){set(options==='checkbox'?n.checked:n.value);};n.addEventListener('input',function(){read();refresh();});n.addEventListener('change',function(){read();refresh();});box.appendChild(E('label',{},[label,n]));readers.push(read);return n;}
+ function certOptions(){return [['','请选择已有证书']].concat(inventory.map(function(v){return [v.certificate_ref,v.domain+' · '+v.key_type.toUpperCase()+' · '+(v.not_after || '日期未知')+' · '+v.status];}));}
+ function cover(ref,host){var v=inventory.find(function(v){return v.certificate_ref===ref;});return v && v.status==='within_validity' && (v.sans || []).some(function(san){san=san.toLowerCase();host=host.toLowerCase();return san===host || (san.slice(0,2)==='*.' && host.split('.').length===san.split('.').length && host.slice(host.indexOf('.')+1)===san.slice(2));});}
+ var bar=E('div'),start=button('hp-start','开启已保存配置',function(){confirmAction('start');}),apply=button('hp-apply','应用已保存变更',function(){confirmAction('apply');});bar.append(start,apply,button('hp-stop','停止全部',function(){confirmAction('stop');}));root.append(E('h2',{},'家庭服务直连发布'),message,bar);
+ var tabs=E('div',{class:'cbi-tabmenu'});root.appendChild(tabs);
+ [['overview','概览'],['services','服务配置'],['entry','入口设置'],['diagnostics','诊断']].forEach(function(t){var p=E('section',{id:'hp-panel-'+t[0]});panels[t[0]]=p;tabs.appendChild(button('hp-tab-'+t[0],t[1],function(){Object.keys(panels).forEach(function(k){panels[k].hidden=k!==t[0];});}));root.appendChild(p);p.hidden=t[0]!=='overview';});
+ panels.overview.append(E('h3',{},'本机运行与 TLS'),E('p',{id:'hp-local'}),E('h3',{},'公网入口'),E('p',{},'IPv4 / IPv6 公网未验证；证书库存只证明 SAN 覆盖和有效期，不代表完整 TLS / CA 链验收。'));
+ panels.services.append(E('p',{},'参与下次发布仅修改配置。保存不启动，应用时整组短暂停机；紧急关闭请停止全部。'),E('div',{class:'hp-table'},table),button('hp-add-service','新增服务',function(){edit(null);}));
+ function rows(){table.replaceChildren(E('table',{class:'table'},[E('thead',{},E('tr',{},['名称 / 域名','后端','证书','操作'].map(function(t){return E('th',{},t);}))),E('tbody',{},c.services.map(function(v){return E('tr',{'data-service':v.service_id},[E('td',{},v.name+' / '+v.hostname+(v.enabled===false?'（不参与）':'')),E('td',{},v.backend.host+':'+v.backend.port),E('td',{},(v.certificate_mode==='inherit'?'继承入口默认：':'独立指定：')+(v.certificate_mode==='inherit'?c.default_certificate_ref:v.certificate_ref)),E('td',{},[button(null,'编辑',function(){edit(v);}),button(null,'删除',function(){dialog('删除 '+v.hostname,E('p',{},'只删除草稿；保存不影响旧运行，应用会短暂停机替换整组。'),function(){c.services.splice(c.services.indexOf(v),1);rows();refresh();});})])]);}))]));}
+ function dialog(title,body,ok){var d=E('dialog'),cancel=button('hp-edit-cancel','取消',function(){d.close();d.remove();}),submit=button('hp-edit-submit','确认',function(){Promise.resolve().then(function(){return ok(d);}).catch(function(e){d.querySelector('[role=alert]').textContent=e.message;});});d.append(E('h3',{},title),body,E('p',{id:'hp-edit-error',role:'alert'}),cancel,submit);root.appendChild(d);d.showModal();d.addEventListener('close',function(){d.remove();});var input=d.querySelector('input');if(input)input.focus();return d;}
+ function edit(old){var v=JSON.parse(JSON.stringify(old || api.defaults().services[0]));if(!old){v.service_id='service_'+Date.now();v.name='';v.hostname='';v.certificate_mode='inherit';delete v.certificate_ref;}var box=E('div');var local=[];
+ function f(k,l,x,o,set){var n=field(box,k,l,x,o,set);local.push(readers.pop());return n;}
+ f('name','名称',v.name,null,function(x){v.name=x;});f('hostname','域名（ASCII / IDNA A-label）',v.hostname,null,function(x){v.hostname=x.toLowerCase();});
+ f('certificate_mode','证书绑定',v.certificate_mode || 'override',[['inherit','继承入口默认'],['override','独立指定']],function(x){v.certificate_mode=x;});f('certificate_ref','已有证书',v.certificate_ref,certOptions(),function(x){v.certificate_ref=x;});
+ f('backend_url','家庭 HTTP 后端根地址','http://'+(v.backend.addressFamily==='ipv6'?'['+v.backend.host+']':v.backend.host)+':'+v.backend.port,null,function(x){v._url=x;});
+ f('ranges','允许的家庭网段（每行 CIDR）',v.backend.allowed_ranges.join('\n'),'lines',function(x){v.backend.allowed_ranges=x.split(/[\n,]+/).map(function(x){return x.trim();}).filter(Boolean);});
+ f('enabled','参与下次发布',v.enabled!==false,'checkbox',function(x){v.enabled=x;});f('authentication','业务服务自身鉴权',v.authentication_review.authentication,[['unconfirmed','未确认'],['confirmed','已确认']],function(x){v.authentication_review.authentication=x;});
+ f('management','管理服务',v.authentication_review.management,'checkbox',function(x){v.authentication_review.management=x;});
+ dialog(old?'编辑服务':'新增服务',box,function(d){local.forEach(function(f){f();});if(c.services.some(function(x){return x!==old && x.hostname===v.hostname;}))throw Error('域名重复');if(!cover(v.certificate_mode==='inherit'?c.default_certificate_ref:v.certificate_ref,v.hostname))throw Error('证书未覆盖此域名或有效期不可用（不是 TLS 验证）');var u;try{u=new URL(v._url);}catch(e){throw Error('后端应为 HTTP 根地址');}if(u.protocol!=='http:' || u.username || u.password || u.pathname!=='/' || u.search || u.hash)throw Error('仅支持无凭据的 HTTP 根地址');var h=u.hostname.replace(/^\[|\]$/g,'');v.backend.host=h;v.backend.port=Number(u.port || 80);v.backend.addressFamily=h.includes(':')?'ipv6':/^\d+\.\d+\.\d+\.\d+$/.test(h)?'ipv4':'hostname';delete v._url;var candidate=JSON.parse(JSON.stringify(c));if(old)candidate.services[c.services.indexOf(old)]=v;else candidate.services.push(v);return api.validate(candidate).then(function(result){if(!result.valid)throw Error(result.error);c.services=candidate.services;d.close();rows();refresh();});});}
+ field(panels.entry,'default_certificate_ref','入口默认已有证书',c.default_certificate_ref,certOptions(),function(v){if(v)c.default_certificate_ref=v;else delete c.default_certificate_ref;rows();});
+ panels.entry.appendChild(E('p',{},'库存域名不是服务域名；多个服务可共用真实 SAN 覆盖的证书。不上传私钥或接受文件路径。'));
+ var a=c.access_profile,methods={};a.methods_allowed.forEach(function(m){methods[m]=true;});[['manual_ipv4','IPv4 固定转发（需上级人工配置）'],['direct_ipv6','IPv6 直接路由与入站许可']].forEach(function(m){field(panels.entry,m[0],m[1],methods[m[0]],'checkbox',function(v){methods[m[0]]=v;a.methods_allowed=Object.keys(methods).filter(function(k){return methods[k];});});});
+ a.listeners.forEach(function(l,i){var b=E('fieldset',{},E('legend',{},'专用监听 '+l.family));['address','interface','zone','internal_port','external_port'].forEach(function(k){field(b,'listener_'+i+'_'+k,({address:'监听地址',interface:'接口',zone:'区域',internal_port:'内网端口',external_port:'外网端口'})[k],l[k],null,function(v){l[k]=k.includes('port')?Number(v):v;});});panels.entry.appendChild(b);});
+ field(panels.entry,'mode','发布期限',c.publication_policy.mode,[['continuous','长期：直到停止'],['temporary','临时：原截止不续延']],function(v){c.publication_policy.mode=v;if(v==='continuous')delete c.publication_policy.temporary_duration;else c.publication_policy.temporary_duration=c.publication_policy.temporary_duration || 1800;});
+ field(panels.entry,'temporary_duration','临时时长（秒，60–86400）',c.publication_policy.temporary_duration || 1800,null,function(v){if(c.publication_policy.mode==='temporary')c.publication_policy.temporary_duration=Number(v);});
+ var adv=E('details',{},E('summary',{},'高级设置'));field(adv,'boot_restore','开机恢复（默认关闭）',c.publication_policy.boot_restore,'checkbox',function(v){c.publication_policy.boot_restore=v;});panels.entry.appendChild(adv);
+ var raw=E('pre');panels.diagnostics.append(E('details',{},[E('summary',{},'内部状态与失败 / 清理详情'),raw]));
+ root.append(button('hp-save','保存配置（不启动）',function(){return self.handleSave();}),button('hp-reset','撤销未保存修改',function(){location.reload();}));
+ function dirty(){return baseline!==JSON.stringify(c);}
+ function refresh(){var cap=s.capabilities || {},r=s.runtime || {},running=r.phase==='running' && r.active_verified===true;start.disabled=dirty() || !cap.start || !s.saved_revision || running || r.cleanup==='unknown';apply.disabled=dirty() || !cap.apply || !running || !(s.pending_config && s.pending_config.apply_required);message.textContent=dirty()?'未保存草稿；开启 / 应用前请保存':(s.pending_config && s.pending_config.apply_required?'已保存待应用':'已保存')+'；'+(!cap.start?'当前安装运行能力未支持开启':'');root.querySelector('#hp-local').textContent=running?'本机运行已验证；公网仍未验证':'本机未运行 / 未验证';raw.textContent=JSON.stringify(s,null,2);}
+ function confirmAction(kind){var changes=[],before=s.active_config && s.active_config.services || [],after=s.saved_config && s.saved_config.services || [];before.forEach(function(v){var n=after.find(function(x){return x.service_id===v.service_id;});if(!n)changes.push('删除 '+v.hostname);else if(JSON.stringify(n)!==JSON.stringify(v))changes.push('修改 '+v.hostname+'：'+v.backend.host+':'+v.backend.port+' → '+n.backend.host+':'+n.backend.port);});after.forEach(function(v){if(!before.some(function(x){return x.service_id===v.service_id;}))changes.push('新增 '+v.hostname);});dialog(kind==='stop'?'停止全部服务':kind==='apply'?'整组应用变更':'开启已保存服务',E('div',{},[E('p',{},changes.join('；') || '整个已保存运行组'),E('p',{},'整组连接将关闭 / 替换，应用存在短暂停机；临时截止不延长：'+((s.runtime || {}).expires_at || '首次开启建立截止')),E('p',{},JSON.stringify(s.saved_config && s.saved_config.access_profile || {}))]),function(d){d.close();return (kind==='stop'?api.stop():api[kind](s.saved_revision,true)).then(api.checked).then(function(){return api.status();}).then(api.checked).then(function(st){s=st;refresh();}).catch(function(e){message.textContent='操作失败 / 状态未知：'+e.message;});});}
+ self.handleSave=function(){var committed=false;readers.forEach(function(f){f();});return api.validate(c).then(function(v){if(!v.valid)throw Error(v.error);return api.save(s.saved_revision,v.config);}).then(api.checked).then(function(st){committed=true;s=st;c.services=JSON.parse(JSON.stringify(st.saved_config.services));baseline=JSON.stringify(c);return Promise.all([api.status(),api.certificates()]);}).then(function(d){s=api.checked(d[0]);inventory=Array.isArray(api.checked(d[1]).certificates)?d[1].certificates:[];rows();refresh();message.textContent='已保存 revision '+s.saved_revision+'，不启动 / 未应用';}).catch(function(e){message.textContent=(committed?'已提交，状态读回未知：':'保存失败：')+e.message;});};
+ rows();refresh();return root;
  },handleSaveApply:null,handleReset:null
 });

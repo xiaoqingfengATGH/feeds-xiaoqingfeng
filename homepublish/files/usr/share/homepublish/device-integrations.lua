@@ -49,7 +49,7 @@ function M.certificate_source(ref,host)
  local source,err=M.acme_source(identity.domain,identity.key_type);if not source then return nil,err end
  local C=require('certificate-metadata');local metadata,me=C.read(source.certificate)
  if not metadata then return nil,me end
- if metadata.status~='valid' or not C.match(metadata.sans,host) then return nil,'certificate expired or DNS SAN mismatch' end
+ if metadata.status~='within_validity' or not C.match(metadata.sans,host) then return nil,'certificate expired or DNS SAN mismatch' end
  return source
 end
 function M.certificate_inventory()
@@ -60,7 +60,7 @@ function M.certificate_inventory()
   if identity then
    local source=M.acme_source(identity.domain,identity.key_type)
    local metadata=source and C.read(source.certificate)
-   local row={certificate_ref=ref,domain=identity.domain,key_type=identity.key_type,status=metadata and metadata.status or 'unavailable',sans=metadata and metadata.sans or {}}
+   local row={certificate_ref=ref,domain=identity.domain,key_type=identity.key_type,tls_validated=false,status=metadata and metadata.status or 'unavailable',sans=metadata and metadata.sans or {}}
    if metadata then row.not_before=metadata.not_before;row.not_after=metadata.not_after end
    rows[#rows+1]=row
   end

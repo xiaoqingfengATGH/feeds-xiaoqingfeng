@@ -34,6 +34,11 @@ def main():
    for name in ['null','urandom']:
     (d/'dev'/name).touch();subprocess.run(['mount','--bind','/dev/'+name,str(d/'dev'/name)],check=True);mounted.append(d/'dev'/name)
    for p in (ROOT/'homepublish/files/usr/share/homepublish').glob('*.lua'):shutil.copy(p,d/'usr/share/homepublish'/p.name)
+   # Test-only metadata injection; not installed certificates or target acceptance.
+   (d/'etc/config/acme').write_text("config cert 'rsa'\n option domains 'photos.example.test'\n option key_type 'rsa2048'\nconfig cert 'ecc'\n option domains 'photos.example.test'\n option key_type 'ec256'\n")
+   integration=d/'usr/share/homepublish/device-integrations.lua'
+   text=integration.read_text().replace('return M',"M.acme_source=function(domain,kind)return {certificate='/fixture/'..kind,key='/fixture/key',domain=domain,key_type=kind}end;require('certificate-metadata').read=function()return {sans={'photos.example.test'},status='within_validity',not_before='fixture start',not_after='fixture expiry',tls_validated=false}end;return M")
+   integration.write_text(text)
    shutil.copy(ROOT/'luci-app-homepublish/root/usr/libexec/rpcd/homepublish',d/'usr/libexec/rpcd/homepublish');(d/'usr/libexec/rpcd/homepublish').chmod(0o755)
    shutil.copy(ROOT/'luci-app-homepublish/root/usr/share/rpcd/acl.d/luci-app-homepublish.json',d/'usr/share/rpcd/acl.d')
    gcc=SDK/'staging_dir/toolchain-x86_64_gcc-13.3.0_musl/bin/x86_64-openwrt-linux-musl-gcc'
@@ -49,6 +54,8 @@ def main():
    spawn(['/sbin/ubusd']);time.sleep(.3);spawn(['/sbin/rpcd']);time.sleep(.5)
    print('PLUGIN',subprocess.run(['chroot',td,'/usr/libexec/rpcd/homepublish','list'],capture_output=True,text=True),flush=True)
    print('LUA',subprocess.run(['chroot',td,'/usr/libexec/rpcd/homepublish','call','status'],input='{}',capture_output=True,text=True),flush=True)
+   print('INVENTORY_DEBUG',subprocess.run(['chroot',td,'/usr/bin/lua','-e',"package.path='/usr/share/homepublish/?.lua;'..package.path;local ok,e=pcall(function()return require('device-integrations').certificate_inventory()end);print(ok,e)"],capture_output=True,text=True),flush=True)
+   print('CERT_DEBUG',subprocess.run(['chroot',td,'/usr/libexec/rpcd/homepublish','call','certificates'],input='{}',capture_output=True,text=True),flush=True)
    assert call('homepublish','status')['saved_revision']==0
    sid=call('session','create',{'timeout':300})['ubus_rpc_session']
    acl=json.loads((d/'usr/share/rpcd/acl.d/luci-app-homepublish.json').read_text())['luci-app-homepublish']

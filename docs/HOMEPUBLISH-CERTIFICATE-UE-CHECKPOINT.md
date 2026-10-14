@@ -1,5 +1,21 @@
 # Unified ingress / certificate slice — local source only
 
+## Current UI/RPC follow-up (supersedes inheritance/metadata limitations below)
+- Persistent `certificate_mode=inherit|override` now survives journal normalization. Old explicit refs imply override; omitted ref implies inherit. Derived reference is recomputed from the stored default on every canonical validation. Default changes retarget inherited services, not overrides. Runtime plans filter configuration-disabled services and reject no enabled service.
+- Metadata states are `within_validity`, `not_yet_valid`, `expired`, `unavailable`, with `tls_validated=false`. UTC notBefore and notAfter are checked; neither state claims full chain/readiness.
+- Fixed `certificates` RPC -> CLI -> actual configured UCI inventory/HomeVPN thin resolver; read ACL added. Public projection has no cert/key paths. Actual target inventory not read this round.
+- Recommended A native Chinese tabs, service table, add/edit/delete dialogs, inherited/default/specific certificate picker, SAN errors, HTTP root URL parsing, entry ports/scope/policy and folded raw diagnostics implemented in settings.js. Save uses actual RPC/native journal and status+inventory readback, never Start. Start/Apply are status capability gated; fixed device-test channel reports capability, unsupported public provider does not. Whole-group modal states additions/modifications/deletions, interruption and unchanged deadline; Stop all uses real RPC.
+- Browser GREEN: official LuCI loader + real SDK rpcd/ubus/uhttpd/native store in isolated chroot, Windows headless Chrome. Added inherited service, invalid SAN dialog error, Save revision1 without active, change default RSA->ECC revision2, override unchanged, reload, inventory readback, 375px no document overflow, pageerror=[]; owned processes/mounts/listeners empty and directory absent after cleanup. Inventory SAN/date metadata injected ONLY into copied test fixture; NOT actual business certificates. Two exact-host RSA/ECC fixture identities, no existing wildcard claim.
+- `make product rpc` passed (existing tmpnam linker warning). `make controller-multi` additionally attempted and FAILED at provider start / phase blocked cleanup confirmed; historical intermittent harness, not repaired or declared passed. JS syntax passed. Browser test initially failed missing Playwright, missing tabs (RED), empty-table inventory, synchronous modal error catch; final corrected browser exit0.
+
+### Remaining before calling this complete
+- Target provider certificate_source/shared snapshots remains unconnected; matching SDK/IPK and device acceptance NOT attempted.
+- Browser live Start/Apply, real controller capability-enabled profile and whole-group diff/Stop confirmation contracts not yet exercised. Browser edit/delete and independently specified picker need expanded final coverage. Old wizard browser script replaced with native-tab acceptance; old wizard coverage is historical.
+- Native controls are structured but not full LuCI form.Map modules. Entry listener add/delete and restricted interface/zone selectors, polling refresh/focus restoration, empty-list Save, global certificate coverage pre-save validation and detailed non-backend diff need continuation.
+- Empty inventory transports Lua empty tables as JSON objects; UI normalizes this, but public RPC empty-array contract still needs correction/tests.
+- Do not deploy or advertise full UI/production readiness. No device/firewall/UPnP/ACME/public/proxy/push/merge/PR actions.
+
+
 ## Implemented
 - One group-level optional `default_certificate_ref`; missing service bindings normalize into existing `acme:section` / `import:id` references. Explicit service overrides remain independent; shared references are allowed. Schema/journal version remains 1 and old explicit bindings remain valid.
 - Service hostname ASCII case canonicalization and duplicate detection. Unicode is rejected rather than guessed; callers must supply IDNA A-labels (UI conversion still pending).

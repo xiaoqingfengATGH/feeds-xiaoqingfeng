@@ -8,6 +8,9 @@ var save=rpc.declare({object:'homepublish',method:'save',params:['expected_revis
 var stop=rpc.declare({object:'homepublish',method:'stop',expect:{},reject:true});
 return baseclass.extend({
  status:status,validate:validate,save:save,stop:stop,
+ certificates:rpc.declare({object:'homepublish',method:'certificates',expect:{},reject:true}),
+ start:rpc.declare({object:'homepublish',method:'start',params:['revision','approved'],expect:{},reject:true}),
+ apply:rpc.declare({object:'homepublish',method:'apply',params:['revision','approved'],expect:{},reject:true}),
  checked:function(s){if(!s || s.error)throw new Error(s && s.error || 'State unavailable');return s;},
  text:function(s){
   if(!s || s.error || !s.runtime || !s.desired_state)return 'State unavailable / unknown; not running';

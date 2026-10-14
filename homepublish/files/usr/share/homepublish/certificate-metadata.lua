@@ -25,13 +25,27 @@ local function command(s)
  local f=io.popen(s..' 2>/dev/null');if not f then return nil end
  local out=f:read(65537);f:close();if not out or #out>65536 then return nil end;return out
 end
+local function epoch(s)
+ local mon,day,h,m,sec,year=s:match('^(%a+)%s+(%d+)%s+(%d+):(%d+):(%d+)%s+(%d+)%s+GMT$')
+ local months={Jan=1,Feb=2,Mar=3,Apr=4,May=5,Jun=6,Jul=7,Aug=8,Sep=9,Oct=10,Nov=11,Dec=12}
+ if not year or not months[mon] then return nil end
+ local t=os.time{year=tonumber(year),month=months[mon],day=tonumber(day),hour=tonumber(h),min=tonumber(m),sec=tonumber(sec),isdst=false}
+ local utc=os.date('!*t',t);utc.isdst=false
+ return t+os.difftime(t,os.time(utc))
+end
+function M.validity(before,after,now)
+ local b,a=epoch(before or ''),epoch(after or '')
+ if not b or not a then return 'unavailable' end
+ if now<b then return 'not_yet_valid' end
+ return now>=a and 'expired' or 'within_validity'
+end
 function M.read(file)
  -- Internal trusted resolver path only; NEVER expose file as an RPC parameter.
  if not path(file) then return nil,'trusted certificate path required' end
  local text=command('openssl x509 -in '..file..' -noout -dates -ext subjectAltName')
  if not text or not text:find('notAfter=',1,true) then return nil,'certificate parse failed' end
  local sans={};for san in text:gmatch('DNS:([^,%s]+)') do sans[#sans+1]=san:lower() end
- local valid=command('openssl x509 -in '..file..' -noout -checkend 0')
- return {sans=sans,not_before=text:match('notBefore=([^\n]+)'),not_after=text:match('notAfter=([^\n]+)'),status=valid and valid:find('Certificate will not expire',1,true) and 'valid' or 'expired'}
+ local before,after=text:match('notBefore=([^\n]+)'),text:match('notAfter=([^\n]+)')
+ return {sans=sans,not_before=before,not_after=after,status=M.validity(before,after,os.time()),tls_validated=false}
 end
 return M

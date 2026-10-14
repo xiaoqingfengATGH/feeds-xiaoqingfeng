@@ -8,7 +8,7 @@ assert(real('*.example.test','rsa'),'wildcard inventory identity must reach exis
 assert(observed:find("'*.example.test' 'rsa'",1,true))
 io.popen=popen
 I.acme_source=function(domain,kind)return {certificate='/fixture/cert.pem',key='/fixture/key.pem',domain=domain,key_type=kind}end
-C.read=function()return {sans={'*.example.test','example.test'},status='valid',not_after='fixture date'}end
+C.read=function()return {sans={'*.example.test','example.test'},status='within_validity',not_after='fixture date'}end
 local source,e=I.certificate_source('acme:shared','photos.example.test');assert(source,e);assert(source.domain=='*.example.test' and source.key_type=='rsa')
 assert(not I.certificate_source('acme:shared','a.b.example.test'))
 assert(not I.certificate_source('acme:shared','unrelated.test'))

@@ -44,7 +44,8 @@ function M.new(provider,options)
    if s.runtime.phase~='running' or s.desired_state.state~='enabled' or s.desired_state.manual_stop_latch then return {error='not running'} end
   elseif s.runtime.phase=='running' or s.runtime.phase=='starting' or s.runtime.cleanup=='unknown' then return {error='runtime busy or cleanup unknown'} end
   local snapshot=W.decode(W.encode(recovery and s.active_config or s.saved_config))
-  local plan,err=provider.plan(W.decode(W.encode(snapshot)))
+  local effective,err=require('canonical').runtime_plan(snapshot)
+  local plan;if effective then plan,err=provider.plan(effective) end
   if not plan then
    if recovery then
     change(function(v)v.runtime.attempt_count=(v.runtime.attempt_count or 0)+1 end)
@@ -75,12 +76,12 @@ function M.new(provider,options)
    stage='readiness';local results
    if provider.readiness then ok,results=provider.readiness(plan) else ok=false end
    ok=ok==true
-   if #snapshot.services>1 and not results then ok=false end
+   if #effective.services>1 and not results then ok=false end
    if results then
     change(function(v)
      assert(v.runtime.generation==C.generation,'stale service readiness')
      v.runtime.services={}
-     for _,service in ipairs(snapshot.services) do
+     for _,service in ipairs(effective.services) do
       local result=results[service.service_id]
       local ready=type(result)=='table' and result.ready==true
       v.runtime.services[service.service_id]={hostname=service.hostname,ready=ready,generation=C.generation}

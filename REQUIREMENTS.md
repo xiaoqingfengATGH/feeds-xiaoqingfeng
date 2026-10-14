@@ -1,5 +1,7 @@
 # Requirements
 
+Current native LuCI/RPC source follow-up: persistent certificate inheritance and notBefore metadata fixed; certificates read RPC, Chinese service list/dialog/entry tabs and real Save/readback locally browser verified. Capability-enabled Start/Apply UI contracts, installed certificate_source/shared runtime, SDK/target and production/public remain unverified. Additional controller-multi run failed provider start (cleanup confirmed), not resolved. See docs/HOMEPUBLISH-CERTIFICATE-UE-CHECKPOINT.md current follow-up ledger. No deployment or network mutations.
+
 ## REQ-006 — 家庭统一入口与证书共享（源码切片，待完整验收）
 
 Nginx 是家庭统一入口；入口监听/IPv4-IPv6策略/端口/发布期限为全局设置，服务是域名→后端→证书绑定的虚拟主机。证书库存域名与服务域名分开；支持通配符单层匹配、多SAN、多服务共用引用以及服务独立覆写。私钥仅服务端，不接受客户端路径或上传。推荐 A 原生LuCI列表/编辑对话框，B仅首次新增辅助。本轮先落 canonical/证书匹配与库存内部适配器切片，RPC/UI/安装provider共享运行与真实浏览器仍未完成，详见 [证书UE checkpoint](docs/HOMEPUBLISH-CERTIFICATE-UE-CHECKPOINT.md)。无公网操作。

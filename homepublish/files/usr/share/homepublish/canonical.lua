@@ -108,15 +108,18 @@ local function validate(c)
  end
  if c.default_certificate_ref~=nil then r.default_certificate_ref=certificate(c.default_certificate_ref) end
  for i,s in ipairs(c.services) do
-  object(s,{service_id=true,name=true,hostname=true,backend=true,certificate_ref=true,authentication_review=true})
+  object(s,{service_id=true,name=true,hostname=true,backend=true,certificate_ref=true,certificate_mode=true,enabled=true,authentication_review=true})
   local id=identifier(s.service_id); local host=hostname(s.hostname)
   check(not ids[id] and not hosts[host],'duplicate service or hostname'); ids[id]=true; hosts[host]=true
   check(type(s.name)=='string' and #s.name>=1 and #s.name<=128 and not s.name:find('[%z\1-\31\127]'),'invalid service name')
-  local binding=certificate(s.certificate_ref or r.default_certificate_ref)
+  local mode=s.certificate_mode or (s.certificate_ref and 'override' or 'inherit')
+  check(mode=='inherit' or mode=='override','certificate binding mode')
+  check(s.enabled==nil or type(s.enabled)=='boolean','service enabled boolean')
+  local binding=certificate(mode=='inherit' and r.default_certificate_ref or s.certificate_ref)
   object(s.authentication_review,{authentication=true,management=true})
   check(s.authentication_review.authentication=='confirmed' or s.authentication_review.authentication=='unconfirmed','authentication review')
   check(type(s.authentication_review.management)=='boolean','management review')
-  r.services[i]={service_id=id,name=s.name,hostname=host,backend=endpoint(s.backend),certificate_ref=binding,authentication_review={authentication=s.authentication_review.authentication,management=s.authentication_review.management}}
+  r.services[i]={service_id=id,name=s.name,hostname=host,backend=endpoint(s.backend),certificate_ref=binding,certificate_mode=mode,enabled=s.enabled~=false,authentication_review={authentication=s.authentication_review.authentication,management=s.authentication_review.management}}
  end
  local a=c.access_profile
  object(a,{methods_allowed=true,listeners=true,gateway_ref=true})
@@ -157,5 +160,11 @@ end
 function M.validate(c)
  local ok,result=pcall(validate,c); if ok then return result end
  return nil,tostring(result)
+end
+function M.runtime_plan(c)
+ local plan,e=M.validate(c);if not plan then return nil,e end
+ local services={};for _,s in ipairs(plan.services) do if s.enabled~=false then services[#services+1]=s end end
+ if #services==0 then return nil,'no enabled services' end
+ plan.services=services;return plan
 end
 return M

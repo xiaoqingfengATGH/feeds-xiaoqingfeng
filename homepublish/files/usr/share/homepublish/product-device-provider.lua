@@ -21,7 +21,7 @@ function M.plan(c)
   local source={certificate='/etc/homepublish/device-test/cert.pem',key='/etc/homepublish/device-test/key.pem'}
   if business then local e;source,e=I.acme_source('home.iwonderful.top','rsa');if not source then return nil,e end end
   for _,v in ipairs({source.certificate,source.key}) do if not v:match('^/[a-zA-Z0-9_./%-]+$') or v:find('..',1,true) then return nil,'trusted HomeVPN source path required' end end
-  services[i]={backend=s.backend,hostname=s.hostname,system_trust=business,certificate_source=source,cert_identity=cert_identity(source),certificate=root..'/cert'..i..'.pem',key=root..'/key'..i..'.pem'}
+  services[i]={service_id=s.service_id,backend=s.backend,hostname=s.hostname,system_trust=business,certificate_source=source,cert_identity=cert_identity(source),certificate=root..'/cert'..i..'.pem',key=root..'/key'..i..'.pem'}
  end
  if #c.access_profile.methods_allowed~=1 or c.access_profile.methods_allowed[1]~='manual_ipv4' or l.family~='ipv4' or l.address~='192.168.1.2' or l.interface~='br-lan' or l.zone~='lan' or l.internal_port~=49284 or l.external_port~=49284 then return nil,'device test listener denied' end
  -- Canonical intentionally disallows loopback publication. This server-owned
@@ -51,6 +51,7 @@ function M.start(plan,g,t)
 end
 function M.readiness()
  if not active_plan then return false end
+ local results={}
  for _,v in ipairs(active_plan.services) do
   local trust=v.system_trust and '' or ' --cacert /etc/homepublish/device-test/cert.pem'
   local ready=false
@@ -58,9 +59,10 @@ function M.readiness()
    if os.execute("env -u CURL_CA_BUNDLE -u SSL_CERT_FILE -u SSL_CERT_DIR /usr/bin/curl -q --noproxy '*' --connect-timeout 1 --max-time 1"..trust.." --resolve "..v.hostname..":49284:127.0.0.1 --fail --silent --output /dev/null https://"..v.hostname..":49284/")==0 then ready=true;break end
    os.execute('sleep 1')
   end
-  if not ready then return false end
+  results[v.service_id]={ready=ready}
+  if not ready then return false,results end
  end
- return true
+ return true,results
 end
 function M.renew()
  -- A changed certificate or DNS selection closes this generation; controller

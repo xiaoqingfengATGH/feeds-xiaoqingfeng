@@ -17,6 +17,8 @@ local execute=os.execute;local seen={};os.execute=function(s)
 end
 local open=io.open;io.open=function()return {write=function()return true end,close=function()return true end}end
 assert(P.start(p,1,{}));assert(not P.readiness());assert(#seen>=2)
+os.execute=function()return 0 end
+local ok,results=P.readiness();assert(ok and results and results.fixture.ready and results.fixture2.ready,'per-service readiness results required')
 io.open=open
 os.execute=execute
 print('PASS simplified device multi-plan exact bindings and all-service readiness')

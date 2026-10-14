@@ -4,7 +4,7 @@ repo=/mnt/d/DevPortal/homelede/homepublish-product
 sdk=/home/eric/homestun-sdk-check/openwrt-sdk-24.10.5-x86-64_gcc-13.3.0_musl.Linux-x86_64
 source=/home/eric/homestun-sdk-check/device-r8-source
 mkdir -p "$source"
-tar -xf /mnt/d/DevPortal/homelede/homepublish-product/r8-source.tar -C "$source"
+tar -xf /mnt/d/DevPortal/homelede/artifacts/homepublish-r8/r8-source.tar -C "$source"
 cd "$sdk"
 exec 9>/home/eric/homestun-sdk-check/build.lock
 flock -n 9

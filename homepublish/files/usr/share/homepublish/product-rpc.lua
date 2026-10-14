@@ -9,14 +9,14 @@ local function run()
   local ok,result=pcall(wire.decode,bytes:gsub('\n$',''))
   io.write(json.encode(ok and result or {error='Request rejected or state unavailable'}),'\n');return
  end
- assert(#arg==1 and ({status=true,validate=true,save=true,stop=true})[arg[1]],'unsupported method')
+ assert(#arg==1 and ({status=true,validate=true,save=true,stop=true,start=true,apply=true})[arg[1]],'unsupported method')
  local r=json.decode(bytes);assert(type(r)=='table','request object')
  -- uhttpd injects transport session metadata after its ACL check. Never send it to the controller.
  if r.ubus_rpc_session~=nil then
   assert(type(r.ubus_rpc_session)=='string' and #r.ubus_rpc_session==32 and r.ubus_rpc_session:match('^[0-9a-f]+$'),'invalid session metadata')
   r.ubus_rpc_session=nil
  end
- local fields=arg[1]=='save' and {expected_revision=true,config=true} or arg[1]=='validate' and {config=true} or {}
+ local fields=arg[1]=='save' and {expected_revision=true,config=true} or arg[1]=='validate' and {config=true} or (arg[1]=='start' or arg[1]=='apply') and {revision=true,approved=true} or {}
  for k in pairs(r) do assert(fields[k],'unknown request field') end
  r.action=arg[1];io.write(wire.encode(r))
 end

@@ -6,7 +6,7 @@ local function ready(s,ms)return n.poll({{fd=s,events=n.poll_flags('in')}},ms)>0
 local function read(s)
  local out=''
  while #out<262145 do
-  if not ready(s,5000) then return nil end
+  if not ready(s,45000) then return nil end
   local b=s:recv(4096);if not b or #b==0 then return nil end
   out=out..b
   if out:find('\n',1,true) then return out:match('^([^\n]*)\n$') end

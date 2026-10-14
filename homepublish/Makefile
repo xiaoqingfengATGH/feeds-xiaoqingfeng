@@ -33,7 +33,7 @@ define Package/homepublish/install
 	$(INSTALL_DATA) $(PKG_BUILD_DIR)/homepublish_store.so $(1)/usr/lib/lua/homepublish_store.so
 	$(INSTALL_DATA) ./files/usr/share/homepublish/*.lua $(1)/usr/share/homepublish/
 	$(INSTALL_CONF) ./files/etc/config/homepublish $(1)/etc/config/homepublish
-	$(INSTALL_BIN) ./files/etc/init.d/homepublish* $(1)/etc/init.d/homepublish
+	$(INSTALL_BIN) ./files/etc/init.d/homepublish* $(1)/etc/init.d/
 	chmod 0700 $(1)/etc/homepublish
 endef
 

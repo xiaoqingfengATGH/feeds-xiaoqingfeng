@@ -1,5 +1,9 @@
 # HomePublish 已恢复：当前续跑入口
 
+## 真实目标部署预检（2026-10-14，最新）
+
+SSH `127.0.0.1:222` 已恢复。两只 0.1.0-r1 IPK 已上传并核对真实 SHA256；`opkg --noaction` 发现缺 `natmap (20250924-r1)`，遵循缺依赖报告约束停止，未实际安装任何包、未重载 rpcd。目标 RPC/Save/Stop/default-disabled/LuCI browser 尚未验收。独立 SSH 重连确认管理80/443/LAN22、xray、路由及 firewall hash 保持，无 fw/UPnP/公网写入。详见 [真实目标部署 checkpoint](HOMEPUBLISH-TARGET-DEPLOY-CHECKPOINT.md)。需确认确切缺失依赖的安装权限或另行源码/SDK修复；下文 SSH 未恢复描述属历史。
+
 ## 当前安装包切片（2026-10-14，本地，不是目标部署）
 
 实际官方 OpenWrt 24.10.5 x86/64 SDK 构建两只 IPK，源码归档 ec46452/6798609，无测试 adapter 入包。修复真实解包发现的 rpcd plugin 0644（RED）为 Git executable 0755（GREEN）。全部 product Lua（含 JSON/RPC/controller/lifecycle）、native ELF、依赖、menu/ACL/default disabled 已实际解包验收。详见 [安装包 checkpoint](HOMEPUBLISH-PACKAGE-CHECKPOINT.md)。

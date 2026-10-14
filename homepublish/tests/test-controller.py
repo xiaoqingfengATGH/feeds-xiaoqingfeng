@@ -43,7 +43,7 @@ def compile_adapter(d):
  rows=['{'+json.dumps(f)+','+json.dumps(n)+','+json.dumps(hashlib.sha256((SDK/f).read_bytes()).hexdigest())+'}' for f,n in zip(files,names)]
  header.write_text('#define HP_TRUST_ROOT '+json.dumps(str(SDK))+'\nstatic const struct hp_trust_entry hp_trust_entries[]={'+','.join(rows)+'};\n')
  vals={'HP_NGINX_LOADER':SDK/'lib/ld-musl-x86_64.so.1','HP_NGINX_EXEC':SDK/'usr/sbin/nginx','HP_NGINX_LIBS':str(SDK/'lib')+':'+str(SDK/'usr/lib'),'HP_NGINX_PREFIX':d,'HP_FOREIGN_SOCKET':d/'foreign.sock'}
- subprocess.run(['cc','-std=c11','-Wall','-Wextra','-Werror','-fPIC','-shared','-DHP_GUARD_TEST','-I'+str(SRC),'-I'+DEV+'/lua5.1','-I'+DEV+'/x86_64-linux-gnu',*['-D'+k+'='+json.dumps(str(v)) for k,v in vals.items()],'-DHP_TRUST_PROFILE_HEADER='+json.dumps(str(header)),str(SRC/'trusted-nginx.c'),str(SRC/'renewable-guard.c'),str(ROOT/'homepublish/tests/controller-adapter.c'),'-o',str(d/'homepublish_controller_test.so'),'-l:libcrypto.so.3'],check=True)
+ subprocess.run(['cc','-std=c11','-Wall','-Wextra','-Werror','-fPIC','-shared','-DHP_GUARD_TEST','-DHP_CONTROLLER_MULTI_TEST','-I'+str(SRC),'-I'+DEV+'/lua5.1','-I'+DEV+'/x86_64-linux-gnu',*['-D'+k+'='+json.dumps(str(v)) for k,v in vals.items()],'-DHP_TRUST_PROFILE_HEADER='+json.dumps(str(header)),str(SRC/'trusted-nginx.c'),str(SRC/'renewable-guard.c'),str(ROOT/'homepublish/tests/controller-adapter.c'),'-o',str(d/'homepublish_controller_test.so'),'-l:libcrypto.so.3'],check=True)
 def main():
  assert (SHARE/'product-controller.lua').exists(),'internal runnable controller missing'
  with tempfile.TemporaryDirectory(prefix='controller-',dir='/home/eric/homestun-sdk-check') as td:

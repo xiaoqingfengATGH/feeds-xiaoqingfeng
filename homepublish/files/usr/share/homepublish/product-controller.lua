@@ -51,7 +51,24 @@ function M.new(provider)
   if s.runtime.expires_at and remaining==0 then return C.stop() end
   local ok=provider.start(plan,C.generation,remaining)
   local stage='start'
-  if ok then stage='readiness';ok=provider.readiness and provider.readiness(plan)==true end
+  if ok then
+   stage='readiness';local results
+   if provider.readiness then ok,results=provider.readiness(plan) else ok=false end
+   ok=ok==true
+   if #snapshot.services>1 and not results then ok=false end
+   if results then
+    change(function(v)
+     assert(v.runtime.generation==C.generation,'stale service readiness')
+     v.runtime.services={}
+     for _,service in ipairs(snapshot.services) do
+      local result=results[service.service_id]
+      local ready=type(result)=='table' and result.ready==true
+      v.runtime.services[service.service_id]={hostname=service.hostname,ready=ready,generation=C.generation}
+      if not ready then ok=false end
+     end
+    end)
+   end
+  end
   if not ok then
    local clean=provider.stop()
    return finish('blocked','provider '..stage..' failed',clean and 'confirmed' or 'unknown',stage)

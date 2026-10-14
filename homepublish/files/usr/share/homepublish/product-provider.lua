@@ -29,7 +29,7 @@ local function validate_state(s)
  assert(s.desired_state.state=='disabled' or s.desired_state.state=='enabled','journal desired')
  assert(type(s.desired_state.manual_stop_latch)=='boolean','journal latch')
  assert(not s.desired_state.manual_stop_latch or s.desired_state.state=='disabled','latched enabled intent')
- known(s.runtime,{phase=true,generation=true,last_error=true,cleanup=true,expires_at=true,stage=true,active_verified=true})
+ known(s.runtime,{phase=true,generation=true,last_error=true,cleanup=true,expires_at=true,stage=true,active_verified=true,services=true})
  local phases={unsupported=true,cleanup_required=true,starting=true,running=true,stopping=true,stopped=true,blocked=true}
  assert(phases[s.runtime.phase],'runtime unavailable')
  if s.runtime.generation~=nil then revision(s.runtime.generation) end
@@ -38,6 +38,14 @@ local function validate_state(s)
  if s.runtime.expires_at~=nil then revision(s.runtime.expires_at) end
  if s.runtime.stage then assert(type(s.runtime.stage)=='string' and #s.runtime.stage<=32,'runtime stage') end
  if s.runtime.active_verified~=nil then assert(type(s.runtime.active_verified)=='boolean','runtime verification') end
+ if s.runtime.services then
+  local allowed={};for _,service in ipairs((s.attempted_config or s.active_config).services) do allowed[service.service_id]=service.hostname end
+  for id,result in pairs(s.runtime.services) do
+   assert(allowed[id]==result.hostname,'runtime service identity')
+   known(result,{hostname=true,ready=true,generation=true});assert(type(result.ready)=='boolean','service readiness')
+   assert(result.generation==s.runtime.generation,'service generation')
+  end
+ end
  if s.approval then known(s.approval,{revision=true});assert(s.approval.revision==(s.attempted_revision or s.active_revision),'approval revision') end
  return s
 end

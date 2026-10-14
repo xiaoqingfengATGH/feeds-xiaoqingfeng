@@ -1,4 +1,4 @@
-.PHONY: browser rpc controller direct product guardian guardian-nginx owned-runtime startup-owned trusted-provider openssl-engine audit-regressions
+.PHONY: browser rpc controller controller-multi direct product guardian guardian-nginx owned-runtime startup-owned trusted-provider openssl-engine audit-regressions
 # WSL root + Windows node.exe/Chrome/Playwright; see RPC checkpoint prerequisites.
 # HP_PLAYWRIGHT is optional when Windows Node can resolve 'playwright'.
 browser:
@@ -7,6 +7,9 @@ rpc:
 	python3 test-rpc.py
 controller:
 	python3 test-controller.py
+	python3 test-controller-multi.py
+controller-multi:
+	python3 test-controller-multi.py
 audit-regressions:
 	python3 test-audit-regressions.py maps
 	python3 test-audit-regressions.py compiler

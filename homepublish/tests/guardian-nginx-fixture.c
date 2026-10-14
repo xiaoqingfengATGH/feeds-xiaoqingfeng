@@ -37,6 +37,18 @@ static void nginx_provider(int fd) {
    close(in);
   }
   if(hp_owned_file(runtime,3,"",0))_exit(127);
+#ifdef HP_CONTROLLER_MULTI_TEST
+  const char *extra_names[]={"cert2.pem","key2.pem"};
+  for(unsigned i=0;i<2;i++) {
+   char path[1024];snprintf(path,sizeof(path),"%s/%s",HP_NGINX_PREFIX,extra_names[i]);
+   int in=open(path,O_RDONLY|O_NOFOLLOW|O_CLOEXEC);
+   if(in<0 && errno==ENOENT)continue;
+   if(in<0)_exit(127);
+   char buf[65536];ssize_t n=read(in,buf,sizeof(buf));char extra;
+   if(n<=0 || read(in,&extra,1)!=0 || hp_owned_file(runtime,13+i,buf,(size_t)n))_exit(127);
+   close(in);
+  }
+#endif
  }
  int log=open(HP_NGINX_PREFIX "/stderr",O_CREAT|O_APPEND|O_WRONLY,0600);
  if(log<0 || dup2(log,2)<0) _exit(127);

@@ -391,7 +391,14 @@ int hp_guard_start_private_test(struct hp_guard *g, uint64_t gen, uint64_t epoch
  return guard_start(g,gen,epoch,temporary_ms,child,arg,1);
 }
 #endif
-#ifndef HP_GUARD_TEST
+#ifdef HP_DEVICE_PROVIDER
+/* Linked only into the fixed nonroot device-test broker, never root exec. */
+void hp_guard_bind_owned_device(struct hp_owned_runtime *r) { owned_runtime=r; }
+int hp_guard_start_device(struct hp_guard *g,uint64_t gen,uint64_t epoch,unsigned ttl,void (*child)(int),int fd) {
+ return guard_start(g,gen,epoch,ttl,child,fd,1);
+}
+#endif
+#if !defined(HP_GUARD_TEST) && !defined(HP_DEVICE_PROVIDER)
 /* No provider has been integrated: packaged executable cannot start anything. */
 int main(void) { fputs("HomePublish guardian provider unavailable; activation disabled\n",stderr); return 78; }
 #endif

@@ -1,6 +1,9 @@
 # HomePublish 已恢复：当前续跑入口
 
-Latest Feature3 partial device DNS/TLS/certificate-replacement acceptance and HomeVPN adapter steering: see docs/HOMEPUBLISH-DEVICE-INTEGRATIONS-CHECKPOINT.md (relative to repository root). Business ACME activation, DNS-answer-change, independent LAN return path and proxy reload remain unverified; do not call Feature3 complete.
+> **Current r5 acceptance:** authorized HomeVPN RSA business certificate now connected and installed: system-CA/hostname TLS A→Save pending A→Apply B→Stop old/new connections and private snapshot cleanup pass; original source cert/key hash+permissions equal server-only. Runtime commit59b7af8, installed homepublish0.1.0-r5; final revision0/disabled/stopped. Passwall enabled/xray16371 unchanged. Historical local multi-controller regression failed; controlled DNS-answer-change, independent LAN/proxy reload and production/public readiness remain unverified. See [current device integration checkpoint](HOMEPUBLISH-DEVICE-INTEGRATIONS-CHECKPOINT.md).
+
+
+Feature3 business RSA system-trust TLS is now accepted on installedr5 (see current acceptance above). Controlled DNS-answer-change, independent LAN return path and proxy reload remain unverified; do not call Feature3 complete.
 
 > **Current simplified architecture (supersedes historical guard/security gates below):** Lua controller + standard procd dedicated foreground Nginx, ordinary process lifecycle and private permissions; no device C broker/dual guardians/seccomp/memfd/short capability in active package. Normal Stop/temporary/controller lifecycle does not guarantee millisecond hard interruption or independent frozen-controller fail-close. Persisted Stop latch, Save pending, explicit Apply, original temporary deadline and bounded recovery remain. Real device scoped ubus Start/TLS A → Save pending A → Apply TLS B → Stop/keepalive EOF and SDK r3 source binding passed; fixed loopback test profile only. UI Start/Apply still disabled and public production unsupported. Feature3 ACME/DDNS/DNS/Passwall2 integration remains. See [simplified acceptance checkpoint](HOMEPUBLISH-DEVICE-SIMPLIFY-CHECKPOINT.md).
 

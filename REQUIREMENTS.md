@@ -48,6 +48,8 @@ init 不再走旧 UCI→NATMap lease：固定 lifecycle start 在 disabled 时�
 
 ## 当前授权与阶段
 
+Current r7 continuation: actual-device Chrome official single LuCI view lifecycle / scoped RPC / real procd Start → shared RSA TLS → Save pending old traffic → Apply independent ECC + original deadline → Stop both held TLS connections and new listener/private snapshots PASS. Target restored revision0/disabled/latch/cleanup confirmed, ACME backup exact, fixtures gone, controller/backends stopped, both init disabled, management/proxy/listeners/routes/firewall preserved. See docs/HOMEPUBLISH-R7-BROWSER-ACCEPTANCE.md. Natural expiry and second-readiness-failure r7 rerun not tested; public activation remains unsupported.
+
 **HomePublish（家庭服务直连）最终设计基线已整理。** 用户确认正常发布持续直到停用，临时限时可选，UPnP有限租约受控续租，开机恢复独立设置；直接双栈专用Nginx，不通用forwarder。详见[完整设计](docs/homepublish-product-design.md)和[审查清单](docs/homepublish-design-review-checklist.md)。当前用户已授权隔离分支源码开发、本机/WSL测试与local commit；禁止生产操作、安装、Add/Delete映射、公网测试、防火墙/路由/Cloudflare操作，以及merge/push/PR。先前仅文档授权已由本次源码授权取代，真实生产操作仍须另定范围。默认未发布、Save不启动，明确开启可持续运行；产品自动INPUT能力不是本批生产写授权。命名迁移源码已完成；canonical校验、固定stdin CLI及原生私有持久化最小切片已本地验证，产品仍未完成，历史实验不是生产验收。当前证据与续跑入口见[checkpoint](docs/HOMEPUBLISH-PROGRESS.md)。
 
 ## REQ-001 — 家庭Web HTTPS直连（当前定位）

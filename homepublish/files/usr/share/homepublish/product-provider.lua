@@ -25,7 +25,13 @@ local function validate_state(s)
  assert(s.desired_state.state=='disabled' or s.desired_state.state=='enabled','journal desired')
  assert(type(s.desired_state.manual_stop_latch)=='boolean','journal latch')
  assert(not s.desired_state.manual_stop_latch or s.desired_state.state=='disabled','latched enabled intent')
- known(s.runtime,{phase=true});assert(s.runtime.phase=='unsupported' or s.runtime.phase=='cleanup_required','runtime unavailable')
+ known(s.runtime,{phase=true,generation=true,last_error=true,cleanup=true,expires_at=true})
+ local phases={unsupported=true,cleanup_required=true,starting=true,running=true,stopping=true,stopped=true,blocked=true}
+ assert(phases[s.runtime.phase],'runtime unavailable')
+ if s.runtime.generation~=nil then revision(s.runtime.generation) end
+ if s.runtime.last_error~=nil then assert(type(s.runtime.last_error)=='string' and #s.runtime.last_error<=128,'runtime error') end
+ if s.runtime.cleanup~=nil then assert(s.runtime.cleanup=='confirmed' or s.runtime.cleanup=='unknown','runtime cleanup') end
+ if s.runtime.expires_at~=nil then revision(s.runtime.expires_at) end
  if s.approval then known(s.approval,{revision=true});assert(s.approval.revision==s.active_revision,'approval revision') end
  return s
 end
@@ -47,8 +53,9 @@ function M.handle(request)
    state.desired_state={state='disabled',manual_stop_latch=true}
    assert(state.intent_revision<9007199254740990,'intent revision exhausted')
    state.intent_revision=state.intent_revision+1;state.approval=nil
-   -- No controller exists yet: intent revocation is real, resource cleanup is not claimed.
-   state.runtime={phase=state.active_revision and 'cleanup_required' or 'unsupported'}
+   -- Preserve the owned generation so the internal controller observes revocation.
+   state.runtime.phase=state.active_revision and 'cleanup_required' or 'unsupported'
+   if state.active_revision then state.runtime.cleanup='unknown' end
    return wire.encode(state),public(state)
   end
   assert(request.action=='save','unsupported action')
@@ -56,6 +63,15 @@ function M.handle(request)
   local config,err=model.validate(request.config);assert(config,err)
   assert(state.saved_revision<9007199254740990,'saved revision exhausted')
   state.saved_revision=state.saved_revision+1;state.saved_config=config
+  return wire.encode(state),public(state)
+ end)
+end
+-- Internal code dependency only; never exposed through the fixed client protocol.
+function M.controller_transaction(fn)
+ return store.transaction(function(bytes)
+  local state=validate_state(bytes and wire.decode(bytes) or initial())
+  fn(state)
+  validate_state(state)
   return wire.encode(state),public(state)
  end)
 end

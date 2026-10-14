@@ -1,4 +1,6 @@
-.PHONY: direct product guardian guardian-nginx owned-runtime startup-owned trusted-provider openssl-engine audit-regressions
+.PHONY: controller direct product guardian guardian-nginx owned-runtime startup-owned trusted-provider openssl-engine audit-regressions
+controller:
+	python3 test-controller.py
 audit-regressions:
 	python3 test-audit-regressions.py maps
 	python3 test-audit-regressions.py compiler

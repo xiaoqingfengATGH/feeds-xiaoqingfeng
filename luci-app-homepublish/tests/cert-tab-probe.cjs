@@ -28,6 +28,15 @@ await page.waitForSelector('tr.cbi-section-table-row',{timeout:20000});
 const dbg=await page.evaluate(async()=>{try{const r=await window.L.Request.post(L.env.ubuspath+'/call',{data:JSON.stringify({jsonrpc:'2.0',id:1,method:'call',params:[L.env.sessionid,'homepublish','certificates',{}]})});return {status:r.status,text:(await r.text()).slice(0,400)};}catch(e){return {error:e.message};}});
 console.log('RPC-DEBUG:',JSON.stringify(dbg));
 console.log('PAGE-ERRORS:',JSON.stringify(errors));
+/* 造数：备份 state → save default=acme:home.iwonderful.top(RSA) → reload 验证已用靠前 → finally 还原 */
+ssh('cp -a /etc/homepublish/product /tmp/hp-cert-probe-backup');
+const saveOut=call('homepublish','save',{expected_revision:0,config:{schema_version:1,default_certificate_ref:'acme:home.iwonderful.top',services:[],access_profile:{methods_allowed:['manual_ipv4'],listeners:[{family:'ipv4',address:'192.168.220.48',interface:'wan',zone:'wan',protocol:'tcp',internal_port:49284,external_port:49284}]},publication_policy:{mode:'continuous',boot_restore:false}}});
+assert.equal(saveOut.error,undefined,'probe save failed: '+JSON.stringify(saveOut));
+console.log('probe saved default ref:', saveOut.saved_config && saveOut.saved_config.default_certificate_ref);
+await page.reload();
+await page.waitForFunction(()=>window.result.loader,{timeout:20000});
+assert.equal(await page.evaluate(()=>result.loader),'PASS',await page.evaluate(()=>result.error));
+await page.waitForSelector('tr.cbi-section-table-row',{timeout:20000});
 const rows=await page.$$eval('tr.cbi-section-table-row',rs=>rs.map(r=>Array.from(r.querySelectorAll('td')).map(td=>td.textContent.trim())));
 console.log('ROWS:');
 rows.forEach((r,i)=>console.log(` [${i}] `+r.join(' | ')));
@@ -40,13 +49,14 @@ assert.ok(texts.every(t=>!t.includes('免责')&&!t.includes('不代表')&&!t.inc
 /* RSA 已被入口默认使用 → RSA 行必须排第一 */
 assert.ok(texts[0].includes('RSA')&&texts[0].includes('入口默认'),'used-first: RSA row first with 入口默认 usage, got: '+texts[0]);
 assert.ok(texts[1].includes('ECC')&&texts[1].includes('未被使用'),'unused ECC second, got: '+texts[1]);
+assert.ok(texts.every(t=>!/Edit/.test(t)),'readonly rows must have no Edit buttons: '+texts.join(' ; '));
+assert.equal((await page.textContent('.cbi-map-descr')).trim(),'列出可使用的证书列表（来自ACME）','map description');
 const desc=await page.textContent('.cbi-map-descr').catch(()=>'' ) || '';
 assert.ok(!desc.includes('不代表')&&!desc.includes('私钥'),'map description user-facing');
-/* 设置一个使用方再回来看排序：默认证书= ECC 那张 → ECC 行应排最前 */
-const st=JSON.parse(ssh("ubus call homepublish status"));
-console.log('saved_config default ref:', st.saved_config && st.saved_config.default_certificate_ref);
-console.log('saved services:', st.saved_config && JSON.stringify(st.saved_config.services||[]));
+
 assert.deepEqual(errors,[]);
 console.log('CERTIFICATE-TAB PASS: 2 rows RSA/ECC, Chinese status, no disclaimers, sorted used-first');
-}finally{if(browser)await browser.close();if(server)await new Promise(r=>server.close(r));if(sid)ssh(`ubus call session destroy '{"ubus_rpc_session":"${sid}"}'`);}
+}finally{
+try{ssh('test ! -e /tmp/hp-cert-probe-backup || { rm -rf /etc/homepublish/product; cp -a /tmp/hp-cert-probe-backup /etc/homepublish/product; rm -rf /tmp/hp-cert-probe-backup; }');}catch(e){console.error('RESTORE FAILED:',e.message);}
+if(browser)await browser.close();if(server)await new Promise(r=>server.close(r));if(sid)ssh(`ubus call session destroy '{"ubus_rpc_session":"${sid}"}'`);}
 })().catch(e=>{console.error(e);process.exitCode=1;});

@@ -38,14 +38,17 @@ return view.extend({
 		};
 
 		m = new form.JSONMap({ certificates: inventory }, _('HomePublish — 证书'),
-			_('展示本机已申请的 ACME 证书，供发布服务选择。证书的申请与续期在 ACME 应用中管理。'));
+			_('列出可使用的证书列表（来自ACME）'));
 
 		/* 只读表：每张证书一行（同域名 RSA/ECC 为两行） */
 		s = m.section(form.GridSection, 'certificates', _('已有证书'));
 		s.readonly = true;
+		s.modalizable = false;
 		s.addremove = false;
 		s.anonymous = true;
 		s.nodescriptions = true;
+		/* 只读库存表：无任何行操作（GridSection 默认会给每行塞 Edit 按钮） */
+		s.renderRowActions = function() { return E([]); };
 
 		var statusText = {
 			within_validity: _('有效'),

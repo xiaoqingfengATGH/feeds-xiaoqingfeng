@@ -1,0 +1,19 @@
+Final read-only network acceptance and cleanup
+Command: lua /tmp/homepublish-tcp-p1-network/device-tcp-p1-network.lua /tmp/homepublish-tcp-p1-network
+Final rerun output:
+PASS live fixed ubus/UCI inventory and exact LAN resolution
+PASS classification, delegated local IPv6, exclusion, ambiguity, down/missing, malformed, deterministic summary
+PASS malformed IPv6 and real-adapter dependency failure returns structured unknown
+Exit 0.
+
+Local sha256sum matched previously read-back device sha256sum exactly:
+eda23190a0638829ca252e82915a4a3244d2b99ee4ec4cf86872214c3669cd8d network-inventory.lua
+0a3556bbd075260eff9119db2547b6a69e619efb3870c44642b75e26cd1e5b97 device-tcp-p1-network.lua
+
+Cleanup command (same authenticated SSH options as tcp-p1-network.txt):
+rm /tmp/homepublish-tcp-p1-network/test.lua /tmp/homepublish-tcp-p1-network/device-tcp-p1-network.lua /tmp/homepublish-tcp-p1-network/network-inventory.lua && rmdir /tmp/homepublish-tcp-p1-network && test ! -e /tmp/homepublish-tcp-p1-network && echo CLEANUP_ABSENT_VERIFIED
+Output: CLEANUP_ABSENT_VERIFIED
+Exit 0. No fixture daemons or sockets were created; only foreground Lua executions and root-private fixture files. No service restart or UCI set/save/commit occurred. Final SSH readback succeeded before cleanup and checked exact fixture root absence after removal.
+
+git diff --check: exit 0, no output.
+Concurrent canonical/schema work was present in final git status; not touched by network worker. No commit/push/PR.

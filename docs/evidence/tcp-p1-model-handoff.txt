@@ -1,0 +1,36 @@
+P1 canonical model subtask handoff (not full P1 completion)
+
+Changed: homepublish/files/usr/share/homepublish/canonical-v2.lua (new), canonical.lua (27-line dispatcher addition only; original v1 implementation prefix compared with HEAD and unchanged), homepublish/tests/device-tcp-p1-model.lua (new).
+
+Public API:
+ canonical.validate(config) -> normalized_config OR nil,error_string,error_detail.
+ V1 dispatch preserves legacy behavior and two-result failures; v2 error_detail has error/error_code/field/retryable (service_id for service conflicts).
+ canonical.runtime_plan(v2) -> nil,'v2 runtime unsupported until P3',detail. Never feeds v2 to legacy runtime.
+ canonical.migrate_preview(v1, inventory) -> {original_config, proposed_config?, warnings, blocking_issues}.
+ Inventory argument shape is {networks={{network='lan',device='br-lan'},...}}; extra inventory facts may be present but are not used. Matches legacy interface against BOTH logical network and device, unions matching logical networks, requires exactly one. Parent inventory adapter must supply this shape explicitly; do not guess interface ownership.
+ original_config is a detached raw v1 copy, including external_port and all listeners; proposed_config retains every listener even when blocked (unresolved network is absent). Invalid legacy configs have original_config and blockers but no proposed_config. Proposed configs with blockers must never be committed implicitly. API does not persist backups; store/save owner must create private backup before explicit revision-checked save. No automatic migration.
+
+Contract behavior: four discriminator types; strict known fields/dense arrays/explicit boolean and family; high ingress ports; verified HTTPS upstream with DNS server_name; save-time missing certificates allowed; lowercase exact DNS names; IPv6 canonical eight lowercase unpadded words; exact unicast no wildcard/loopback/link-local/mapped ingress; one listener per family and common shared port. Duplicate domain/SSH/TCP/service identity conflicts include disabled items as required by contract line40. TCP shared-port conflicts are rejected even when shared socket would not yet be used.
+
+Device evidence (all commands, stderr/stdout and exit codes included):
+ tcp-p1-model-red-core.txt -> expected unsupported schema failure, exit1.
+ tcp-p1-model-green-core.txt -> 5 grouped cases pass, exit0.
+ tcp-p1-model-red-conflicts.txt -> expected disabled normalized domain conflict accepted before implementation, exit1.
+ tcp-p1-model-green-conflicts.txt -> 5 grouped cases pass, exit0.
+ tcp-p1-model-red-migration.txt -> expected missing explicit export, exit1.
+ tcp-p1-model-green-migration.txt -> 3 grouped cases pass, exit0.
+ tcp-p1-model-red-schema.txt -> expected missing structured unsupported-schema error, exit1.
+ tcp-p1-model-red-malformed.txt -> schema case now green; malformed scalar service exposed internal Lua path before guard, exit1.
+ tcp-p1-model-green-final.txt -> final 16 grouped cases pass, exit0. Includes additional migration same-family/differing-port no-truncation regressions; those additional regression cases were not independently RED.
+ tcp-p1-model-regression.txt -> unchanged existing test-canonical.lua and test-certificate-model.lua run on device, both exit0; root:root fixture mode0700 and target source SHA256 recorded.
+ tcp-p1-model-cleanup.txt -> exact owned fixture removed; absence independently read back in another SSH command, exit0.
+ tcp-p1-model-final.txt is an earlier 13-case successful run, NOT the final acceptance count.
+
+Final local/device bytes match:
+ 9801b5c822ddc40e31bea2aea5a460baf5038f5efefeac6e262cb7db025262f8 canonical.lua
+ 0c677d4a05875929639ec519c268170742afcfd9e6efc52a19349969e9528ed7 canonical-v2.lua
+ 512c6f973596863f543701e7fbb8765da8ec7eae49fcf65cadbcc793cc12a9a0 device-tcp-p1-model.lua
+
+git diff --check passed. No local Lua/product tests, installed-path writes, runtime processes, listeners, firewall changes, service reloads, commit/push/PR. All target tests restricted to new root-private /tmp/homepublish-tcp-p1-model, now absent.
+
+Unresolved/out of this worker scope: RPC structured-error propagation/capability publication; network inventory integration; actual private migration backup and optimistic save; concurrent-save/Save-not-Start integration; certificate/DNS/network preflight; P3 runtime. Network/provider/RPC/store/ACL and other workers' files untouched. A scratch helper invocation attempted to append a not-yet-created scratch file and failed locally before any source change; corrected before target test, no fabricated result.

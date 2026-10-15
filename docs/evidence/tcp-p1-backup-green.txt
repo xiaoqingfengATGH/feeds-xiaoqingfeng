@@ -1,0 +1,2 @@
+PASS exact original bytes, private mode, updated readback, legacy two-return callback, capability
+DEVICE_EXIT=0

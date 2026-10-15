@@ -1,0 +1,14 @@
+OBSERVE connect cli_exit=256 wire_bytes=156 stderr_bytes=0
+{"retryable":true,"field":"access_profile.listeners.network","error":"Network inventory unavailable or malformed","error_code":"NETWORK_UNAVAILABLE"}
+
+PASS full transport connect
+OBSERVE firewall cli_exit=256 wire_bytes=156 stderr_bytes=0
+{"retryable":true,"field":"access_profile.listeners.network","error":"Network inventory unavailable or malformed","error_code":"NETWORK_UNAVAILABLE"}
+
+PASS full transport firewall
+OBSERVE malformed cli_exit=256 wire_bytes=156 stderr_bytes=0
+{"retryable":true,"field":"access_profile.listeners.network","error":"Network inventory unavailable or malformed","error_code":"NETWORK_UNAVAILABLE"}
+
+PASS full transport malformed
+TOTAL network full transport fault regressions PASS
+DEVICE_EXIT=0

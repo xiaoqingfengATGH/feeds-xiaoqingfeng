@@ -5,6 +5,9 @@ local model=dofile(source..'/canonical.lua')
 local wire=dofile(source..'/product-wire.lua')
 local store=require('homepublish_store')
 local M={}
+local function failure(code,field,message,retryable)
+ return {error_code=code,field=field,error=message,retryable=retryable==true}
+end
 local function initial()
  return {state_version=1,saved_revision=0,intent_revision=0,desired_state={state='disabled',manual_stop_latch=false},runtime={phase='unsupported'}}
 end
@@ -57,26 +60,40 @@ end
 local function public(state)
  local out=wire.decode(wire.encode(state))
  -- r9: 已安装即真实能力；后端权威校验保留（CLI→device-test channel→controller 拒绝路径不动）
- out.capabilities={start=true,apply=true,stop=true}
+ out.schema_versions={1,2}
+ local supported=not state.saved_config or state.saved_config.schema_version==1
+ out.capabilities={start=supported,apply=supported,stop=true,network_inventory=true,preflight=true}
  out.pending_config={saved_revision=state.saved_revision,apply_required=state.saved_revision>0 and state.saved_revision~=state.active_revision}
  return out
 end
-function M.handle(request)
+function M.handle(request,structured)
  if type(request)~='table' or getmetatable(request)~=nil then return nil,'request object required' end
- local allowed=request.action=='save' and {action=true,expected_revision=true,config=true} or request.action=='validate' and {action=true,config=true} or {action=true}
+ local allowed=request.action=='save' and {action=true,expected_revision=true,config=true} or request.action=='validate' and {action=true,config=true} or request.action=='preflight' and {action=true,revision=true} or {action=true}
  for k in pairs(request) do if not allowed[k] then return nil,'unknown request field' end end
+ if request.action=='network_inventory' then
+  return dofile(source..'/network-inventory.lua').collect()
+ end
  if request.action=='certificates' then
   package.path=source..'/?.lua;'..package.path
   return require('device-integrations').certificate_inventory()
  end
- if request.action=='validate' then local c,e=model.validate(request.config);return c and {valid=true,config=c} or {valid=false,error=e} end
- if request.action~='save' and request.action~='status' and request.action~='stop' and request.action~='start' and request.action~='apply' then return nil,'unsupported action' end
+ if request.action=='validate' then
+  local c,e,detail=model.validate(request.config)
+  if c then return {valid=true,config=c} end
+  local out=detail or failure('INVALID_CONFIG','config',e,false);out.valid=false;return out
+ end
+ if request.action~='preflight' and request.action~='save' and request.action~='status' and request.action~='stop' and request.action~='start' and request.action~='apply' then return nil,'unsupported action' end
  -- r9: start/apply 为真实能力，但本地 provider 无 controller 执行通道；
  -- 设备通道（device-test channel）才是权威执行路径，此处保持权威拒绝。
  if request.action=='start' or request.action=='apply' then return nil,'runtime requires the device controller channel' end
  return store.transaction(function(bytes)
   local state=validate_state(bytes and wire.decode(bytes) or initial())
   if request.action=='status' then return nil,public(state) end
+  if request.action=='preflight' then
+   if request.revision~=state.saved_revision then return nil,failure('REVISION_CONFLICT','revision','Saved revision changed',true) end
+   if not state.saved_config then return nil,failure('INVALID_CONFIG','config','No saved configuration',false) end
+   return nil,dofile(source..'/preflight.lua').check(state.saved_config,state.saved_revision)
+  end
   if request.action=='stop' then
    state.desired_state={state='disabled',manual_stop_latch=true}
    assert(state.intent_revision<9007199254740990,'intent revision exhausted')
@@ -88,11 +105,22 @@ function M.handle(request)
    return wire.encode(state),public(state)
   end
   assert(request.action=='save','unsupported action')
-  assert(request.expected_revision==state.saved_revision,'revision conflict')
-  local config,err=model.validate(request.config);assert(config,err)
+  if request.expected_revision~=state.saved_revision then
+   if not structured and type(request.config)=='table' and request.config.schema_version==1 then error('revision conflict') end
+   return nil,failure('REVISION_CONFLICT','expected_revision','Saved revision changed',true)
+  end
+  local config,err,detail=model.validate(request.config)
+  if not config then
+   if not structured and type(request.config)=='table' and request.config.schema_version==1 then error(err) end
+   return nil,detail or failure('INVALID_CONFIG','config',err,false)
+  end
+  local migrating=state.saved_config and state.saved_config.schema_version==1 and config.schema_version==2
+  if migrating and store.migration_backup~=true then
+   return nil,failure('DEPENDENCY_UNAVAILABLE','schema_version','Private migration backup support unavailable',false)
+  end
   assert(state.saved_revision<9007199254740990,'saved revision exhausted')
   state.saved_revision=state.saved_revision+1;state.saved_config=config
-  return wire.encode(state),public(state)
+  return wire.encode(state),public(state),migrating==true
  end)
 end
 -- Internal code dependency only; never exposed through the fixed client protocol.

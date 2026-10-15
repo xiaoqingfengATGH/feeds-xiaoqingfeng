@@ -1,0 +1,9 @@
+PASS real scoped inventory
+PASS v2 persistence, optimistic revision, Save not Start, truthful preflight and TCP-only endpoint
+PASS precise live network/address blockers and stale preflight
+PASS unsafe backup rejects provider transition without state change; equal private backup safely reusable
+PASS transaction-backed migration original backup and active v1 preservation
+PASS older-store transition gate preserves saved and active v1; legacy malformed request API
+PASS scoped transport encoding, malformed fields/types, structured errors and real inventory
+
+exit=0

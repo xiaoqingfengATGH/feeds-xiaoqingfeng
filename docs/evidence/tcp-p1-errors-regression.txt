@@ -1,0 +1,34 @@
+PASS real scoped inventory
+PASS v2 persistence, optimistic revision, Save not Start, truthful preflight and TCP-only endpoint
+PASS precise live network/address blockers and stale preflight
+PASS unsafe backup rejects provider transition without state change; equal private backup safely reusable
+PASS transaction-backed migration original backup and active v1 preservation
+PASS older-store transition gate preserves saved and active v1; legacy malformed request API
+PASS final save revision transport guards
+PASS scoped transport encoding, malformed fields/types, structured errors and real inventory
+PASS live fixed ubus/UCI inventory and exact LAN resolution
+PASS classification, delegated local IPv6, exclusion, ambiguity, down/missing, malformed, deterministic summary
+PASS malformed IPv6 and real-adapter dependency failure returns structured unknown
+PASS canonical normalized IPv6 binding resolves compressed inventory exactly
+PASS semantic summary, deduplication, GUA/case variants and exact-host no-CIDR/no-mapped rejection
+PASS sparse interior-hole interface array fails closed independently of Lua length
+PASS real IPv6 canonical binding on lan
+PASS sparse address/prefix/zone/network arrays and genuine-address summary sensitivity
+PASS four types and IPv6 normalization
+PASS v2 runtime explicitly refused
+PASS unsupported schema structured refusal
+PASS strict structures and disabled syntax
+PASS malformed service gives secret-free fixed error
+PASS HTTPS upstream strict verified DNS
+PASS listener safety and cardinality
+PASS disabled normalized domain conflict
+PASS disabled SSH conflict
+PASS disabled TCP and reserved shared port conflicts
+PASS duplicate IDs across types
+PASS equivalent IPv6 family binding rejected
+PASS pure explicit migration preserves all listeners and source
+PASS migration refuses ambiguous missing and unsupported without loss
+PASS migration blocks multiple same-family listeners and differing ports without truncation
+PASS legacy validate and runtime unchanged
+TOTAL 16 PASS phase=all
+DEVICE_EXIT=0

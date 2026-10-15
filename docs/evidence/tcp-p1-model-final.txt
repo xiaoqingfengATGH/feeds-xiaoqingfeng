@@ -1,0 +1,26 @@
+$ scp -O -o ProxyCommand=none -o ProxyJump=none -o IdentitiesOnly=yes -o BatchMode=yes -i D:/DevPortal/CloudHosts/HomePri.key -P 222 D:\DevPortal\homelede\homepublish-product\homepublish\files\usr\share\homepublish\canonical.lua root@127.0.0.1:/tmp/homepublish-tcp-p1-model/canonical.lua
+
+EXIT 0
+$ scp -O -o ProxyCommand=none -o ProxyJump=none -o IdentitiesOnly=yes -o BatchMode=yes -i D:/DevPortal/CloudHosts/HomePri.key -P 222 D:\DevPortal\homelede\homepublish-product\homepublish\files\usr\share\homepublish\canonical-v2.lua root@127.0.0.1:/tmp/homepublish-tcp-p1-model/canonical-v2.lua
+
+EXIT 0
+$ scp -O -o ProxyCommand=none -o ProxyJump=none -o IdentitiesOnly=yes -o BatchMode=yes -i D:/DevPortal/CloudHosts/HomePri.key -P 222 D:\DevPortal\homelede\homepublish-product\homepublish\tests\device-tcp-p1-model.lua root@127.0.0.1:/tmp/homepublish-tcp-p1-model/device-tcp-p1-model.lua
+
+EXIT 0
+$ ssh -o ProxyCommand=none -o ProxyJump=none -o IdentitiesOnly=yes -o BatchMode=yes -i D:/DevPortal/CloudHosts/HomePri.key -p 222 root@127.0.0.1 lua /tmp/homepublish-tcp-p1-model/device-tcp-p1-model.lua /tmp/homepublish-tcp-p1-model all
+PASS four types and IPv6 normalization
+PASS v2 runtime explicitly refused
+PASS strict structures and disabled syntax
+PASS HTTPS upstream strict verified DNS
+PASS listener safety and cardinality
+PASS disabled normalized domain conflict
+PASS disabled SSH conflict
+PASS disabled TCP and reserved shared port conflicts
+PASS duplicate IDs across types
+PASS equivalent IPv6 family binding rejected
+PASS pure explicit migration preserves all listeners and source
+PASS migration refuses ambiguous missing and unsupported without loss
+PASS legacy validate and runtime unchanged
+TOTAL 13 PASS phase=all
+
+EXIT 0

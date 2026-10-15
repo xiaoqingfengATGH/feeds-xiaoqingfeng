@@ -1,0 +1,27 @@
+PASS injected write old state preserved, candidate absent, backup absent
+PASS injected zero old state preserved, candidate absent, backup absent
+PASS injected fsync old state preserved, candidate absent, backup absent
+PASS injected close old state preserved, candidate absent, backup absent
+PASS injected dirsync old state preserved, candidate absent, backup absent
+PASS injected fsync old state preserved, candidate absent, backup preserved
+PASS injected dirsync old state preserved, candidate absent, backup preserved
+PASS exact original bytes, private mode, updated readback, legacy two-return callback, capability
+PASS equal backup reuse keeps inode and response-only API
+PASS unequal backup fail closed
+PASS same-length unequal backup fail closed
+PASS special mode bits fail closed
+PASS symlink backup fail closed
+PASS foreign mode fail closed
+PASS foreign owner fail closed
+PASS multiple hardlinks fail closed
+PASS FIFO backup fail closed
+PASS directory backup fail closed
+PASS missing original rejects migration
+PASS read-only true and write false do not create backup
+PASS third return type guarded
+PASS safe preexisting backup survives later failure
+TOTAL backup device assertions PASS
+c58dd4e9548ab41e4b21d130e2ea4ceb8ecbe33126831fa2c38015fc0d14e0b6  homepublish_store.so
+e27660c939f987eea0f7426f284cb5a7d5f7c58dc67b301fefe2f235741065da  test.lua
+6b6c62fac5d0f4ca4e8d36b0be6f64d6192fff06d98162bdb0421d010eb0283f  fault.so
+DEVICE_EXIT=0

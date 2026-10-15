@@ -1,0 +1,17 @@
+OBSERVE connect cli_exit=256 wire_bytes=0 stderr_bytes=281
+lua: /tmp/homepublish-tcp-p1-errors/product-cli.lua:27: attempt to call method 'match' (a nil value)
+stack traceback:
+	/tmp/homepublish-tcp-p1-errors/product-cli.lua:27: in main chunk
+	[C]: in function 'dofile'
+	/tmp/homepublish-tcp-p1-errors/preload.lua:11: in main chunk
+	[C]: ?
+
+{"retryable":true,"field":"state","error":"Request rejected or state unavailable","error_code":"STATE_UNKNOWN"}
+
+lua: ...p/homepublish-tcp-p1-errors/device-tcp-p1-errors.lua:63: expected NETWORK_UNAVAILABLE, got STATE_UNKNOWN
+stack traceback:
+	[C]: in function 'assert'
+	...p/homepublish-tcp-p1-errors/device-tcp-p1-errors.lua:63: in function 'safe_error'
+	...p/homepublish-tcp-p1-errors/device-tcp-p1-errors.lua:74: in main chunk
+	[C]: ?
+DEVICE_EXIT=1

@@ -1,0 +1,8 @@
+$ ssh -o ProxyCommand=none -o ProxyJump=none -o IdentitiesOnly=yes -o BatchMode=yes -i D:/DevPortal/CloudHosts/HomePri.key -p 222 root@127.0.0.1 rm -rf /tmp/homepublish-tcp-p1-model; test ! -e /tmp/homepublish-tcp-p1-model && printf "PASS model fixture removed\n"
+PASS model fixture removed
+
+EXIT 0
+$ ssh -o ProxyCommand=none -o ProxyJump=none -o IdentitiesOnly=yes -o BatchMode=yes -i D:/DevPortal/CloudHosts/HomePri.key -p 222 root@127.0.0.1 test ! -e /tmp/homepublish-tcp-p1-model && printf "PASS cleanup independently rechecked; SSH recovery available\n"
+PASS cleanup independently rechecked; SSH recovery available
+
+EXIT 0

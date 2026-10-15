@@ -1,0 +1,12 @@
+PASS real scoped inventory
+PASS v2 persistence, optimistic revision, Save not Start, truthful preflight and TCP-only endpoint
+PASS precise live network/address blockers and stale preflight
+PASS older-store transition gate preserves saved and active v1; legacy malformed request API
+lua: /tmp/homepublish-tcp-p1-provider/product-wire.lua:21: wire header/limit
+stack traceback:
+	[C]: in function 'assert'
+	/tmp/homepublish-tcp-p1-provider/product-wire.lua:21: in function 'decode'
+	...mepublish-tcp-p1-provider/device-tcp-p1-provider.lua:40: in main chunk
+	[C]: ?
+
+exit=1

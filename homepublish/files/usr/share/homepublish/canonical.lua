@@ -167,4 +167,31 @@ function M.runtime_plan(c)
  if #services==0 then return nil,'no enabled services' end
  plan.services=services;return plan
 end
+-- Keep the legacy validator and runtime semantics isolated from v2.
+local legacy_validate,legacy_runtime_plan=M.validate,M.runtime_plan
+local v2
+local function model_v2()
+ if not v2 then
+  local source=debug.getinfo(1,'S').source
+  local directory=source:match('^@(.*/)') or '/usr/share/homepublish/'
+  v2=dofile(directory..'canonical-v2.lua')
+ end
+ return v2
+end
+function M.validate(c)
+ if type(c)=='table' and c.schema_version~=1 and c.schema_version~=2 then
+  return nil,'unsupported schema',{error='unsupported schema',error_code='UNSUPPORTED_SCHEMA',field='schema_version',retryable=false}
+ end
+ if type(c)=='table' and c.schema_version==2 then return model_v2().validate(c) end
+ return legacy_validate(c)
+end
+function M.runtime_plan(c)
+ if type(c)=='table' and c.schema_version==2 then
+  return nil,'v2 runtime unsupported until P3',{error='v2 runtime unsupported until P3',error_code='DEPENDENCY_UNAVAILABLE',field='schema_version',retryable=false}
+ end
+ return legacy_runtime_plan(c)
+end
+function M.migrate_preview(c,inventory)
+ return model_v2().migrate_preview(c,inventory,legacy_validate)
+end
 return M

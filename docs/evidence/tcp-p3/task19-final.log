@@ -1,0 +1,12 @@
+P3_TASK19_RENDER_GREEN
+PASS client-server-first IPv6 to IPv4; 8192 binary bytes both ways + interleaving + held8s + response after client FIN
+PASS client-client-first IPv6 to IPv4; 8192 binary bytes both ways + interleaving + held8s + response after client FIN
+PASS server write-half closed first; client sent 8192 bytes after observed EOF
+PASS backend server-first exact 8192 binary bytes and half-close
+PASS backend client-first exact 8192 binary bytes and half-close
+PASS backend server-half exact 8192 binary bytes and half-close
+PASS management SSH/Web/proxy PID+listeners unchanged
+P3_TASK19_ISOLATED_GREEN
+PASS private processes exited; all snapshots + fixture keys removed
+PASS live journal + firewall/management/proxy configs + system nginx unchanged
+netstat: showing only processes with your user ID

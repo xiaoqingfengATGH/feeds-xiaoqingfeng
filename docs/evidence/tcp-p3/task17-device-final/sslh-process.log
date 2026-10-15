@@ -1,0 +1,30 @@
+Landlock: Failed to create a rulesettls:connection from ::1:39492 to ::1:49543 forwarded from 127.0.0.1:39910 to 127.0.0.1:49544
+Proto tls -1: 0/0 cnx
+Endpoint 3 -1: 0/0 cnx
+tls:connection from ::1:39508 to ::1:49543 forwarded from 127.0.0.1:35962 to 127.0.0.1:49546
+Proto tls -1: 0/0 cnx
+Endpoint 3 -1: 0/0 cnx
+tls:connection from ::1:39510 to ::1:49543 forwarded from 127.0.0.1:35972 to 127.0.0.1:49546
+Proto tls -1: 0/0 cnx
+Endpoint 3 -1: 0/0 cnx
+tls:connection from ::1:39520 to ::1:49543 forwarded from 127.0.0.1:35990 to 127.0.0.1:49546
+Proto tls -1: 0/0 cnx
+Endpoint 3 -1: 0/0 cnx
+anyprot:connection from ::1:39534 to ::1:49543 forwarded from 127.0.0.1:55368 to 127.0.0.1:49549
+Proto anyprot -1: 0/0 cnx
+Endpoint 3 -1: 0/0 cnx
+anyprot:connection from ::1:39542 to ::1:49543 forwarded from 127.0.0.1:55384 to 127.0.0.1:49549
+Proto anyprot -1: 0/0 cnx
+Endpoint 3 -1: 0/0 cnx
+anyprot:connection from ::1:39548 to ::1:49543 forwarded from 127.0.0.1:55394 to 127.0.0.1:49549
+Proto anyprot -1: 0/0 cnx
+Endpoint 3 -1: 0/0 cnx
+anyprot:connection from ::1:39558 to ::1:49543 forwarded from 127.0.0.1:55396 to 127.0.0.1:49549
+Proto anyprot -1: 0/0 cnx
+Endpoint 3 -1: 0/0 cnx
+anyprot:connection from ::1:39562 to ::1:49543 forwarded from 127.0.0.1:55402 to 127.0.0.1:49549
+Proto anyprot -1: 0/0 cnx
+Endpoint 3 -1: 0/0 cnx
+anyprot:connection from ::1:39568 to ::1:49543 forwarded from 127.0.0.1:55412 to 127.0.0.1:49549
+Proto anyprot -1: 0/0 cnx
+Endpoint 3 -1: 0/0 cnx

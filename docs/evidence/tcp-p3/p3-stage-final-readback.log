@@ -1,0 +1,3 @@
+PASS authorization marker absent: installed capability denied
+PASS live rev0 intent7 disabled latch stopped
+P3_STAGE_FINAL_CLEANUP_READBACK_GREEN

@@ -44,7 +44,12 @@ function M.new(provider,options)
    if s.runtime.phase~='running' or s.desired_state.state~='enabled' or s.desired_state.manual_stop_latch then return {error='not running'} end
   elseif s.runtime.phase=='running' or s.runtime.phase=='starting' or s.runtime.cleanup=='unknown' then return {error='runtime busy or cleanup unknown'} end
   local snapshot=W.decode(W.encode(recovery and s.active_config or s.saved_config))
-  local effective,err=require('canonical').runtime_plan(snapshot)
+  local effective,err
+  -- A trusted server-owned provider must opt in; the installed canonical guard
+  -- remains closed for all providers without the implemented v2 capability.
+  if snapshot.schema_version==2 and type(provider.runtime_plan)=='function' then
+   effective,err=provider.runtime_plan(snapshot)
+  else effective,err=require('canonical').runtime_plan(snapshot) end
   local plan;if effective then plan,err=provider.plan(effective) end
   if not plan then
    if recovery then
@@ -83,7 +88,7 @@ function M.new(provider,options)
      v.runtime.services={}
      for _,service in ipairs(effective.services) do
       local result=results[service.service_id]
-      local ready=type(result)=='table' and result.ready==true
+      local ready=type(result)=='table' and result.ready==true and (snapshot.schema_version~=2 or result.generation==C.generation)
       v.runtime.services[service.service_id]={hostname=service.hostname,ready=ready,generation=C.generation}
       if not ready then ok=false end
      end

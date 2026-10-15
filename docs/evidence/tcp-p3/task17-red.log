@@ -1,0 +1,5 @@
+lua: ...mp/homepublish-tcp-p3/device-tcp-p3-mixed-render.lua:11: mixed exact-SNI route unsupported: P3 route type not implemented: tls_passthrough
+stack traceback:
+	[C]: in function 'assert'
+	...mp/homepublish-tcp-p3/device-tcp-p3-mixed-render.lua:11: in main chunk
+	[C]: ?

@@ -1,0 +1,10 @@
+PASS ingress=v4 backend=ipv4 shared TLS + native SSH + independent TCP simultaneous graph; no ingress certificate snapshot
+PASS ingress=v6 backend=ipv4 shared TLS + native SSH + independent TCP simultaneous graph; no ingress certificate snapshot
+PASS raw garbage/client-PROXY/idle EOF within 4 seconds
+PASS nonHTTPS ipv4 unknown/suffix/noSNI/garbage/PROXY/idle rejection
+lua: ...p/homepublish-tcp-p3/device-tcp-p3-matrix-render.lua:12: nonHTTPS graph: unsafe IPv6
+stack traceback:
+	[C]: in function 'assert'
+	...p/homepublish-tcp-p3/device-tcp-p3-matrix-render.lua:12: in main chunk
+	[C]: ?
+PASS cleanup readback rc=1; management/global DNS/journal/config baselines compared

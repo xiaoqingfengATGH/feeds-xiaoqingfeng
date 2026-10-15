@@ -1,0 +1,1 @@
+2026/10/15 20:22:09 [error] 9903#0: *1 upstream SSL certificate does not match "wrong.fixture.home" while SSL handshaking to upstream, client: ::1, server: home.iwonderful.top, request: "GET / HTTP/1.1", upstream: "https://127.0.0.1:49446/", host: "home.iwonderful.top:49443"

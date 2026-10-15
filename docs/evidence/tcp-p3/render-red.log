@@ -1,0 +1,5 @@
+lua: /tmp/homepublish-tcp-p3/device-tcp-p3-render.lua:7: v2 HTTPS render rejected: /tmp/homepublish-tcp-p3/direct-renderer.lua:18: listener family/protocol
+stack traceback:
+	[C]: in function 'assert'
+	/tmp/homepublish-tcp-p3/device-tcp-p3-render.lua:7: in main chunk
+	[C]: ?

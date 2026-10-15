@@ -1,0 +1,4 @@
+PASS v2 canonical to HTTPS IPv6 route plan/render
+PASS upstream verify=false rejected
+PASS production loopback ingress remains forbidden
+P3_RENDER_GREEN

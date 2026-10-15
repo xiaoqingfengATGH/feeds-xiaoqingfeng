@@ -1,0 +1,9 @@
+Traceback (most recent call last):
+  File "D:\DevPortal\homelede\homepublish-product\homepublish\tests\run-device-tcp-p3-controller.py", line 24, in <module>
+    s=request({'action':'save','expected_revision':0,'config':c})
+  File "D:\DevPortal\homelede\homepublish-product\homepublish\tests\run-device-tcp-p3-controller.py", line 17, in request
+    r=ssh('lua '+REMOTE+'/device-tcp-p3-controller-cli.lua',json.dumps(q));print(r.stdout.strip());return json.loads(r.stdout)
+  File "D:\DevPortal\homelede\homepublish-product\homepublish\tests\run-device-tcp-p3-controller.py", line 11, in ssh
+    if check and r.returncode: raise RuntimeError((cmd,r.returncode,r.stdout,r.stderr))
+                               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+RuntimeError: ('lua /tmp/homepublish-tcp-p3/device-tcp-p3-controller-cli.lua', 1, '', 'lua: cannot open /tmp/homepublish-tcp-p3/device-tcp-p3-controller-cli.lua: No such file or directory\n')

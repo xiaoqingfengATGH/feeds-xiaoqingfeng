@@ -1,8 +1,8 @@
 -- SPDX-License-Identifier: Apache-2.0
 -- Pure internal render: no process/network/filesystem changes. Activation gated.
 -- Providers must be fixed trusted code, NEVER client-derived functions/paths.
--- Certificate provider currently supplies paths only; full SAN/chain/owner/key
--- readiness and guardian-owned snapshot lifecycle are NOT implemented here.
+-- Certificate provider supplies snapshot paths; runtime adapters own SAN/chain/
+-- key readiness, private snapshot lifecycle and ordinary procd supervision.
 local A=require('direct-address');local B=require('direct-backend');local M={}
 local function dense(t,lo,hi)
  assert(type(t)=='table' and getmetatable(t)==nil,'array');local n=0
@@ -43,10 +43,10 @@ local function render(plan,p)
   out[#out+1]='map "$http_host:$server_port" $'..host_guard..' { default 0;'
   local ports={}
   for _,l in ipairs(plan.access_profile.listeners) do
-   local number=tostring(l.internal_port)
+   local number=tostring(l.public_port or l.internal_port)
    if not ports[number] then
     ports[number]=true
-    out[#out+1]='"~*^'..hostname_pattern..'(:'..number..')?:'..number..'$" 1;'
+    out[#out+1]='"~*^'..hostname_pattern..'(:'..number..')?:'..tostring(l.internal_port)..'$" 1;'
    end
   end
   out[#out+1]='}'
@@ -56,9 +56,24 @@ local function render(plan,p)
   out[#out+1]='if ($ssl_server_name !~* "^'..hostname_pattern..'$") { return 444; }'
   out[#out+1]='if ($'..host_guard..' != 1) { return 444; }'
   out[#out+1]='if ($host != "'..s.hostname..'") { return 444; }'
-  out[#out+1]='location / { proxy_pass http://'..host..':'..backend.port..'; proxy_next_upstream off; proxy_set_header Host '..s.hostname..'; proxy_connect_timeout 2s; proxy_read_timeout 5s; } }'
+ local scheme=s.upstream_scheme or 'http';assert(scheme=='http' or scheme=='https','upstream scheme')
+  local tls=''
+  if scheme=='https' then
+   assert(type(s.upstream_tls)=='table' and s.upstream_tls.verify==true,'upstream TLS verification required')
+   B.hostname(s.upstream_tls.server_name)
+   tls=' proxy_ssl_server_name on; proxy_ssl_name '..s.upstream_tls.server_name..'; proxy_ssl_verify on; proxy_ssl_verify_depth 5; proxy_ssl_trusted_certificate /etc/ssl/certs/ca-certificates.crt;'
+  else assert(s.upstream_tls==nil,'HTTP has no upstream TLS') end
+  out[#out+1]='location / { proxy_pass '..scheme..'://'..host..':'..backend.port..'; proxy_next_upstream off; proxy_set_header Host '..s.hostname..'; proxy_set_header X-Real-IP $remote_addr; proxy_set_header X-Forwarded-For $remote_addr; proxy_set_header Forwarded "";'..tls..' proxy_connect_timeout 2s; proxy_read_timeout 5s; } }'
  end
- out[#out+1]='}';return {configuration=table.concat(out,'\n')..'\n',backends=snapshots,activation_ready=false,blocker='guardian and authoritative TLS/DNS/ownership providers not implemented'}
+ out[#out+1]='}';return {configuration=table.concat(out,'\n')..'\n',backends=snapshots,activation_ready=false,blocker='fixed runtime provider and authoritative TLS/DNS/ownership readiness required'}
 end
-function M.render(plan,p) local ok,r=pcall(render,plan,p);if ok then return r end;return nil,tostring(r) end
+function M.render(plan,p)
+ if type(plan)=='table' and plan.schema_version==2 then
+  local lowered,e=require('tcp-route-plan').compile(plan);if not lowered then return nil,e end
+  plan=lowered
+ end
+ if plan.tcp then return require('tcp-stream-renderer').render(plan,p) end
+ if plan.passthrough or plan.ssh then return require('sslh-renderer').render(plan,p) end
+ local ok,r=pcall(render,plan,p);if ok then return r end;return nil,tostring(r)
+end
 return M

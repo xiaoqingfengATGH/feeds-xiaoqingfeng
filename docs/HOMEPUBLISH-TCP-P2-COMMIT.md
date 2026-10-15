@@ -11,6 +11,11 @@
 
 真实无配置官方页面+实际库存的初始化与过滤已有RED/GREEN；本次失败不能直接归因到真实无配置页面，也不能因此忽略。
 
+## P2 回归夹具修复后的父代理复验
+最终 harness 改为单一 RPC dispatcher，通过状态切换响应fixture，不再在新视图请求期间反复 unrouteAll/route；同时等待官方 View.__init__ 完整渲染 Promise，并验证唯一新视图及实际完整RPC响应集合。只修复加载等待仍曾失败；失败时新视图已经渲染但fixture变换次数为零，故根因是测试拦截生命周期，不是已证明的业务地址过滤故障。原空选项、禁用、文案及禁止写入断言全部保留。
+
+父代理独立完整运行两次 `HP_CASE=extended node luci-app-homepublish/tests/tcp-ingress-device-probe.cjs`，均实际 exit0；日志为 docs/evidence/p2-dispatcher-final.log 和 p2-dispatcher-repeat.log。本项已按最终修改复验闭环，不改写上文提交时真实失败记录。未修改业务源码或安装UI；P3设备隔离目录未触碰。
+
 ## 延后验收边界
 受限非root账号ACL隔离未实测。root通配权限成功不等于受限账户ACL通过。下一阶段为P3协议数据面与运行时集成：四方式路由、IPv6→IPv4、未知流量拒绝、受控Start/Apply/Stop与清理；阶段详细范围以原计划为准。公网可达性、发布防火墙/认证/路由修改不在本次提交或既有仅部署授权内。
 

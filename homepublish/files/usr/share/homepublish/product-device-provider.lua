@@ -102,4 +102,25 @@ function M.stop()
  end
  return false
 end
+-- v2 capability is provided only by the fixed installed device profile.
+local function v2()return require('product-device-v2-profile')end
+local legacy={plan=M.plan,start=M.start,readiness=M.readiness,renew=M.renew,stop=M.stop}
+local current_v2=false
+function M.runtime_plan(c)return v2().runtime_plan(c)end
+function M.plan(c)
+ if c.schema_version==2 then return v2().plan(c) end
+ return legacy.plan(c)
+end
+function M.start(p,g,t)
+ current_v2=p.selected~=nil
+ if current_v2 then return v2().start(p,g,t) end
+ return legacy.start(p,g,t)
+end
+function M.readiness(p)if p and p.selected then return v2().readiness(p) end;return legacy.readiness(p)end
+function M.renew()if current_v2 then return v2().renew() end;return legacy.renew()end
+function M.stop()
+ -- Check the v2 owned group even in a fresh CLI/controller process.
+ if not v2().stop() then return false end
+ current_v2=false;return legacy.stop()
+end
 return M

@@ -1,0 +1,2 @@
+nginx: [alert] could not open error log file: open() "/tmp/homepublish-tcp-p3/matrix-runtime/logs/error.log" failed (2: No such file or directory)
+2026/10/15 19:40:55 [error] 96574#0: *3 upstream prematurely closed connection while reading response header from upstream, client: ::1, server: tls.fixture.home, request: "POST /drop HTTP/1.1", upstream: "http://127.0.0.1:49557/drop", host: "tls.fixture.home:49556"

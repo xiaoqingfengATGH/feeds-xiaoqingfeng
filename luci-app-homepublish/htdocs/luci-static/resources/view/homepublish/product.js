@@ -13,6 +13,29 @@ return baseclass.extend({
  start:rpc.declare({object:'homepublish',method:'start',params:['revision','approved'],expect:{},reject:true}),
  apply:rpc.declare({object:'homepublish',method:'apply',params:['revision','approved'],expect:{},reject:true}),
  checked:function(s){if(!s || s.error)throw new Error(s && s.error || 'State unavailable');return s;},
+ /* 证书下拉/列表排序：被本应用使用的靠前（入口默认 + 各服务绑定，继承按入口默认算），
+     未使用的排后面；同组内按域名、密钥类型排序 */
+ sortInventory:function(inventory,saved){
+  var usage={};
+  var users=function(ref){
+   if(!usage[ref]){
+    var list=[];
+    if(saved && saved.default_certificate_ref===ref)list.push('entry');
+    (Array.isArray(saved && saved.services) ? saved.services : []).forEach(function(svc){
+     var bound=svc.certificate_mode==='inherit'?saved.default_certificate_ref:svc.certificate_ref;
+     if(bound===ref)list.push(svc.hostname || svc.service_id);
+    });
+    usage[ref]=list;
+   }
+   return usage[ref];
+  };
+  return inventory.slice().sort(function(a,b){
+   var ua=users(a.certificate_ref).length>0,ub=users(b.certificate_ref).length>0;
+   if(ua!==ub)return ua?-1:1;
+   if(a.domain!==b.domain)return a.domain<b.domain?-1:1;
+   return a.key_type<b.key_type?-1:1;
+  });
+ },
  actionDialog:function(root,s,kind,updated,failed){
   var api=this,d=E('dialog'),busy=false;
   function button(id,text,fn){return E('button',{id:id,type:'button',class:'cbi-button',click:fn},text);}

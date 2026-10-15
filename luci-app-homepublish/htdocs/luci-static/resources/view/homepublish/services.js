@@ -16,13 +16,13 @@ return view.extend({
 	},
 
 	render: function(data) {
-		var state = data[0], inventory = Array.isArray(data[1].certificates) ? data[1].certificates : [];
+		var state = data[0], inventory = api.sortInventory(Array.isArray(data[1].certificates) ? data[1].certificates : [], (state && state.saved_config) || null);
 		var saved = (state && state.saved_config) ? JSON.parse(JSON.stringify(state.saved_config)) : api.defaults();
 		var m, s, o;
 
 		/* JSONMap 数据面：services 数组为 GridSection 行；其余 canonical 字段不进表单，
 		   由 m.snapshot 承载，Save 时经 collectConfig() 重组为 canonical 提交 RPC save。 */
-		var mapData = { services: (saved.services || []).map(function(svc) {
+		var mapData = { services: (Array.isArray(saved.services) ? saved.services : []).map(function(svc) {
 			var row = JSON.parse(JSON.stringify(svc));
 			row.backend_url = (svc.backend && svc.backend.port != null)
 				? ((svc.backend.addressFamily === 'ipv6' ? '[' + svc.backend.host + ']' : svc.backend.host) + ':' + svc.backend.port)

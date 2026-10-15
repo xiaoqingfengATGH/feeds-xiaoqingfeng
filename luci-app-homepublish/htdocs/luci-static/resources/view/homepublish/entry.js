@@ -15,8 +15,9 @@ return view.extend({
 	},
 
 	render: function(data) {
-		var state = data[0], inventory = Array.isArray(data[1].certificates) ? data[1].certificates : [];
+		var state = data[0], inventory = api.sortInventory(Array.isArray(data[1].certificates) ? data[1].certificates : [], (state && state.saved_config) || null);
 		var saved = (state && state.saved_config) ? JSON.parse(JSON.stringify(state.saved_config)) : api.defaults();
+		saved.services = Array.isArray(saved.services) ? saved.services : [];
 		var listener = saved.access_profile.listeners[0] || { family: 'ipv4', address: '192.168.1.2', interface: 'br-lan', zone: 'lan', protocol: 'tcp', internal_port: 8443, external_port: 18443 };
 		saved.access_profile.listeners = [listener];
 		var m, s, o;
@@ -78,7 +79,7 @@ return view.extend({
 		for (var i = 0; i < inventory.length; i++)
 			o.value(inventory[i].certificate_ref,
 				inventory[i].domain + ' · ' + String(inventory[i].key_type || '').toUpperCase() + ' · ' + (inventory[i].not_after || '日期未知'));
-		o.description = _('库存来自 ACME / 导入证书；库存域名不是服务域名，多个服务可共用真实 SAN 覆盖的证书。不上传私钥。');
+		o.description = _('证书来自本机 ACME 已申请的证书。多个服务可共用同一张证书。');
 
 		o = s.option(form.ListValue, 'mode', _('发布期限'));
 		o.value('continuous', _('长期：直到停止'));

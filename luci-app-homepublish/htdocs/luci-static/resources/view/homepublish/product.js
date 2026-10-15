@@ -3,6 +3,7 @@
 'require baseclass';
 'require rpc';
 'require dom';
+'require ui';
 var status=rpc.declare({object:'homepublish',method:'status',expect:{},reject:true});
 var validate=rpc.declare({object:'homepublish',method:'validate',params:['config'],expect:{},reject:true});
 var save=rpc.declare({object:'homepublish',method:'save',params:['expected_revision','config'],expect:{},reject:true});
@@ -22,6 +23,7 @@ return baseclass.extend({
     var list=[];
     if(saved && saved.default_certificate_ref===ref)list.push('entry');
     (Array.isArray(saved && saved.services) ? saved.services : []).forEach(function(svc){
+     if(svc.type && svc.type!=='https_proxy')return;
      var bound=svc.certificate_mode==='inherit'?saved.default_certificate_ref:svc.certificate_ref;
      if(bound===ref)list.push(svc.hostname || svc.service_id);
     });
@@ -80,100 +82,82 @@ return baseclass.extend({
 	    handleSaveApply：Save 后弹确认对话框展示 api.diff 具体差异与整组影响 → 确认才 api.apply(approved=true)。
 	    按钮使能只由 saved_revision / running / pending / cleanup 真实状态驱动，无能力假门控。 */
  running:function(s){var r=(s || {}).runtime || {},d=(s || {}).desired_state || {};return r.phase==='running' && r.active_verified===true && d.state==='enabled' && !d.manual_stop_latch;},
+ addressEqual:function(a,b){if(a===b)return true;try{return new URL('http://['+a+']/').hostname===new URL('http://['+b+']/').hostname;}catch(e){return false;}},
+ networkInventory:rpc.declare({object:'homepublish',method:'network_inventory',expect:{},reject:true}),
+ migrationPreview:rpc.declare({object:'homepublish',method:'migration_preview',params:['expected_revision'],expect:{},reject:true}),
+ clone:function(v){return JSON.parse(JSON.stringify(v));},
+ errorText:function(e){
+  var labels={REVISION_CONFLICT:'配置已被其他页面修改，请重新载入后编辑',DOMAIN_CONFLICT:'域名重复',SSH_CONFLICT:'共享入口只能配置一个 SSH 服务',PORT_CONFLICT:'监听端口冲突',ADDRESS_UNAVAILABLE:'所选地址已不可用',NETWORK_UNAVAILABLE:'网络不可用',ZONE_AMBIGUOUS:'网络区域关联不明确',STATE_UNKNOWN:'状态未知，请重试',DEPENDENCY_UNAVAILABLE:'设备缺少所需能力',INVALID_CONFIG:'配置不完整或无效'};
+  return (labels[e.error_code] || '操作失败')+(e.field?'（'+e.field+'）':'');
+ },
+ checked:function(s){if(!s || s.error){var e=new Error('状态读取失败或操作被拒绝');Object.assign(e,s || {});throw e;}return s;},
+ serviceRows:function(saved){return (saved.services || []).map(function(s){var r=JSON.parse(JSON.stringify(s)),b=s.backend || {};r.backend_host=b.host;r.backend_port=String(b.port || '');r.allowed_ranges=b.allowed_ranges || [];r.tls_server_name=(s.upstream_tls || {}).server_name || '';r.management=(s.authentication_review || {}).management?'1':'0';r.authentication=(s.authentication_review || {}).authentication || 'unconfirmed';r.enabled=s.enabled?'1':'0';return r;});},
  collectConfig:function(map){
-  /* 从 JSONMap 数据重建 canonical 配置：services 行 + 单 listener + 策略 NamedSection 的选项写入。
-     视图把 listener/policy 字段写到 map.data 的独立 section 上，由 product.js 统一组装。 */
-  var data=map.data.data,out=JSON.parse(JSON.stringify(map.snapshot || {}));
-  out.schema_version=1;
-  var section=function(name){return data[name] && typeof data[name]==='object' ? data[name] : null;};
-  /* 入口 listener（cfg_listener）：端口字符串数值化 */
-  var l=section('cfg_listener');
+  var data=map.data.data,out=this.clone(map.snapshot),p=data.cfg_policy,l=data.cfg_listener;
+  if(out.schema_version!==2)throw new Error('请先预览并确认旧配置迁移');
   if(l){
-   var ln={};
-   ['family','address','interface','zone'].forEach(function(k){if(l[k]!=null && l[k]!=='')ln[k]=l[k];});
-   ln.protocol='tcp';
-   ['internal_port','external_port'].forEach(function(k){if(l[k]!=null && l[k]!=='')ln[k]=Number(l[k]);});
-   out.access_profile=out.access_profile || {};
-   out.access_profile.methods_allowed=out.access_profile.methods_allowed || ['manual_ipv4'];
-   out.access_profile.listeners=[ln];
+   var old=out.access_profile.listeners;
+   out.access_profile={listeners:['ipv4','ipv6'].filter(function(f){return l.family==='dual' || l.family===f;}).map(function(f){
+    var existing=old.find(function(x){return x.family===f;});
+    return {listener_id:existing?existing.listener_id:'shared_'+f,family:f,network:l[f+'_network'],address:l[f+'_address'],port:Number(l.port)};
+   })};
   }
-  /* 默认证书与发布策略（cfg_policy） */
-  var p=section('cfg_policy');
   if(p){
-   if(p.default_certificate_ref)out.default_certificate_ref=p.default_certificate_ref;
-   else delete out.default_certificate_ref;
-   var policy={mode:p.mode || 'continuous'};
-   if(p.mode==='temporary' && p.temporary_duration!=null && p.temporary_duration!=='')policy.temporary_duration=Number(p.temporary_duration);
-   policy.boot_restore=p.boot_restore==='1' || p.boot_restore===true;
-   out.publication_policy=policy;
+   if(p.default_certificate_ref)out.default_certificate_ref=p.default_certificate_ref;else delete out.default_certificate_ref;
+   out.publication_policy={mode:p.mode,boot_restore:p.boot_restore==='1' || p.boot_restore===true};
+   if(p.mode==='temporary')out.publication_policy.temporary_duration=Number(p.temporary_minutes)*60;
   }
-  out.services=[];
-  map.data.sections(map.config,'services').forEach(function(row){
-   var svc=JSON.parse(JSON.stringify(row));
-   /* GridSection 新行无既有 service_id：用行 ID（.name）补齐，canonical 校验依赖 service_id */
-   if(!svc.service_id && svc['.name'])svc.service_id=svc['.name'];
-   delete svc['.type'];delete svc['.name'];delete svc['.index'];delete svc['.anonymous'];
-   if(svc.enabled==='0'||svc.enabled===false)svc.enabled=false;else if(svc.enabled!=null)svc.enabled=svc.enabled==='1'||svc.enabled===true;
-   if(!svc.authentication_review)svc.authentication_review={authentication:'unconfirmed',management:false};
-   if(svc.management!=null){svc.authentication_review.management=svc.management==='1'||svc.management===true;delete svc.management;}
-   if(!svc.certificate_mode)svc.certificate_mode=svc.certificate_ref?'override':'inherit';
-   if(svc.certificate_mode==='inherit')delete svc.certificate_ref;
-   if(svc.backend_url!=null)delete svc.backend_url;
-   out.services.push(svc);
-  });
+  if(map.editor==='services'){
+   out.services=[];
+   var rows=map.data.sections(map.config,'services'),used={};
+   (out.services.concat(map.snapshot.services || [],rows)).forEach(function(row){if(row.service_id)used[row.service_id]=true;});
+   rows.forEach(function(row){
+    if(!row.service_id){var n=1;while(used['svc_'+n])n++;row.service_id='svc_'+n;used[row.service_id]=true;}
+    var host=String(row.backend_host || ''),previous=row.backend || {};
+    var backend={host:host,addressFamily:host.indexOf(':')>=0?'ipv6':/^\d+\.\d+\.\d+\.\d+$/.test(host)?'ipv4':'hostname',port:Number(row.backend_port),allowed_ranges:row.allowed_ranges || []};
+    if(previous.backup)backend.backup=JSON.parse(JSON.stringify(previous.backup));
+    var svc={service_id:row.service_id,name:row.name,enabled:row.enabled==='1' || row.enabled===true,type:row.type,backend:backend,authentication_review:{authentication:row.authentication || 'unconfirmed',management:row.management==='1' || row.management===true}};
+    if(row.type==='https_proxy' || row.type==='tls_passthrough')svc.hostname=row.hostname;
+    if(row.type==='https_proxy'){
+     svc.upstream_scheme=row.upstream_scheme || 'http';svc.certificate_mode=row.certificate_mode || 'inherit';
+     if(svc.certificate_mode==='override' && row.certificate_ref)svc.certificate_ref=row.certificate_ref;
+     if(svc.upstream_scheme==='https')svc.upstream_tls={verify:true,server_name:row.tls_server_name};
+    }
+    if(row.type==='tcp_forward')svc.listen_port=Number(row.listen_port);
+    out.services.push(svc);
+   });
+  }
   return out;
  },
+ loadEditor:function(withNetworks){
+  var api=this;
+  return Promise.all([api.status().then(function(s){return api.checked(s);}),api.certificates().then(function(s){return api.checked(s);}),withNetworks?api.networkInventory().then(function(s){return api.checked(s);}):Promise.resolve(null)]).catch(function(){return [{error:'状态读取失败，请重试'}, {certificates:[]}, null];});
+ },
+ editorUnavailable:function(state){
+  return E('div',{class:'cbi-map'},[E('h2',{},'HomePublish'),E('p',{role:'alert'},state.error || '配置读取失败，不能保存'),E('button',{class:'cbi-button',click:function(){location.reload();}},'重新载入')]);
+ },
+ migrationPanel:function(state){
+  var api=this,preview=null,busy=false,box=E('div',{class:'cbi-map'}),message=E('div',{role:'alert'});
+  box.append(E('h2',{},'旧版配置需要确认迁移'),E('p',{},'读取不会修改配置。预览保留全部入口与服务；确认保存前备份旧配置，不启动发布。'),message,
+   E('button',{id:'hp-migration-preview',class:'cbi-button',click:function(){if(busy)return;busy=true;return api.migrationPreview(state.saved_revision).then(function(p){api.checked(p);preview=p;message.replaceChildren(E('pre',{},JSON.stringify({warnings:p.warnings,blocking_issues:p.blocking_issues,proposed_config:p.proposed_config},null,2)));confirm.disabled=!p.proposed_config || (p.blocking_issues || []).length>0;}).catch(function(e){message.textContent=api.errorText(e);}).finally(function(){busy=false;});}},'预览迁移'));
+  var confirm=E('button',{id:'hp-migration-confirm',class:'cbi-button cbi-button-save',disabled:true,click:function(){
+   ui.showModal('确认迁移并保存',[E('p',{},'将按当前版本保存预览配置并备份原始配置；不启动发布。'),E('div',{class:'right'},[E('button',{class:'cbi-button',click:ui.hideModal},'取消'),E('button',{class:'cbi-button cbi-button-save',click:function(){if(busy)return;busy=true;return api.save(state.saved_revision,preview.proposed_config).then(function(s){api.checked(s);return api.status();}).then(function(s){api.checked(s);if(s.saved_config.schema_version!==2)throw new Error('迁移读取核验失败');location.reload();}).catch(function(e){message.textContent=api.errorText(e);ui.hideModal();}).finally(function(){busy=false;});}},'确认保存')])]);
+  }},'确认迁移');box.append(confirm);return box;
+ },
  actionBar:function(node,state,opts){
-  opts=opts || {};
-  var api=this,s=state || {},bar=E('div',{class:'hp-actions'});
-  /* node 是外层容器（含 .cbi-map）；actionBar/message 挂在 map 外，
-     避免任何 map 重渲染（modal Save / renderContents dom.content 清空）洗掉操作条 */
-  var mapHolder=E('div',{});
-  var message=E('p',{id:'hp-message','aria-live':'polite'});
-  function refreshButtons(st,dirty){
-   var r=(st || s).runtime || {},pending=!!((st || s).pending_config && (st || s).pending_config.apply_required);
-   var running=api.running(st || s);
-   var canStart=!!(st || s).saved_revision && !running && r.cleanup!=='unknown' && !dirty;
-   var canApply=pending && running && !dirty;
-   start.disabled=!canStart;apply.disabled=!canApply;stop.disabled=!running;
-   /* 仅更新按钮使能；文案交给调用方（Save 成功/失败各有专属消息，不能被此处覆盖） */
-  }
-  var start=E('button',{id:'hp-start',type:'button',class:'cbi-button',click:function(){
-   return api.actionDialog(node,s,'start',function(st){s=st;refreshButtons(st);},function(e){message.textContent='操作失败 / 状态未知：'+e.message;refreshButtons(s);});
-  }},_('开启已保存配置'));
-  var apply=E('button',{id:'hp-apply',type:'button',class:'cbi-button',click:function(){
-   return api.actionDialog(node,s,'apply',function(st){s=st;refreshButtons(st);},function(e){message.textContent='操作失败 / 状态未知：'+e.message;refreshButtons(s);});
-  }},_('应用已保存变更'));
-  var stop=E('button',{id:'hp-stop',type:'button',class:'cbi-button',click:function(){
-   return api.actionDialog(node,s,'stop',function(st){s=st;refreshButtons(st);},function(e){message.textContent='操作失败 / 状态未知：'+e.message;refreshButtons(s);});
-  }},_('停止全部'));
-  var save=E('button',{id:'hp-save',type:'button',class:'cbi-button cbi-button-save important',click:function(){
-   var mapNode=node.querySelector('.cbi-map'),map=mapNode?dom.findClassInstance(mapNode):null;
-   if(!map)return Promise.resolve();
-   var dirty=true;
-   return Promise.resolve().then(function(){
-    var candidate=api.collectConfig(map);
-    return api.validate(candidate);
-   }).then(function(v){
-    if(!v.valid)throw new Error(v.error);
-    return api.save(map.snapshotRevision!=null?map.snapshotRevision:s.saved_revision,v.config);
-   }).then(api.checked).then(function(st){
-    dirty=false;s=st;
-    return map.render().then(function(){refreshButtons(st);message.textContent='已保存 revision '+st.saved_revision+'，不启动 / 未应用';return api.status().then(api.checked).then(function(latest){s=latest;refreshButtons(latest);});});
-   }).catch(function(e){
-    message.textContent='保存失败：'+e.message;refreshButtons(s,dirty);
-   });
-  }},_('保存配置（不启动）'));
-  bar.append(save,start,apply,stop);
-  var wrap=E('div',{},[bar,message]);
-  /* node 为外层容器：先把 map 包进 mapHolder 与 actionBar 分离，
-     再把 mapHolder+wrap 一起放回 node，这样任何 map 重渲染都不会洗掉操作条 */
-  var mapNode=node.querySelector('.cbi-map');
-  if(mapNode){mapHolder.append(mapNode);node.append(mapHolder);}
-    node.append(wrap);
-    refreshButtons(s,false);
-    /* 初始文案：与 refreshButtons 拆分后由此处统一给出 */
-    message.textContent=s.pending_config && s.pending_config.apply_required?'已保存待应用；保存不启动':'已保存；保存不启动';
-    return node;
+  var api=this,map=opts.map,busy=false,dirty=false,blocked=false,message=E('p',{id:'hp-message',role:'status','aria-live':'polite'},'保存只更新本应用配置，不启动发布'),holder=E('div',{},[node]),bar=E('div',{class:'cbi-page-actions'});
+  var initialDraft=JSON.stringify(api.collectConfig(map));
+  function leave(e){var changed=dirty;try{changed=changed || JSON.stringify(api.collectConfig(map))!==initialDraft;}catch(err){changed=true;}if(changed){e.preventDefault();e.returnValue='';}}
+  window.addEventListener('beforeunload',leave);
+  holder.addEventListener('change',function(){dirty=true;});holder.addEventListener('input',function(){dirty=true;});
+  var saveButton=E('button',{id:'hp-save',type:'button',class:'cbi-button cbi-button-save important',click:function(){
+   if(busy || blocked)return;busy=true;saveButton.disabled=true;
+   return Promise.resolve().then(function(){return map.save();}).then(function(){return api.validate(api.collectConfig(map));}).then(function(v){if(!v.valid){api.checked(v);throw new Error('配置验证失败');}return api.save(map.snapshotRevision,v.config);}).then(function(s){api.checked(s);return api.status();}).then(function(s){api.checked(s);dirty=false;window.removeEventListener('beforeunload',leave);location.reload();}).catch(function(e){
+    message.textContent=api.errorText(e);if(e.error_code==='REVISION_CONFLICT'){blocked=true;message.append('；当前草稿保留，重置后再编辑。');}
+    if(e.field){var path=e.field.replace(/services\[(\d+)\]/,'services');holder.querySelectorAll('[data-field]').forEach(function(n){if(n.dataset.field.endsWith('.'+path.split('.').pop())){n.setAttribute('aria-invalid','true');n.title=api.errorText(e);}});}
+   }).finally(function(){busy=false;saveButton.disabled=blocked;});
+  }},'保存');
+  var reset=E('button',{id:'hp-reset',type:'button',class:'cbi-button cbi-button-reset',click:function(){ui.showModal('重新载入已保存配置',[E('p',{},'放弃当前页面草稿？'),E('div',{class:'right'},[E('button',{class:'cbi-button',click:ui.hideModal},'取消'),E('button',{class:'cbi-button cbi-button-reset',click:function(){dirty=false;window.removeEventListener('beforeunload',leave);location.reload();}},'重新载入')])]);}},'重置');
+  bar.append(saveButton,reset);holder.append(message,bar);return holder;
  }
 });

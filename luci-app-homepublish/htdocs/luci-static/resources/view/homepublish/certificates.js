@@ -7,6 +7,7 @@
 'require view.homepublish.product as api';
 
 return view.extend({
+	handleSave: null, handleSaveApply: null, handleReset: null,
 	load: function() {
 		return Promise.all([
 			api.certificates().then(api.checked),
@@ -29,6 +30,7 @@ return view.extend({
 				if (saved && saved.default_certificate_ref === ref)
 					list.push(_('入口默认'));
 				(Array.isArray(saved && saved.services) ? saved.services : []).forEach(function(svc) {
+					if (svc.type && svc.type !== 'https_proxy') return;
 					var bound = svc.certificate_mode === 'inherit' ? saved.default_certificate_ref : svc.certificate_ref;
 					if (bound === ref) list.push(svc.hostname);
 				});
@@ -86,6 +88,12 @@ return view.extend({
 			return list.length ? list.join(', ') : _('未被使用');
 		};
 
-		return m.render();
+		return m.render().then(function(node) {
+			node.querySelectorAll('table.cbi-section-table').forEach(function(table) {
+				var viewport = E('div', { style: 'max-width:100%;overflow-x:auto', tabindex: 0, 'aria-label': '证书列表，可横向滚动' });
+				table.parentNode.insertBefore(viewport, table); viewport.appendChild(table);
+			});
+			return node;
+		});
 	}
 });

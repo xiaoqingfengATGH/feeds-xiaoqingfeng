@@ -68,7 +68,7 @@ local function public(state)
 end
 function M.handle(request,structured)
  if type(request)~='table' or getmetatable(request)~=nil then return nil,'request object required' end
- local allowed=request.action=='save' and {action=true,expected_revision=true,config=true} or request.action=='validate' and {action=true,config=true} or request.action=='preflight' and {action=true,revision=true} or {action=true}
+ local allowed=request.action=='migration_preview' and {action=true,expected_revision=true} or request.action=='save' and {action=true,expected_revision=true,config=true} or request.action=='validate' and {action=true,config=true} or request.action=='preflight' and {action=true,revision=true} or {action=true}
  for k in pairs(request) do if not allowed[k] then return nil,'unknown request field' end end
  if request.action=='network_inventory' then
   return dofile(source..'/network-inventory.lua').collect()
@@ -82,13 +82,20 @@ function M.handle(request,structured)
   if c then return {valid=true,config=c} end
   local out=detail or failure('INVALID_CONFIG','config',e,false);out.valid=false;return out
  end
- if request.action~='preflight' and request.action~='save' and request.action~='status' and request.action~='stop' and request.action~='start' and request.action~='apply' then return nil,'unsupported action' end
+ if request.action~='migration_preview' and request.action~='preflight' and request.action~='save' and request.action~='status' and request.action~='stop' and request.action~='start' and request.action~='apply' then return nil,'unsupported action' end
  -- r9: start/apply 为真实能力，但本地 provider 无 controller 执行通道；
  -- 设备通道（device-test channel）才是权威执行路径，此处保持权威拒绝。
  if request.action=='start' or request.action=='apply' then return nil,'runtime requires the device controller channel' end
  return store.transaction(function(bytes)
   local state=validate_state(bytes and wire.decode(bytes) or initial())
   if request.action=='status' then return nil,public(state) end
+  if request.action=='migration_preview' then
+   if request.expected_revision~=state.saved_revision then return nil,failure('REVISION_CONFLICT','expected_revision','Saved revision changed',true) end
+   if not state.saved_config or state.saved_config.schema_version~=1 then return nil,failure('INVALID_CONFIG','schema_version','A saved v1 configuration is required',false) end
+   local inventory,err=dofile(source..'/network-inventory.lua').collect()
+   if not inventory then return nil,err end
+   return nil,model.migrate_preview(state.saved_config,inventory)
+  end
   if request.action=='preflight' then
    if request.revision~=state.saved_revision then return nil,failure('REVISION_CONFLICT','revision','Saved revision changed',true) end
    if not state.saved_config then return nil,failure('INVALID_CONFIG','config','No saved configuration',false) end

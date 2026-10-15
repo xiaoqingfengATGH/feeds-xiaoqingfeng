@@ -1,0 +1,57 @@
+{
+  "states": [
+    {
+      "family": "ipv4",
+      "networks": [
+        {
+          "value": "lan",
+          "text": "lan · br-lan",
+          "disabled": false
+        }
+      ]
+    },
+    {
+      "family": "ipv4",
+      "network": "lan",
+      "value": "192.168.1.2",
+      "disabled": false,
+      "invalid": false,
+      "options": [
+        {
+          "value": "192.168.1.2",
+          "text": "192.168.1.2/24",
+          "disabled": false
+        }
+      ],
+      "zone": "lan",
+      "url": "http://127.0.0.1:1081/cgi-bin/luci/admin/services/homepublish/entry?filter=green"
+    },
+    {
+      "family": "ipv6",
+      "networks": [
+        {
+          "value": "lan",
+          "text": "lan · br-lan",
+          "disabled": false
+        }
+      ]
+    },
+    {
+      "family": "ipv6",
+      "network": "lan",
+      "value": "fd89:878e:a47f::1",
+      "disabled": false,
+      "invalid": false,
+      "options": [
+        {
+          "value": "fd89:878e:a47f::1",
+          "text": "fd89:878e:a47f::1/60 · 内网 IPv6，不能据此直接公网访问",
+          "disabled": false
+        }
+      ],
+      "zone": "lan",
+      "url": "http://127.0.0.1:1081/cgi-bin/luci/admin/services/homepublish/entry?filter=green"
+    }
+  ],
+  "errors": []
+}

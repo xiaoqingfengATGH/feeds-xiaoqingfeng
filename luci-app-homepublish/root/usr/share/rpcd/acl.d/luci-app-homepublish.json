@@ -1,1 +1,1 @@
-{"luci-app-homepublish":{"description":"HomePublish canonical status, validation, scoped save and durable stop","read":{"ubus":{"homepublish":["status","validate","certificates","network_inventory","preflight"]}},"write":{"ubus":{"homepublish":["save","stop","start","apply"]}}}}
+{"luci-app-homepublish":{"description":"HomePublish canonical status, validation, scoped save and durable stop","read":{"ubus":{"homepublish":["status","validate","certificates","network_inventory","preflight","migration_preview"]}},"write":{"ubus":{"homepublish":["save","stop","start","apply"]}}}}

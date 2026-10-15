@@ -1,8 +1,8 @@
 #!/bin/sh
 # Fixed scoped RPC. No request-controlled command, path or provider.
 case "$1:$2" in
- list:) printf '%s\n' '{"network_inventory":{},"preflight":{"revision":0},"certificates":{},"status":{},"validate":{"config":{}},"save":{"expected_revision":0,"config":{}},"stop":{},"start":{"revision":0,"approved":false},"apply":{"revision":0,"approved":false}}' ;;
- call:network_inventory|call:preflight|call:certificates|call:status|call:validate|call:save|call:stop|call:start|call:apply)
+ list:) printf '%s\n' '{"migration_preview":{"expected_revision":0},"network_inventory":{},"preflight":{"revision":0},"certificates":{},"status":{},"validate":{"config":{}},"save":{"expected_revision":0,"config":{}},"stop":{},"start":{"revision":0,"approved":false},"apply":{"revision":0,"approved":false}}' ;;
+ call:migration_preview|call:network_inventory|call:preflight|call:certificates|call:status|call:validate|call:save|call:stop|call:start|call:apply)
   /usr/bin/lua /usr/share/homepublish/product-rpc.lua "$2" |
   /usr/bin/lua /usr/share/homepublish/product-cli.lua |
   /usr/bin/lua /usr/share/homepublish/product-rpc.lua response ;;

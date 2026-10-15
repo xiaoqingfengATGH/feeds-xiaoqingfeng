@@ -1,159 +1,48 @@
 /* SPDX-License-Identifier: Apache-2.0 */
-/* HomePublish r9 services — 接入服务（form.Map + GridSection，JSONMap 承载 RPC saved_config） */
-
 'use strict';
 'require form';
 'require view';
 'require view.homepublish.product as api';
-
 return view.extend({
-	load: function() {
-		/* 证书库存 + 已保存配置都在 render 时经 JSONMap 呈现；status 提供 saved_config */
-		return Promise.all([
-			api.status().then(api.checked),
-			api.certificates().then(api.checked)
-		]).catch(function(e) { return [{ error: e.message }, { certificates: [] }]; });
-	},
-
-	render: function(data) {
-		var state = data[0], inventory = api.sortInventory(Array.isArray(data[1].certificates) ? data[1].certificates : [], (state && state.saved_config) || null);
-		var saved = (state && state.saved_config) ? JSON.parse(JSON.stringify(state.saved_config)) : api.defaults();
-		var m, s, o;
-
-		/* JSONMap 数据面：services 数组为 GridSection 行；其余 canonical 字段不进表单，
-		   由 m.snapshot 承载，Save 时经 collectConfig() 重组为 canonical 提交 RPC save。 */
-		var mapData = { services: (Array.isArray(saved.services) ? saved.services : []).map(function(svc) {
-			var row = JSON.parse(JSON.stringify(svc));
-			row.backend_url = (svc.backend && svc.backend.port != null)
-				? ((svc.backend.addressFamily === 'ipv6' ? '[' + svc.backend.host + ']' : svc.backend.host) + ':' + svc.backend.port)
-				: '';
-			if (svc.certificate_mode === 'inherit' || !svc.certificate_ref)
-				row.certificate_ref = '';
-			row.management = !!(svc.authentication_review && svc.authentication_review.management);
-			return row;
-		}) };
-
-		m = new form.JSONMap(mapData, _('HomePublish — 接入服务'),
-			_('参与下次发布仅修改配置；保存不启动，应用时整组短暂停机。后端保持权威校验。'));
-
-		/* canonical 基底 + 修订号：Save 组装与 revision 冲突检测必需（JSONMap 本身无此语义） */
-		m.snapshot = saved;
-		m.snapshotRevision = (state && state.saved_revision != null) ? state.saved_revision : null;
-
-		s = m.section(form.GridSection, 'services', _('服务规则'));
-		s.addremove = true;
-		s.anonymous = true;
-		s.sortable = true;
-		s.nodescriptions = true;
-		s.modalizable = true;
-		s.modaltitle = function(sid) {
-			var svc = this.map.data.get(this.map.config, sid);
-			return (svc && svc.hostname) ? svc.hostname : _('新服务');
-		};
-
-		o = s.option(form.Flag, 'enabled', _('参与发布'));
-		o.default = '1';
-		o.rmempty = false;
-
-		o = s.option(form.Value, 'name', _('名称'));
-		o.placeholder = 'NAS';
-		o.rmempty = false;
-		o.modalonly = true;
-
-		o = s.option(form.Value, 'hostname', _('域名'));
-		o.placeholder = 'nas.example.test';
-		o.datatype = 'hostname';
-		o.rmempty = false;
-
-		o = s.option(form.Value, 'backend_url', _('家庭 HTTP 后端'));
-		o.placeholder = 'http://192.168.1.10:8080';
-		o.rmempty = false;
-		o.description = _('仅支持无凭据的 HTTP 根地址，如 http://192.168.1.10:8080');
-		/* 表格列显示 host:port；modal 编辑原始 URL */
-		o.cfgvalue = function(sid) {
-			var svc = this.map.data.get(this.map.config, sid);
-			if (!svc || !svc.backend) return '';
-			var b = svc.backend;
-			return (b.addressFamily === 'ipv6' ? '[' + b.host + ']' : b.host) + ':' + b.port;
-		};
-		o.textvalue = function(sid) { return this.cfgvalue(sid); };
-		o.write = function(sid, value) {
-			var u;
-			try { u = new URL(value); } catch (e) { throw new TypeError(_('后端应为 HTTP 根地址')); }
-			if (u.protocol !== 'http:' || u.username || u.password || u.pathname !== '/' || u.search || u.hash)
-				throw new TypeError(_('仅支持无凭据的 HTTP 根地址'));
-			var h = u.hostname.replace(/^\[|\]$/g, '');
-			var svc = this.map.data.get(this.map.config, sid);
-			svc.backend = {
-				addressFamily: h.includes(':') ? 'ipv6' : (/^\d+\.\d+\.\d+\.\d+$/.test(h) ? 'ipv4' : 'hostname'),
-				host: h,
-				port: Number(u.port || 80),
-				/* allowed_ranges 空数组守卫：未填写时不携带，交给后端 canonical 校验 */
-				allowed_ranges: (svc.backend && Array.isArray(svc.backend.allowed_ranges)) ? svc.backend.allowed_ranges : []
-			};
-		};
-		o.remove = function() {};
-
-		/* r8 既有字段：允许的家庭网段（每行/逗号分隔 CIDR）；canonical 要求至少 1 条 */
-		o = s.option(form.Value, 'allowed_ranges', _('允许的家庭网段'));
-		o.placeholder = '192.168.1.0/24, fd00::/64';
-		o.rmempty = false;
-		o.modalonly = true;
-		o.description = _('允许访问此服务的来源网段，每行或逗号分隔的 CIDR；后端保持权威校验。');
-		o.cfgvalue = function(sid) {
-			var svc = this.map.data.get(this.map.config, sid);
-			return (svc && svc.backend && Array.isArray(svc.backend.allowed_ranges)) ? svc.backend.allowed_ranges.join(', ') : '';
-		};
-		o.write = function(sid, value) {
-			var svc = this.map.data.get(this.map.config, sid);
-			if (!svc.backend) svc.backend = { addressFamily: 'ipv4', host: '', port: 80, allowed_ranges: [] };
-			svc.backend.allowed_ranges = String(value || '').split(/[\n,]+/).map(function(x) { return x.trim(); }).filter(Boolean);
-		};
-		o.remove = function() {};
-
-		o = s.option(form.ListValue, 'certificate_ref', _('证书'));
-		o.value('', _('继承入口默认'));
-		for (var i = 0; i < inventory.length; i++)
-			o.value(inventory[i].certificate_ref,
-				inventory[i].domain + ' · ' + String(inventory[i].key_type || '').toUpperCase() + ' · ' + (inventory[i].not_after || '日期未知'));
-		o.rmempty = true;
-		/* 行内只读展示解析后的证书；写入仍落到行数据 */
-		o.textvalue = function(sid) {
-			var svc = this.map.data.get(this.map.config, sid);
-			var ref = svc ? (svc.certificate_mode === 'inherit' || !svc.certificate_ref ? '' : svc.certificate_ref) : '';
-			if (!ref) return _('继承入口默认');
-			var c = null;
-			for (var j = 0; j < inventory.length; j++)
-				if (inventory[j].certificate_ref === ref) { c = inventory[j]; break; }
-			return c ? (c.domain + ' · ' + String(c.key_type || '').toUpperCase()) : ref;
-		};
-		o.write = function(sid, value) {
-			var svc = this.map.data.get(this.map.config, sid);
-			if (value) { svc.certificate_ref = value; svc.certificate_mode = 'override'; }
-			else { delete svc.certificate_ref; svc.certificate_mode = 'inherit'; }
-		};
-
-		o = s.option(form.Flag, 'management', _('管理服务'));
-		o.rmempty = false;
-		o.modalonly = true;
-		o.cfgvalue = function(sid) {
-			var svc = this.map.data.get(this.map.config, sid);
-			return (svc && svc.authentication_review && svc.authentication_review.management) ? '1' : '0';
-		};
-		o.write = function(sid, value) {
-			var svc = this.map.data.get(this.map.config, sid);
-			/* 同步行上的 management，collectConfig 以行数据为准 */
-			svc.management = value;
-			svc.authentication_review = {
-				authentication: 'confirmed',
-				management: value === '1'
-			};
-		};
-
-		return m.render().then(function(node) {
-			/* wrap 外层容器：map 与 actionBar 分层，map 重渲染不会洗掉操作条 */
-			var holder = E('div', {}, [ node ]);
-			return api.actionBar(holder, state, { save: true });
-		});
-	}
+ handleSave:null,handleSaveApply:null,handleReset:null,
+ load:function(){return api.loadEditor(false);},
+ render:function(data){
+  var state=data[0];if(state.error)return api.editorUnavailable(state);
+  if(!state.saved_config)return api.editorUnavailable({error:'请先在发布入口设置保存监听设置'});
+  if(state.saved_config.schema_version===1)return api.migrationPanel(state);
+  var saved=state.saved_config,inventory=api.sortInventory(data[1].certificates || [],saved);
+  var m=new form.JSONMap({services:api.serviceRows(saved)},'HomePublish — 发布服务','参与下次发布仅修改配置；页面保存不会启动服务。更改类型时，不适用字段不会写入配置。');
+  m.snapshot=api.clone(saved);m.snapshotRevision=state.saved_revision;m.editor='services';
+  var s=m.section(form.GridSection,'services','服务规则'),o;
+  s.addremove=true;s.anonymous=true;s.sortable=false;s.nodescriptions=true;s.modalizable=true;
+  s.tab('general','基本设置');s.tab('access','接入设置');s.tab('backend','后端设置');s.tab('advanced','高级设置');
+  s.modaltitle=function(sid){var r=this.map.data.get(this.map.config,sid);return r && r.name || '新服务';};
+  function field(tab,cls,key,label,modal){var v=s.taboption(tab,cls,key,label);if(modal!==undefined)v.modalonly=modal;v.rmempty=cls===form.DummyValue;return v;}
+  o=field('general',form.Flag,'enabled','参与发布');o.default='1';o.editable=true;
+  o=field('general',form.Value,'name','名称');
+  o=field('general',form.ListValue,'type','发布方式');o.value('https_proxy','HTTPS 反向代理');o.value('tls_passthrough','TLS 透传');o.value('ssh','原生 SSH 共入口');o.value('tcp_forward','独立端口 TCP 转发');o.default='https_proxy';
+  o=field('access',form.DummyValue,'match_summary','域名 / 独立端口');o.textvalue=function(sid){var r=this.map.data.get(this.map.config,sid);return r.type==='tcp_forward'?String(r.listen_port || '待填写'):r.hostname || '继承共享入口';};
+  o=field('access',form.Value,'hostname','域名（精确匹配）',true);o.datatype='hostname';o.depends('type','https_proxy');o.depends('type','tls_passthrough');o.retain=true;
+  o=field('access',form.Value,'listen_port','独立 TCP 监听端口',true);o.datatype='range(1024,65535)';o.depends('type','tcp_forward');o.retain=true;
+  o=field('access',form.ListValue,'certificate_mode','HTTPS 证书模式',true);o.value('inherit','继承入口默认证书');o.value('override','独立指定');o.default='inherit';o.depends('type','https_proxy');o.retain=true;
+  o=field('access',form.ListValue,'certificate_ref','独立证书',true);o.value('','未选择');o.rmempty=true;o.depends({type:'https_proxy',certificate_mode:'override'});o.retain=true;
+  inventory.forEach(function(c){o.value(c.certificate_ref,c.domain+' · '+String(c.key_type).toUpperCase());});
+  (saved.services || []).forEach(function(svc){if(svc.certificate_ref && !inventory.some(function(c){return c.certificate_ref===svc.certificate_ref;}))o.value(svc.certificate_ref,svc.certificate_ref+'（不可用）');});
+  o=field('access',form.DummyValue,'certificate_summary','证书');o.textvalue=function(sid){var r=this.map.data.get(this.map.config,sid);return r.type==='https_proxy'?(r.certificate_mode==='override'?r.certificate_ref || '未选择':'继承入口默认'):r.type==='tls_passthrough'?'由后端提供':'不需要';};
+  o=field('backend',form.DummyValue,'backend_summary','后端');o.textvalue=function(sid){var r=this.map.data.get(this.map.config,sid),h=r.backend_host || '';return (h.includes(':')?'['+h+']':h)+':'+(r.backend_port || '');};
+  o=field('backend',form.Value,'backend_host','后端地址',true);o.datatype='host';o.description='填写主机名或裸 IP 地址，不含协议、路径及端口。';
+  o=field('backend',form.Value,'backend_port','后端端口',true);o.datatype='port';
+  o=field('backend',form.ListValue,'upstream_scheme','后端协议',true);o.value('http','HTTP');o.value('https','HTTPS（系统 CA 验证）');o.default='http';o.depends('type','https_proxy');o.retain=true;
+  o=field('backend',form.Value,'tls_server_name','后端 HTTPS 校验域名',true);o.datatype='hostname';o.depends({type:'https_proxy',upstream_scheme:'https'});o.description='始终验证证书，使用系统 CA；即使后端是 IP 也需填写校验域名。';o.retain=true;
+  o=field('advanced',form.DynamicList,'allowed_ranges','允许连接的后端网段',true);o.datatype='cidr';o.description='限制本应用可以连接的后端地址范围，不是允许访问服务的客户端来源网段。';
+  o=field('advanced',form.ListValue,'authentication','业务鉴权确认',true);o.value('unconfirmed','尚未确认');o.value('confirmed','已确认后端业务鉴权');o.default='unconfirmed';
+  o=field('advanced',form.Flag,'management','管理服务',true);o.default='0';
+  return m.render().then(function(node){
+   node.querySelectorAll('table.cbi-section-table').forEach(function(table){
+    var viewport=E('div',{style:'max-width:100%;overflow-x:auto',tabindex:0,'aria-label':'服务列表，可横向滚动'});
+    table.parentNode.insertBefore(viewport,table);viewport.appendChild(table);
+   });
+   return api.actionBar(node,state,{map:m});
+  });
+ }
 });

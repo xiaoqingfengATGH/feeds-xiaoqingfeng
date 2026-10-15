@@ -1,6 +1,6 @@
 # Requirements
 
-## REQ-007 — TCP 统一发布与 IPv6→IPv4（P0完成 / P1源码与私有实机链路验收完成 / P2已授权）
+## REQ-007 — TCP 统一发布与 IPv6→IPv4（P0/P1完成；P2配置UI与部署切片提交；下一阶段P3）
 
 用户已确认四种发布方式：HTTPS反向代理、TLS/SNI透传、一个原生SSH目标共享入口、独立端口TCP转发。IPv6入站→家庭IPv4后端为核心验收路径；入口/后端地址族解耦，支持双栈和只有LAN的旁路由。页面优先原生LuCI JSONMap/NamedSection/GridSection、真实网络地址选择和条件字段。保存不启动、明确应用、整组停止、原临时截止不延长、未知流量不兜底业务。
 

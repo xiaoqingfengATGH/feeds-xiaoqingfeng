@@ -1,0 +1,8 @@
+/tmp/homepublish-tcp-p0/device-tcp-p0-probe.lua:40: bad argument #2 to 'mkdir' (supported values: [0-7]?[0-7][0-7][0-7], [-r][-w][-xsS][-r][-w][-xsS][-r][-w][-xtT])
+stack traceback:
+	[C]: in function 'mkdir'
+	/tmp/homepublish-tcp-p0/device-tcp-p0-probe.lua:40: in function </tmp/homepublish-tcp-p0/device-tcp-p0-probe.lua:39>
+	[C]: in function 'xpcall'
+	/tmp/homepublish-tcp-p0/device-tcp-p0-probe.lua:80: in main chunk
+	[C]: ?
+EXIT_CODE=1

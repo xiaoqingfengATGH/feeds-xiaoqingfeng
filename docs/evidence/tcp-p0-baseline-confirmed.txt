@@ -1,0 +1,25 @@
+total        used        free      shared  buff/cache   available
+Mem:        2010176      418920      470912      172828     1120344     1344888
+Swap:             0           0           0
+Filesystem                Size      Used Available Use% Mounted on
+overlayfs:/overlay        1.7G    166.0M      1.6G   9% /
+tmpfs                   981.5M    164.1M    817.5M  17% /tmp
+default via 192.168.1.1 dev br-lan proto static 
+172.17.0.0/16 dev docker0 proto kernel scope link src 172.17.0.1 linkdown 
+192.168.1.0/24 dev br-lan proto kernel scope link src 192.168.1.2 
+fd89:878e:a47f::/64 dev br-lan proto static metric 1024 pref medium
+unreachable fd89:878e:a47f::/48 dev lo proto static metric 2147483647 pref medium
+fe80::/64 dev br-lan proto kernel metric 256 pref medium
+0:	from all lookup local
+220:	from all lookup 220
+999:	from all fwmark 0x50535732 lookup 999
+32766:	from all lookup main
+32767:	from all lookup default
+{
+	
+}
+52a2755e9a380e1e6d526204ec443dcdd85639f07d2903f64839d073edd55795  /etc/config/firewall
+6ead1d3a553f28348a58b4a3055b8873aee4916b2fe3471b67e960cbfba2dacd  /etc/config/network
+43dbb7d14614af6c7a323b97cf24830d2d87533d9b1e03ecc9d56ba5d0ec725b  /etc/config/homepublish
+P0_BASELINE_READBACK_OK
+EXIT=0

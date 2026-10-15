@@ -1,0 +1,42 @@
+Landlock: Failed to create a ruleset2026/10/15 15:02:39 [notice] 40279#0: using the "epoll" event method
+2026/10/15 15:02:39 [notice] 40279#0: nginx/1.26.1
+2026/10/15 15:02:39 [notice] 40279#0: built by gcc 13.3.0 (OpenWrt GCC 13.3.0 r29087-d9c5716d1d) 
+2026/10/15 15:02:39 [notice] 40279#0: OS: Linux 6.18.55
+2026/10/15 15:02:39 [notice] 40279#0: getrlimit(RLIMIT_NOFILE): 1024:4096
+PASS SNI_A_V6_TO_V4
+tls:connection from ::1:45404 to ::1:49300 forwarded from 127.0.0.1:44862 to 127.0.0.1:49301
+Proto tls -1: 0/0 cnx
+Endpoint 8 -1: 0/0 cnx
+tls:connection from ::1:45418 to ::1:49300 forwarded from 127.0.0.1:41422 to 127.0.0.1:49302
+Proto tls -1: 0/0 cnx
+Endpoint 8 -1: 0/0 cnx
+ssh:connection from ::1:45430 to ::1:49300 forwarded from 127.0.0.1:39832 to 127.0.0.1:49303
+Proto ssh -1: 0/0 cnx
+Endpoint 8 -1: 0/0 cnx
+tls:connection from ::1:45446 to ::1:49300 forwarded from 127.0.0.1:44878 to 127.0.0.1:49301
+Proto tls -1: 0/0 cnx
+Endpoint 8 -1: 0/0 cnx
+anyprot: lost incoming connection
+Proto anyprot -1: 0/0 cnx
+Endpoint 8 -1: 0/0 cnx
+anyprot: lost incoming connection
+Proto anyprot -1: 0/0 cnx
+Endpoint 8 -1: 0/0 cnx
+anyprot: lost incoming connection
+Proto anyprot -1: 0/0 cnx
+Endpoint 8 -1: 0/0 cnx
+anyprot: lost incoming connection
+Proto anyprot -1: 0/0 cnx
+Endpoint 8 -1: 0/0 cnx
+2026/10/15 15:02:42 [notice] 40279#0: signal 15 (SIGTERM) received from 40273, exiting
+2026/10/15 15:02:42 [notice] 40279#0: exit
+PASS SNI_B_V6_TO_V4
+PASS SSH_PROBE_V6_TO_V4
+PASS NGINX_STREAM_V6_TO_V4_SERVER_FIRST
+PASS FRAGMENTED_CLIENT_HELLO
+PASS NO_SNI_NO_BUSINESS
+PASS UNKNOWN_SNI_NO_BUSINESS
+PASS UNKNOWN_PROTOCOL_NO_BUSINESS
+PASS SILENT_TIMEOUT_NO_BUSINESS
+HP_TCP_P0_PROBES_PASS (probe routing only; no real TLS/SSH authentication/public acceptance)
+EXIT=0

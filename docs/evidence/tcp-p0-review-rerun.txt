@@ -1,0 +1,41 @@
+2026/10/15 15:07:19 [notice] 41275#0: using the "epoll" event method
+2026/10/15 15:07:19 [notice] 41275#0: nginx/1.26.1
+2026/10/15 15:07:19 [notice] 41275#0: built by gcc 13.3.0 (OpenWrt GCC 13.3.0 r29087-d9c5716d1d) 
+2026/10/15 15:07:19 [notice] 41275#0: OS: Linux 6.18.55
+2026/10/15 15:07:19 [notice] 41275#0: getrlimit(RLIMIT_NOFILE): 1024:4096
+Landlock: Failed to create a rulesetPASS BOTH_PROCESSES_NONROOT
+tls:connection from ::1:55374 to ::1:49300 forwarded from 127.0.0.1:34174 to 127.0.0.1:49302
+Proto tls -1: 0/0 cnx
+Endpoint 3 -1: 1/0 cnx
+ssh:connection from ::1:55388 to ::1:49300 forwarded from 127.0.0.1:49964 to 127.0.0.1:49303
+Proto ssh -1: 0/0 cnx
+Endpoint 3 -1: 1/0 cnx
+anyprot: lost incoming connection
+Proto anyprot -1: 0/0 cnx
+Endpoint 3 -1: 0/0 cnx
+2026/10/15 15:07:21 [notice] 41275#0: signal 15 (SIGTERM) received from 41272, exiting
+2026/10/15 15:07:21 [notice] 41275#0: exit
+PASS PP_V1_NGINX_CONSUMED_V6_TO_V4
+PASS SSH_NO_PROXY_HEADER
+PASS EXTERNAL_PROXY_HEADER_REJECTED
+PASS NGINX_ORIGINAL_V6_AND_PROXY_PEER ::1|127.0.0.1|200;
+HP_TCP_P0_IDENTITY_PASS (stream metadata, NOT HTTP X-Forwarded-For/TLS authentication acceptance)
+2026/10/15 15:07:22 [notice] 41286#0: using the "epoll" event method
+2026/10/15 15:07:22 [notice] 41286#0: nginx/1.26.1
+2026/10/15 15:07:22 [notice] 41286#0: built by gcc 13.3.0 (OpenWrt GCC 13.3.0 r29087-d9c5716d1d) 
+2026/10/15 15:07:22 [notice] 41286#0: OS: Linux 6.18.55
+2026/10/15 15:07:22 [notice] 41286#0: getrlimit(RLIMIT_NOFILE): 1024:4096
+Landlock: Failed to create a rulesetPASS BOTH_PROCESSES_NONROOT
+tls:connection from ::1:55410 to ::1:49300 forwarded from 127.0.0.1:34180 to 127.0.0.1:49302
+2026/10/15 15:07:23 [error] 41286#0: *1 connect() failed (111: Connection refused) while proxying connection, client: 127.0.0.1, server: 127.0.0.1:49302, upstream: "127.0.0.1:49301", bytes from/to client:75/0, bytes from/to upstream:0/0
+2026/10/15 15:07:23 [notice] 41286#0: signal 15 (SIGTERM) received from 41283, exiting
+2026/10/15 15:07:23 [notice] 41286#0: exit
+/tmp/homepublish-tcp-p0/device-tcp-p0-identity.lua:32: bad response 
+stack traceback:
+	[C]: in function 'assert'
+	/tmp/homepublish-tcp-p0/device-tcp-p0-identity.lua:32: in function 'request'
+	/tmp/homepublish-tcp-p0/device-tcp-p0-identity.lua:81: in function </tmp/homepublish-tcp-p0/device-tcp-p0-identity.lua:48>
+	[C]: in function 'xpcall'
+	/tmp/homepublish-tcp-p0/device-tcp-p0-identity.lua:88: in main chunk
+	[C]: ?
+EXIT=1

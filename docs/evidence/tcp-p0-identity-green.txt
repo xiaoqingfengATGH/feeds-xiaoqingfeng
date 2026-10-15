@@ -1,0 +1,23 @@
+2026/10/15 15:00:48 [notice] 39949#0: using the "epoll" event method
+2026/10/15 15:00:48 [notice] 39949#0: nginx/1.26.1
+2026/10/15 15:00:48 [notice] 39949#0: built by gcc 13.3.0 (OpenWrt GCC 13.3.0 r29087-d9c5716d1d) 
+2026/10/15 15:00:48 [notice] 39949#0: OS: Linux 6.18.55
+2026/10/15 15:00:48 [notice] 39949#0: getrlimit(RLIMIT_NOFILE): 1024:4096
+Landlock: Failed to create a rulesetPASS BOTH_PROCESSES_NONROOT
+tls:connection from ::1:40496 to ::1:49300 forwarded from 127.0.0.1:43058 to 127.0.0.1:49302
+Proto tls -1: 0/0 cnx
+Endpoint 3 -1: 1/0 cnx
+ssh:connection from ::1:40512 to ::1:49300 forwarded from 127.0.0.1:49738 to 127.0.0.1:49303
+Proto ssh -1: 0/0 cnx
+Endpoint 3 -1: 1/0 cnx
+anyprot: lost incoming connection
+Proto anyprot -1: 0/0 cnx
+Endpoint 3 -1: 0/0 cnx
+2026/10/15 15:00:50 [notice] 39949#0: signal 15 (SIGTERM) received from 39945, exiting
+2026/10/15 15:00:50 [notice] 39949#0: exit
+PASS PP_V1_NGINX_CONSUMED_V6_TO_V4
+PASS SSH_NO_PROXY_HEADER
+PASS EXTERNAL_PROXY_HEADER_REJECTED
+PASS NGINX_ORIGINAL_V6_AND_PROXY_PEER -|127.0.0.1|400;::1|127.0.0.1|200;
+HP_TCP_P0_IDENTITY_PASS (stream metadata, NOT HTTP X-Forwarded-For/TLS authentication acceptance)
+EXIT=0

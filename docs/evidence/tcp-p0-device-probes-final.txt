@@ -1,0 +1,32 @@
+Landlock: Failed to create a ruleset2026/10/15 14:53:18 [notice] 38181#0: using the "epoll" event method
+2026/10/15 14:53:18 [notice] 38181#0: nginx/1.26.1
+2026/10/15 14:53:18 [notice] 38181#0: built by gcc 13.3.0 (OpenWrt GCC 13.3.0 r29087-d9c5716d1d) 
+2026/10/15 14:53:18 [notice] 38181#0: OS: Linux 6.18.55
+2026/10/15 14:53:18 [notice] 38181#0: getrlimit(RLIMIT_NOFILE): 1024:4096
+matching [a.fixture.home] with [a.fixture.home]
+tls:connection from ::1:58600 to ::1:49300 forwarded from 127.0.0.1:60630 to 127.0.0.1:49301
+PASS SNI_A_V6_TO_V4
+matching [b.fixture.home] with [a.fixture.home]
+matching [b.fixture.home] with [b.fixture.home]
+tls:connection from ::1:58614 to ::1:49300 forwarded from 127.0.0.1:51548 to 127.0.0.1:49302
+ssh:connection from ::1:58622 to ::1:49300 forwarded from 127.0.0.1:37616 to 127.0.0.1:49303
+matching [a.fixture.home] with [a.fixture.home]
+tls:connection from ::1:58632 to ::1:49300 forwarded from 127.0.0.1:60640 to 127.0.0.1:49301
+anyprot: lost incoming connection
+matching [unknown.fixture.home] with [a.fixture.home]
+matching [unknown.fixture.home] with [b.fixture.home]
+anyprot: lost incoming connection
+anyprot: lost incoming connection
+anyprot: lost incoming connection
+2026/10/15 14:53:21 [notice] 38181#0: signal 15 (SIGTERM) received from 38174, exiting
+2026/10/15 14:53:21 [notice] 38181#0: exit
+PASS SNI_B_V6_TO_V4
+PASS SSH_PROBE_V6_TO_V4
+PASS NGINX_STREAM_V6_TO_V4_SERVER_FIRST
+PASS FRAGMENTED_CLIENT_HELLO
+PASS NO_SNI_NO_BUSINESS
+PASS UNKNOWN_SNI_NO_BUSINESS
+PASS UNKNOWN_PROTOCOL_NO_BUSINESS
+PASS SILENT_TIMEOUT_NO_BUSINESS
+HP_TCP_P0_PROBES_PASS (probe routing only; no real TLS/SSH authentication/public acceptance)
+EXIT_CODE=0

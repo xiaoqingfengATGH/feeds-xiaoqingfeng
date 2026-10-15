@@ -2,3 +2,7 @@
 homepublish/files/usr/share/homepublish/lease-run.sh text eol=lf
 homepublish/files/etc/init.d/homepublish text eol=lf
 homepublish/tests/router-dns-replan.sh text eol=lf
+homepublish/tests/*.sh text eol=lf
+homepublish/tests/*.lua text eol=lf
+# Preserve raw command evidence, including terminal trailing whitespace.
+docs/evidence/*.txt text eol=lf -whitespace

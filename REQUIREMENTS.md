@@ -1,5 +1,15 @@
 # Requirements
 
+## REQ-007 — TCP 统一发布与 IPv6→IPv4（本阶段冻结，P0门禁完成/P1未开始）
+
+用户已确认四种发布方式：HTTPS反向代理、TLS/SNI透传、一个原生SSH目标共享入口、独立端口TCP转发。IPv6入站→家庭IPv4后端为核心验收路径；入口/后端地址族解耦，支持双栈和只有LAN的旁路由。页面优先原生LuCI JSONMap/NamedSection/GridSection、真实网络地址选择和条件字段。保存不启动、明确应用、整组停止、原临时截止不延长、未知流量不兜底业务。
+
+不承诺UDP/QUIC、任意协议探针、多个原生SSH按域名分流、通用NAT64、上级路由控制或云中继；本阶段不开发UPnP/STUN。精确SNI路由与通配证书分开，HTTPS回源不得默认关闭证书验证。
+
+基线：[详细设计与实施计划](.hermes/plans/2026-10-15_143056-homepublish-tcp-ingress-luci.md)。进度：[TCP入口P0检查点](docs/HOMEPUBLISH-TCP-INGRESS-P0.md)。当前仅授权从P0开始，实机127.0.0.1:222源码直传验证，不跑本地测试；不改管理SSH/Web、认证、防火墙、路由、UPnP、DNS或生产，不push/merge/PR。阶段完成停等指令。
+
+**覆盖映射（保留历史记录）**：REQ-001“仅Web/不用普通TCP forwarder”被本条四方式覆盖；REQ-002旧四步向导被四TAB原生表单覆盖；REQ-003 UPnP在本阶段排除，不代表删除历史需求；REQ-004普通procd生命周期与持久Stop继续有效，旧自定义guardian条款不作为新架构前置；REQ-006证书继承继续有效，仅作用HTTPS反代。下文旧“当前定位/本地测试授权”等为历史快照，以本条和最新用户指令为准。
+
 Current native LuCI/RPC source follow-up: persistent certificate inheritance and notBefore metadata fixed; certificates read RPC, Chinese service list/dialog/entry tabs and real Save/readback locally browser verified. Capability-enabled Start/Apply UI contracts, installed certificate_source/shared runtime, SDK/target and production/public remain unverified. Additional controller-multi run failed provider start (cleanup confirmed), not resolved. See docs/HOMEPUBLISH-CERTIFICATE-UE-CHECKPOINT.md current follow-up ledger. No deployment or network mutations.
 
 ## REQ-006 — 家庭统一入口与证书共享（源码切片，待完整验收）

@@ -33,7 +33,7 @@ return view.extend({
 			}
 		};
 
-		m = new form.JSONMap(mapData, _('HomePublish — 入口设置'),
+		m = new form.JSONMap(mapData, _('HomePublish — 发布入口设置'),
 			_('专用 Nginx 入口监听与默认证书；无独立入口端口字段，内网端口即监听端口。保存不启动。'));
 
 		/* canonical 基底 + 修订号：Save 组装与 revision 冲突检测必需（JSONMap 本身无此语义） */

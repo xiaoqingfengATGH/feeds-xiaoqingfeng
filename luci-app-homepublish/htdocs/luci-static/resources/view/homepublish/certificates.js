@@ -47,7 +47,10 @@ return view.extend({
 		s.addremove = false;
 		s.anonymous = true;
 		s.nodescriptions = true;
-		/* 只读库存表：无任何行操作（GridSection 默认会给每行塞 Edit 按钮） */
+		/* 只读库存表：表头与数据行均不生成操作列。 */
+		s.renderHeaderRows = function() {
+			return form.TableSection.prototype.renderHeaderRows.call(this, false);
+		};
 		s.renderRowActions = function() { return E([]); };
 
 		var statusText = {

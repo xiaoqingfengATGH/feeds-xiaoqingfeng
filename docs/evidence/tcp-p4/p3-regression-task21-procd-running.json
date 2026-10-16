@@ -1,0 +1,31 @@
+{
+	"homepublish-p3-controller": {
+		"instances": {
+			"nginx": {
+				"running": true,
+				"pid": 53368,
+				"command": [
+					"/tmp/homepublish-tcp-p3/nginx-private",
+					"-p",
+					"/tmp/homepublish-tcp-p3/controller-runtime/",
+					"-c",
+					"nginx.conf"
+				],
+				"term_timeout": 2,
+				"env": {
+					"OPENSSL_CONF": "/dev/null"
+				}
+			},
+			"sslh": {
+				"running": true,
+				"pid": 53369,
+				"command": [
+					"/tmp/homepublish-tcp-p3/sslh-select.private",
+					"-F",
+					"/tmp/homepublish-tcp-p3/controller-runtime/sslh.cfg"
+				],
+				"term_timeout": 2
+			}
+		}
+	}
+}

@@ -17,7 +17,7 @@ return view.extend({
   s.addremove=true;s.anonymous=true;s.sortable=false;s.nodescriptions=true;s.modalizable=true;
   s.tab('general','基本设置');s.tab('access','接入设置');s.tab('backend','后端设置');s.tab('advanced','高级设置');
   s.modaltitle=function(sid){var r=this.map.data.get(this.map.config,sid);return r && r.name || '新服务';};
-  function field(tab,cls,key,label,modal){var v=s.taboption(tab,cls,key,label);if(modal!==undefined)v.modalonly=modal;v.rmempty=cls===form.DummyValue;return v;}
+  function field(tab,cls,key,label,modal){var v=s.taboption(tab,cls,key,label);if(modal!==undefined)v.modalonly=modal;if(cls===form.DummyValue){v.modalonly=false;v.optional=true;}v.rmempty=cls===form.DummyValue;return v;}
   o=field('general',form.Flag,'enabled','参与发布');o.default='1';o.editable=true;
   o=field('general',form.Value,'name','名称');
   o=field('general',form.ListValue,'type','发布方式');o.value('https_proxy','HTTPS 反向代理');o.value('tls_passthrough','TLS 透传');o.value('ssh','原生 SSH 共入口');o.value('tcp_forward','独立端口 TCP 转发');o.default='https_proxy';

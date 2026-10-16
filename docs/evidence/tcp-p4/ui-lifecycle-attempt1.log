@@ -1,0 +1,64 @@
+PASS Cancel Start performs zero mutations
+PASS actual LuCI Start activates installed four-protocol generation; real HTTPS marker A
+SERVICE_BUTTONS [
+  'tlstls_passthroughtls.fixture.home由后端提供127.0.0.1:49546编辑删除',
+  'rawtcp_forward49550不需要127.0.0.1:49546编辑删除',
+  'webhttps_proxyhome.iwonderful.top继承入口默认127.0.0.1:49545编辑删除',
+  'sshssh继承共享入口不需要127.0.0.1:49547编辑删除'
+]
+MODAL_BUTTONS [ '关闭', '保存' ]
+PASS native services edit+Save revision2 retains four-protocol active revision1 and real marker A
+locator.click: Timeout 30000ms exceeded.
+Call log:
+[2m  - waiting for locator('#hp-apply')[22m
+[2m    - locator resolved to <button id="hp-apply" disabled="true" class="cbi-button cbi-button-action btn btn-purple waves-effect waves-light">应用变更</button>[22m
+[2m  - attempting click action[22m
+[2m    2 × waiting for element to be visible, enabled and stable[22m
+[2m      - element is not enabled[22m
+[2m    - retrying click action[22m
+[2m    - waiting 20ms[22m
+[2m    2 × waiting for element to be visible, enabled and stable[22m
+[2m      - element is not enabled[22m
+[2m    - retrying click action[22m
+[2m      - waiting 100ms[22m
+[2m    58 × waiting for element to be visible, enabled and stable[22m
+[2m       - element is not enabled[22m
+[2m     - retrying click action[22m
+[2m       - waiting 500ms[22m
+
+    at clickAction (D:\DevPortal\homelede\homepublish-product\luci-app-homepublish\tests\p4-lifecycle-browser.cjs:19:79)
+    at D:\DevPortal\homelede\homepublish-product\luci-app-homepublish\tests\p4-lifecycle-browser.cjs:28:28 {
+  log: [
+    "  - waiting for locator('#hp-apply')",
+    '    - locator resolved to <button id="hp-apply" disabled="true" class="cbi-button cbi-button-action btn btn-purple waves-effect waves-light">应用变更</button>',
+    '  - attempting click action',
+    '    2 × waiting for element to be visible, enabled and stable',
+    '      - element is not enabled',
+    '    - retrying click action',
+    '    - waiting 20ms',
+    '    2 × waiting for element to be visible, enabled and stable',
+    '      - element is not enabled',
+    '    - retrying click action',
+    '      - waiting 100ms',
+    '    58 × waiting for element to be visible, enabled and stable',
+    '       - element is not enabled',
+    '     - retrying click action',
+    '       - waiting 500ms'
+  ],
+  name: 'TimeoutError'
+}
+{"desired_state":{"state":"disabled","manual_stop_latch":false},"capabilities":{"stop":true,"start":false,"preflight":true,"network_inventory":true,"apply":false},"runtime":{"phase":"stopped","cleanup":"confirmed","stage":"boot_cleanup","active_verified":false},"pending_config":{"apply_required":true,"saved_revision":1},"schema_versions":[1,2],"saved_revision":1,"intent_revision":0,"state_version":1,"saved_config":{"access_profile":{"listeners":[{"listener_id":"v6","network":"lan","address":"fd89:878e:a47f:0:0:0:0:1","family":"ipv6","port":49543}]},"services":[{"enabled":true,"type":"tls_passthrough","name":"tls","hostname":"tls.fixture.home","service_id":"tls","backend":{"host":"127.0.0.1","allowed_ranges":["127.0.0.0/8"],"addressFamily":"ipv4","port":49546},"authentication_review":{"management":false,"authentication":"confirmed"}},{"enabled":true,"type":"tcp_forward","name":"raw","service_id":"raw","listen_port":49550,"backend":{"host":"127.0.0.1","allowed_ranges":["127.0.0.0/8"],"addressFamily":"ipv4","port":49546},"authentication_review":{"management":false,"authentication":"confirmed"}},{"service_id":"web","type":"https_proxy","certificate_mode":"inherit","name":"web","hostname":"home.iwonderful.top","upstream_scheme":"http","enabled":true,"backend":{"host":"127.0.0.1","allowed_ranges":["127.0.0.0/8"],"addressFamily":"ipv4","port":49545},"authentication_review":{"management":false,"authentication":"confirmed"}},{"enabled":true,"type":"ssh","name":"ssh","service_id":"ssh","backend":{"host":"127.0.0.1","allowed_ranges":["127.0.0.0/8"],"addressFamily":"ipv4","port":49547},"authentication_review":{"management":false,"authentication":"confirmed"}}],"default_certificate_ref":"acme:home_rsa","publication_policy":{"mode":"continuous","boot_restore":false},"schema_version":2}}
+{"desired_state":{"state":"disabled","manual_stop_latch":true},"saved_revision":2,"attempted_revision":1,"pending_config":{"apply_required":true,"saved_revision":2},"capabilities":{"stop":true,"start":true,"preflight":true,"network_inventory":true,"apply":true},"runtime":{"cleanup":"confirmed","services":{"ssh":{"ready":true,"generation":1},"web":{"ready":true,"hostname":"home.iwonderful.top","generation":1},"tls":{"ready":true,"hostname":"tls.fixture.home","generation":1},"raw":{"ready":true,"generation":1}},"phase":"stopped","attempt_count":0,"clock_at":1792071879,"boot_id":"3d88e3f4-7a3a-4cda-a480-0ffcb4751a39","active_verified":false,"clock_trusted":true,"generation":1,"stage":"stop","running_since":1792071879},"attempted_config":{"access_profile":{"listeners":[{"listener_id":"v6","network":"lan","address":"fd89:878e:a47f:0:0:0:0:1","family":"ipv6","port":49543}]},"services":[{"enabled":true,"type":"tls_passthrough","name":"tls","hostname":"tls.fixture.home","service_id":"tls","backend":{"host":"127.0.0.1","allowed_ranges":["127.0.0.0/8"],"addressFamily":"ipv4","port":49546},"authentication_review":{"management":false,"authentication":"confirmed"}},{"enabled":true,"type":"tcp_forward","name":"raw","service_id":"raw","listen_port":49550,"backend":{"host":"127.0.0.1","allowed_ranges":["127.0.0.0/8"],"addressFamily":"ipv4","port":49546},"authentication_review":{"management":false,"authentication":"confirmed"}},{"service_id":"web","type":"https_proxy","certificate_mode":"inherit","name":"web","hostname":"home.iwonderful.top","upstream_scheme":"http","enabled":true,"backend":{"host":"127.0.0.1","allowed_ranges":["127.0.0.0/8"],"addressFamily":"ipv4","port":49545},"authentication_review":{"management":false,"authentication":"confirmed"}},{"enabled":true,"type":"ssh","name":"ssh","service_id":"ssh","backend":{"host":"127.0.0.1","allowed_ranges":["127.0.0.0/8"],"addressFamily":"ipv4","port":49547},"authentication_review":{"management":false,"authentication":"confirmed"}}],"default_certificate_ref":"acme:home_rsa","publication_policy":{"mode":"continuous","boot_restore":false},"schema_version":2},"active_config":{"access_profile":{"listeners":[{"listener_id":"v6","network":"lan","address":"fd89:878e:a47f:0:0:0:0:1","family":"ipv6","port":49543}]},"services":[{"enabled":true,"type":"tls_passthrough","name":"tls","hostname":"tls.fixture.home","service_id":"tls","backend":{"host":"127.0.0.1","allowed_ranges":["127.0.0.0/8"],"addressFamily":"ipv4","port":49546},"authentication_review":{"management":false,"authentication":"confirmed"}},{"enabled":true,"type":"tcp_forward","name":"raw","service_id":"raw","listen_port":49550,"backend":{"host":"127.0.0.1","allowed_ranges":["127.0.0.0/8"],"addressFamily":"ipv4","port":49546},"authentication_review":{"management":false,"authentication":"confirmed"}},{"service_id":"web","type":"https_proxy","certificate_mode":"inherit","name":"web","hostname":"home.iwonderful.top","upstream_scheme":"http","enabled":true,"backend":{"host":"127.0.0.1","allowed_ranges":["127.0.0.0/8"],"addressFamily":"ipv4","port":49545},"authentication_review":{"management":false,"authentication":"confirmed"}},{"enabled":true,"type":"ssh","name":"ssh","service_id":"ssh","backend":{"host":"127.0.0.1","allowed_ranges":["127.0.0.0/8"],"addressFamily":"ipv4","port":49547},"authentication_review":{"management":false,"authentication":"confirmed"}}],"default_certificate_ref":"acme:home_rsa","publication_policy":{"mode":"continuous","boot_restore":false},"schema_version":2},"schema_versions":[1,2],"saved_config":{"access_profile":{"listeners":[{"listener_id":"v6","network":"lan","address":"fd89:878e:a47f:0:0:0:0:1","family":"ipv6","port":49543}]},"services":[{"enabled":true,"type":"tls_passthrough","name":"tls","hostname":"tls.fixture.home","service_id":"tls","backend":{"host":"127.0.0.1","allowed_ranges":["127.0.0.0/8"],"addressFamily":"ipv4","port":49546},"authentication_review":{"management":false,"authentication":"confirmed"}},{"enabled":true,"type":"tcp_forward","name":"raw","service_id":"raw","listen_port":49550,"backend":{"host":"127.0.0.1","allowed_ranges":["127.0.0.0/8"],"addressFamily":"ipv4","port":49546},"authentication_review":{"management":false,"authentication":"confirmed"}},{"service_id":"web","type":"https_proxy","certificate_mode":"inherit","name":"web","hostname":"home.iwonderful.top","upstream_scheme":"http","enabled":true,"backend":{"host":"127.0.0.1","allowed_ranges":["127.0.0.0/8"],"addressFamily":"ipv4","port":49556},"authentication_review":{"management":false,"authentication":"confirmed"}},{"enabled":true,"type":"ssh","name":"ssh","service_id":"ssh","backend":{"host":"127.0.0.1","allowed_ranges":["127.0.0.0/8"],"addressFamily":"ipv4","port":49547},"authentication_review":{"management":false,"authentication":"confirmed"}}],"default_certificate_ref":"acme:home_rsa","publication_policy":{"mode":"continuous","boot_restore":false},"schema_version":2},"intent_revision":2,"state_version":1,"active_revision":1}
+PASS real business certificate/key source hashes + ownership/mode preserved server-only
+PASS final owned listeners absent; private keys removed; live journal/config/management baseline unchanged
+Traceback (most recent call last):
+  File "D:\DevPortal\homelede\homepublish-product\homepublish\tests\run-device-tcp-p4-ui.py", line 21, in <module>
+    exec(compile(tree,str(p),'exec'),{'__file__':str(p),'__name__':'__main__'})
+    ~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\DevPortal\homelede\homepublish-product\homepublish\tests\run-device-tcp-p4-policy.py", line 144, in <module>
+    exercise()
+    ~~~~~~~~^^
+  File "D:\DevPortal\homelede\homepublish-product\homepublish\tests\run-device-tcp-p4-policy.py", line 7, in exercise
+    SCP=['scp','-O','-o','ProxyCommand=none','-o','ProxyJump=none','-o','IdentitiesOnly=yes','-o','BatchMode=yes','-i','D:/DevPortal/CloudHosts/HomePri.key','-P','222']
+            ^^^^^^^^^^^^^^^^^^^^
+AssertionError: ('browser lifecycle failed', 1)

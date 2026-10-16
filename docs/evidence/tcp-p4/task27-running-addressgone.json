@@ -1,0 +1,715 @@
+{
+  "before": {
+    "desired_state": {
+      "state": "enabled",
+      "manual_stop_latch": false
+    },
+    "saved_revision": 1,
+    "attempted_revision": 1,
+    "pending_config": {
+      "apply_required": false,
+      "saved_revision": 1
+    },
+    "capabilities": {
+      "stop": true,
+      "start": true,
+      "preflight": true,
+      "network_inventory": true,
+      "apply": true
+    },
+    "approval": {
+      "revision": 1
+    },
+    "runtime": {
+      "cleanup": "unknown",
+      "services": {
+        "ssh": {
+          "ready": true,
+          "generation": 2
+        },
+        "web": {
+          "ready": true,
+          "hostname": "home.iwonderful.top",
+          "generation": 2
+        },
+        "tls": {
+          "ready": true,
+          "hostname": "tls.fixture.home",
+          "generation": 2
+        },
+        "raw": {
+          "ready": true,
+          "generation": 2
+        }
+      },
+      "phase": "running",
+      "attempt_count": 0,
+      "clock_at": 1792076668,
+      "boot_id": "3d88e3f4-7a3a-4cda-a480-0ffcb4751a39",
+      "active_verified": true,
+      "clock_trusted": true,
+      "generation": 2,
+      "stage": "ready",
+      "running_since": 1792076668
+    },
+    "attempted_config": {
+      "access_profile": {
+        "listeners": [
+          {
+            "listener_id": "v6",
+            "network": "lan",
+            "address": "fd89:878e:a47f:0:0:0:0:1",
+            "family": "ipv6",
+            "port": 49543
+          }
+        ]
+      },
+      "services": [
+        {
+          "enabled": true,
+          "type": "tls_passthrough",
+          "name": "tls",
+          "hostname": "tls.fixture.home",
+          "service_id": "tls",
+          "backend": {
+            "host": "127.0.0.1",
+            "allowed_ranges": [
+              "127.0.0.0/8"
+            ],
+            "addressFamily": "ipv4",
+            "port": 49546
+          },
+          "authentication_review": {
+            "management": false,
+            "authentication": "confirmed"
+          }
+        },
+        {
+          "enabled": true,
+          "type": "tcp_forward",
+          "name": "raw",
+          "service_id": "raw",
+          "listen_port": 49550,
+          "backend": {
+            "host": "127.0.0.1",
+            "allowed_ranges": [
+              "127.0.0.0/8"
+            ],
+            "addressFamily": "ipv4",
+            "port": 49546
+          },
+          "authentication_review": {
+            "management": false,
+            "authentication": "confirmed"
+          }
+        },
+        {
+          "service_id": "web",
+          "type": "https_proxy",
+          "certificate_mode": "inherit",
+          "name": "web",
+          "hostname": "home.iwonderful.top",
+          "upstream_scheme": "http",
+          "enabled": true,
+          "backend": {
+            "host": "127.0.0.1",
+            "allowed_ranges": [
+              "127.0.0.0/8"
+            ],
+            "addressFamily": "ipv4",
+            "port": 49545
+          },
+          "authentication_review": {
+            "management": false,
+            "authentication": "confirmed"
+          }
+        },
+        {
+          "enabled": true,
+          "type": "ssh",
+          "name": "ssh",
+          "service_id": "ssh",
+          "backend": {
+            "host": "127.0.0.1",
+            "allowed_ranges": [
+              "127.0.0.0/8"
+            ],
+            "addressFamily": "ipv4",
+            "port": 49547
+          },
+          "authentication_review": {
+            "management": false,
+            "authentication": "confirmed"
+          }
+        }
+      ],
+      "default_certificate_ref": "acme:home_rsa",
+      "publication_policy": {
+        "mode": "continuous",
+        "boot_restore": false
+      },
+      "schema_version": 2
+    },
+    "active_config": {
+      "access_profile": {
+        "listeners": [
+          {
+            "listener_id": "v6",
+            "network": "lan",
+            "address": "fd89:878e:a47f:0:0:0:0:1",
+            "family": "ipv6",
+            "port": 49543
+          }
+        ]
+      },
+      "services": [
+        {
+          "enabled": true,
+          "type": "tls_passthrough",
+          "name": "tls",
+          "hostname": "tls.fixture.home",
+          "service_id": "tls",
+          "backend": {
+            "host": "127.0.0.1",
+            "allowed_ranges": [
+              "127.0.0.0/8"
+            ],
+            "addressFamily": "ipv4",
+            "port": 49546
+          },
+          "authentication_review": {
+            "management": false,
+            "authentication": "confirmed"
+          }
+        },
+        {
+          "enabled": true,
+          "type": "tcp_forward",
+          "name": "raw",
+          "service_id": "raw",
+          "listen_port": 49550,
+          "backend": {
+            "host": "127.0.0.1",
+            "allowed_ranges": [
+              "127.0.0.0/8"
+            ],
+            "addressFamily": "ipv4",
+            "port": 49546
+          },
+          "authentication_review": {
+            "management": false,
+            "authentication": "confirmed"
+          }
+        },
+        {
+          "service_id": "web",
+          "type": "https_proxy",
+          "certificate_mode": "inherit",
+          "name": "web",
+          "hostname": "home.iwonderful.top",
+          "upstream_scheme": "http",
+          "enabled": true,
+          "backend": {
+            "host": "127.0.0.1",
+            "allowed_ranges": [
+              "127.0.0.0/8"
+            ],
+            "addressFamily": "ipv4",
+            "port": 49545
+          },
+          "authentication_review": {
+            "management": false,
+            "authentication": "confirmed"
+          }
+        },
+        {
+          "enabled": true,
+          "type": "ssh",
+          "name": "ssh",
+          "service_id": "ssh",
+          "backend": {
+            "host": "127.0.0.1",
+            "allowed_ranges": [
+              "127.0.0.0/8"
+            ],
+            "addressFamily": "ipv4",
+            "port": 49547
+          },
+          "authentication_review": {
+            "management": false,
+            "authentication": "confirmed"
+          }
+        }
+      ],
+      "default_certificate_ref": "acme:home_rsa",
+      "publication_policy": {
+        "mode": "continuous",
+        "boot_restore": false
+      },
+      "schema_version": 2
+    },
+    "schema_versions": [
+      1,
+      2
+    ],
+    "saved_config": {
+      "access_profile": {
+        "listeners": [
+          {
+            "listener_id": "v6",
+            "network": "lan",
+            "address": "fd89:878e:a47f:0:0:0:0:1",
+            "family": "ipv6",
+            "port": 49543
+          }
+        ]
+      },
+      "services": [
+        {
+          "enabled": true,
+          "type": "tls_passthrough",
+          "name": "tls",
+          "hostname": "tls.fixture.home",
+          "service_id": "tls",
+          "backend": {
+            "host": "127.0.0.1",
+            "allowed_ranges": [
+              "127.0.0.0/8"
+            ],
+            "addressFamily": "ipv4",
+            "port": 49546
+          },
+          "authentication_review": {
+            "management": false,
+            "authentication": "confirmed"
+          }
+        },
+        {
+          "enabled": true,
+          "type": "tcp_forward",
+          "name": "raw",
+          "service_id": "raw",
+          "listen_port": 49550,
+          "backend": {
+            "host": "127.0.0.1",
+            "allowed_ranges": [
+              "127.0.0.0/8"
+            ],
+            "addressFamily": "ipv4",
+            "port": 49546
+          },
+          "authentication_review": {
+            "management": false,
+            "authentication": "confirmed"
+          }
+        },
+        {
+          "service_id": "web",
+          "type": "https_proxy",
+          "certificate_mode": "inherit",
+          "name": "web",
+          "hostname": "home.iwonderful.top",
+          "upstream_scheme": "http",
+          "enabled": true,
+          "backend": {
+            "host": "127.0.0.1",
+            "allowed_ranges": [
+              "127.0.0.0/8"
+            ],
+            "addressFamily": "ipv4",
+            "port": 49545
+          },
+          "authentication_review": {
+            "management": false,
+            "authentication": "confirmed"
+          }
+        },
+        {
+          "enabled": true,
+          "type": "ssh",
+          "name": "ssh",
+          "service_id": "ssh",
+          "backend": {
+            "host": "127.0.0.1",
+            "allowed_ranges": [
+              "127.0.0.0/8"
+            ],
+            "addressFamily": "ipv4",
+            "port": 49547
+          },
+          "authentication_review": {
+            "management": false,
+            "authentication": "confirmed"
+          }
+        }
+      ],
+      "default_certificate_ref": "acme:home_rsa",
+      "publication_policy": {
+        "mode": "continuous",
+        "boot_restore": false
+      },
+      "schema_version": 2
+    },
+    "active_revision": 1,
+    "state_version": 1,
+    "intent_revision": 2
+  },
+  "after": {
+    "desired_state": {
+      "state": "enabled",
+      "manual_stop_latch": false
+    },
+    "saved_revision": 1,
+    "attempted_revision": 1,
+    "pending_config": {
+      "apply_required": false,
+      "saved_revision": 1
+    },
+    "capabilities": {
+      "stop": true,
+      "start": true,
+      "preflight": true,
+      "network_inventory": true,
+      "apply": true
+    },
+    "approval": {
+      "revision": 1
+    },
+    "runtime": {
+      "cleanup": "confirmed",
+      "last_error": "provider unavailable",
+      "services": {
+        "ssh": {
+          "ready": true,
+          "generation": 2
+        },
+        "web": {
+          "ready": true,
+          "hostname": "home.iwonderful.top",
+          "generation": 2
+        },
+        "tls": {
+          "ready": true,
+          "hostname": "tls.fixture.home",
+          "generation": 2
+        },
+        "raw": {
+          "ready": true,
+          "generation": 2
+        }
+      },
+      "phase": "retry_wait",
+      "attempt_count": 0,
+      "reason": "provider unavailable",
+      "generation": 2,
+      "clock_at": 1792076668,
+      "boot_id": "3d88e3f4-7a3a-4cda-a480-0ffcb4751a39",
+      "active_verified": false,
+      "clock_trusted": true,
+      "next_retry": 1792076700,
+      "stage": "renew",
+      "running_since": 1792076668
+    },
+    "attempted_config": {
+      "access_profile": {
+        "listeners": [
+          {
+            "listener_id": "v6",
+            "network": "lan",
+            "address": "fd89:878e:a47f:0:0:0:0:1",
+            "family": "ipv6",
+            "port": 49543
+          }
+        ]
+      },
+      "services": [
+        {
+          "enabled": true,
+          "type": "tls_passthrough",
+          "name": "tls",
+          "hostname": "tls.fixture.home",
+          "service_id": "tls",
+          "backend": {
+            "host": "127.0.0.1",
+            "allowed_ranges": [
+              "127.0.0.0/8"
+            ],
+            "addressFamily": "ipv4",
+            "port": 49546
+          },
+          "authentication_review": {
+            "management": false,
+            "authentication": "confirmed"
+          }
+        },
+        {
+          "enabled": true,
+          "type": "tcp_forward",
+          "name": "raw",
+          "service_id": "raw",
+          "listen_port": 49550,
+          "backend": {
+            "host": "127.0.0.1",
+            "allowed_ranges": [
+              "127.0.0.0/8"
+            ],
+            "addressFamily": "ipv4",
+            "port": 49546
+          },
+          "authentication_review": {
+            "management": false,
+            "authentication": "confirmed"
+          }
+        },
+        {
+          "service_id": "web",
+          "type": "https_proxy",
+          "certificate_mode": "inherit",
+          "name": "web",
+          "hostname": "home.iwonderful.top",
+          "upstream_scheme": "http",
+          "enabled": true,
+          "backend": {
+            "host": "127.0.0.1",
+            "allowed_ranges": [
+              "127.0.0.0/8"
+            ],
+            "addressFamily": "ipv4",
+            "port": 49545
+          },
+          "authentication_review": {
+            "management": false,
+            "authentication": "confirmed"
+          }
+        },
+        {
+          "enabled": true,
+          "type": "ssh",
+          "name": "ssh",
+          "service_id": "ssh",
+          "backend": {
+            "host": "127.0.0.1",
+            "allowed_ranges": [
+              "127.0.0.0/8"
+            ],
+            "addressFamily": "ipv4",
+            "port": 49547
+          },
+          "authentication_review": {
+            "management": false,
+            "authentication": "confirmed"
+          }
+        }
+      ],
+      "default_certificate_ref": "acme:home_rsa",
+      "publication_policy": {
+        "mode": "continuous",
+        "boot_restore": false
+      },
+      "schema_version": 2
+    },
+    "active_config": {
+      "access_profile": {
+        "listeners": [
+          {
+            "listener_id": "v6",
+            "network": "lan",
+            "address": "fd89:878e:a47f:0:0:0:0:1",
+            "family": "ipv6",
+            "port": 49543
+          }
+        ]
+      },
+      "services": [
+        {
+          "enabled": true,
+          "type": "tls_passthrough",
+          "name": "tls",
+          "hostname": "tls.fixture.home",
+          "service_id": "tls",
+          "backend": {
+            "host": "127.0.0.1",
+            "allowed_ranges": [
+              "127.0.0.0/8"
+            ],
+            "addressFamily": "ipv4",
+            "port": 49546
+          },
+          "authentication_review": {
+            "management": false,
+            "authentication": "confirmed"
+          }
+        },
+        {
+          "enabled": true,
+          "type": "tcp_forward",
+          "name": "raw",
+          "service_id": "raw",
+          "listen_port": 49550,
+          "backend": {
+            "host": "127.0.0.1",
+            "allowed_ranges": [
+              "127.0.0.0/8"
+            ],
+            "addressFamily": "ipv4",
+            "port": 49546
+          },
+          "authentication_review": {
+            "management": false,
+            "authentication": "confirmed"
+          }
+        },
+        {
+          "service_id": "web",
+          "type": "https_proxy",
+          "certificate_mode": "inherit",
+          "name": "web",
+          "hostname": "home.iwonderful.top",
+          "upstream_scheme": "http",
+          "enabled": true,
+          "backend": {
+            "host": "127.0.0.1",
+            "allowed_ranges": [
+              "127.0.0.0/8"
+            ],
+            "addressFamily": "ipv4",
+            "port": 49545
+          },
+          "authentication_review": {
+            "management": false,
+            "authentication": "confirmed"
+          }
+        },
+        {
+          "enabled": true,
+          "type": "ssh",
+          "name": "ssh",
+          "service_id": "ssh",
+          "backend": {
+            "host": "127.0.0.1",
+            "allowed_ranges": [
+              "127.0.0.0/8"
+            ],
+            "addressFamily": "ipv4",
+            "port": 49547
+          },
+          "authentication_review": {
+            "management": false,
+            "authentication": "confirmed"
+          }
+        }
+      ],
+      "default_certificate_ref": "acme:home_rsa",
+      "publication_policy": {
+        "mode": "continuous",
+        "boot_restore": false
+      },
+      "schema_version": 2
+    },
+    "schema_versions": [
+      1,
+      2
+    ],
+    "saved_config": {
+      "access_profile": {
+        "listeners": [
+          {
+            "listener_id": "v6",
+            "network": "lan",
+            "address": "fd89:878e:a47f:0:0:0:0:1",
+            "family": "ipv6",
+            "port": 49543
+          }
+        ]
+      },
+      "services": [
+        {
+          "enabled": true,
+          "type": "tls_passthrough",
+          "name": "tls",
+          "hostname": "tls.fixture.home",
+          "service_id": "tls",
+          "backend": {
+            "host": "127.0.0.1",
+            "allowed_ranges": [
+              "127.0.0.0/8"
+            ],
+            "addressFamily": "ipv4",
+            "port": 49546
+          },
+          "authentication_review": {
+            "management": false,
+            "authentication": "confirmed"
+          }
+        },
+        {
+          "enabled": true,
+          "type": "tcp_forward",
+          "name": "raw",
+          "service_id": "raw",
+          "listen_port": 49550,
+          "backend": {
+            "host": "127.0.0.1",
+            "allowed_ranges": [
+              "127.0.0.0/8"
+            ],
+            "addressFamily": "ipv4",
+            "port": 49546
+          },
+          "authentication_review": {
+            "management": false,
+            "authentication": "confirmed"
+          }
+        },
+        {
+          "service_id": "web",
+          "type": "https_proxy",
+          "certificate_mode": "inherit",
+          "name": "web",
+          "hostname": "home.iwonderful.top",
+          "upstream_scheme": "http",
+          "enabled": true,
+          "backend": {
+            "host": "127.0.0.1",
+            "allowed_ranges": [
+              "127.0.0.0/8"
+            ],
+            "addressFamily": "ipv4",
+            "port": 49545
+          },
+          "authentication_review": {
+            "management": false,
+            "authentication": "confirmed"
+          }
+        },
+        {
+          "enabled": true,
+          "type": "ssh",
+          "name": "ssh",
+          "service_id": "ssh",
+          "backend": {
+            "host": "127.0.0.1",
+            "allowed_ranges": [
+              "127.0.0.0/8"
+            ],
+            "addressFamily": "ipv4",
+            "port": 49547
+          },
+          "authentication_review": {
+            "management": false,
+            "authentication": "confirmed"
+          }
+        }
+      ],
+      "default_certificate_ref": "acme:home_rsa",
+      "publication_policy": {
+        "mode": "continuous",
+        "boot_restore": false
+      },
+      "schema_version": 2
+    },
+    "active_revision": 1,
+    "state_version": 1,
+    "intent_revision": 2
+  }
+}

@@ -1,0 +1,11 @@
+nginx version: nginx/1.30.6
+built by gcc 13.3.0 (OpenWrt GCC 13.3.0 r29087-d9c5716d1d) 
+built with OpenSSL 3.0.18 30 Sep 2025 (running with OpenSSL 3.6.4 25 Aug 2026)
+TLS SNI support enabled
+configure arguments: --crossbuild=Linux::x86_64 --with-cc=/home/eric/homestun-sdk-check/openwrt-sdk-24.10.5-x86-64_gcc-13.3.0_musl.Linux-x86_64/staging_dir/toolchain-x86_64_gcc-13.3.0_musl/bin/x86_64-openwrt-linux-musl-gcc --with-cc-opt=-I/home/eric/homestun-sdk-check/openwrt-sdk-24.10.5-x86-64_gcc-13.3.0_musl.Linux-x86_64/staging_dir/target-x86_64_musl/usr/include --with-ld-opt='-L/home/eric/homestun-sdk-check/openwrt-sdk-24.10.5-x86-64_gcc-13.3.0_musl.Linux-x86_64/staging_dir/target-x86_64_musl/usr/lib -Wl,-Map,/home/eric/homestun-sdk-check/tcp-ingress-p5/build/relink/nginx.map' --prefix=/var/run/homepublish --sbin-path=/usr/libexec/homepublish/nginx --with-http_ssl_module --with-http_realip_module --with-stream --with-stream_ssl_module --with-stream_ssl_preread_module --without-http_ssi_module --without-http_scgi_module --without-http_uwsgi_module --without-http_grpc_module --without-http_memcached_module --without-http_fastcgi_module
+sslh-select d39388d1edcc9fe7a35449fc5c23d222d20d6f81
+ENABLE_REGEX
+LIBCONFIG
+HAVE_LANDLOCK
+HAVE_PROXYPROTOCOL
+HAVE_LIBCAP

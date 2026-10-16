@@ -1,0 +1,12 @@
+Command failed: ubus call service delete {"name":"homepublish-p5-ordinary-held"} (Not found)
+locator.evaluate: Error: strict mode violation: locator('#modal_overlay [id$=".name"]') resolved to 2 elements:
+    1) <div data-idref="802f4a9b" id="cbid.json.services0.name">…</div> aka locator('[id="cbid.json.services0.name"]')
+    2) <input type="text" data-tooltip="请输入：不能为空" data-tooltip-style="error" id="widget.cbid.json.services0.name" class="cbi-input-text cbi-input-invalid form-control"/> aka getByRole('textbox', { name: '名称' })
+
+Call log:
+[2m  - waiting for locator('#modal_overlay [id$=".name"]')[22m
+
+    at field (D:\DevPortal\homelede\homepublish-product\luci-app-homepublish\tests\p5-ordinary-browser.cjs:9:100)
+    at D:\DevPortal\homelede\homepublish-product\luci-app-homepublish\tests\p5-ordinary-browser.cjs:16:90 {
+  log: [ `  - waiting for locator('#modal_overlay [id$=".name"]')` ]
+}

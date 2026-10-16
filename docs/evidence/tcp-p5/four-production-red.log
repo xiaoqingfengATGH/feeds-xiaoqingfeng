@@ -1,0 +1,5 @@
+lua: /root/homepublish-p5/four-cli.lua:13: four protocol production plan: production stream/multiplex capability unavailable
+stack traceback:
+	[C]: in function 'assert'
+	/root/homepublish-p5/four-cli.lua:13: in main chunk
+	[C]: ?

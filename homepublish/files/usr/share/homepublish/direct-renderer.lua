@@ -22,7 +22,7 @@ local function render(plan,p)
   local bind=f=='ipv6' and '['..l.address..']' or l.address
   listens[#listens+1]='listen '..bind..':'..l.internal_port..' ssl'..(f=='ipv6' and ' ipv6only=on' or '')..';'
  end
- local out={'worker_processes 1;','daemon off;','pid nginx.pid;','error_log stderr error;','events { worker_connections 64; }','http {','access_log off;','client_body_temp_path body;','proxy_temp_path proxy;','fastcgi_temp_path fastcgi;','uwsgi_temp_path uwsgi;','scgi_temp_path scgi;'}
+ local out={'worker_processes 1;','daemon off;','pid nginx.pid;','error_log stderr error;','events { worker_connections 64; }','http {','access_log off;','client_body_temp_path body;','proxy_temp_path proxy;'}
  local default={};for _,l in ipairs(listens) do default[#default+1]=l:gsub(';$',' default_server;') end
  out[#out+1]='server { '..table.concat(default,' ')..' ssl_reject_handshake on; return 444; }'
  local hosts={};local snapshots={}

@@ -1,0 +1,72 @@
+[
+  {
+    "id": "cbi-json-services0-enabled",
+    "text": "参与发布",
+    "html": "<label class=\"cbi-value-title\" for=\"widget.cbid.json.services0.enabled\">参与发布</label><div class=\"cbi-value-field\"><div id=\"cbid.json.services0.enabled\" class=\"cbi-checkbox\" data-idref=\"78ad0f94\"><input id=\"cbf5c93686\" type=\"checkbox\" value=\"1\" checked=\"\" data-widget-id=\"widget.cbid.json.services0.enabled\" class=\"form-check-input\"><label for=\"cbf5c93686\"></label></div></div>"
+  },
+  {
+    "id": "cbi-json-services0-name",
+    "text": "名称",
+    "html": "<label class=\"cbi-value-title\" for=\"widget.cbid.json.services0.name\">名称</label><div class=\"cbi-value-field\"><div id=\"cbid.json.services0.name\" data-idref=\"3d6bba95\"><input id=\"widget.cbid.json.services0.name\" type=\"text\" class=\"cbi-input-text cbi-input-invalid form-control\" data-tooltip=\"请输入：不能为空\" data-tooltip-style=\"error\"></div></div>"
+  },
+  {
+    "id": "cbi-json-services0-type",
+    "text": "发布方式\nHTTPS 反向代理\nTLS 透传\n原生 SSH 共入口\n独立端口 TCP 转发",
+    "html": "<label class=\"cbi-value-title\" for=\"widget.cbid.json.services0.type\">发布方式</label><div class=\"cbi-value-field\"><div id=\"cbid.json.services0.type\" data-idref=\"7f07d56a\"><select id=\"widget.cbid.json.services0.type\" class=\"cbi-input-select form-select\"><option value=\"https_proxy\" selected=\"\">HTTPS 反向代理</option><option value=\"tls_passthrough\">TLS 透传</option><option value=\"ssh\">原生 SSH 共入口</option><option value=\"tcp_forward\">独立端口 TCP 转发</option></select></div></div>"
+  },
+  {
+    "id": "cbi-json-services0-hostname",
+    "text": "域名（精确匹配）",
+    "html": "<label class=\"cbi-value-title\" for=\"widget.cbid.json.services0.hostname\">域名（精确匹配）</label><div class=\"cbi-value-field\"><div id=\"cbid.json.services0.hostname\" data-idref=\"f87b0904\"><input id=\"widget.cbid.json.services0.hostname\" type=\"text\" class=\"cbi-input-text cbi-input-invalid form-control\" data-tooltip=\"请输入：不能为空\" data-tooltip-style=\"error\"></div></div>"
+  },
+  {
+    "id": "cbi-json-services0-listen_port",
+    "text": "独立 TCP 监听端口",
+    "html": "<label class=\"cbi-value-title\" for=\"widget.cbid.json.services0.listen_port\">独立 TCP 监听端口</label><div class=\"cbi-value-field\"><div id=\"cbid.json.services0.listen_port\" data-idref=\"d30ce1c2\"><input id=\"widget.cbid.json.services0.listen_port\" type=\"text\" class=\"cbi-input-text form-control\"></div></div>"
+  },
+  {
+    "id": "cbi-json-services0-certificate_mode",
+    "text": "HTTPS 证书模式\n继承入口默认证书\n独立指定",
+    "html": "<label class=\"cbi-value-title\" for=\"widget.cbid.json.services0.certificate_mode\">HTTPS 证书模式</label><div class=\"cbi-value-field\"><div id=\"cbid.json.services0.certificate_mode\" data-idref=\"55f07ec0\"><select id=\"widget.cbid.json.services0.certificate_mode\" class=\"cbi-input-select form-select\"><option value=\"inherit\" selected=\"\">继承入口默认证书</option><option value=\"override\">独立指定</option></select></div></div>"
+  },
+  {
+    "id": "cbi-json-services0-certificate_ref",
+    "text": "独立证书未选择home.iwonderful.top · ECChome.iwonderful.top · RSA",
+    "html": "<label class=\"cbi-value-title\" for=\"widget.cbid.json.services0.certificate_ref\">独立证书</label><div class=\"cbi-value-field\"><div id=\"cbid.json.services0.certificate_ref\" data-idref=\"a5d4a4e9\"><select id=\"widget.cbid.json.services0.certificate_ref\" class=\"cbi-input-select form-select\"><option value=\"\" selected=\"\">未选择</option><option value=\"acme:home.iwonderful.top_ecc\">home.iwonderful.top · ECC</option><option value=\"acme:home.iwonderful.top\">home.iwonderful.top · RSA</option></select></div></div>"
+  },
+  {
+    "id": "cbi-json-services0-backend_host",
+    "text": "后端地址\n填写主机名或裸 IP 地址，不含协议、路径及端口。",
+    "html": "<label class=\"cbi-value-title\" for=\"widget.cbid.json.services0.backend_host\">后端地址</label><div class=\"cbi-value-field\"><div id=\"cbid.json.services0.backend_host\" data-idref=\"af70be96\"><input id=\"widget.cbid.json.services0.backend_host\" type=\"text\" class=\"cbi-input-text cbi-input-invalid form-control\" data-tooltip=\"请输入：不能为空\" data-tooltip-style=\"error\"></div><div class=\"cbi-value-description\">填写主机名或裸 IP 地址，不含协议、路径及端口。</div></div>"
+  },
+  {
+    "id": "cbi-json-services0-backend_port",
+    "text": "后端端口",
+    "html": "<label class=\"cbi-value-title\" for=\"widget.cbid.json.services0.backend_port\">后端端口</label><div class=\"cbi-value-field\"><div id=\"cbid.json.services0.backend_port\" data-idref=\"b4f4ea1b\"><input id=\"widget.cbid.json.services0.backend_port\" type=\"text\" class=\"cbi-input-text cbi-input-invalid form-control\" data-tooltip=\"请输入：不能为空\" data-tooltip-style=\"error\"></div></div>"
+  },
+  {
+    "id": "cbi-json-services0-upstream_scheme",
+    "text": "后端协议\nHTTP\nHTTPS（系统 CA 验证）",
+    "html": "<label class=\"cbi-value-title\" for=\"widget.cbid.json.services0.upstream_scheme\">后端协议</label><div class=\"cbi-value-field\"><div id=\"cbid.json.services0.upstream_scheme\" data-idref=\"502c39b6\"><select id=\"widget.cbid.json.services0.upstream_scheme\" class=\"cbi-input-select form-select\"><option value=\"http\" selected=\"\">HTTP</option><option value=\"https\">HTTPS（系统 CA 验证）</option></select></div></div>"
+  },
+  {
+    "id": "cbi-json-services0-tls_server_name",
+    "text": "后端 HTTPS 校验域名始终验证证书，使用系统 CA；即使后端是 IP 也需填写校验域名。",
+    "html": "<label class=\"cbi-value-title\" for=\"widget.cbid.json.services0.tls_server_name\">后端 HTTPS 校验域名</label><div class=\"cbi-value-field\"><div id=\"cbid.json.services0.tls_server_name\" data-idref=\"8d338b4f\"><input id=\"widget.cbid.json.services0.tls_server_name\" type=\"text\" class=\"cbi-input-text form-control\"></div><div class=\"cbi-value-description\">始终验证证书，使用系统 CA；即使后端是 IP 也需填写校验域名。</div></div>"
+  },
+  {
+    "id": "cbi-json-services0-allowed_ranges",
+    "text": "允许连接的后端网段\n+\n限制本应用可以连接的后端地址范围，不是允许访问服务的客户端来源网段。",
+    "html": "<label class=\"cbi-value-title\" for=\"widget.cbid.json.services0.allowed_ranges\">允许连接的后端网段</label><div class=\"cbi-value-field\"><div id=\"cbid.json.services0.allowed_ranges\" class=\"cbi-dynlist\" data-idref=\"897b8279\"><div class=\"add-item control-group\"><input id=\"widget.cbid.json.services0.allowed_ranges\" type=\"text\" class=\"cbi-input-text form-control\"><div class=\"btn cbi-button cbi-button-add btn-success waves-effect waves-light\">+</div></div></div><div class=\"cbi-value-description\">限制本应用可以连接的后端地址范围，不是允许访问服务的客户端来源网段。</div></div>"
+  },
+  {
+    "id": "cbi-json-services0-authentication",
+    "text": "业务鉴权确认\n尚未确认\n已确认后端业务鉴权",
+    "html": "<label class=\"cbi-value-title\" for=\"widget.cbid.json.services0.authentication\">业务鉴权确认</label><div class=\"cbi-value-field\"><div id=\"cbid.json.services0.authentication\" data-idref=\"650bf3da\"><select id=\"widget.cbid.json.services0.authentication\" class=\"cbi-input-select form-select\"><option value=\"unconfirmed\" selected=\"\">尚未确认</option><option value=\"confirmed\">已确认后端业务鉴权</option></select></div></div>"
+  },
+  {
+    "id": "cbi-json-services0-management",
+    "text": "管理服务",
+    "html": "<label class=\"cbi-value-title\" for=\"widget.cbid.json.services0.management\">管理服务</label><div class=\"cbi-value-field\"><div id=\"cbid.json.services0.management\" class=\"cbi-checkbox\" data-idref=\"28cfb691\"><input id=\"cb9862bee4\" type=\"checkbox\" value=\"1\" data-widget-id=\"widget.cbid.json.services0.management\" class=\"form-check-input\"><label for=\"cb9862bee4\"></label></div></div>"
+  }
+]

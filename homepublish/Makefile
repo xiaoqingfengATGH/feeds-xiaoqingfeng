@@ -12,7 +12,7 @@ define Package/homepublish
   SECTION:=net
   CATEGORY:=Network
   TITLE:=Bounded independent HomePublish HTTPS service
-  DEPENDS:=+libgcc +liblua +lua +libuci-lua +nginx-ssl +luci-lib-nixio +curl +ca-bundle
+  DEPENDS:=+libgcc +liblua +lua +libuci-lua +libubus-lua +homepublish-engines +luci-lib-nixio +curl +ca-bundle +openssl-util
 endef
 
 define Package/homepublish/conffiles

@@ -1,0 +1,12 @@
+AssertionError [ERR_ASSERTION]: overview must render native JSONMap
+
+0 !== 1
+
+    at D:\DevPortal\homelede\homepublish-product\luci-app-homepublish\tests\p4-overview-browser.cjs:12:8 {
+  generatedMessage: false,
+  code: 'ERR_ASSERTION',
+  actual: 0,
+  expected: 1,
+  operator: 'strictEqual',
+  diff: 'simple'
+}

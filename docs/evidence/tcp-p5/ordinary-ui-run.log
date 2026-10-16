@@ -1,0 +1,21 @@
+Command failed: ubus call service delete {"name":"homepublish-p5-ordinary-held"} (Not found)
+Error: Command failed: ssh -o ProxyCommand=none -o ProxyJump=none -o IdentitiesOnly=yes -o BatchMode=yes -i D:/DevPortal/CloudHosts/HomePri.key -p 222 root@127.0.0.1 ubus call service delete "{\"name\":\"homepublish-p5-ordinary-held\"}"
+Command failed: ubus call service delete {"name":"homepublish-p5-ordinary-held"} (Not found)
+
+    at genericNodeError (node:internal/errors:985:15)
+    at wrappedFn (node:internal/errors:539:14)
+    at checkExecSyncError (node:child_process:925:11)
+    at execFileSync (node:child_process:961:15)
+    at ssh (D:\DevPortal\homelede\homepublish-product\luci-app-homepublish\tests\p5-ordinary-browser.cjs:3:24)
+    at D:\DevPortal\homelede\homepublish-product\luci-app-homepublish\tests\p5-ordinary-browser.cjs:23:204 {
+  status: 252,
+  signal: null,
+  output: [
+    null,
+    '',
+    'Command failed: ubus call service delete {"name":"homepublish-p5-ordinary-held"} (Not found)\n'
+  ],
+  pid: 26484,
+  stdout: '',
+  stderr: 'Command failed: ubus call service delete {"name":"homepublish-p5-ordinary-held"} (Not found)\n'
+}

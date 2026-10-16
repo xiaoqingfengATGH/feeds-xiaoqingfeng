@@ -1,0 +1,614 @@
+{
+  "boundary": "Actual installed LuCI loader and rpc.declare requests forwarded by test-only fixed SSH transport to root-private installed-module controller, NOT public rpcd/session ACL lifecycle acceptance",
+  "routes": [
+    "http://127.0.0.1:1081/cgi-bin/luci/admin/services/homepublish/overview",
+    "http://127.0.0.1:1081/cgi-bin/luci/admin/services/homepublish/services",
+    "http://127.0.0.1:1081/cgi-bin/luci/admin/services/homepublish/overview"
+  ],
+  "calls": [
+    {
+      "method": "status",
+      "responseError": null,
+      "saved_revision": 1,
+      "phase": "stopped"
+    },
+    {
+      "method": "status",
+      "responseError": null,
+      "saved_revision": 1,
+      "phase": "stopped"
+    },
+    {
+      "method": "status",
+      "responseError": null,
+      "saved_revision": 1,
+      "phase": "stopped"
+    },
+    {
+      "method": "start",
+      "responseError": null,
+      "saved_revision": 1,
+      "phase": "running"
+    },
+    {
+      "method": "status",
+      "responseError": null,
+      "saved_revision": 1,
+      "phase": "running"
+    },
+    {
+      "method": "status",
+      "responseError": null,
+      "saved_revision": 1,
+      "phase": "running"
+    },
+    {
+      "method": "status",
+      "responseError": null,
+      "saved_revision": 1,
+      "phase": "running"
+    },
+    {
+      "method": "certificates",
+      "responseError": null
+    },
+    {
+      "method": "validate",
+      "responseError": null
+    },
+    {
+      "method": "save",
+      "responseError": null,
+      "saved_revision": 2,
+      "phase": "running"
+    },
+    {
+      "method": "status",
+      "responseError": null,
+      "saved_revision": 2,
+      "phase": "running"
+    },
+    {
+      "method": "status",
+      "responseError": null,
+      "saved_revision": 2,
+      "phase": "running"
+    },
+    {
+      "method": "certificates",
+      "responseError": null
+    },
+    {
+      "method": "status",
+      "responseError": null,
+      "saved_revision": 2,
+      "phase": "running"
+    },
+    {
+      "method": "status",
+      "responseError": null,
+      "saved_revision": 2,
+      "phase": "running"
+    },
+    {
+      "method": "status",
+      "responseError": null,
+      "saved_revision": 2,
+      "phase": "running"
+    },
+    {
+      "method": "apply",
+      "responseError": null,
+      "saved_revision": 2,
+      "phase": "running"
+    },
+    {
+      "method": "status",
+      "responseError": null,
+      "saved_revision": 2,
+      "phase": "running"
+    },
+    {
+      "method": "status",
+      "responseError": null,
+      "saved_revision": 2,
+      "phase": "running"
+    },
+    {
+      "method": "status",
+      "responseError": null,
+      "saved_revision": 2,
+      "phase": "running"
+    },
+    {
+      "method": "stop",
+      "responseError": null,
+      "saved_revision": 2,
+      "phase": "stopped"
+    },
+    {
+      "method": "status",
+      "responseError": null,
+      "saved_revision": 2,
+      "phase": "stopped"
+    }
+  ],
+  "checks": [
+    "Cancel Start performs zero mutations",
+    "actual LuCI Start activates installed four-protocol generation; real HTTPS marker A",
+    "native services edit+Save revision2 retains four-protocol active revision1 and real marker A",
+    "Cancel Apply retains generation A",
+    "actual LuCI Apply activates revision2/new four-protocol generation and real marker B",
+    "four real TLS/HTTPS/SSH/raw-TCP clients held before Stop",
+    "actual LuCI Stop closes all four held sessions and listeners; owned snapshots absent; manual latch persisted"
+  ],
+  "start": {
+    "generation": 1,
+    "active_revision": 1
+  },
+  "saved": {
+    "desired_state": {
+      "state": "enabled",
+      "manual_stop_latch": false
+    },
+    "saved_revision": 2,
+    "attempted_revision": 1,
+    "pending_config": {
+      "apply_required": true,
+      "saved_revision": 2
+    },
+    "capabilities": {
+      "stop": true,
+      "start": true,
+      "preflight": true,
+      "network_inventory": true,
+      "apply": true
+    },
+    "approval": {
+      "revision": 1
+    },
+    "runtime": {
+      "cleanup": "unknown",
+      "services": {
+        "ssh": {
+          "ready": true,
+          "generation": 1
+        },
+        "web": {
+          "ready": true,
+          "hostname": "home.iwonderful.top",
+          "generation": 1
+        },
+        "tls": {
+          "ready": true,
+          "hostname": "tls.fixture.home",
+          "generation": 1
+        },
+        "raw": {
+          "ready": true,
+          "generation": 1
+        }
+      },
+      "phase": "running",
+      "attempt_count": 0,
+      "clock_at": 1792076318,
+      "boot_id": "3d88e3f4-7a3a-4cda-a480-0ffcb4751a39",
+      "active_verified": true,
+      "clock_trusted": true,
+      "generation": 1,
+      "stage": "ready",
+      "running_since": 1792076319
+    },
+    "attempted_config": {
+      "access_profile": {
+        "listeners": [
+          {
+            "listener_id": "v6",
+            "network": "lan",
+            "address": "fd89:878e:a47f:0:0:0:0:1",
+            "family": "ipv6",
+            "port": 49543
+          }
+        ]
+      },
+      "services": [
+        {
+          "enabled": true,
+          "type": "tls_passthrough",
+          "name": "tls",
+          "hostname": "tls.fixture.home",
+          "service_id": "tls",
+          "backend": {
+            "host": "127.0.0.1",
+            "allowed_ranges": [
+              "127.0.0.0/8"
+            ],
+            "addressFamily": "ipv4",
+            "port": 49546
+          },
+          "authentication_review": {
+            "management": false,
+            "authentication": "confirmed"
+          }
+        },
+        {
+          "enabled": true,
+          "type": "tcp_forward",
+          "name": "raw",
+          "service_id": "raw",
+          "listen_port": 49550,
+          "backend": {
+            "host": "127.0.0.1",
+            "allowed_ranges": [
+              "127.0.0.0/8"
+            ],
+            "addressFamily": "ipv4",
+            "port": 49546
+          },
+          "authentication_review": {
+            "management": false,
+            "authentication": "confirmed"
+          }
+        },
+        {
+          "service_id": "web",
+          "type": "https_proxy",
+          "certificate_mode": "inherit",
+          "name": "web",
+          "hostname": "home.iwonderful.top",
+          "upstream_scheme": "http",
+          "enabled": true,
+          "backend": {
+            "host": "127.0.0.1",
+            "allowed_ranges": [
+              "127.0.0.0/8"
+            ],
+            "addressFamily": "ipv4",
+            "port": 49545
+          },
+          "authentication_review": {
+            "management": false,
+            "authentication": "confirmed"
+          }
+        },
+        {
+          "enabled": true,
+          "type": "ssh",
+          "name": "ssh",
+          "service_id": "ssh",
+          "backend": {
+            "host": "127.0.0.1",
+            "allowed_ranges": [
+              "127.0.0.0/8"
+            ],
+            "addressFamily": "ipv4",
+            "port": 49547
+          },
+          "authentication_review": {
+            "management": false,
+            "authentication": "confirmed"
+          }
+        }
+      ],
+      "default_certificate_ref": "acme:home_rsa",
+      "publication_policy": {
+        "mode": "continuous",
+        "boot_restore": false
+      },
+      "schema_version": 2
+    },
+    "active_config": {
+      "access_profile": {
+        "listeners": [
+          {
+            "listener_id": "v6",
+            "network": "lan",
+            "address": "fd89:878e:a47f:0:0:0:0:1",
+            "family": "ipv6",
+            "port": 49543
+          }
+        ]
+      },
+      "services": [
+        {
+          "enabled": true,
+          "type": "tls_passthrough",
+          "name": "tls",
+          "hostname": "tls.fixture.home",
+          "service_id": "tls",
+          "backend": {
+            "host": "127.0.0.1",
+            "allowed_ranges": [
+              "127.0.0.0/8"
+            ],
+            "addressFamily": "ipv4",
+            "port": 49546
+          },
+          "authentication_review": {
+            "management": false,
+            "authentication": "confirmed"
+          }
+        },
+        {
+          "enabled": true,
+          "type": "tcp_forward",
+          "name": "raw",
+          "service_id": "raw",
+          "listen_port": 49550,
+          "backend": {
+            "host": "127.0.0.1",
+            "allowed_ranges": [
+              "127.0.0.0/8"
+            ],
+            "addressFamily": "ipv4",
+            "port": 49546
+          },
+          "authentication_review": {
+            "management": false,
+            "authentication": "confirmed"
+          }
+        },
+        {
+          "service_id": "web",
+          "type": "https_proxy",
+          "certificate_mode": "inherit",
+          "name": "web",
+          "hostname": "home.iwonderful.top",
+          "upstream_scheme": "http",
+          "enabled": true,
+          "backend": {
+            "host": "127.0.0.1",
+            "allowed_ranges": [
+              "127.0.0.0/8"
+            ],
+            "addressFamily": "ipv4",
+            "port": 49545
+          },
+          "authentication_review": {
+            "management": false,
+            "authentication": "confirmed"
+          }
+        },
+        {
+          "enabled": true,
+          "type": "ssh",
+          "name": "ssh",
+          "service_id": "ssh",
+          "backend": {
+            "host": "127.0.0.1",
+            "allowed_ranges": [
+              "127.0.0.0/8"
+            ],
+            "addressFamily": "ipv4",
+            "port": 49547
+          },
+          "authentication_review": {
+            "management": false,
+            "authentication": "confirmed"
+          }
+        }
+      ],
+      "default_certificate_ref": "acme:home_rsa",
+      "publication_policy": {
+        "mode": "continuous",
+        "boot_restore": false
+      },
+      "schema_version": 2
+    },
+    "schema_versions": [
+      1,
+      2
+    ],
+    "saved_config": {
+      "access_profile": {
+        "listeners": [
+          {
+            "listener_id": "v6",
+            "network": "lan",
+            "address": "fd89:878e:a47f:0:0:0:0:1",
+            "family": "ipv6",
+            "port": 49543
+          }
+        ]
+      },
+      "services": [
+        {
+          "enabled": true,
+          "type": "tls_passthrough",
+          "name": "tls",
+          "hostname": "tls.fixture.home",
+          "service_id": "tls",
+          "backend": {
+            "host": "127.0.0.1",
+            "allowed_ranges": [
+              "127.0.0.0/8"
+            ],
+            "addressFamily": "ipv4",
+            "port": 49546
+          },
+          "authentication_review": {
+            "management": false,
+            "authentication": "confirmed"
+          }
+        },
+        {
+          "enabled": true,
+          "type": "tcp_forward",
+          "name": "raw",
+          "service_id": "raw",
+          "listen_port": 49550,
+          "backend": {
+            "host": "127.0.0.1",
+            "allowed_ranges": [
+              "127.0.0.0/8"
+            ],
+            "addressFamily": "ipv4",
+            "port": 49546
+          },
+          "authentication_review": {
+            "management": false,
+            "authentication": "confirmed"
+          }
+        },
+        {
+          "service_id": "web",
+          "type": "https_proxy",
+          "certificate_mode": "inherit",
+          "name": "web",
+          "hostname": "home.iwonderful.top",
+          "upstream_scheme": "http",
+          "enabled": true,
+          "backend": {
+            "host": "127.0.0.1",
+            "allowed_ranges": [
+              "127.0.0.0/8"
+            ],
+            "addressFamily": "ipv4",
+            "port": 49556
+          },
+          "authentication_review": {
+            "management": false,
+            "authentication": "confirmed"
+          }
+        },
+        {
+          "enabled": true,
+          "type": "ssh",
+          "name": "ssh",
+          "service_id": "ssh",
+          "backend": {
+            "host": "127.0.0.1",
+            "allowed_ranges": [
+              "127.0.0.0/8"
+            ],
+            "addressFamily": "ipv4",
+            "port": 49547
+          },
+          "authentication_review": {
+            "management": false,
+            "authentication": "confirmed"
+          }
+        }
+      ],
+      "default_certificate_ref": "acme:home_rsa",
+      "publication_policy": {
+        "mode": "continuous",
+        "boot_restore": false
+      },
+      "schema_version": 2
+    },
+    "active_revision": 1,
+    "state_version": 1,
+    "intent_revision": 1
+  },
+  "apply": {
+    "generation": 2,
+    "active_revision": 2
+  },
+  "heldBefore": {
+    "homepublish-p3-clients": {
+      "instances": {
+        "held49543": {
+          "running": true,
+          "pid": 5802,
+          "command": [
+            "/bin/sh",
+            "-c",
+            "exec openssl s_client -connect [::1]:49543 -servername tls.fixture.home -CAfile /tmp/homepublish-tcp-p3/controller-fixture/tls.pem -verify_return_error -quiet -ign_eof >/tmp/homepublish-tcp-p3/controller-fixture/held-49543.log 2>&1"
+          ],
+          "term_timeout": 5
+        },
+        "held49550": {
+          "running": true,
+          "pid": 5803,
+          "command": [
+            "/bin/sh",
+            "-c",
+            "exec openssl s_client -connect [::1]:49550 -servername tls.fixture.home -CAfile /tmp/homepublish-tcp-p3/controller-fixture/tls.pem -verify_return_error -quiet -ign_eof >/tmp/homepublish-tcp-p3/controller-fixture/held-49550.log 2>&1"
+          ],
+          "term_timeout": 5
+        },
+        "heldssh": {
+          "running": true,
+          "pid": 5805,
+          "command": [
+            "/usr/bin/dbclient",
+            "-y",
+            "-y",
+            "-N",
+            "-i",
+            "/tmp/homepublish-tcp-p3/controller-fixture/ssh-client.key",
+            "-p",
+            "49543",
+            "root@::1"
+          ],
+          "term_timeout": 5
+        },
+        "heldweb": {
+          "running": true,
+          "pid": 5804,
+          "command": [
+            "/bin/sh",
+            "-c",
+            "exec openssl s_client -connect [::1]:49543 -servername home.iwonderful.top -verify_hostname home.iwonderful.top -CAfile /etc/ssl/certs/ca-certificates.crt -verify_return_error -quiet -ign_eof >/tmp/homepublish-tcp-p3/controller-fixture/held-web.log 2>&1"
+          ],
+          "term_timeout": 5
+        }
+      }
+    }
+  },
+  "connectionsBefore": "Active Internet connections (w/o servers)\nProto Recv-Q Send-Q Local Address           Foreign Address         State       \ntcp        0      0 192.168.1.2:22          192.168.1.2:52472       TIME_WAIT   \ntcp        0      0 192.168.1.2:22          192.168.1.2:46032       TIME_WAIT   \ntcp        0      0 192.168.1.2:22          192.168.1.2:52466       TIME_WAIT   \ntcp        0      0 192.168.1.2:80          192.168.1.2:55010       ESTABLISHED \ntcp        0      0 192.168.1.2:38176       192.168.1.2:22          TIME_WAIT   \ntcp        0      0 192.168.1.2:38222       192.168.1.2:22          TIME_WAIT   \ntcp        0      0 192.168.1.2:38266       192.168.1.2:22          TIME_WAIT   \ntcp        0      0 192.168.1.2:38318       192.168.1.2:22          TIME_WAIT   \ntcp        0      0 192.168.1.2:38352       192.168.1.2:22          TIME_WAIT   \ntcp        0      0 192.168.1.2:38370       192.168.1.2:22          TIME_WAIT   \ntcp        0      0 192.168.1.2:38406       192.168.1.2:22          TIME_WAIT   \ntcp        0      0 192.168.1.2:38418       192.168.1.2:22          TIME_WAIT   \ntcp        0      0 192.168.1.2:38428       192.168.1.2:22          TIME_WAIT   \ntcp        0      0 192.168.1.2:38440       192.168.1.2:22          TIME_WAIT   \ntcp        0      0 192.168.1.2:38462       192.168.1.2:22          ESTABLISHED \ntcp        0      0 192.168.1.2:22          192.168.1.2:33428       TIME_WAIT   \ntcp        0      0 192.168.1.2:22          192.168.1.2:38310       TIME_WAIT   \ntcp        0      0 192.168.1.2:22          192.168.1.2:46034       TIME_WAIT   \ntcp        0      0 192.168.1.2:22          192.168.1.2:46142       TIME_WAIT   \ntcp        0      0 127.0.0.1:44720         127.0.0.1:49546         TIME_WAIT   \ntcp        0      0 127.0.0.1:44722         127.0.0.1:49546         TIME_WAIT   \ntcp        0      0 127.0.0.1:44728         127.0.0.1:49546         ESTABLISHED \ntcp        0      0 127.0.0.1:44730         127.0.0.1:49546         ESTABLISHED \ntcp        0      0 192.168.1.2:22          192.168.1.2:38296       TIME_WAIT   \ntcp        0      0 192.168.1.2:22          192.168.1.2:38338       TIME_WAIT   \ntcp        0      0 192.168.1.2:22          192.168.1.2:58130       TIME_WAIT   \ntcp        0      0 192.168.1.2:80          192.168.1.2:54988       ESTABLISHED \ntcp        0      0 192.168.1.2:80          192.168.1.2:54984       ESTABLISHED \ntcp        0      0 192.168.1.2:22          192.168.1.2:59682       TIME_WAIT   \ntcp        0      0 192.168.1.2:22          192.168.1.2:42674       TIME_WAIT   \ntcp        0      0 192.168.1.2:22          192.168.1.2:42724       TIME_WAIT   \ntcp        0      0 192.168.1.2:54984       192.168.1.2:80          ESTABLISHED \ntcp        0      0 192.168.1.2:54988       192.168.1.2:80          ESTABLISHED \ntcp        0      0 192.168.1.2:55002       192.168.1.2:80          ESTABLISHED \ntcp        0      0 192.168.1.2:55010       192.168.1.2:80          ESTABLISHED \ntcp        0      0 192.168.1.2:55012       192.168.1.2:80          ESTABLISHED \ntcp        0      0 192.168.1.2:55022       192.168.1.2:80          ESTABLISHED \ntcp        0      0 192.168.1.2:55030       192.168.1.2:80          ESTABLISHED \ntcp        0      0 192.168.1.2:22          192.168.1.2:52480       TIME_WAIT   \ntcp        0      0 192.168.1.2:22          192.168.1.2:59608       TIME_WAIT   \ntcp        0      0 127.0.0.1:49544         127.0.0.1:49548         TIME_WAIT   \ntcp        0      0 192.168.1.2:22          192.168.1.2:33348       TIME_WAIT   \ntcp        0      0 127.0.0.1:49545         127.0.0.1:44872         TIME_WAIT   \ntcp        0      0 192.168.1.2:22          192.168.1.2:38234       TIME_WAIT   \ntcp        0      0 192.168.1.2:22          192.168.1.2:59812       TIME_WAIT   \ntcp        0      0 192.168.1.2:22          192.168.1.2:46208       TIME_WAIT   \ntcp        0      0 192.168.1.2:22          192.168.1.2:42742       TIME_WAIT   \ntcp        0      0 192.168.1.2:22          192.168.1.2:46200       TIME_WAIT   \ntcp        0      0 127.0.0.1:49546         127.0.0.1:44714         TIME_WAIT   \ntcp        0      0 127.0.0.1:59494         127.0.0.1:49556         TIME_WAIT   \ntcp        0      0 192.168.1.2:22          192.168.1.2:46236       TIME_WAIT   \ntcp        0      0 127.0.0.1:49568         127.0.0.1:49544         ESTABLISHED \ntcp        0      0 192.168.1.2:22          192.168.1.2:38208       TIME_WAIT   \ntcp        0      0 192.168.1.2:22          192.168.1.2:52534       TIME_WAIT   \ntcp        0      0 192.168.1.2:22          192.168.1.2:46070       TIME_WAIT   \ntcp        0      0 127.0.0.1:49546         127.0.0.1:36144         TIME_WAIT   \ntcp        0      0 192.168.1.2:42660       192.168.1.2:22          TIME_WAIT   \ntcp        0      0 192.168.1.2:42680       192.168.1.2:22          TIME_WAIT   \ntcp        0      0 192.168.1.2:42726       192.168.1.2:22          TIME_WAIT   \ntcp        0      0 192.168.1.2:42746       192.168.1.2:22          TIME_WAIT   \ntcp        0      0 192.168.1.2:42774       192.168.1.2:22          TIME_WAIT   \ntcp        0      0 192.168.1.2:22          192.168.1.2:59784       TIME_WAIT   \ntcp        0      0 192.168.1.2:22          192.168.1.2:38320       TIME_WAIT   \ntcp        0      0 192.168.1.2:22          192.168.1.2:42644       TIME_WAIT   \ntcp        0      0 127.0.0.1:47256         127.0.0.1:49547         TIME_WAIT   \ntcp        0      0 192.168.1.2:59634       192.168.1.2:22          TIME_WAIT   \ntcp        0      0 192.168.1.2:59650       192.168.1.2:22          TIME_WAIT   \ntcp        0      0 192.168.1.2:22          192.168.1.2:59642       TIME_WAIT   \ntcp        0      0 192.168.1.2:59658       192.168.1.2:22          TIME_WAIT   \ntcp        0      0 192.168.1.2:22          192.168.1.2:38400       TIME_WAIT   \ntcp        0      0 192.168.1.2:59666       192.168.1.2:22          TIME_WAIT   \ntcp        0      0 127.0.0.1:49546         127.0.0.1:44728         ESTABLISHED \ntcp        0      0 192.168.1.2:59684       192.168.1.2:22          TIME_WAIT   \ntcp        0      0 192.168.1.2:59686       192.168.1.2:22          TIME_WAIT   \ntcp        0      0 192.168.1.2:22          192.168.1.2:52510       TIME_WAIT   \ntcp        0      0 192.168.1.2:22          192.168.1.2:45984       TIME_WAIT   \ntcp        0      0 192.168.1.2:59702       192.168.1.2:22          TIME_WAIT   \ntcp        0      0 192.168.1.2:59738       192.168.1.2:22          TIME_WAIT   \ntcp        0      0 192.168.1.2:59766       192.168.1.2:22          TIME_WAIT   \ntcp        0      0 192.168.1.2:59782       192.168.1.2:22          TIME_WAIT   \ntcp        0      0 192.168.1.2:59798       192.168.1.2:22          TIME_WAIT   \ntcp        0      0 192.168.1.2:59818       192.168.1.2:22          TIME_WAIT   \ntcp        0      0 192.168.1.2:22          192.168.1.2:59752       TIME_WAIT   \ntcp        0      0 192.168.1.2:22          192.168.1.2:52558       TIME_WAIT   \ntcp        0      0 192.168.1.2:22          192.168.1.2:52566       TIME_WAIT   \ntcp        0      0 192.168.1.2:22          192.168.1.2:59618       TIME_WAIT   \ntcp        0      0 192.168.1.2:22          192.168.1.2:42764       TIME_WAIT   \ntcp        0      0 127.0.0.1:49544         127.0.0.1:49538         TIME_WAIT   \ntcp        0      0 192.168.1.2:22          192.168.1.2:59614       TIME_WAIT   \ntcp        0      0 192.168.1.2:22          192.168.1.2:38274       TIME_WAIT   \ntcp        0      0 192.168.1.2:22          192.168.1.2:38250       TIME_WAIT   \ntcp        0      0 192.168.1.2:22          192.168.1.2:33392       TIME_WAIT   \ntcp        0      0 192.168.1.2:22          192.168.1.2:38312       TIME_WAIT   \ntcp        0      0 192.168.1.2:22          192.168.1.2:59764       TIME_WAIT   \ntcp        0      0 192.168.1.2:22          192.168.1.2:52490       TIME_WAIT   \ntcp        0      0 192.168.1.2:22          192.168.1.2:46270       TIME_WAIT   \ntcp        0      0 192.168.1.2:22          192.168.1.2:46298       TIME_WAIT   \ntcp        0      0 192.168.1.2:22          192.168.1.2:33378       TIME_WAIT   \ntcp        0      0 192.168.1.2:80          192.168.1.2:55002       ESTABLISHED \ntcp        0      0 192.168.1.2:22          192.168.1.2:46098       TIME_WAIT   \ntcp        0      0 192.168.1.2:22          192.168.1.2:38194       TIME_WAIT   \ntcp        0      0 192.168.1.2:80          192.168.1.2:55022       ESTABLISHED \ntcp        0      0 192.168.1.2:22          192.168.1.2:38404       TIME_WAIT   \ntcp        0      0 192.168.1.2:22          192.168.1.2:38460       TIME_WAIT   \ntcp        0      0 192.168.1.2:22          192.168.1.2:38224       TIME_WAIT   \ntcp        0      0 192.168.1.2:22          192.168.1.2:46256       TIME_WAIT   \ntcp        0      0 192.168.1.2:80          192.168.1.2:55012       ESTABLISHED \ntcp        0      0 192.168.1.2:46000       192.168.1.2:22          TIME_WAIT   \ntcp        0      0 192.168.1.2:46016       192.168.1.2:22          TIME_WAIT   \ntcp        0      0 192.168.1.2:46046       192.168.1.2:22          TIME_WAIT   \ntcp        0      0 192.168.1.2:46080       192.168.1.2:22          TIME_WAIT   \ntcp        0      0 192.168.1.2:46090       192.168.1.2:22          TIME_WAIT   \ntcp        0      0 192.168.1.2:46108       192.168.1.2:22          TIME_WAIT   \ntcp        0      0 192.168.1.2:46132       192.168.1.2:22          TIME_WAIT   \ntcp        0      0 192.168.1.2:46166       192.168.1.2:22          TIME_WAIT   \ntcp        0      0 192.168.1.2:22          192.168.1.2:59592       TIME_WAIT   \ntcp        0      0 192.168.1.2:46182       192.168.1.2:22          TIME_WAIT   \ntcp        0      0 192.168.1.2:46198       192.168.1.2:22          TIME_WAIT   \ntcp        0      0 192.168.1.2:46224       192.168.1.2:22          TIME_WAIT   \ntcp        0      0 192.168.1.2:22          192.168.1.2:42708       TIME_WAIT   \ntcp        0      0 192.168.1.2:22          192.168.1.2:33416       TIME_WAIT   \ntcp        0      0 192.168.1.2:22          192.168.1.2:46144       TIME_WAIT   \ntcp        0      0 127.0.0.1:49545         127.0.0.1:44870         TIME_WAIT   \ntcp        0      0 127.0.0.1:36158         127.0.0.1:49546         TIME_WAIT   \ntcp        0      0 127.0.0.1:36168         127.0.0.1:49546         TIME_WAIT   \ntcp        0      0 192.168.1.2:22          192.168.1.2:52524       TIME_WAIT   \ntcp        0      0 127.0.0.1:49545         127.0.0.1:57074         TIME_WAIT   \ntcp        0      0 192.168.1.2:22          192.168.1.2:38180       TIME_WAIT   \ntcp        0      0 127.0.0.1:49547         127.0.0.1:35678         ESTABLISHED \ntcp        0      0 192.168.1.2:22          192.168.1.2:38384       TIME_WAIT   \ntcp        0      0 127.0.0.1:35672         127.0.0.1:49547         TIME_WAIT   \ntcp        0      0 127.0.0.1:35678         127.0.0.1:49547         ESTABLISHED \ntcp        0      0 127.0.0.1:49544         127.0.0.1:45138         TIME_WAIT   \ntcp        0      0 192.168.1.2:22          192.168.1.2:42692       TIME_WAIT   \ntcp        0      0 192.168.1.2:22          192.168.1.2:38286       TIME_WAIT   \ntcp        0      0 192.168.1.2:22          192.168.1.2:46156       TIME_WAIT   \ntcp        0      0 192.168.1.2:22          192.168.1.2:59774       TIME_WAIT   \ntcp        0      0 192.168.1.2:22          192.168.1.2:52546       TIME_WAIT   \ntcp        0      0 192.168.1.2:22          192.168.1.2:38328       TIME_WAIT   \ntcp        0      0 192.168.1.2:22          192.168.1.2:46112       TIME_WAIT   \ntcp        0      0 192.168.1.2:33388       192.168.1.2:22          TIME_WAIT   \ntcp        0      0 192.168.1.2:33406       192.168.1.2:22          TIME_WAIT   \ntcp        0      0 192.168.1.2:33422       192.168.1.2:22          TIME_WAIT   \ntcp        0      0 192.168.1.2:22          192.168.1.2:59804       TIME_WAIT   \ntcp        0      0 192.168.1.2:22          192.168.1.2:33438       TIME_WAIT   \ntcp        0      0 192.168.1.2:22          192.168.1.2:46116       TIME_WAIT   \ntcp        0      0 127.0.0.1:49546         127.0.0.1:44730         ESTABLISHED \ntcp        0      0 192.168.1.2:22          192.168.1.2:38298       TIME_WAIT   \ntcp        0      0 127.0.0.1:49544         127.0.0.1:49552         TIME_WAIT   \ntcp        0      0 192.168.1.2:22          192.168.1.2:52498       TIME_WAIT   \ntcp        0      0 192.168.1.2:22          192.168.1.2:59828       TIME_WAIT   \ntcp        0      0 192.168.1.2:22          47.93.22.202:6955       ESTABLISHED \ntcp        0      0 192.168.1.2:22          192.168.1.2:46296       TIME_WAIT   \ntcp        0      0 192.168.1.2:22          192.168.1.2:46058       TIME_WAIT   \ntcp        0      0 192.168.1.2:22          192.168.1.2:38288       TIME_WAIT   \ntcp        0      0 192.168.1.2:22          192.168.1.2:42758       TIME_WAIT   \ntcp        0      0 192.168.1.2:22          192.168.1.2:38358       TIME_WAIT   \ntcp        0      0 192.168.1.2:22          192.168.1.2:59710       TIME_WAIT   \ntcp        0      0 127.0.0.1:49556         127.0.0.1:59488         TIME_WAIT   \ntcp        0      0 192.168.1.2:22          192.168.1.2:59708       TIME_WAIT   \ntcp        0      0 192.168.1.2:22          192.168.1.2:46284       TIME_WAIT   \ntcp        0      0 192.168.1.2:80          192.168.1.2:55030       ESTABLISHED \ntcp        0      0 127.0.0.1:49544         127.0.0.1:49568         ESTABLISHED \ntcp        0  12332 192.168.1.2:22          123.118.214.120:22527   ESTABLISHED \ntcp        0      0 192.168.1.2:22          192.168.1.2:33324       TIME_WAIT   \ntcp        0      0 192.168.1.2:52550       192.168.1.2:22          TIME_WAIT   \ntcp        0      0 192.168.1.2:22          192.168.1.2:46252       TIME_WAIT   \ntcp        0      0 192.168.1.2:22          192.168.1.2:38216       TIME_WAIT   \ntcp        0      0 192.168.1.2:22          192.168.1.2:33362       TIME_WAIT   \ntcp        0      0 192.168.1.2:22          192.168.1.2:38462       ESTABLISHED \ntcp        0      0 192.168.1.2:22          192.168.1.2:33336       TIME_WAIT   \ntcp        0      0 192.168.1.2:22          192.168.1.2:46222       TIME_WAIT   \ntcp        0      0 192.168.1.2:22          192.168.1.2:59722       TIME_WAIT   \ntcp        0      0 127.0.0.1:45130         127.0.0.1:49544         TIME_WAIT   \ntcp        0      0 ::1:55382               ::1:49550               TIME_WAIT   \ntcp        0      0 ::1:55384               ::1:49550               ESTABLISHED \ntcp        0      0 ::1:49543               ::1:46524               ESTABLISHED \ntcp        0      0 ::1:46486               ::1:49543               TIME_WAIT   \ntcp        0      0 ::1:46518               ::1:49543               ESTABLISHED \ntcp        0      0 ::1:46524               ::1:49543               ESTABLISHED \ntcp        0      0 ::1:46538               ::1:49543               ESTABLISHED \ntcp        0      0 ::1:49543               ::1:46538               ESTABLISHED \ntcp        0      0 ::1:49543               ::1:46508               TIME_WAIT   \ntcp        0      0 ::1:35326               ::1:49543               TIME_WAIT   \ntcp        0      0 ::1:49543               ::1:46518               ESTABLISHED \ntcp        0      0 ::1:49543               ::1:46490               TIME_WAIT   \ntcp        0      0 ::1:49543               ::1:35320               TIME_WAIT   \ntcp        0      0 ::1:49550               ::1:55384               ESTABLISHED \ntcp        0      0 ::1:49543               ::1:35344               TIME_WAIT   \ntcp        0      0 ::1:36050               ::1:49550               TIME_WAIT   \ntcp        0      0 ::1:49543               ::1:46470               TIME_WAIT   \n",
+  "heldAfter": {
+    "homepublish-p3-clients": {
+      "instances": {
+        "held49543": {
+          "running": false,
+          "command": [
+            "/bin/sh",
+            "-c",
+            "exec openssl s_client -connect [::1]:49543 -servername tls.fixture.home -CAfile /tmp/homepublish-tcp-p3/controller-fixture/tls.pem -verify_return_error -quiet -ign_eof >/tmp/homepublish-tcp-p3/controller-fixture/held-49543.log 2>&1"
+          ],
+          "term_timeout": 5,
+          "exit_code": 1
+        },
+        "held49550": {
+          "running": false,
+          "command": [
+            "/bin/sh",
+            "-c",
+            "exec openssl s_client -connect [::1]:49550 -servername tls.fixture.home -CAfile /tmp/homepublish-tcp-p3/controller-fixture/tls.pem -verify_return_error -quiet -ign_eof >/tmp/homepublish-tcp-p3/controller-fixture/held-49550.log 2>&1"
+          ],
+          "term_timeout": 5,
+          "exit_code": 1
+        },
+        "heldssh": {
+          "running": false,
+          "command": [
+            "/usr/bin/dbclient",
+            "-y",
+            "-y",
+            "-N",
+            "-i",
+            "/tmp/homepublish-tcp-p3/controller-fixture/ssh-client.key",
+            "-p",
+            "49543",
+            "root@::1"
+          ],
+          "term_timeout": 5,
+          "exit_code": 1
+        },
+        "heldweb": {
+          "running": false,
+          "command": [
+            "/bin/sh",
+            "-c",
+            "exec openssl s_client -connect [::1]:49543 -servername home.iwonderful.top -verify_hostname home.iwonderful.top -CAfile /etc/ssl/certs/ca-certificates.crt -verify_return_error -quiet -ign_eof >/tmp/homepublish-tcp-p3/controller-fixture/held-web.log 2>&1"
+          ],
+          "term_timeout": 5,
+          "exit_code": 1
+        }
+      }
+    }
+  },
+  "result": "P4_UI_REAL_PRIVATE_RPC_LIFECYCLE_GREEN"
+}

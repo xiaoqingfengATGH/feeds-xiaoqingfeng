@@ -1,0 +1,470 @@
+{
+  "states": [
+    {
+      "family": "ipv4",
+      "network": "lan",
+      "value": "192.168.1.2",
+      "disabled": false,
+      "invalid": false,
+      "options": [
+        {
+          "value": "192.168.1.2",
+          "text": "192.168.1.2",
+          "disabled": false
+        }
+      ],
+      "zone": "lan",
+      "url": "http://127.0.0.1:1081/cgi-bin/luci/admin/services/homepublish/entry"
+    },
+    {
+      "family": "ipv4",
+      "network": "docker",
+      "value": "192.168.1.2",
+      "disabled": false,
+      "invalid": true,
+      "options": [
+        {
+          "value": "192.168.1.2",
+          "text": "192.168.1.2（已不可用，请重新选择）",
+          "disabled": false
+        }
+      ],
+      "zone": "lan",
+      "url": "http://127.0.0.1:1081/cgi-bin/luci/admin/services/homepublish/entry"
+    },
+    {
+      "family": "ipv4",
+      "network": "loopback",
+      "value": "192.168.1.2",
+      "disabled": false,
+      "invalid": true,
+      "options": [
+        {
+          "value": "192.168.1.2",
+          "text": "192.168.1.2（已不可用，请重新选择）",
+          "disabled": false
+        }
+      ],
+      "zone": "lan",
+      "url": "http://127.0.0.1:1081/cgi-bin/luci/admin/services/homepublish/entry"
+    },
+    {
+      "family": "ipv4",
+      "network": "lan",
+      "value": "192.168.1.2",
+      "disabled": false,
+      "invalid": false,
+      "options": [
+        {
+          "value": "192.168.1.2",
+          "text": "192.168.1.2",
+          "disabled": false
+        }
+      ],
+      "zone": "lan",
+      "url": "http://127.0.0.1:1081/cgi-bin/luci/admin/services/homepublish/entry"
+    },
+    {
+      "family": "ipv6",
+      "network": "lan",
+      "value": "fd89:878e:a47f::1",
+      "disabled": false,
+      "invalid": false,
+      "options": [
+        {
+          "value": "fd89:878e:a47f::1",
+          "text": "fd89:878e:a47f::1 · 内网 IPv6",
+          "disabled": false
+        }
+      ],
+      "zone": "lan",
+      "url": "http://127.0.0.1:1081/cgi-bin/luci/admin/services/homepublish/entry"
+    },
+    {
+      "family": "ipv6",
+      "network": "docker",
+      "value": "fd89:878e:a47f::1",
+      "disabled": false,
+      "invalid": true,
+      "options": [
+        {
+          "value": "fd89:878e:a47f::1",
+          "text": "fd89:878e:a47f::1（已不可用，请重新选择）",
+          "disabled": false
+        }
+      ],
+      "zone": "lan",
+      "url": "http://127.0.0.1:1081/cgi-bin/luci/admin/services/homepublish/entry"
+    },
+    {
+      "family": "ipv6",
+      "network": "loopback",
+      "value": "fd89:878e:a47f::1",
+      "disabled": false,
+      "invalid": true,
+      "options": [
+        {
+          "value": "fd89:878e:a47f::1",
+          "text": "fd89:878e:a47f::1（已不可用，请重新选择）",
+          "disabled": false
+        }
+      ],
+      "zone": "lan",
+      "url": "http://127.0.0.1:1081/cgi-bin/luci/admin/services/homepublish/entry"
+    },
+    {
+      "family": "ipv6",
+      "network": "lan",
+      "value": "fd89:878e:a47f::1",
+      "disabled": false,
+      "invalid": false,
+      "options": [
+        {
+          "value": "fd89:878e:a47f::1",
+          "text": "fd89:878e:a47f::1 · 内网 IPv6",
+          "disabled": false
+        }
+      ],
+      "zone": "lan",
+      "url": "http://127.0.0.1:1081/cgi-bin/luci/admin/services/homepublish/entry"
+    }
+  ],
+  "errors": [
+    [
+      "ipv4",
+      "docker",
+      "exact candidates",
+      {
+        "family": "ipv4",
+        "network": "docker",
+        "value": "192.168.1.2",
+        "disabled": false,
+        "invalid": true,
+        "options": [
+          {
+            "value": "192.168.1.2",
+            "text": "192.168.1.2（已不可用，请重新选择）",
+            "disabled": false
+          }
+        ],
+        "zone": "lan",
+        "url": "http://127.0.0.1:1081/cgi-bin/luci/admin/services/homepublish/entry"
+      }
+    ],
+    [
+      "ipv4",
+      "docker",
+      "selected address",
+      {
+        "family": "ipv4",
+        "network": "docker",
+        "value": "192.168.1.2",
+        "disabled": false,
+        "invalid": true,
+        "options": [
+          {
+            "value": "192.168.1.2",
+            "text": "192.168.1.2（已不可用，请重新选择）",
+            "disabled": false
+          }
+        ],
+        "zone": "lan",
+        "url": "http://127.0.0.1:1081/cgi-bin/luci/admin/services/homepublish/entry"
+      }
+    ],
+    [
+      "ipv4",
+      "docker",
+      "disabled placeholder and validation",
+      {
+        "family": "ipv4",
+        "network": "docker",
+        "value": "192.168.1.2",
+        "disabled": false,
+        "invalid": true,
+        "options": [
+          {
+            "value": "192.168.1.2",
+            "text": "192.168.1.2（已不可用，请重新选择）",
+            "disabled": false
+          }
+        ],
+        "zone": "lan",
+        "url": "http://127.0.0.1:1081/cgi-bin/luci/admin/services/homepublish/entry"
+      }
+    ],
+    [
+      "ipv4",
+      "docker",
+      "zone",
+      {
+        "family": "ipv4",
+        "network": "docker",
+        "value": "192.168.1.2",
+        "disabled": false,
+        "invalid": true,
+        "options": [
+          {
+            "value": "192.168.1.2",
+            "text": "192.168.1.2（已不可用，请重新选择）",
+            "disabled": false
+          }
+        ],
+        "zone": "lan",
+        "url": "http://127.0.0.1:1081/cgi-bin/luci/admin/services/homepublish/entry"
+      }
+    ],
+    [
+      "ipv4",
+      "loopback",
+      "exact candidates",
+      {
+        "family": "ipv4",
+        "network": "loopback",
+        "value": "192.168.1.2",
+        "disabled": false,
+        "invalid": true,
+        "options": [
+          {
+            "value": "192.168.1.2",
+            "text": "192.168.1.2（已不可用，请重新选择）",
+            "disabled": false
+          }
+        ],
+        "zone": "lan",
+        "url": "http://127.0.0.1:1081/cgi-bin/luci/admin/services/homepublish/entry"
+      }
+    ],
+    [
+      "ipv4",
+      "loopback",
+      "selected address",
+      {
+        "family": "ipv4",
+        "network": "loopback",
+        "value": "192.168.1.2",
+        "disabled": false,
+        "invalid": true,
+        "options": [
+          {
+            "value": "192.168.1.2",
+            "text": "192.168.1.2（已不可用，请重新选择）",
+            "disabled": false
+          }
+        ],
+        "zone": "lan",
+        "url": "http://127.0.0.1:1081/cgi-bin/luci/admin/services/homepublish/entry"
+      }
+    ],
+    [
+      "ipv4",
+      "loopback",
+      "disabled placeholder and validation",
+      {
+        "family": "ipv4",
+        "network": "loopback",
+        "value": "192.168.1.2",
+        "disabled": false,
+        "invalid": true,
+        "options": [
+          {
+            "value": "192.168.1.2",
+            "text": "192.168.1.2（已不可用，请重新选择）",
+            "disabled": false
+          }
+        ],
+        "zone": "lan",
+        "url": "http://127.0.0.1:1081/cgi-bin/luci/admin/services/homepublish/entry"
+      }
+    ],
+    [
+      "ipv4",
+      "loopback",
+      "zone",
+      {
+        "family": "ipv4",
+        "network": "loopback",
+        "value": "192.168.1.2",
+        "disabled": false,
+        "invalid": true,
+        "options": [
+          {
+            "value": "192.168.1.2",
+            "text": "192.168.1.2（已不可用，请重新选择）",
+            "disabled": false
+          }
+        ],
+        "zone": "lan",
+        "url": "http://127.0.0.1:1081/cgi-bin/luci/admin/services/homepublish/entry"
+      }
+    ],
+    [
+      "ipv6",
+      "docker",
+      "exact candidates",
+      {
+        "family": "ipv6",
+        "network": "docker",
+        "value": "fd89:878e:a47f::1",
+        "disabled": false,
+        "invalid": true,
+        "options": [
+          {
+            "value": "fd89:878e:a47f::1",
+            "text": "fd89:878e:a47f::1（已不可用，请重新选择）",
+            "disabled": false
+          }
+        ],
+        "zone": "lan",
+        "url": "http://127.0.0.1:1081/cgi-bin/luci/admin/services/homepublish/entry"
+      }
+    ],
+    [
+      "ipv6",
+      "docker",
+      "selected address",
+      {
+        "family": "ipv6",
+        "network": "docker",
+        "value": "fd89:878e:a47f::1",
+        "disabled": false,
+        "invalid": true,
+        "options": [
+          {
+            "value": "fd89:878e:a47f::1",
+            "text": "fd89:878e:a47f::1（已不可用，请重新选择）",
+            "disabled": false
+          }
+        ],
+        "zone": "lan",
+        "url": "http://127.0.0.1:1081/cgi-bin/luci/admin/services/homepublish/entry"
+      }
+    ],
+    [
+      "ipv6",
+      "docker",
+      "disabled placeholder and validation",
+      {
+        "family": "ipv6",
+        "network": "docker",
+        "value": "fd89:878e:a47f::1",
+        "disabled": false,
+        "invalid": true,
+        "options": [
+          {
+            "value": "fd89:878e:a47f::1",
+            "text": "fd89:878e:a47f::1（已不可用，请重新选择）",
+            "disabled": false
+          }
+        ],
+        "zone": "lan",
+        "url": "http://127.0.0.1:1081/cgi-bin/luci/admin/services/homepublish/entry"
+      }
+    ],
+    [
+      "ipv6",
+      "docker",
+      "zone",
+      {
+        "family": "ipv6",
+        "network": "docker",
+        "value": "fd89:878e:a47f::1",
+        "disabled": false,
+        "invalid": true,
+        "options": [
+          {
+            "value": "fd89:878e:a47f::1",
+            "text": "fd89:878e:a47f::1（已不可用，请重新选择）",
+            "disabled": false
+          }
+        ],
+        "zone": "lan",
+        "url": "http://127.0.0.1:1081/cgi-bin/luci/admin/services/homepublish/entry"
+      }
+    ],
+    [
+      "ipv6",
+      "loopback",
+      "exact candidates",
+      {
+        "family": "ipv6",
+        "network": "loopback",
+        "value": "fd89:878e:a47f::1",
+        "disabled": false,
+        "invalid": true,
+        "options": [
+          {
+            "value": "fd89:878e:a47f::1",
+            "text": "fd89:878e:a47f::1（已不可用，请重新选择）",
+            "disabled": false
+          }
+        ],
+        "zone": "lan",
+        "url": "http://127.0.0.1:1081/cgi-bin/luci/admin/services/homepublish/entry"
+      }
+    ],
+    [
+      "ipv6",
+      "loopback",
+      "selected address",
+      {
+        "family": "ipv6",
+        "network": "loopback",
+        "value": "fd89:878e:a47f::1",
+        "disabled": false,
+        "invalid": true,
+        "options": [
+          {
+            "value": "fd89:878e:a47f::1",
+            "text": "fd89:878e:a47f::1（已不可用，请重新选择）",
+            "disabled": false
+          }
+        ],
+        "zone": "lan",
+        "url": "http://127.0.0.1:1081/cgi-bin/luci/admin/services/homepublish/entry"
+      }
+    ],
+    [
+      "ipv6",
+      "loopback",
+      "disabled placeholder and validation",
+      {
+        "family": "ipv6",
+        "network": "loopback",
+        "value": "fd89:878e:a47f::1",
+        "disabled": false,
+        "invalid": true,
+        "options": [
+          {
+            "value": "fd89:878e:a47f::1",
+            "text": "fd89:878e:a47f::1（已不可用，请重新选择）",
+            "disabled": false
+          }
+        ],
+        "zone": "lan",
+        "url": "http://127.0.0.1:1081/cgi-bin/luci/admin/services/homepublish/entry"
+      }
+    ],
+    [
+      "ipv6",
+      "loopback",
+      "zone",
+      {
+        "family": "ipv6",
+        "network": "loopback",
+        "value": "fd89:878e:a47f::1",
+        "disabled": false,
+        "invalid": true,
+        "options": [
+          {
+            "value": "fd89:878e:a47f::1",
+            "text": "fd89:878e:a47f::1（已不可用，请重新选择）",
+            "disabled": false
+          }
+        ],
+        "zone": "lan",
+        "url": "http://127.0.0.1:1081/cgi-bin/luci/admin/services/homepublish/entry"
+      }
+    ]
+  ]
+}

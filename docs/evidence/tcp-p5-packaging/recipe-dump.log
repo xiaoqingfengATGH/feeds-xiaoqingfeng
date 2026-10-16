@@ -1,0 +1,22 @@
+make: Entering directory '/home/eric/homestun-sdk-check/tcp-ingress-p5/recipe-smoke'
+Build-Depends: openssl pcre2 zlib libcap
+
+Package: homepublish-engines
+Version: 1.30.6-r1
+Depends: +libc @TARGET_x86_64 +libgcc +libopenssl +libpcre2 +zlib +libcap
+Conflicts: 
+Menu-Depends: 
+Provides: 
+Section: net
+Category: Network
+Repository: base
+Title: HomePublish private Nginx and sslh 2.3.1 engines
+Maintainer: 
+Source: 
+License: BSD-2-Clause GPL-3.0-or-later LGPL-2.1-or-later LGPL-3.0-or-later
+Type: ipkg
+Description: HomePublish private Nginx and sslh 2.3.1 engines
+@@
+
+make: Nothing to be done for 'all'.
+make: Leaving directory '/home/eric/homestun-sdk-check/tcp-ingress-p5/recipe-smoke'

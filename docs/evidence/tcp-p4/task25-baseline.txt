@@ -1,0 +1,16 @@
+64fdd7f00450e683e460215f2fda4054f27152d1d1d2bbe24ed1945e06178dba  /etc/homepublish/product/state
+52a2755e9a380e1e6d526204ec443dcdd85639f07d2903f64839d073edd55795  /etc/config/firewall
+3a78300a121ae8b3ec4a2e5c8bc78b084a4520f6984ed79a61e06d1c772339c1  /etc/config/dropbear
+25aaae48a302f40eb7d74c95d46b39c3b06f62dc9db110f2c93da54810376797  /etc/config/uhttpd
+62cb51fe983f98e057c368d4654675d15a34572b68b6ae0fca241887ea9a58c4  /etc/config/passwall2
+7d6806759821bb1b18ad3ce81edec5f082c2c0dda30f17907016591fb4d6e84c  /etc/resolv.conf
+c1a978d90673437b35fa9494e0a54294062c152bb653d490b718052ab88447fd  /etc/hosts
+d24cceeb3b33fb61545b7c50b49be6299167959ffcdebf6d765dc4a67bb3d0f1  /usr/sbin/nginx
+tcp        0      0 0.0.0.0:443             0.0.0.0:*               LISTEN      36655/dropbear
+tcp        0      0 192.168.1.2:22          0.0.0.0:*               LISTEN      34089/dropbear
+tcp        0      0 0.0.0.0:80              0.0.0.0:*               LISTEN      4308/uhttpd
+tcp        0      0 127.0.0.1:2002          0.0.0.0:*               LISTEN      16371/xray
+tcp        0      0 fd89:878e:a47f::1:22    :::*                    LISTEN      34089/dropbear
+tcp        0      0 :::80                   :::*                    LISTEN      4308/uhttpd
+tcp        0      0 :::1070                 :::*                    LISTEN      16371/xray
+tcp        0      0 :::2001                 :::*                    LISTEN      16371/xray

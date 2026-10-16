@@ -1,0 +1,1046 @@
+nginx-1.30.6.tar.gz: OK
+sslh-d39388d1.tar.gz: OK
+libproxyprotocol-3e133b96.tar.gz: OK
+libconfig-1.7.3.tar.gz: OK
+checking build system type... x86_64-unknown-linux-gnu
+checking host system type... x86_64-openwrt-linux-musl
+checking target system type... x86_64-openwrt-linux-musl
+checking for a BSD-compatible install... /usr/bin/install -c
+checking whether build environment is sane... yes
+checking for x86_64-openwrt-linux-musl-strip... x86_64-openwrt-linux-musl-strip
+checking for a thread-safe mkdir -p... /usr/bin/mkdir -p
+checking for gawk... gawk
+checking whether make sets $(MAKE)... yes
+checking whether make supports nested variables... yes
+checking whether make supports nested variables... (cached) yes
+configure: libconfig - made with pride in Colorado
+checking for style of include used by make... GNU
+checking for x86_64-openwrt-linux-musl-gcc... /home/eric/homestun-sdk-check/openwrt-sdk-24.10.5-x86-64_gcc-13.3.0_musl.Linux-x86_64/staging_dir/toolchain-x86_64_gcc-13.3.0_musl/bin/x86_64-openwrt-linux-musl-gcc
+checking whether the C compiler works... yes
+checking for C compiler default output file name... a.out
+checking for suffix of executables... 
+checking whether we are cross compiling... yes
+checking for suffix of object files... o
+checking whether we are using the GNU C compiler... yes
+checking whether /home/eric/homestun-sdk-check/openwrt-sdk-24.10.5-x86-64_gcc-13.3.0_musl.Linux-x86_64/staging_dir/toolchain-x86_64_gcc-13.3.0_musl/bin/x86_64-openwrt-linux-musl-gcc accepts -g... yes
+checking for /home/eric/homestun-sdk-check/openwrt-sdk-24.10.5-x86-64_gcc-13.3.0_musl.Linux-x86_64/staging_dir/toolchain-x86_64_gcc-13.3.0_musl/bin/x86_64-openwrt-linux-musl-gcc option to accept ISO C89... none needed
+checking whether /home/eric/homestun-sdk-check/openwrt-sdk-24.10.5-x86-64_gcc-13.3.0_musl.Linux-x86_64/staging_dir/toolchain-x86_64_gcc-13.3.0_musl/bin/x86_64-openwrt-linux-musl-gcc understands -c and -o together... yes
+checking dependency style of /home/eric/homestun-sdk-check/openwrt-sdk-24.10.5-x86-64_gcc-13.3.0_musl.Linux-x86_64/staging_dir/toolchain-x86_64_gcc-13.3.0_musl/bin/x86_64-openwrt-linux-musl-gcc... gcc3
+checking how to run the C preprocessor... /home/eric/homestun-sdk-check/openwrt-sdk-24.10.5-x86-64_gcc-13.3.0_musl.Linux-x86_64/staging_dir/toolchain-x86_64_gcc-13.3.0_musl/bin/x86_64-openwrt-linux-musl-gcc -E
+checking for grep that handles long lines and -e... /usr/bin/grep
+checking for egrep... /usr/bin/grep -E
+checking for ANSI C header files... yes
+checking for sys/types.h... yes
+checking for sys/stat.h... yes
+checking for stdlib.h... yes
+checking for string.h... yes
+checking for memory.h... yes
+checking for strings.h... yes
+checking for inttypes.h... yes
+checking for stdint.h... yes
+checking for unistd.h... yes
+checking minix/config.h usability... no
+checking minix/config.h presence... no
+checking for minix/config.h... no
+checking whether it is safe to define __EXTENSIONS__... yes
+checking how to print strings... printf
+checking for a sed that does not truncate output... /usr/bin/sed
+checking for fgrep... /usr/bin/grep -F
+checking for ld used by /home/eric/homestun-sdk-check/openwrt-sdk-24.10.5-x86-64_gcc-13.3.0_musl.Linux-x86_64/staging_dir/toolchain-x86_64_gcc-13.3.0_musl/bin/x86_64-openwrt-linux-musl-gcc... /home/eric/homestun-sdk-check/openwrt-sdk-24.10.5-x86-64_gcc-13.3.0_musl.Linux-x86_64/staging_dir/toolchain-x86_64_gcc-13.3.0_musl/x86_64-openwrt-linux-musl/bin/ld
+checking if the linker (/home/eric/homestun-sdk-check/openwrt-sdk-24.10.5-x86-64_gcc-13.3.0_musl.Linux-x86_64/staging_dir/toolchain-x86_64_gcc-13.3.0_musl/x86_64-openwrt-linux-musl/bin/ld) is GNU ld... yes
+checking for BSD- or MS-compatible name lister (nm)... /home/eric/homestun-sdk-check/openwrt-sdk-24.10.5-x86-64_gcc-13.3.0_musl.Linux-x86_64/staging_dir/toolchain-x86_64_gcc-13.3.0_musl/bin/x86_64-openwrt-linux-musl-nm -B
+checking the name lister (/home/eric/homestun-sdk-check/openwrt-sdk-24.10.5-x86-64_gcc-13.3.0_musl.Linux-x86_64/staging_dir/toolchain-x86_64_gcc-13.3.0_musl/bin/x86_64-openwrt-linux-musl-nm -B) interface... BSD nm
+checking whether ln -s works... yes
+checking the maximum length of command line arguments... 1572864
+checking whether the shell understands some XSI constructs... yes
+checking whether the shell understands "+="... yes
+checking how to convert x86_64-unknown-linux-gnu file names to x86_64-openwrt-linux-musl format... func_convert_file_noop
+checking how to convert x86_64-unknown-linux-gnu file names to toolchain format... func_convert_file_noop
+checking for /home/eric/homestun-sdk-check/openwrt-sdk-24.10.5-x86-64_gcc-13.3.0_musl.Linux-x86_64/staging_dir/toolchain-x86_64_gcc-13.3.0_musl/x86_64-openwrt-linux-musl/bin/ld option to reload object files... -r
+checking for x86_64-openwrt-linux-musl-objdump... x86_64-openwrt-linux-musl-objdump
+checking how to recognize dependent libraries... pass_all
+checking for x86_64-openwrt-linux-musl-dlltool... no
+checking for dlltool... no
+checking how to associate runtime and link libraries... printf %s\n
+checking for x86_64-openwrt-linux-musl-ar... /home/eric/homestun-sdk-check/openwrt-sdk-24.10.5-x86-64_gcc-13.3.0_musl.Linux-x86_64/staging_dir/toolchain-x86_64_gcc-13.3.0_musl/bin/x86_64-openwrt-linux-musl-ar
+checking for archiver @FILE support... @
+checking for x86_64-openwrt-linux-musl-strip... (cached) x86_64-openwrt-linux-musl-strip
+checking for x86_64-openwrt-linux-musl-ranlib... x86_64-openwrt-linux-musl-ranlib
+checking command to parse /home/eric/homestun-sdk-check/openwrt-sdk-24.10.5-x86-64_gcc-13.3.0_musl.Linux-x86_64/staging_dir/toolchain-x86_64_gcc-13.3.0_musl/bin/x86_64-openwrt-linux-musl-nm -B output from /home/eric/homestun-sdk-check/openwrt-sdk-24.10.5-x86-64_gcc-13.3.0_musl.Linux-x86_64/staging_dir/toolchain-x86_64_gcc-13.3.0_musl/bin/x86_64-openwrt-linux-musl-gcc object... ok
+checking for sysroot... no
+checking for x86_64-openwrt-linux-musl-mt... no
+checking for mt... no
+checking if : is a manifest tool... no
+checking for dlfcn.h... yes
+checking for objdir... .libs
+checking if /home/eric/homestun-sdk-check/openwrt-sdk-24.10.5-x86-64_gcc-13.3.0_musl.Linux-x86_64/staging_dir/toolchain-x86_64_gcc-13.3.0_musl/bin/x86_64-openwrt-linux-musl-gcc supports -fno-rtti -fno-exceptions... no
+checking for /home/eric/homestun-sdk-check/openwrt-sdk-24.10.5-x86-64_gcc-13.3.0_musl.Linux-x86_64/staging_dir/toolchain-x86_64_gcc-13.3.0_musl/bin/x86_64-openwrt-linux-musl-gcc option to produce PIC... -fPIC -DPIC
+checking if /home/eric/homestun-sdk-check/openwrt-sdk-24.10.5-x86-64_gcc-13.3.0_musl.Linux-x86_64/staging_dir/toolchain-x86_64_gcc-13.3.0_musl/bin/x86_64-openwrt-linux-musl-gcc PIC flag -fPIC -DPIC works... yes
+checking if /home/eric/homestun-sdk-check/openwrt-sdk-24.10.5-x86-64_gcc-13.3.0_musl.Linux-x86_64/staging_dir/toolchain-x86_64_gcc-13.3.0_musl/bin/x86_64-openwrt-linux-musl-gcc static flag -static works... yes
+checking if /home/eric/homestun-sdk-check/openwrt-sdk-24.10.5-x86-64_gcc-13.3.0_musl.Linux-x86_64/staging_dir/toolchain-x86_64_gcc-13.3.0_musl/bin/x86_64-openwrt-linux-musl-gcc supports -c -o file.o... yes
+checking if /home/eric/homestun-sdk-check/openwrt-sdk-24.10.5-x86-64_gcc-13.3.0_musl.Linux-x86_64/staging_dir/toolchain-x86_64_gcc-13.3.0_musl/bin/x86_64-openwrt-linux-musl-gcc supports -c -o file.o... (cached) yes
+checking whether the /home/eric/homestun-sdk-check/openwrt-sdk-24.10.5-x86-64_gcc-13.3.0_musl.Linux-x86_64/staging_dir/toolchain-x86_64_gcc-13.3.0_musl/bin/x86_64-openwrt-linux-musl-gcc linker (/home/eric/homestun-sdk-check/openwrt-sdk-24.10.5-x86-64_gcc-13.3.0_musl.Linux-x86_64/staging_dir/toolchain-x86_64_gcc-13.3.0_musl/x86_64-openwrt-linux-musl/bin/ld -m elf_x86_64) supports shared libraries... yes
+checking dynamic linker characteristics... GNU/Linux ld.so
+checking how to hardcode library paths into programs... immediate
+checking whether stripping libraries is possible... yes
+checking if libtool supports shared libraries... yes
+checking whether to build shared libraries... no
+checking whether to build static libraries... yes
+checking for x86_64-openwrt-linux-musl-gcc... (cached) /home/eric/homestun-sdk-check/openwrt-sdk-24.10.5-x86-64_gcc-13.3.0_musl.Linux-x86_64/staging_dir/toolchain-x86_64_gcc-13.3.0_musl/bin/x86_64-openwrt-linux-musl-gcc
+checking whether we are using the GNU C compiler... (cached) yes
+checking whether /home/eric/homestun-sdk-check/openwrt-sdk-24.10.5-x86-64_gcc-13.3.0_musl.Linux-x86_64/staging_dir/toolchain-x86_64_gcc-13.3.0_musl/bin/x86_64-openwrt-linux-musl-gcc accepts -g... (cached) yes
+checking for /home/eric/homestun-sdk-check/openwrt-sdk-24.10.5-x86-64_gcc-13.3.0_musl.Linux-x86_64/staging_dir/toolchain-x86_64_gcc-13.3.0_musl/bin/x86_64-openwrt-linux-musl-gcc option to accept ISO C89... (cached) none needed
+checking whether /home/eric/homestun-sdk-check/openwrt-sdk-24.10.5-x86-64_gcc-13.3.0_musl.Linux-x86_64/staging_dir/toolchain-x86_64_gcc-13.3.0_musl/bin/x86_64-openwrt-linux-musl-gcc understands -c and -o together... (cached) yes
+checking dependency style of /home/eric/homestun-sdk-check/openwrt-sdk-24.10.5-x86-64_gcc-13.3.0_musl.Linux-x86_64/staging_dir/toolchain-x86_64_gcc-13.3.0_musl/bin/x86_64-openwrt-linux-musl-gcc... (cached) gcc3
+checking for x86_64-openwrt-linux-musl-g++... x86_64-openwrt-linux-musl-g++
+checking whether we are using the GNU C++ compiler... yes
+checking whether x86_64-openwrt-linux-musl-g++ accepts -g... yes
+checking dependency style of x86_64-openwrt-linux-musl-g++... gcc3
+checking how to run the C++ preprocessor... x86_64-openwrt-linux-musl-g++ -E
+checking for ld used by x86_64-openwrt-linux-musl-g++... /home/eric/homestun-sdk-check/openwrt-sdk-24.10.5-x86-64_gcc-13.3.0_musl.Linux-x86_64/staging_dir/toolchain-x86_64_gcc-13.3.0_musl/x86_64-openwrt-linux-musl/bin/ld -m elf_x86_64
+checking if the linker (/home/eric/homestun-sdk-check/openwrt-sdk-24.10.5-x86-64_gcc-13.3.0_musl.Linux-x86_64/staging_dir/toolchain-x86_64_gcc-13.3.0_musl/x86_64-openwrt-linux-musl/bin/ld -m elf_x86_64) is GNU ld... yes
+checking whether the x86_64-openwrt-linux-musl-g++ linker (/home/eric/homestun-sdk-check/openwrt-sdk-24.10.5-x86-64_gcc-13.3.0_musl.Linux-x86_64/staging_dir/toolchain-x86_64_gcc-13.3.0_musl/x86_64-openwrt-linux-musl/bin/ld -m elf_x86_64) supports shared libraries... yes
+checking for x86_64-openwrt-linux-musl-g++ option to produce PIC... -fPIC -DPIC
+checking if x86_64-openwrt-linux-musl-g++ PIC flag -fPIC -DPIC works... yes
+checking if x86_64-openwrt-linux-musl-g++ static flag -static works... yes
+checking if x86_64-openwrt-linux-musl-g++ supports -c -o file.o... yes
+checking if x86_64-openwrt-linux-musl-g++ supports -c -o file.o... (cached) yes
+checking whether the x86_64-openwrt-linux-musl-g++ linker (/home/eric/homestun-sdk-check/openwrt-sdk-24.10.5-x86-64_gcc-13.3.0_musl.Linux-x86_64/staging_dir/toolchain-x86_64_gcc-13.3.0_musl/x86_64-openwrt-linux-musl/bin/ld -m elf_x86_64) supports shared libraries... yes
+checking dynamic linker characteristics... (cached) GNU/Linux ld.so
+checking how to hardcode library paths into programs... immediate
+checking for flex... no
+checking for lex... no
+*******************************************************************
+You do not seem to have flex. While flex is not required to build
+libconfig, you may need it to regenerate the lexer if you change
+the scanner.l file.
+*******************************************************************
+checking for bison... no
+checking for byacc... no
+*******************************************************************
+You do not seem to have bison. While bison is not required to build
+libconfig, you may need it to regenerate the parser if you change
+the grammar.y file.
+*******************************************************************
+checking for compiler switch to enable full C/C++ warnings... (cannot determine)
+checking for ANSI C header files... (cached) yes
+checking for unistd.h... (cached) yes
+checking for stdint.h... (cached) yes
+checking xlocale.h usability... no
+checking xlocale.h presence... no
+checking for xlocale.h... no
+checking for an ANSI C-conforming const... yes
+checking for newlocale... yes
+checking for uselocale... yes
+checking for freelocale... yes
+checking that generated files are newer than configure... done
+configure: creating ./config.status
+config.status: creating Makefile
+config.status: creating lib/Makefile
+config.status: creating lib/libconfig.pc
+config.status: creating lib/libconfig++.pc
+config.status: creating lib/libconfigConfig.cmake
+config.status: creating lib/libconfig++Config.cmake
+config.status: creating doc/Makefile
+config.status: creating examples/Makefile
+config.status: creating examples/c/Makefile
+config.status: creating examples/c++/Makefile
+config.status: creating tinytest/Makefile
+config.status: creating tests/Makefile
+config.status: creating libconfig.spec
+config.status: creating ac_config.h
+config.status: executing depfiles commands
+config.status: executing libtool commands
+make  all-recursive
+make[1]: Entering directory '/home/eric/homestun-sdk-check/tcp-ingress-p5/build/libconfig-1.7.3'
+Making all in lib
+make[2]: Entering directory '/home/eric/homestun-sdk-check/tcp-ingress-p5/build/libconfig-1.7.3/lib'
+make  all-am
+make[3]: Entering directory '/home/eric/homestun-sdk-check/tcp-ingress-p5/build/libconfig-1.7.3/lib'
+  CC       libconfig_la-grammar.lo
+  CC       libconfig_la-libconfig.lo
+  CC       libconfig_la-scanctx.lo
+  CC       libconfig_la-scanner.lo
+  CC       libconfig_la-strbuf.lo
+  CC       libconfig_la-strvec.lo
+  CC       libconfig_la-util.lo
+  CC       libconfig_la-wincompat.lo
+  CCLD     libconfig.la
+/home/eric/homestun-sdk-check/openwrt-sdk-24.10.5-x86-64_gcc-13.3.0_musl.Linux-x86_64/staging_dir/toolchain-x86_64_gcc-13.3.0_musl/bin/x86_64-openwrt-linux-musl-ar: `u' modifier ignored since `D' is the default (see `U')
+make[3]: Leaving directory '/home/eric/homestun-sdk-check/tcp-ingress-p5/build/libconfig-1.7.3/lib'
+make[2]: Leaving directory '/home/eric/homestun-sdk-check/tcp-ingress-p5/build/libconfig-1.7.3/lib'
+Making all in doc
+make[2]: Entering directory '/home/eric/homestun-sdk-check/tcp-ingress-p5/build/libconfig-1.7.3/doc'
+make[2]: Nothing to be done for 'all'.
+make[2]: Leaving directory '/home/eric/homestun-sdk-check/tcp-ingress-p5/build/libconfig-1.7.3/doc'
+Making all in tinytest
+make[2]: Entering directory '/home/eric/homestun-sdk-check/tcp-ingress-p5/build/libconfig-1.7.3/tinytest'
+  CC       tinytest.o
+  AR       libtinytest.a
+make[2]: Leaving directory '/home/eric/homestun-sdk-check/tcp-ingress-p5/build/libconfig-1.7.3/tinytest'
+Making all in tests
+make[2]: Entering directory '/home/eric/homestun-sdk-check/tcp-ingress-p5/build/libconfig-1.7.3/tests'
+  CC       libconfig_tests-tests.o
+  CCLD     libconfig_tests
+make[2]: Leaving directory '/home/eric/homestun-sdk-check/tcp-ingress-p5/build/libconfig-1.7.3/tests'
+make[2]: Entering directory '/home/eric/homestun-sdk-check/tcp-ingress-p5/build/libconfig-1.7.3'
+make[2]: Leaving directory '/home/eric/homestun-sdk-check/tcp-ingress-p5/build/libconfig-1.7.3'
+make[1]: Leaving directory '/home/eric/homestun-sdk-check/tcp-ingress-p5/build/libconfig-1.7.3'
+Making install in lib
+make[1]: Entering directory '/home/eric/homestun-sdk-check/tcp-ingress-p5/build/libconfig-1.7.3/lib'
+make  install-am
+make[2]: Entering directory '/home/eric/homestun-sdk-check/tcp-ingress-p5/build/libconfig-1.7.3/lib'
+make[3]: Entering directory '/home/eric/homestun-sdk-check/tcp-ingress-p5/build/libconfig-1.7.3/lib'
+ /usr/bin/mkdir -p '/home/eric/homestun-sdk-check/tcp-ingress-p5/build/libconfig/lib'
+ /bin/bash ../libtool   --mode=install /usr/bin/install -c   libconfig.la '/home/eric/homestun-sdk-check/tcp-ingress-p5/build/libconfig/lib'
+libtool: install: /usr/bin/install -c .libs/libconfig.lai /home/eric/homestun-sdk-check/tcp-ingress-p5/build/libconfig/lib/libconfig.la
+libtool: install: /usr/bin/install -c .libs/libconfig.a /home/eric/homestun-sdk-check/tcp-ingress-p5/build/libconfig/lib/libconfig.a
+libtool: install: chmod 644 /home/eric/homestun-sdk-check/tcp-ingress-p5/build/libconfig/lib/libconfig.a
+libtool: install: x86_64-openwrt-linux-musl-ranlib /home/eric/homestun-sdk-check/tcp-ingress-p5/build/libconfig/lib/libconfig.a
+libtool: finish: PATH="/home/eric/homestun-sdk-check/openwrt-sdk-24.10.5-x86-64_gcc-13.3.0_musl.Linux-x86_64/staging_dir/toolchain-x86_64_gcc-13.3.0_musl/bin:/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin:/usr/games:/usr/local/games:/usr/lib/wsl/lib:/usr/lib/linux-tools/6.18.54.1-microsoft-standard-WSL2/bin:/mnt/c/Users/xiaoq/bin:/mnt/c/Users/xiaoq/AppData/Local/hermes/tools/git-2.53.0+3-win32-x64/usr/local/bin:/mnt/c/Users/xiaoq/AppData/Local/hermes/tools/git-2.53.0+3-win32-x64/usr/bin:/mnt/c/Users/xiaoq/AppData/Local/hermes/tools/git-2.53.0+3-win32-x64/usr/bin:/mnt/c/Users/xiaoq/AppData/Local/hermes/tools/git-2.53.0+3-win32-x64/opt/bin:/mnt/c/Users/xiaoq/AppData/Local/hermes/tools/agent-browser-0.26.0-win32-x64/bin:/mnt/c/Users/xiaoq/AppData/Local/hermes/tools/cua-driver-0.21.0-win32-x64:/mnt/c/Users/xiaoq/AppData/Local/hermes/tools/ffmpeg-9.0.1-win32-x64/bin:/mnt/c/Users/xiaoq/AppData/Local/hermes/tools/git-2.53.0+3-win32-x64/cmd:/mnt/c/Users/xiaoq/AppData/Local/hermes/tools/git-2.53.0+3-win32-x64/usr/bin:/mnt/c/Users/xiaoq/AppData/Local/hermes/tools/node-26.7.0-win32-x64:/mnt/c/Users/xiaoq/AppData/Local/hermes/tools/npm-12.0.2-win32-x64:/mnt/c/Users/xiaoq/AppData/Local/hermes/tools/python-3.14.7+20260901-win32-x64:/mnt/c/Users/xiaoq/AppData/Local/hermes/tools/ripgrep-15.2.0-win32-x64:/mnt/c/Users/xiaoq/AppData/Local/hermes/hermes-agent/venv/Scripts:/mnt/c/Users/xiaoq/AppData/Local/hermes/hermes-agent/.hermes/bin:/mnt/c/Users/xiaoq/AppData/Local/hermes/installs/6536bbedae0dddcf/environments/6d6cf3293ae7429ab292967f00f80415/venv/Scripts:/mnt/c/Program Files/NVIDIA GPU Computing Toolkit/CUDA/v12.1/bin:/mnt/c/Program Files/NVIDIA GPU Computing Toolkit/CUDA/v12.1/libnvvp:/mnt/c/Windows/system32:/mnt/c/Windows:/mnt/c/Windows/System32/Wbem:/mnt/c/Windows/System32/WindowsPowerShell/v1.0:/mnt/c/Program Files (x86)/NVIDIA Corporation/PhysX/Common:/mnt/c/WINDOWS/system32:/mnt/c/WINDOWS:/mnt/c/WINDOWS/System32/Wbem:/mnt/c/WINDOWS/System32/WindowsPowerShell/v1.0:/mnt/c/Program Files/dotnet:/mnt/c/Program Files/Go/bin:/mnt/c/Program Files/Git/cmd:/mnt/c/Program Files/Amazon/AWSCLIV2:/mnt/d/DevEnv/Kubernetes:/mnt/d/DevEnv/AWSCloud:/mnt/d/DevEnv/AWS_jdk17.0.9_8/bin:/mnt/d/DevEnv/apache-maven-3.8.5/bin:/mnt/c/Program Files (x86)/Tencent/微信web开发者工具/dll:/mnt/c/Program Files (x86)/Microsoft SQL Server/160/DTS/Binn:/mnt/c/Program Files/NVIDIA Corporation/NVIDIA App/NvDLISR:/mnt/d/Softwares/ffmpeg-2025-06-04/bin:/mnt/d/DevEnv/cudnn-windows-x86_64-8.9.7.29_cuda12/bin:/mnt/c/Program Files/NVIDIA Corporation/Nsight Compute 2021.1.0:/mnt/c/Program Files (x86)/Windows Kits/10/Windows Performance Toolkit:/mnt/c/Program Files (x86)/Microsoft Visual Studio 14.0/VC/bin/amd64:/mnt/c/Users/xiaoq/AppData/Local/Programs/cursor/resources/app/bin:/mnt/c/WINDOWS/System32/OpenSSH:/mnt/c/Users/xiaoq/AppData/Local/nvm:/mnt/d/DevEnv/nvm/nodejs:/mnt/d/DevEnv/SAP:/mnt/c/Program Files/TortoiseSVN/bin:/mnt/c/ProgramData/chocolatey/bin:/mnt/c/Program Files (x86)/Bitvise SSH Client:/mnt/c/Program Files/WSL:/mnt/c/Program Files/Docker/Docker/resources/bin:/mnt/c/Users/xiaoq/AppData/Local/pnpm/bin:/mnt/c/Users/xiaoq/AppData/Local/hermes/bin:/mnt/c/Users/xiaoq/AppData/Local/pnpm:/mnt/c/Users/xiaoq/AppData/Local/Microsoft/WindowsApps:/mnt/c/Users/xiaoq/go/bin:/mnt/c/Users/xiaoq/AppData/Local/Programs/Microsoft VS Code/bin:/mnt/c/Users/xiaoq/AppData/Roaming/npm:/mnt/c/Program Files/JetBrains/IntelliJ IDEA 2024.1.4/bin:/mnt/c/Users/xiaoq/AppData/Local/Programs/Ollama:/mnt/c/Users/xiaoq/.lmstudio/bin:/mnt/c/Users/xiaoq/AppData/Local/Programs/cursor/resources/app/bin:/mnt/c/Program Files/mitmproxy/bin:/mnt/c/Users/xiaoq/AppData/Local/Programs/WorkBuddy/bin:/mnt/c/Users/xiaoq/AppData/Local/Pandoc:/mnt/c/Users/xiaoq/AppData/Local/Python/bin:/mnt/c/Users/xiaoq/AppData/Local/QwenPaw Desktop/binaries/qwenpaw-backend:/mnt/c/Users/xiaoq/AppData/Local/cftunnel:/mnt/c/Users/xiaoq/AppData/Local/Programs/Cua/cua-driver/bin:/mnt/c/Users/xiaoq/AppData/Local/hermes/tools/git-2.53.0+3-win32-x64/usr/bin/vendor_perl:/mnt/c/Users/xiaoq/AppData/Local/hermes/tools/git-2.53.0+3-win32-x64/usr/bin/core_perl:/sbin" ldconfig -n /home/eric/homestun-sdk-check/tcp-ingress-p5/build/libconfig/lib
+----------------------------------------------------------------------
+Libraries have been installed in:
+   /home/eric/homestun-sdk-check/tcp-ingress-p5/build/libconfig/lib
+
+If you ever happen to want to link against installed libraries
+in a given directory, LIBDIR, you must either use libtool, and
+specify the full pathname of the library, or use the `-LLIBDIR'
+flag during linking and do at least one of the following:
+   - add LIBDIR to the `LD_LIBRARY_PATH' environment variable
+     during execution
+   - add LIBDIR to the `LD_RUN_PATH' environment variable
+     during linking
+   - use the `-Wl,-rpath -Wl,LIBDIR' linker flag
+   - have your system administrator add LIBDIR to `/etc/ld.so.conf'
+
+See any operating system documentation about shared libraries for
+more information, such as the ld(1) and ld.so(8) manual pages.
+----------------------------------------------------------------------
+ /usr/bin/mkdir -p '/home/eric/homestun-sdk-check/tcp-ingress-p5/build/libconfig/lib/cmake/libconfig'
+ /usr/bin/install -c -m 644 libconfigConfig.cmake '/home/eric/homestun-sdk-check/tcp-ingress-p5/build/libconfig/lib/cmake/libconfig'
+ /usr/bin/mkdir -p '/home/eric/homestun-sdk-check/tcp-ingress-p5/build/libconfig/include'
+ /usr/bin/install -c -m 644 libconfig.h '/home/eric/homestun-sdk-check/tcp-ingress-p5/build/libconfig/include'
+ /usr/bin/mkdir -p '/home/eric/homestun-sdk-check/tcp-ingress-p5/build/libconfig/lib/pkgconfig'
+ /usr/bin/install -c -m 644 libconfig.pc '/home/eric/homestun-sdk-check/tcp-ingress-p5/build/libconfig/lib/pkgconfig'
+make[3]: Leaving directory '/home/eric/homestun-sdk-check/tcp-ingress-p5/build/libconfig-1.7.3/lib'
+make[2]: Leaving directory '/home/eric/homestun-sdk-check/tcp-ingress-p5/build/libconfig-1.7.3/lib'
+make[1]: Leaving directory '/home/eric/homestun-sdk-check/tcp-ingress-p5/build/libconfig-1.7.3/lib'
+Making install in doc
+make[1]: Entering directory '/home/eric/homestun-sdk-check/tcp-ingress-p5/build/libconfig-1.7.3/doc'
+make[2]: Entering directory '/home/eric/homestun-sdk-check/tcp-ingress-p5/build/libconfig-1.7.3/doc'
+make[2]: Nothing to be done for 'install-exec-am'.
+ /usr/bin/mkdir -p '/home/eric/homestun-sdk-check/tcp-ingress-p5/build/libconfig/share/info'
+ /usr/bin/install -c -m 644 ./libconfig.info '/home/eric/homestun-sdk-check/tcp-ingress-p5/build/libconfig/share/info'
+ install-info --info-dir='/home/eric/homestun-sdk-check/tcp-ingress-p5/build/libconfig/share/info' '/home/eric/homestun-sdk-check/tcp-ingress-p5/build/libconfig/share/info/libconfig.info'
+make[2]: Leaving directory '/home/eric/homestun-sdk-check/tcp-ingress-p5/build/libconfig-1.7.3/doc'
+make[1]: Leaving directory '/home/eric/homestun-sdk-check/tcp-ingress-p5/build/libconfig-1.7.3/doc'
+Making install in tinytest
+make[1]: Entering directory '/home/eric/homestun-sdk-check/tcp-ingress-p5/build/libconfig-1.7.3/tinytest'
+make[2]: Entering directory '/home/eric/homestun-sdk-check/tcp-ingress-p5/build/libconfig-1.7.3/tinytest'
+make[2]: Nothing to be done for 'install-exec-am'.
+make[2]: Nothing to be done for 'install-data-am'.
+make[2]: Leaving directory '/home/eric/homestun-sdk-check/tcp-ingress-p5/build/libconfig-1.7.3/tinytest'
+make[1]: Leaving directory '/home/eric/homestun-sdk-check/tcp-ingress-p5/build/libconfig-1.7.3/tinytest'
+Making install in tests
+make[1]: Entering directory '/home/eric/homestun-sdk-check/tcp-ingress-p5/build/libconfig-1.7.3/tests'
+make[2]: Entering directory '/home/eric/homestun-sdk-check/tcp-ingress-p5/build/libconfig-1.7.3/tests'
+make[2]: Nothing to be done for 'install-exec-am'.
+make[2]: Nothing to be done for 'install-data-am'.
+make[2]: Leaving directory '/home/eric/homestun-sdk-check/tcp-ingress-p5/build/libconfig-1.7.3/tests'
+make[1]: Leaving directory '/home/eric/homestun-sdk-check/tcp-ingress-p5/build/libconfig-1.7.3/tests'
+make[1]: Entering directory '/home/eric/homestun-sdk-check/tcp-ingress-p5/build/libconfig-1.7.3'
+make[2]: Entering directory '/home/eric/homestun-sdk-check/tcp-ingress-p5/build/libconfig-1.7.3'
+make[2]: Nothing to be done for 'install-exec-am'.
+make[2]: Nothing to be done for 'install-data-am'.
+make[2]: Leaving directory '/home/eric/homestun-sdk-check/tcp-ingress-p5/build/libconfig-1.7.3'
+make[1]: Leaving directory '/home/eric/homestun-sdk-check/tcp-ingress-p5/build/libconfig-1.7.3'
+checking for x86_64-openwrt-linux-musl-gcc... /home/eric/homestun-sdk-check/openwrt-sdk-24.10.5-x86-64_gcc-13.3.0_musl.Linux-x86_64/staging_dir/toolchain-x86_64_gcc-13.3.0_musl/bin/x86_64-openwrt-linux-musl-gcc
+checking whether the C compiler works... yes
+checking for C compiler default output file name... a.out
+checking for suffix of executables... 
+checking whether we are cross compiling... yes
+checking for suffix of object files... o
+checking whether the compiler supports GNU C... yes
+checking whether /home/eric/homestun-sdk-check/openwrt-sdk-24.10.5-x86-64_gcc-13.3.0_musl.Linux-x86_64/staging_dir/toolchain-x86_64_gcc-13.3.0_musl/bin/x86_64-openwrt-linux-musl-gcc accepts -g... yes
+checking for /home/eric/homestun-sdk-check/openwrt-sdk-24.10.5-x86-64_gcc-13.3.0_musl.Linux-x86_64/staging_dir/toolchain-x86_64_gcc-13.3.0_musl/bin/x86_64-openwrt-linux-musl-gcc option to enable C11 features... none needed
+checking for hosts_ctl in -lwrap... no
+checking for cap_get_proc in -lcap... yes
+checking for setproctitle in -lbsd... no
+checking for stdio.h... yes
+checking for stdlib.h... yes
+checking for string.h... yes
+checking for inttypes.h... yes
+checking for stdint.h... yes
+checking for strings.h... yes
+checking for sys/stat.h... yes
+checking for sys/types.h... yes
+checking for unistd.h... yes
+checking for linux/landlock.h... yes
+checking for proxy_protocol.h... yes
+configure: creating ./config.status
+config.status: creating Makefile
+config.status: creating config.h
+./genver.sh >version.h
+/home/eric/homestun-sdk-check/openwrt-sdk-24.10.5-x86-64_gcc-13.3.0_musl.Linux-x86_64/staging_dir/toolchain-x86_64_gcc-13.3.0_musl/bin/x86_64-openwrt-linux-musl-gcc -Wall -O2 -fshort-enums -I/home/eric/homestun-sdk-check/tcp-ingress-p5/build/proxy/include -I/home/eric/homestun-sdk-check/tcp-ingress-p5/build/libconfig/include -I/home/eric/homestun-sdk-check/openwrt-sdk-24.10.5-x86-64_gcc-13.3.0_musl.Linux-x86_64/staging_dir/target-x86_64_musl/usr/include -DLIBCONFIG -DENABLE_REGEX -c processes.c -o processes.o
+/home/eric/homestun-sdk-check/openwrt-sdk-24.10.5-x86-64_gcc-13.3.0_musl.Linux-x86_64/staging_dir/toolchain-x86_64_gcc-13.3.0_musl/bin/x86_64-openwrt-linux-musl-gcc -Wall -O2 -fshort-enums -I/home/eric/homestun-sdk-check/tcp-ingress-p5/build/proxy/include -I/home/eric/homestun-sdk-check/tcp-ingress-p5/build/libconfig/include -I/home/eric/homestun-sdk-check/openwrt-sdk-24.10.5-x86-64_gcc-13.3.0_musl.Linux-x86_64/staging_dir/target-x86_64_musl/usr/include -DLIBCONFIG -DENABLE_REGEX -c udp-listener.c -o udp-listener.o
+/home/eric/homestun-sdk-check/openwrt-sdk-24.10.5-x86-64_gcc-13.3.0_musl.Linux-x86_64/staging_dir/toolchain-x86_64_gcc-13.3.0_musl/bin/x86_64-openwrt-linux-musl-gcc -Wall -O2 -fshort-enums -I/home/eric/homestun-sdk-check/tcp-ingress-p5/build/proxy/include -I/home/eric/homestun-sdk-check/tcp-ingress-p5/build/libconfig/include -I/home/eric/homestun-sdk-check/openwrt-sdk-24.10.5-x86-64_gcc-13.3.0_musl.Linux-x86_64/staging_dir/target-x86_64_musl/usr/include -DLIBCONFIG -DENABLE_REGEX  -c -o sslh-select.o sslh-select.c
+/home/eric/homestun-sdk-check/openwrt-sdk-24.10.5-x86-64_gcc-13.3.0_musl.Linux-x86_64/staging_dir/toolchain-x86_64_gcc-13.3.0_musl/bin/x86_64-openwrt-linux-musl-gcc -Wall -O2 -fshort-enums -I/home/eric/homestun-sdk-check/tcp-ingress-p5/build/proxy/include -I/home/eric/homestun-sdk-check/tcp-ingress-p5/build/libconfig/include -I/home/eric/homestun-sdk-check/openwrt-sdk-24.10.5-x86-64_gcc-13.3.0_musl.Linux-x86_64/staging_dir/target-x86_64_musl/usr/include -DLIBCONFIG -DENABLE_REGEX -c hash.c -o hash.o
+/home/eric/homestun-sdk-check/openwrt-sdk-24.10.5-x86-64_gcc-13.3.0_musl.Linux-x86_64/staging_dir/toolchain-x86_64_gcc-13.3.0_musl/bin/x86_64-openwrt-linux-musl-gcc -Wall -O2 -fshort-enums -I/home/eric/homestun-sdk-check/tcp-ingress-p5/build/proxy/include -I/home/eric/homestun-sdk-check/tcp-ingress-p5/build/libconfig/include -I/home/eric/homestun-sdk-check/openwrt-sdk-24.10.5-x86-64_gcc-13.3.0_musl.Linux-x86_64/staging_dir/target-x86_64_musl/usr/include -DLIBCONFIG -DENABLE_REGEX -c tcp-listener.c -o tcp-listener.o
+/home/eric/homestun-sdk-check/openwrt-sdk-24.10.5-x86-64_gcc-13.3.0_musl.Linux-x86_64/staging_dir/toolchain-x86_64_gcc-13.3.0_musl/bin/x86_64-openwrt-linux-musl-gcc -Wall -O2 -fshort-enums -I/home/eric/homestun-sdk-check/tcp-ingress-p5/build/proxy/include -I/home/eric/homestun-sdk-check/tcp-ingress-p5/build/libconfig/include -I/home/eric/homestun-sdk-check/openwrt-sdk-24.10.5-x86-64_gcc-13.3.0_musl.Linux-x86_64/staging_dir/target-x86_64_musl/usr/include -DLIBCONFIG -DENABLE_REGEX -c sslh-conf.c -o sslh-conf.o
+/home/eric/homestun-sdk-check/openwrt-sdk-24.10.5-x86-64_gcc-13.3.0_musl.Linux-x86_64/staging_dir/toolchain-x86_64_gcc-13.3.0_musl/bin/x86_64-openwrt-linux-musl-gcc -Wall -O2 -fshort-enums -I/home/eric/homestun-sdk-check/tcp-ingress-p5/build/proxy/include -I/home/eric/homestun-sdk-check/tcp-ingress-p5/build/libconfig/include -I/home/eric/homestun-sdk-check/openwrt-sdk-24.10.5-x86-64_gcc-13.3.0_musl.Linux-x86_64/staging_dir/target-x86_64_musl/usr/include -DLIBCONFIG -DENABLE_REGEX -c common.c -o common.o
+/home/eric/homestun-sdk-check/openwrt-sdk-24.10.5-x86-64_gcc-13.3.0_musl.Linux-x86_64/staging_dir/toolchain-x86_64_gcc-13.3.0_musl/bin/x86_64-openwrt-linux-musl-gcc -Wall -O2 -fshort-enums -I/home/eric/homestun-sdk-check/tcp-ingress-p5/build/proxy/include -I/home/eric/homestun-sdk-check/tcp-ingress-p5/build/libconfig/include -I/home/eric/homestun-sdk-check/openwrt-sdk-24.10.5-x86-64_gcc-13.3.0_musl.Linux-x86_64/staging_dir/target-x86_64_musl/usr/include -DLIBCONFIG -DENABLE_REGEX -c log.c -o log.o
+/home/eric/homestun-sdk-check/openwrt-sdk-24.10.5-x86-64_gcc-13.3.0_musl.Linux-x86_64/staging_dir/toolchain-x86_64_gcc-13.3.0_musl/bin/x86_64-openwrt-linux-musl-gcc -Wall -O2 -fshort-enums -I/home/eric/homestun-sdk-check/tcp-ingress-p5/build/proxy/include -I/home/eric/homestun-sdk-check/tcp-ingress-p5/build/libconfig/include -I/home/eric/homestun-sdk-check/openwrt-sdk-24.10.5-x86-64_gcc-13.3.0_musl.Linux-x86_64/staging_dir/target-x86_64_musl/usr/include -DLIBCONFIG -DENABLE_REGEX  -c -o sslh-main.o sslh-main.c
+/home/eric/homestun-sdk-check/openwrt-sdk-24.10.5-x86-64_gcc-13.3.0_musl.Linux-x86_64/staging_dir/toolchain-x86_64_gcc-13.3.0_musl/bin/x86_64-openwrt-linux-musl-gcc -Wall -O2 -fshort-enums -I/home/eric/homestun-sdk-check/tcp-ingress-p5/build/proxy/include -I/home/eric/homestun-sdk-check/tcp-ingress-p5/build/libconfig/include -I/home/eric/homestun-sdk-check/openwrt-sdk-24.10.5-x86-64_gcc-13.3.0_musl.Linux-x86_64/staging_dir/target-x86_64_musl/usr/include -DLIBCONFIG -DENABLE_REGEX -c probe.c -o probe.o
+/home/eric/homestun-sdk-check/openwrt-sdk-24.10.5-x86-64_gcc-13.3.0_musl.Linux-x86_64/staging_dir/toolchain-x86_64_gcc-13.3.0_musl/bin/x86_64-openwrt-linux-musl-gcc -Wall -O2 -fshort-enums -I/home/eric/homestun-sdk-check/tcp-ingress-p5/build/proxy/include -I/home/eric/homestun-sdk-check/tcp-ingress-p5/build/libconfig/include -I/home/eric/homestun-sdk-check/openwrt-sdk-24.10.5-x86-64_gcc-13.3.0_musl.Linux-x86_64/staging_dir/target-x86_64_musl/usr/include -DLIBCONFIG -DENABLE_REGEX -c tls.c -o tls.o
+/home/eric/homestun-sdk-check/openwrt-sdk-24.10.5-x86-64_gcc-13.3.0_musl.Linux-x86_64/staging_dir/toolchain-x86_64_gcc-13.3.0_musl/bin/x86_64-openwrt-linux-musl-gcc -Wall -O2 -fshort-enums -I/home/eric/homestun-sdk-check/tcp-ingress-p5/build/proxy/include -I/home/eric/homestun-sdk-check/tcp-ingress-p5/build/libconfig/include -I/home/eric/homestun-sdk-check/openwrt-sdk-24.10.5-x86-64_gcc-13.3.0_musl.Linux-x86_64/staging_dir/target-x86_64_musl/usr/include -DLIBCONFIG -DENABLE_REGEX -c argtable3.c -o argtable3.o
+/home/eric/homestun-sdk-check/openwrt-sdk-24.10.5-x86-64_gcc-13.3.0_musl.Linux-x86_64/staging_dir/toolchain-x86_64_gcc-13.3.0_musl/bin/x86_64-openwrt-linux-musl-gcc -Wall -O2 -fshort-enums -I/home/eric/homestun-sdk-check/tcp-ingress-p5/build/proxy/include -I/home/eric/homestun-sdk-check/tcp-ingress-p5/build/libconfig/include -I/home/eric/homestun-sdk-check/openwrt-sdk-24.10.5-x86-64_gcc-13.3.0_musl.Linux-x86_64/staging_dir/target-x86_64_musl/usr/include -DLIBCONFIG -DENABLE_REGEX -c collection.c -o collection.o
+/home/eric/homestun-sdk-check/openwrt-sdk-24.10.5-x86-64_gcc-13.3.0_musl.Linux-x86_64/staging_dir/toolchain-x86_64_gcc-13.3.0_musl/bin/x86_64-openwrt-linux-musl-gcc -Wall -O2 -fshort-enums -I/home/eric/homestun-sdk-check/tcp-ingress-p5/build/proxy/include -I/home/eric/homestun-sdk-check/tcp-ingress-p5/build/libconfig/include -I/home/eric/homestun-sdk-check/openwrt-sdk-24.10.5-x86-64_gcc-13.3.0_musl.Linux-x86_64/staging_dir/target-x86_64_musl/usr/include -DLIBCONFIG -DENABLE_REGEX -c gap.c -o gap.o
+/home/eric/homestun-sdk-check/openwrt-sdk-24.10.5-x86-64_gcc-13.3.0_musl.Linux-x86_64/staging_dir/toolchain-x86_64_gcc-13.3.0_musl/bin/x86_64-openwrt-linux-musl-gcc -Wall -O2 -fshort-enums -I/home/eric/homestun-sdk-check/tcp-ingress-p5/build/proxy/include -I/home/eric/homestun-sdk-check/tcp-ingress-p5/build/libconfig/include -I/home/eric/homestun-sdk-check/openwrt-sdk-24.10.5-x86-64_gcc-13.3.0_musl.Linux-x86_64/staging_dir/target-x86_64_musl/usr/include -DLIBCONFIG -DENABLE_REGEX -c tcp-probe.c -o tcp-probe.o
+/home/eric/homestun-sdk-check/openwrt-sdk-24.10.5-x86-64_gcc-13.3.0_musl.Linux-x86_64/staging_dir/toolchain-x86_64_gcc-13.3.0_musl/bin/x86_64-openwrt-linux-musl-gcc -Wall -O2 -fshort-enums -I/home/eric/homestun-sdk-check/tcp-ingress-p5/build/proxy/include -I/home/eric/homestun-sdk-check/tcp-ingress-p5/build/libconfig/include -I/home/eric/homestun-sdk-check/openwrt-sdk-24.10.5-x86-64_gcc-13.3.0_musl.Linux-x86_64/staging_dir/target-x86_64_musl/usr/include -DLIBCONFIG -DENABLE_REGEX  -c -o landlock.o landlock.c
+/home/eric/homestun-sdk-check/openwrt-sdk-24.10.5-x86-64_gcc-13.3.0_musl.Linux-x86_64/staging_dir/toolchain-x86_64_gcc-13.3.0_musl/bin/x86_64-openwrt-linux-musl-gcc -Wall -O2 -fshort-enums -I/home/eric/homestun-sdk-check/tcp-ingress-p5/build/proxy/include -I/home/eric/homestun-sdk-check/tcp-ingress-p5/build/libconfig/include -I/home/eric/homestun-sdk-check/openwrt-sdk-24.10.5-x86-64_gcc-13.3.0_musl.Linux-x86_64/staging_dir/target-x86_64_musl/usr/include -DLIBCONFIG -DENABLE_REGEX -c proxyprotocol.c -o proxyprotocol.o
+/home/eric/homestun-sdk-check/openwrt-sdk-24.10.5-x86-64_gcc-13.3.0_musl.Linux-x86_64/staging_dir/toolchain-x86_64_gcc-13.3.0_musl/bin/x86_64-openwrt-linux-musl-ar rcs libsslh.a sslh-conf.o common.o log.o sslh-main.o probe.o tls.o argtable3.o collection.o gap.o tcp-probe.o landlock.o proxyprotocol.o
+/home/eric/homestun-sdk-check/openwrt-sdk-24.10.5-x86-64_gcc-13.3.0_musl.Linux-x86_64/staging_dir/toolchain-x86_64_gcc-13.3.0_musl/bin/x86_64-openwrt-linux-musl-gcc -Wall -O2 -fshort-enums -L/home/eric/homestun-sdk-check/tcp-ingress-p5/build/proxy/lib -L/home/eric/homestun-sdk-check/tcp-ingress-p5/build/libconfig/lib -L/home/eric/homestun-sdk-check/openwrt-sdk-24.10.5-x86-64_gcc-13.3.0_musl.Linux-x86_64/staging_dir/target-x86_64_musl/usr/lib -Wl,-Map,/home/eric/homestun-sdk-check/tcp-ingress-p5/build/relink/sslh.map -o sslh-select processes.o udp-listener.o sslh-select.o hash.o tcp-listener.o libsslh.a -lm -lpcre2-8  -lcap -lproxyprotocol -lconfig
+patching file auto/cc/name
+patching file auto/cc/conf
+patching file auto/os/linux
+patching file auto/unix
+Hunk #1 succeeded at 835 (offset -18 lines).
+Hunk #2 succeeded at 848 (offset -18 lines).
+Hunk #3 succeeded at 863 (offset -18 lines).
+Hunk #4 succeeded at 877 (offset -18 lines).
+patching file auto/types/sizeof
+patching file auto/endianness
+building for Linux::x86_64
+checking for C compiler ... found
+ + using GNU C compiler
+ + gcc version: 13.3.0 (OpenWrt GCC 13.3.0 r29087-d9c5716d1d) 
+checking for gcc -pipe switch ... found
+checking for --with-ld-opt="-L/home/eric/homestun-sdk-check/openwrt-sdk-24.10.5-x86-64_gcc-13.3.0_musl.Linux-x86_64/staging_dir/target-x86_64_musl/usr/lib -Wl,-Map,/home/eric/homestun-sdk-check/tcp-ingress-p5/build/relink/nginx.map" ... found
+checking for -Wl,-E switch ... found
+checking for gcc builtin atomic operations ... found
+checking for C99 variadic macros ... found
+checking for gcc variadic macros ... found
+checking for gcc builtin 64 bit byteswap ... found
+checking for unistd.h ... found
+checking for inttypes.h ... found
+checking for limits.h ... found
+checking for sys/filio.h ... not found
+checking for sys/param.h ... found
+checking for sys/mount.h ... found
+checking for sys/statvfs.h ... found
+checking for crypt.h ... found
+checking for Linux::x86_64 specific features
+checking for epoll ... found
+checking for EPOLLRDHUP ... found
+checking for EPOLLEXCLUSIVE ... found
+checking for eventfd() ... found
+checking for O_PATH ... found
+checking for sendfile() ... found
+checking for sendfile64() ... found
+checking for sys/prctl.h ... found
+checking for prctl(PR_SET_DUMPABLE) ... found
+checking for prctl(PR_SET_KEEPCAPS) ... found
+checking for capabilities ... found
+checking for crypt_r() ... found
+checking for sys/vfs.h ... found
+checking for BPF sockhash ... found
+checking for SO_COOKIE ... found
+checking for UDP_SEGMENT ... found
+checking for nobody group ... not found
+checking for nogroup group ... found
+checking for poll() ... found
+checking for /dev/poll ... not found
+checking for kqueue ... not found
+checking for crypt() ... found
+checking for F_READAHEAD ... not found
+checking for posix_fadvise() ... found
+checking for O_DIRECT ... found
+checking for F_NOCACHE ... not found
+checking for directio() ... not found
+checking for statfs() ... found
+checking for statvfs() ... found
+checking for dlopen() ... found
+checking for sched_yield() ... found
+checking for sched_setaffinity() ... found
+checking for SO_SETFIB ... not found
+checking for SO_REUSEPORT ... found
+checking for SO_ACCEPTFILTER ... not found
+checking for SO_BINDANY ... not found
+checking for IP_TRANSPARENT ... found
+checking for IP_BINDANY ... not found
+checking for IP_BIND_ADDRESS_NO_PORT ... found
+checking for IP_RECVDSTADDR ... not found
+checking for IP_SENDSRCADDR ... not found
+checking for IP_PKTINFO ... found
+checking for IPV6_RECVPKTINFO ... found
+checking for IP_MTU_DISCOVER ... found
+checking for IPV6_MTU_DISCOVER ... found
+checking for IP_DONTFRAG ... not found
+checking for IPV6_DONTFRAG ... found
+checking for TCP_DEFER_ACCEPT ... found
+checking for TCP_KEEPIDLE ... found
+checking for TCP_FASTOPEN ... found
+checking for TCP_INFO ... found
+checking for accept4() ... found
+checking for int size ... 4 bytes
+checking for long size ... 8 bytes
+checking for long long size ... 8 bytes
+checking for void * size ... 8 bytes
+checking for uint32_t ... found
+checking for uint64_t ... found
+checking for sig_atomic_t ... found
+checking for sig_atomic_t size ... 4 bytes
+checking for socklen_t ... found
+checking for in_addr_t ... found
+checking for in_port_t ... found
+checking for rlim_t ... found
+checking for uintptr_t ... uintptr_t found
+checking for system byte ordering ... little endian
+checking for size_t size ... 8 bytes
+checking for off_t size ... 8 bytes
+checking for time_t size ... 8 bytes
+checking for AF_INET6 ... found
+checking for setproctitle() ... not found
+checking for pread() ... found
+checking for pwrite() ... found
+checking for pwritev() ... found
+checking for strerrordesc_np() ... not found
+checking for sys_nerr ... not found
+checking for _sys_nerr ... not found
+checking for localtime_r() ... found
+checking for clock_gettime(CLOCK_MONOTONIC) ... found
+checking for posix_memalign() ... found
+checking for memalign() ... found
+checking for mmap(MAP_ANON|MAP_SHARED) ... found
+checking for mmap("/dev/zero", MAP_SHARED) ... found
+checking for System V shared memory ... found
+checking for POSIX semaphores ... found
+checking for struct msghdr.msg_control ... found
+checking for ioctl(FIONBIO) ... found
+checking for ioctl(FIONREAD) ... found
+checking for struct tm.tm_gmtoff ... found
+checking for struct dirent.d_namlen ... not found
+checking for struct dirent.d_type ... found
+checking for sysconf(_SC_NPROCESSORS_ONLN) ... found
+checking for sysconf(_SC_LEVEL1_DCACHE_LINESIZE) ... not found
+checking for openat(), fstatat() ... found
+checking for getaddrinfo() ... found
+checking for PCRE2 library ... found
+checking for OpenSSL library ... found
+checking for zlib library ... found
+creating objs/Makefile
+
+Configuration summary
+  + using system PCRE2 library
+  + using system OpenSSL library
+  + using system zlib library
+
+  nginx path prefix: "/var/run/homepublish"
+  nginx binary file: "/usr/libexec/homepublish/nginx"
+  nginx modules path: "/var/run/homepublish/modules"
+  nginx configuration prefix: "/var/run/homepublish/conf"
+  nginx configuration file: "/var/run/homepublish/conf/nginx.conf"
+  nginx pid file: "/var/run/homepublish/logs/nginx.pid"
+  nginx error log file: "/var/run/homepublish/logs/error.log"
+  nginx http access log file: "/var/run/homepublish/logs/access.log"
+  nginx http client request body temporary files: "client_body_temp"
+  nginx http proxy temporary files: "proxy_temp"
+
+make -f objs/Makefile
+make[1]: Entering directory '/home/eric/homestun-sdk-check/tcp-ingress-p5/build/nginx-1.30.6'
+/home/eric/homestun-sdk-check/openwrt-sdk-24.10.5-x86-64_gcc-13.3.0_musl.Linux-x86_64/staging_dir/toolchain-x86_64_gcc-13.3.0_musl/bin/x86_64-openwrt-linux-musl-gcc -c -pipe  -O -W -Wall -Wpointer-arith -Wno-unused-parameter -Werror -g -I/home/eric/homestun-sdk-check/openwrt-sdk-24.10.5-x86-64_gcc-13.3.0_musl.Linux-x86_64/staging_dir/target-x86_64_musl/usr/include -I src/core -I src/event -I src/event/modules -I src/event/quic -I src/os/unix -I objs \
+	-o objs/src/core/nginx.o \
+	src/core/nginx.c
+/home/eric/homestun-sdk-check/openwrt-sdk-24.10.5-x86-64_gcc-13.3.0_musl.Linux-x86_64/staging_dir/toolchain-x86_64_gcc-13.3.0_musl/bin/x86_64-openwrt-linux-musl-gcc -c -pipe  -O -W -Wall -Wpointer-arith -Wno-unused-parameter -Werror -g -I/home/eric/homestun-sdk-check/openwrt-sdk-24.10.5-x86-64_gcc-13.3.0_musl.Linux-x86_64/staging_dir/target-x86_64_musl/usr/include -I src/core -I src/event -I src/event/modules -I src/event/quic -I src/os/unix -I objs \
+	-o objs/src/core/ngx_log.o \
+	src/core/ngx_log.c
+/home/eric/homestun-sdk-check/openwrt-sdk-24.10.5-x86-64_gcc-13.3.0_musl.Linux-x86_64/staging_dir/toolchain-x86_64_gcc-13.3.0_musl/bin/x86_64-openwrt-linux-musl-gcc -c -pipe  -O -W -Wall -Wpointer-arith -Wno-unused-parameter -Werror -g -I/home/eric/homestun-sdk-check/openwrt-sdk-24.10.5-x86-64_gcc-13.3.0_musl.Linux-x86_64/staging_dir/target-x86_64_musl/usr/include -I src/core -I src/event -I src/event/modules -I src/event/quic -I src/os/unix -I objs \
+	-o objs/src/core/ngx_palloc.o \
+	src/core/ngx_palloc.c
+/home/eric/homestun-sdk-check/openwrt-sdk-24.10.5-x86-64_gcc-13.3.0_musl.Linux-x86_64/staging_dir/toolchain-x86_64_gcc-13.3.0_musl/bin/x86_64-openwrt-linux-musl-gcc -c -pipe  -O -W -Wall -Wpointer-arith -Wno-unused-parameter -Werror -g -I/home/eric/homestun-sdk-check/openwrt-sdk-24.10.5-x86-64_gcc-13.3.0_musl.Linux-x86_64/staging_dir/target-x86_64_musl/usr/include -I src/core -I src/event -I src/event/modules -I src/event/quic -I src/os/unix -I objs \
+	-o objs/src/core/ngx_array.o \
+	src/core/ngx_array.c
+/home/eric/homestun-sdk-check/openwrt-sdk-24.10.5-x86-64_gcc-13.3.0_musl.Linux-x86_64/staging_dir/toolchain-x86_64_gcc-13.3.0_musl/bin/x86_64-openwrt-linux-musl-gcc -c -pipe  -O -W -Wall -Wpointer-arith -Wno-unused-parameter -Werror -g -I/home/eric/homestun-sdk-check/openwrt-sdk-24.10.5-x86-64_gcc-13.3.0_musl.Linux-x86_64/staging_dir/target-x86_64_musl/usr/include -I src/core -I src/event -I src/event/modules -I src/event/quic -I src/os/unix -I objs \
+	-o objs/src/core/ngx_list.o \
+	src/core/ngx_list.c
+/home/eric/homestun-sdk-check/openwrt-sdk-24.10.5-x86-64_gcc-13.3.0_musl.Linux-x86_64/staging_dir/toolchain-x86_64_gcc-13.3.0_musl/bin/x86_64-openwrt-linux-musl-gcc -c -pipe  -O -W -Wall -Wpointer-arith -Wno-unused-parameter -Werror -g -I/home/eric/homestun-sdk-check/openwrt-sdk-24.10.5-x86-64_gcc-13.3.0_musl.Linux-x86_64/staging_dir/target-x86_64_musl/usr/include -I src/core -I src/event -I src/event/modules -I src/event/quic -I src/os/unix -I objs \
+	-o objs/src/core/ngx_hash.o \
+	src/core/ngx_hash.c
+/home/eric/homestun-sdk-check/openwrt-sdk-24.10.5-x86-64_gcc-13.3.0_musl.Linux-x86_64/staging_dir/toolchain-x86_64_gcc-13.3.0_musl/bin/x86_64-openwrt-linux-musl-gcc -c -pipe  -O -W -Wall -Wpointer-arith -Wno-unused-parameter -Werror -g -I/home/eric/homestun-sdk-check/openwrt-sdk-24.10.5-x86-64_gcc-13.3.0_musl.Linux-x86_64/staging_dir/target-x86_64_musl/usr/include -I src/core -I src/event -I src/event/modules -I src/event/quic -I src/os/unix -I objs \
+	-o objs/src/core/ngx_buf.o \
+	src/core/ngx_buf.c
+/home/eric/homestun-sdk-check/openwrt-sdk-24.10.5-x86-64_gcc-13.3.0_musl.Linux-x86_64/staging_dir/toolchain-x86_64_gcc-13.3.0_musl/bin/x86_64-openwrt-linux-musl-gcc -c -pipe  -O -W -Wall -Wpointer-arith -Wno-unused-parameter -Werror -g -I/home/eric/homestun-sdk-check/openwrt-sdk-24.10.5-x86-64_gcc-13.3.0_musl.Linux-x86_64/staging_dir/target-x86_64_musl/usr/include -I src/core -I src/event -I src/event/modules -I src/event/quic -I src/os/unix -I objs \
+	-o objs/src/core/ngx_queue.o \
+	src/core/ngx_queue.c
+/home/eric/homestun-sdk-check/openwrt-sdk-24.10.5-x86-64_gcc-13.3.0_musl.Linux-x86_64/staging_dir/toolchain-x86_64_gcc-13.3.0_musl/bin/x86_64-openwrt-linux-musl-gcc -c -pipe  -O -W -Wall -Wpointer-arith -Wno-unused-parameter -Werror -g -I/home/eric/homestun-sdk-check/openwrt-sdk-24.10.5-x86-64_gcc-13.3.0_musl.Linux-x86_64/staging_dir/target-x86_64_musl/usr/include -I src/core -I src/event -I src/event/modules -I src/event/quic -I src/os/unix -I objs \
+	-o objs/src/core/ngx_output_chain.o \
+	src/core/ngx_output_chain.c
+/home/eric/homestun-sdk-check/openwrt-sdk-24.10.5-x86-64_gcc-13.3.0_musl.Linux-x86_64/staging_dir/toolchain-x86_64_gcc-13.3.0_musl/bin/x86_64-openwrt-linux-musl-gcc -c -pipe  -O -W -Wall -Wpointer-arith -Wno-unused-parameter -Werror -g -I/home/eric/homestun-sdk-check/openwrt-sdk-24.10.5-x86-64_gcc-13.3.0_musl.Linux-x86_64/staging_dir/target-x86_64_musl/usr/include -I src/core -I src/event -I src/event/modules -I src/event/quic -I src/os/unix -I objs \
+	-o objs/src/core/ngx_string.o \
+	src/core/ngx_string.c
+/home/eric/homestun-sdk-check/openwrt-sdk-24.10.5-x86-64_gcc-13.3.0_musl.Linux-x86_64/staging_dir/toolchain-x86_64_gcc-13.3.0_musl/bin/x86_64-openwrt-linux-musl-gcc -c -pipe  -O -W -Wall -Wpointer-arith -Wno-unused-parameter -Werror -g -I/home/eric/homestun-sdk-check/openwrt-sdk-24.10.5-x86-64_gcc-13.3.0_musl.Linux-x86_64/staging_dir/target-x86_64_musl/usr/include -I src/core -I src/event -I src/event/modules -I src/event/quic -I src/os/unix -I objs \
+	-o objs/src/core/ngx_parse.o \
+	src/core/ngx_parse.c
+/home/eric/homestun-sdk-check/openwrt-sdk-24.10.5-x86-64_gcc-13.3.0_musl.Linux-x86_64/staging_dir/toolchain-x86_64_gcc-13.3.0_musl/bin/x86_64-openwrt-linux-musl-gcc -c -pipe  -O -W -Wall -Wpointer-arith -Wno-unused-parameter -Werror -g -I/home/eric/homestun-sdk-check/openwrt-sdk-24.10.5-x86-64_gcc-13.3.0_musl.Linux-x86_64/staging_dir/target-x86_64_musl/usr/include -I src/core -I src/event -I src/event/modules -I src/event/quic -I src/os/unix -I objs \
+	-o objs/src/core/ngx_parse_time.o \
+	src/core/ngx_parse_time.c
+/home/eric/homestun-sdk-check/openwrt-sdk-24.10.5-x86-64_gcc-13.3.0_musl.Linux-x86_64/staging_dir/toolchain-x86_64_gcc-13.3.0_musl/bin/x86_64-openwrt-linux-musl-gcc -c -pipe  -O -W -Wall -Wpointer-arith -Wno-unused-parameter -Werror -g -I/home/eric/homestun-sdk-check/openwrt-sdk-24.10.5-x86-64_gcc-13.3.0_musl.Linux-x86_64/staging_dir/target-x86_64_musl/usr/include -I src/core -I src/event -I src/event/modules -I src/event/quic -I src/os/unix -I objs \
+	-o objs/src/core/ngx_inet.o \
+	src/core/ngx_inet.c
+/home/eric/homestun-sdk-check/openwrt-sdk-24.10.5-x86-64_gcc-13.3.0_musl.Linux-x86_64/staging_dir/toolchain-x86_64_gcc-13.3.0_musl/bin/x86_64-openwrt-linux-musl-gcc -c -pipe  -O -W -Wall -Wpointer-arith -Wno-unused-parameter -Werror -g -I/home/eric/homestun-sdk-check/openwrt-sdk-24.10.5-x86-64_gcc-13.3.0_musl.Linux-x86_64/staging_dir/target-x86_64_musl/usr/include -I src/core -I src/event -I src/event/modules -I src/event/quic -I src/os/unix -I objs \
+	-o objs/src/core/ngx_file.o \
+	src/core/ngx_file.c
+/home/eric/homestun-sdk-check/openwrt-sdk-24.10.5-x86-64_gcc-13.3.0_musl.Linux-x86_64/staging_dir/toolchain-x86_64_gcc-13.3.0_musl/bin/x86_64-openwrt-linux-musl-gcc -c -pipe  -O -W -Wall -Wpointer-arith -Wno-unused-parameter -Werror -g -I/home/eric/homestun-sdk-check/openwrt-sdk-24.10.5-x86-64_gcc-13.3.0_musl.Linux-x86_64/staging_dir/target-x86_64_musl/usr/include -I src/core -I src/event -I src/event/modules -I src/event/quic -I src/os/unix -I objs \
+	-o objs/src/core/ngx_crc32.o \
+	src/core/ngx_crc32.c
+/home/eric/homestun-sdk-check/openwrt-sdk-24.10.5-x86-64_gcc-13.3.0_musl.Linux-x86_64/staging_dir/toolchain-x86_64_gcc-13.3.0_musl/bin/x86_64-openwrt-linux-musl-gcc -c -pipe  -O -W -Wall -Wpointer-arith -Wno-unused-parameter -Werror -g -I/home/eric/homestun-sdk-check/openwrt-sdk-24.10.5-x86-64_gcc-13.3.0_musl.Linux-x86_64/staging_dir/target-x86_64_musl/usr/include -I src/core -I src/event -I src/event/modules -I src/event/quic -I src/os/unix -I objs \
+	-o objs/src/core/ngx_murmurhash.o \
+	src/core/ngx_murmurhash.c
+/home/eric/homestun-sdk-check/openwrt-sdk-24.10.5-x86-64_gcc-13.3.0_musl.Linux-x86_64/staging_dir/toolchain-x86_64_gcc-13.3.0_musl/bin/x86_64-openwrt-linux-musl-gcc -c -pipe  -O -W -Wall -Wpointer-arith -Wno-unused-parameter -Werror -g -I/home/eric/homestun-sdk-check/openwrt-sdk-24.10.5-x86-64_gcc-13.3.0_musl.Linux-x86_64/staging_dir/target-x86_64_musl/usr/include -I src/core -I src/event -I src/event/modules -I src/event/quic -I src/os/unix -I objs \
+	-o objs/src/core/ngx_md5.o \
+	src/core/ngx_md5.c
+/home/eric/homestun-sdk-check/openwrt-sdk-24.10.5-x86-64_gcc-13.3.0_musl.Linux-x86_64/staging_dir/toolchain-x86_64_gcc-13.3.0_musl/bin/x86_64-openwrt-linux-musl-gcc -c -pipe  -O -W -Wall -Wpointer-arith -Wno-unused-parameter -Werror -g -I/home/eric/homestun-sdk-check/openwrt-sdk-24.10.5-x86-64_gcc-13.3.0_musl.Linux-x86_64/staging_dir/target-x86_64_musl/usr/include -I src/core -I src/event -I src/event/modules -I src/event/quic -I src/os/unix -I objs \
+	-o objs/src/core/ngx_sha1.o \
+	src/core/ngx_sha1.c
+/home/eric/homestun-sdk-check/openwrt-sdk-24.10.5-x86-64_gcc-13.3.0_musl.Linux-x86_64/staging_dir/toolchain-x86_64_gcc-13.3.0_musl/bin/x86_64-openwrt-linux-musl-gcc -c -pipe  -O -W -Wall -Wpointer-arith -Wno-unused-parameter -Werror -g -I/home/eric/homestun-sdk-check/openwrt-sdk-24.10.5-x86-64_gcc-13.3.0_musl.Linux-x86_64/staging_dir/target-x86_64_musl/usr/include -I src/core -I src/event -I src/event/modules -I src/event/quic -I src/os/unix -I objs \
+	-o objs/src/core/ngx_rbtree.o \
+	src/core/ngx_rbtree.c
+/home/eric/homestun-sdk-check/openwrt-sdk-24.10.5-x86-64_gcc-13.3.0_musl.Linux-x86_64/staging_dir/toolchain-x86_64_gcc-13.3.0_musl/bin/x86_64-openwrt-linux-musl-gcc -c -pipe  -O -W -Wall -Wpointer-arith -Wno-unused-parameter -Werror -g -I/home/eric/homestun-sdk-check/openwrt-sdk-24.10.5-x86-64_gcc-13.3.0_musl.Linux-x86_64/staging_dir/target-x86_64_musl/usr/include -I src/core -I src/event -I src/event/modules -I src/event/quic -I src/os/unix -I objs \
+	-o objs/src/core/ngx_radix_tree.o \
+	src/core/ngx_radix_tree.c
+/home/eric/homestun-sdk-check/openwrt-sdk-24.10.5-x86-64_gcc-13.3.0_musl.Linux-x86_64/staging_dir/toolchain-x86_64_gcc-13.3.0_musl/bin/x86_64-openwrt-linux-musl-gcc -c -pipe  -O -W -Wall -Wpointer-arith -Wno-unused-parameter -Werror -g -I/home/eric/homestun-sdk-check/openwrt-sdk-24.10.5-x86-64_gcc-13.3.0_musl.Linux-x86_64/staging_dir/target-x86_64_musl/usr/include -I src/core -I src/event -I src/event/modules -I src/event/quic -I src/os/unix -I objs \
+	-o objs/src/core/ngx_slab.o \
+	src/core/ngx_slab.c
+/home/eric/homestun-sdk-check/openwrt-sdk-24.10.5-x86-64_gcc-13.3.0_musl.Linux-x86_64/staging_dir/toolchain-x86_64_gcc-13.3.0_musl/bin/x86_64-openwrt-linux-musl-gcc -c -pipe  -O -W -Wall -Wpointer-arith -Wno-unused-parameter -Werror -g -I/home/eric/homestun-sdk-check/openwrt-sdk-24.10.5-x86-64_gcc-13.3.0_musl.Linux-x86_64/staging_dir/target-x86_64_musl/usr/include -I src/core -I src/event -I src/event/modules -I src/event/quic -I src/os/unix -I objs \
+	-o objs/src/core/ngx_times.o \
+	src/core/ngx_times.c
+/home/eric/homestun-sdk-check/openwrt-sdk-24.10.5-x86-64_gcc-13.3.0_musl.Linux-x86_64/staging_dir/toolchain-x86_64_gcc-13.3.0_musl/bin/x86_64-openwrt-linux-musl-gcc -c -pipe  -O -W -Wall -Wpointer-arith -Wno-unused-parameter -Werror -g -I/home/eric/homestun-sdk-check/openwrt-sdk-24.10.5-x86-64_gcc-13.3.0_musl.Linux-x86_64/staging_dir/target-x86_64_musl/usr/include -I src/core -I src/event -I src/event/modules -I src/event/quic -I src/os/unix -I objs \
+	-o objs/src/core/ngx_shmtx.o \
+	src/core/ngx_shmtx.c
+/home/eric/homestun-sdk-check/openwrt-sdk-24.10.5-x86-64_gcc-13.3.0_musl.Linux-x86_64/staging_dir/toolchain-x86_64_gcc-13.3.0_musl/bin/x86_64-openwrt-linux-musl-gcc -c -pipe  -O -W -Wall -Wpointer-arith -Wno-unused-parameter -Werror -g -I/home/eric/homestun-sdk-check/openwrt-sdk-24.10.5-x86-64_gcc-13.3.0_musl.Linux-x86_64/staging_dir/target-x86_64_musl/usr/include -I src/core -I src/event -I src/event/modules -I src/event/quic -I src/os/unix -I objs \
+	-o objs/src/core/ngx_connection.o \
+	src/core/ngx_connection.c
+/home/eric/homestun-sdk-check/openwrt-sdk-24.10.5-x86-64_gcc-13.3.0_musl.Linux-x86_64/staging_dir/toolchain-x86_64_gcc-13.3.0_musl/bin/x86_64-openwrt-linux-musl-gcc -c -pipe  -O -W -Wall -Wpointer-arith -Wno-unused-parameter -Werror -g -I/home/eric/homestun-sdk-check/openwrt-sdk-24.10.5-x86-64_gcc-13.3.0_musl.Linux-x86_64/staging_dir/target-x86_64_musl/usr/include -I src/core -I src/event -I src/event/modules -I src/event/quic -I src/os/unix -I objs \
+	-o objs/src/core/ngx_cycle.o \
+	src/core/ngx_cycle.c
+/home/eric/homestun-sdk-check/openwrt-sdk-24.10.5-x86-64_gcc-13.3.0_musl.Linux-x86_64/staging_dir/toolchain-x86_64_gcc-13.3.0_musl/bin/x86_64-openwrt-linux-musl-gcc -c -pipe  -O -W -Wall -Wpointer-arith -Wno-unused-parameter -Werror -g -I/home/eric/homestun-sdk-check/openwrt-sdk-24.10.5-x86-64_gcc-13.3.0_musl.Linux-x86_64/staging_dir/target-x86_64_musl/usr/include -I src/core -I src/event -I src/event/modules -I src/event/quic -I src/os/unix -I objs \
+	-o objs/src/core/ngx_spinlock.o \
+	src/core/ngx_spinlock.c
+/home/eric/homestun-sdk-check/openwrt-sdk-24.10.5-x86-64_gcc-13.3.0_musl.Linux-x86_64/staging_dir/toolchain-x86_64_gcc-13.3.0_musl/bin/x86_64-openwrt-linux-musl-gcc -c -pipe  -O -W -Wall -Wpointer-arith -Wno-unused-parameter -Werror -g -I/home/eric/homestun-sdk-check/openwrt-sdk-24.10.5-x86-64_gcc-13.3.0_musl.Linux-x86_64/staging_dir/target-x86_64_musl/usr/include -I src/core -I src/event -I src/event/modules -I src/event/quic -I src/os/unix -I objs \
+	-o objs/src/core/ngx_rwlock.o \
+	src/core/ngx_rwlock.c
+/home/eric/homestun-sdk-check/openwrt-sdk-24.10.5-x86-64_gcc-13.3.0_musl.Linux-x86_64/staging_dir/toolchain-x86_64_gcc-13.3.0_musl/bin/x86_64-openwrt-linux-musl-gcc -c -pipe  -O -W -Wall -Wpointer-arith -Wno-unused-parameter -Werror -g -I/home/eric/homestun-sdk-check/openwrt-sdk-24.10.5-x86-64_gcc-13.3.0_musl.Linux-x86_64/staging_dir/target-x86_64_musl/usr/include -I src/core -I src/event -I src/event/modules -I src/event/quic -I src/os/unix -I objs \
+	-o objs/src/core/ngx_cpuinfo.o \
+	src/core/ngx_cpuinfo.c
+/home/eric/homestun-sdk-check/openwrt-sdk-24.10.5-x86-64_gcc-13.3.0_musl.Linux-x86_64/staging_dir/toolchain-x86_64_gcc-13.3.0_musl/bin/x86_64-openwrt-linux-musl-gcc -c -pipe  -O -W -Wall -Wpointer-arith -Wno-unused-parameter -Werror -g -I/home/eric/homestun-sdk-check/openwrt-sdk-24.10.5-x86-64_gcc-13.3.0_musl.Linux-x86_64/staging_dir/target-x86_64_musl/usr/include -I src/core -I src/event -I src/event/modules -I src/event/quic -I src/os/unix -I objs \
+	-o objs/src/core/ngx_conf_file.o \
+	src/core/ngx_conf_file.c
+/home/eric/homestun-sdk-check/openwrt-sdk-24.10.5-x86-64_gcc-13.3.0_musl.Linux-x86_64/staging_dir/toolchain-x86_64_gcc-13.3.0_musl/bin/x86_64-openwrt-linux-musl-gcc -c -pipe  -O -W -Wall -Wpointer-arith -Wno-unused-parameter -Werror -g -I/home/eric/homestun-sdk-check/openwrt-sdk-24.10.5-x86-64_gcc-13.3.0_musl.Linux-x86_64/staging_dir/target-x86_64_musl/usr/include -I src/core -I src/event -I src/event/modules -I src/event/quic -I src/os/unix -I objs \
+	-o objs/src/core/ngx_module.o \
+	src/core/ngx_module.c
+/home/eric/homestun-sdk-check/openwrt-sdk-24.10.5-x86-64_gcc-13.3.0_musl.Linux-x86_64/staging_dir/toolchain-x86_64_gcc-13.3.0_musl/bin/x86_64-openwrt-linux-musl-gcc -c -pipe  -O -W -Wall -Wpointer-arith -Wno-unused-parameter -Werror -g -I/home/eric/homestun-sdk-check/openwrt-sdk-24.10.5-x86-64_gcc-13.3.0_musl.Linux-x86_64/staging_dir/target-x86_64_musl/usr/include -I src/core -I src/event -I src/event/modules -I src/event/quic -I src/os/unix -I objs \
+	-o objs/src/core/ngx_resolver.o \
+	src/core/ngx_resolver.c
+/home/eric/homestun-sdk-check/openwrt-sdk-24.10.5-x86-64_gcc-13.3.0_musl.Linux-x86_64/staging_dir/toolchain-x86_64_gcc-13.3.0_musl/bin/x86_64-openwrt-linux-musl-gcc -c -pipe  -O -W -Wall -Wpointer-arith -Wno-unused-parameter -Werror -g -I/home/eric/homestun-sdk-check/openwrt-sdk-24.10.5-x86-64_gcc-13.3.0_musl.Linux-x86_64/staging_dir/target-x86_64_musl/usr/include -I src/core -I src/event -I src/event/modules -I src/event/quic -I src/os/unix -I objs \
+	-o objs/src/core/ngx_open_file_cache.o \
+	src/core/ngx_open_file_cache.c
+/home/eric/homestun-sdk-check/openwrt-sdk-24.10.5-x86-64_gcc-13.3.0_musl.Linux-x86_64/staging_dir/toolchain-x86_64_gcc-13.3.0_musl/bin/x86_64-openwrt-linux-musl-gcc -c -pipe  -O -W -Wall -Wpointer-arith -Wno-unused-parameter -Werror -g -I/home/eric/homestun-sdk-check/openwrt-sdk-24.10.5-x86-64_gcc-13.3.0_musl.Linux-x86_64/staging_dir/target-x86_64_musl/usr/include -I src/core -I src/event -I src/event/modules -I src/event/quic -I src/os/unix -I objs \
+	-o objs/src/core/ngx_crypt.o \
+	src/core/ngx_crypt.c
+/home/eric/homestun-sdk-check/openwrt-sdk-24.10.5-x86-64_gcc-13.3.0_musl.Linux-x86_64/staging_dir/toolchain-x86_64_gcc-13.3.0_musl/bin/x86_64-openwrt-linux-musl-gcc -c -pipe  -O -W -Wall -Wpointer-arith -Wno-unused-parameter -Werror -g -I/home/eric/homestun-sdk-check/openwrt-sdk-24.10.5-x86-64_gcc-13.3.0_musl.Linux-x86_64/staging_dir/target-x86_64_musl/usr/include -I src/core -I src/event -I src/event/modules -I src/event/quic -I src/os/unix -I objs \
+	-o objs/src/core/ngx_proxy_protocol.o \
+	src/core/ngx_proxy_protocol.c
+/home/eric/homestun-sdk-check/openwrt-sdk-24.10.5-x86-64_gcc-13.3.0_musl.Linux-x86_64/staging_dir/toolchain-x86_64_gcc-13.3.0_musl/bin/x86_64-openwrt-linux-musl-gcc -c -pipe  -O -W -Wall -Wpointer-arith -Wno-unused-parameter -Werror -g -I/home/eric/homestun-sdk-check/openwrt-sdk-24.10.5-x86-64_gcc-13.3.0_musl.Linux-x86_64/staging_dir/target-x86_64_musl/usr/include -I src/core -I src/event -I src/event/modules -I src/event/quic -I src/os/unix -I objs \
+	-o objs/src/core/ngx_syslog.o \
+	src/core/ngx_syslog.c
+/home/eric/homestun-sdk-check/openwrt-sdk-24.10.5-x86-64_gcc-13.3.0_musl.Linux-x86_64/staging_dir/toolchain-x86_64_gcc-13.3.0_musl/bin/x86_64-openwrt-linux-musl-gcc -c -pipe  -O -W -Wall -Wpointer-arith -Wno-unused-parameter -Werror -g -I/home/eric/homestun-sdk-check/openwrt-sdk-24.10.5-x86-64_gcc-13.3.0_musl.Linux-x86_64/staging_dir/target-x86_64_musl/usr/include -I src/core -I src/event -I src/event/modules -I src/event/quic -I src/os/unix -I objs \
+	-o objs/src/event/ngx_event.o \
+	src/event/ngx_event.c
+/home/eric/homestun-sdk-check/openwrt-sdk-24.10.5-x86-64_gcc-13.3.0_musl.Linux-x86_64/staging_dir/toolchain-x86_64_gcc-13.3.0_musl/bin/x86_64-openwrt-linux-musl-gcc -c -pipe  -O -W -Wall -Wpointer-arith -Wno-unused-parameter -Werror -g -I/home/eric/homestun-sdk-check/openwrt-sdk-24.10.5-x86-64_gcc-13.3.0_musl.Linux-x86_64/staging_dir/target-x86_64_musl/usr/include -I src/core -I src/event -I src/event/modules -I src/event/quic -I src/os/unix -I objs \
+	-o objs/src/event/ngx_event_timer.o \
+	src/event/ngx_event_timer.c
+/home/eric/homestun-sdk-check/openwrt-sdk-24.10.5-x86-64_gcc-13.3.0_musl.Linux-x86_64/staging_dir/toolchain-x86_64_gcc-13.3.0_musl/bin/x86_64-openwrt-linux-musl-gcc -c -pipe  -O -W -Wall -Wpointer-arith -Wno-unused-parameter -Werror -g -I/home/eric/homestun-sdk-check/openwrt-sdk-24.10.5-x86-64_gcc-13.3.0_musl.Linux-x86_64/staging_dir/target-x86_64_musl/usr/include -I src/core -I src/event -I src/event/modules -I src/event/quic -I src/os/unix -I objs \
+	-o objs/src/event/ngx_event_posted.o \
+	src/event/ngx_event_posted.c
+/home/eric/homestun-sdk-check/openwrt-sdk-24.10.5-x86-64_gcc-13.3.0_musl.Linux-x86_64/staging_dir/toolchain-x86_64_gcc-13.3.0_musl/bin/x86_64-openwrt-linux-musl-gcc -c -pipe  -O -W -Wall -Wpointer-arith -Wno-unused-parameter -Werror -g -I/home/eric/homestun-sdk-check/openwrt-sdk-24.10.5-x86-64_gcc-13.3.0_musl.Linux-x86_64/staging_dir/target-x86_64_musl/usr/include -I src/core -I src/event -I src/event/modules -I src/event/quic -I src/os/unix -I objs \
+	-o objs/src/event/ngx_event_accept.o \
+	src/event/ngx_event_accept.c
+/home/eric/homestun-sdk-check/openwrt-sdk-24.10.5-x86-64_gcc-13.3.0_musl.Linux-x86_64/staging_dir/toolchain-x86_64_gcc-13.3.0_musl/bin/x86_64-openwrt-linux-musl-gcc -c -pipe  -O -W -Wall -Wpointer-arith -Wno-unused-parameter -Werror -g -I/home/eric/homestun-sdk-check/openwrt-sdk-24.10.5-x86-64_gcc-13.3.0_musl.Linux-x86_64/staging_dir/target-x86_64_musl/usr/include -I src/core -I src/event -I src/event/modules -I src/event/quic -I src/os/unix -I objs \
+	-o objs/src/event/ngx_event_udp.o \
+	src/event/ngx_event_udp.c
+/home/eric/homestun-sdk-check/openwrt-sdk-24.10.5-x86-64_gcc-13.3.0_musl.Linux-x86_64/staging_dir/toolchain-x86_64_gcc-13.3.0_musl/bin/x86_64-openwrt-linux-musl-gcc -c -pipe  -O -W -Wall -Wpointer-arith -Wno-unused-parameter -Werror -g -I/home/eric/homestun-sdk-check/openwrt-sdk-24.10.5-x86-64_gcc-13.3.0_musl.Linux-x86_64/staging_dir/target-x86_64_musl/usr/include -I src/core -I src/event -I src/event/modules -I src/event/quic -I src/os/unix -I objs \
+	-o objs/src/event/ngx_event_connect.o \
+	src/event/ngx_event_connect.c
+/home/eric/homestun-sdk-check/openwrt-sdk-24.10.5-x86-64_gcc-13.3.0_musl.Linux-x86_64/staging_dir/toolchain-x86_64_gcc-13.3.0_musl/bin/x86_64-openwrt-linux-musl-gcc -c -pipe  -O -W -Wall -Wpointer-arith -Wno-unused-parameter -Werror -g -I/home/eric/homestun-sdk-check/openwrt-sdk-24.10.5-x86-64_gcc-13.3.0_musl.Linux-x86_64/staging_dir/target-x86_64_musl/usr/include -I src/core -I src/event -I src/event/modules -I src/event/quic -I src/os/unix -I objs \
+	-o objs/src/event/ngx_event_pipe.o \
+	src/event/ngx_event_pipe.c
+/home/eric/homestun-sdk-check/openwrt-sdk-24.10.5-x86-64_gcc-13.3.0_musl.Linux-x86_64/staging_dir/toolchain-x86_64_gcc-13.3.0_musl/bin/x86_64-openwrt-linux-musl-gcc -c -pipe  -O -W -Wall -Wpointer-arith -Wno-unused-parameter -Werror -g -I/home/eric/homestun-sdk-check/openwrt-sdk-24.10.5-x86-64_gcc-13.3.0_musl.Linux-x86_64/staging_dir/target-x86_64_musl/usr/include -I src/core -I src/event -I src/event/modules -I src/event/quic -I src/os/unix -I objs \
+	-o objs/src/os/unix/ngx_time.o \
+	src/os/unix/ngx_time.c
+/home/eric/homestun-sdk-check/openwrt-sdk-24.10.5-x86-64_gcc-13.3.0_musl.Linux-x86_64/staging_dir/toolchain-x86_64_gcc-13.3.0_musl/bin/x86_64-openwrt-linux-musl-gcc -c -pipe  -O -W -Wall -Wpointer-arith -Wno-unused-parameter -Werror -g -I/home/eric/homestun-sdk-check/openwrt-sdk-24.10.5-x86-64_gcc-13.3.0_musl.Linux-x86_64/staging_dir/target-x86_64_musl/usr/include -I src/core -I src/event -I src/event/modules -I src/event/quic -I src/os/unix -I objs \
+	-o objs/src/os/unix/ngx_errno.o \
+	src/os/unix/ngx_errno.c
+/home/eric/homestun-sdk-check/openwrt-sdk-24.10.5-x86-64_gcc-13.3.0_musl.Linux-x86_64/staging_dir/toolchain-x86_64_gcc-13.3.0_musl/bin/x86_64-openwrt-linux-musl-gcc -c -pipe  -O -W -Wall -Wpointer-arith -Wno-unused-parameter -Werror -g -I/home/eric/homestun-sdk-check/openwrt-sdk-24.10.5-x86-64_gcc-13.3.0_musl.Linux-x86_64/staging_dir/target-x86_64_musl/usr/include -I src/core -I src/event -I src/event/modules -I src/event/quic -I src/os/unix -I objs \
+	-o objs/src/os/unix/ngx_alloc.o \
+	src/os/unix/ngx_alloc.c
+/home/eric/homestun-sdk-check/openwrt-sdk-24.10.5-x86-64_gcc-13.3.0_musl.Linux-x86_64/staging_dir/toolchain-x86_64_gcc-13.3.0_musl/bin/x86_64-openwrt-linux-musl-gcc -c -pipe  -O -W -Wall -Wpointer-arith -Wno-unused-parameter -Werror -g -I/home/eric/homestun-sdk-check/openwrt-sdk-24.10.5-x86-64_gcc-13.3.0_musl.Linux-x86_64/staging_dir/target-x86_64_musl/usr/include -I src/core -I src/event -I src/event/modules -I src/event/quic -I src/os/unix -I objs \
+	-o objs/src/os/unix/ngx_files.o \
+	src/os/unix/ngx_files.c
+/home/eric/homestun-sdk-check/openwrt-sdk-24.10.5-x86-64_gcc-13.3.0_musl.Linux-x86_64/staging_dir/toolchain-x86_64_gcc-13.3.0_musl/bin/x86_64-openwrt-linux-musl-gcc -c -pipe  -O -W -Wall -Wpointer-arith -Wno-unused-parameter -Werror -g -I/home/eric/homestun-sdk-check/openwrt-sdk-24.10.5-x86-64_gcc-13.3.0_musl.Linux-x86_64/staging_dir/target-x86_64_musl/usr/include -I src/core -I src/event -I src/event/modules -I src/event/quic -I src/os/unix -I objs \
+	-o objs/src/os/unix/ngx_socket.o \
+	src/os/unix/ngx_socket.c
+/home/eric/homestun-sdk-check/openwrt-sdk-24.10.5-x86-64_gcc-13.3.0_musl.Linux-x86_64/staging_dir/toolchain-x86_64_gcc-13.3.0_musl/bin/x86_64-openwrt-linux-musl-gcc -c -pipe  -O -W -Wall -Wpointer-arith -Wno-unused-parameter -Werror -g -I/home/eric/homestun-sdk-check/openwrt-sdk-24.10.5-x86-64_gcc-13.3.0_musl.Linux-x86_64/staging_dir/target-x86_64_musl/usr/include -I src/core -I src/event -I src/event/modules -I src/event/quic -I src/os/unix -I objs \
+	-o objs/src/os/unix/ngx_recv.o \
+	src/os/unix/ngx_recv.c
+/home/eric/homestun-sdk-check/openwrt-sdk-24.10.5-x86-64_gcc-13.3.0_musl.Linux-x86_64/staging_dir/toolchain-x86_64_gcc-13.3.0_musl/bin/x86_64-openwrt-linux-musl-gcc -c -pipe  -O -W -Wall -Wpointer-arith -Wno-unused-parameter -Werror -g -I/home/eric/homestun-sdk-check/openwrt-sdk-24.10.5-x86-64_gcc-13.3.0_musl.Linux-x86_64/staging_dir/target-x86_64_musl/usr/include -I src/core -I src/event -I src/event/modules -I src/event/quic -I src/os/unix -I objs \
+	-o objs/src/os/unix/ngx_readv_chain.o \
+	src/os/unix/ngx_readv_chain.c
+/home/eric/homestun-sdk-check/openwrt-sdk-24.10.5-x86-64_gcc-13.3.0_musl.Linux-x86_64/staging_dir/toolchain-x86_64_gcc-13.3.0_musl/bin/x86_64-openwrt-linux-musl-gcc -c -pipe  -O -W -Wall -Wpointer-arith -Wno-unused-parameter -Werror -g -I/home/eric/homestun-sdk-check/openwrt-sdk-24.10.5-x86-64_gcc-13.3.0_musl.Linux-x86_64/staging_dir/target-x86_64_musl/usr/include -I src/core -I src/event -I src/event/modules -I src/event/quic -I src/os/unix -I objs \
+	-o objs/src/os/unix/ngx_udp_recv.o \
+	src/os/unix/ngx_udp_recv.c
+/home/eric/homestun-sdk-check/openwrt-sdk-24.10.5-x86-64_gcc-13.3.0_musl.Linux-x86_64/staging_dir/toolchain-x86_64_gcc-13.3.0_musl/bin/x86_64-openwrt-linux-musl-gcc -c -pipe  -O -W -Wall -Wpointer-arith -Wno-unused-parameter -Werror -g -I/home/eric/homestun-sdk-check/openwrt-sdk-24.10.5-x86-64_gcc-13.3.0_musl.Linux-x86_64/staging_dir/target-x86_64_musl/usr/include -I src/core -I src/event -I src/event/modules -I src/event/quic -I src/os/unix -I objs \
+	-o objs/src/os/unix/ngx_send.o \
+	src/os/unix/ngx_send.c
+/home/eric/homestun-sdk-check/openwrt-sdk-24.10.5-x86-64_gcc-13.3.0_musl.Linux-x86_64/staging_dir/toolchain-x86_64_gcc-13.3.0_musl/bin/x86_64-openwrt-linux-musl-gcc -c -pipe  -O -W -Wall -Wpointer-arith -Wno-unused-parameter -Werror -g -I/home/eric/homestun-sdk-check/openwrt-sdk-24.10.5-x86-64_gcc-13.3.0_musl.Linux-x86_64/staging_dir/target-x86_64_musl/usr/include -I src/core -I src/event -I src/event/modules -I src/event/quic -I src/os/unix -I objs \
+	-o objs/src/os/unix/ngx_writev_chain.o \
+	src/os/unix/ngx_writev_chain.c
+/home/eric/homestun-sdk-check/openwrt-sdk-24.10.5-x86-64_gcc-13.3.0_musl.Linux-x86_64/staging_dir/toolchain-x86_64_gcc-13.3.0_musl/bin/x86_64-openwrt-linux-musl-gcc -c -pipe  -O -W -Wall -Wpointer-arith -Wno-unused-parameter -Werror -g -I/home/eric/homestun-sdk-check/openwrt-sdk-24.10.5-x86-64_gcc-13.3.0_musl.Linux-x86_64/staging_dir/target-x86_64_musl/usr/include -I src/core -I src/event -I src/event/modules -I src/event/quic -I src/os/unix -I objs \
+	-o objs/src/os/unix/ngx_udp_send.o \
+	src/os/unix/ngx_udp_send.c
+/home/eric/homestun-sdk-check/openwrt-sdk-24.10.5-x86-64_gcc-13.3.0_musl.Linux-x86_64/staging_dir/toolchain-x86_64_gcc-13.3.0_musl/bin/x86_64-openwrt-linux-musl-gcc -c -pipe  -O -W -Wall -Wpointer-arith -Wno-unused-parameter -Werror -g -I/home/eric/homestun-sdk-check/openwrt-sdk-24.10.5-x86-64_gcc-13.3.0_musl.Linux-x86_64/staging_dir/target-x86_64_musl/usr/include -I src/core -I src/event -I src/event/modules -I src/event/quic -I src/os/unix -I objs \
+	-o objs/src/os/unix/ngx_udp_sendmsg_chain.o \
+	src/os/unix/ngx_udp_sendmsg_chain.c
+/home/eric/homestun-sdk-check/openwrt-sdk-24.10.5-x86-64_gcc-13.3.0_musl.Linux-x86_64/staging_dir/toolchain-x86_64_gcc-13.3.0_musl/bin/x86_64-openwrt-linux-musl-gcc -c -pipe  -O -W -Wall -Wpointer-arith -Wno-unused-parameter -Werror -g -I/home/eric/homestun-sdk-check/openwrt-sdk-24.10.5-x86-64_gcc-13.3.0_musl.Linux-x86_64/staging_dir/target-x86_64_musl/usr/include -I src/core -I src/event -I src/event/modules -I src/event/quic -I src/os/unix -I objs \
+	-o objs/src/os/unix/ngx_channel.o \
+	src/os/unix/ngx_channel.c
+/home/eric/homestun-sdk-check/openwrt-sdk-24.10.5-x86-64_gcc-13.3.0_musl.Linux-x86_64/staging_dir/toolchain-x86_64_gcc-13.3.0_musl/bin/x86_64-openwrt-linux-musl-gcc -c -pipe  -O -W -Wall -Wpointer-arith -Wno-unused-parameter -Werror -g -I/home/eric/homestun-sdk-check/openwrt-sdk-24.10.5-x86-64_gcc-13.3.0_musl.Linux-x86_64/staging_dir/target-x86_64_musl/usr/include -I src/core -I src/event -I src/event/modules -I src/event/quic -I src/os/unix -I objs \
+	-o objs/src/os/unix/ngx_shmem.o \
+	src/os/unix/ngx_shmem.c
+/home/eric/homestun-sdk-check/openwrt-sdk-24.10.5-x86-64_gcc-13.3.0_musl.Linux-x86_64/staging_dir/toolchain-x86_64_gcc-13.3.0_musl/bin/x86_64-openwrt-linux-musl-gcc -c -pipe  -O -W -Wall -Wpointer-arith -Wno-unused-parameter -Werror -g -I/home/eric/homestun-sdk-check/openwrt-sdk-24.10.5-x86-64_gcc-13.3.0_musl.Linux-x86_64/staging_dir/target-x86_64_musl/usr/include -I src/core -I src/event -I src/event/modules -I src/event/quic -I src/os/unix -I objs \
+	-o objs/src/os/unix/ngx_process.o \
+	src/os/unix/ngx_process.c
+/home/eric/homestun-sdk-check/openwrt-sdk-24.10.5-x86-64_gcc-13.3.0_musl.Linux-x86_64/staging_dir/toolchain-x86_64_gcc-13.3.0_musl/bin/x86_64-openwrt-linux-musl-gcc -c -pipe  -O -W -Wall -Wpointer-arith -Wno-unused-parameter -Werror -g -I/home/eric/homestun-sdk-check/openwrt-sdk-24.10.5-x86-64_gcc-13.3.0_musl.Linux-x86_64/staging_dir/target-x86_64_musl/usr/include -I src/core -I src/event -I src/event/modules -I src/event/quic -I src/os/unix -I objs \
+	-o objs/src/os/unix/ngx_daemon.o \
+	src/os/unix/ngx_daemon.c
+/home/eric/homestun-sdk-check/openwrt-sdk-24.10.5-x86-64_gcc-13.3.0_musl.Linux-x86_64/staging_dir/toolchain-x86_64_gcc-13.3.0_musl/bin/x86_64-openwrt-linux-musl-gcc -c -pipe  -O -W -Wall -Wpointer-arith -Wno-unused-parameter -Werror -g -I/home/eric/homestun-sdk-check/openwrt-sdk-24.10.5-x86-64_gcc-13.3.0_musl.Linux-x86_64/staging_dir/target-x86_64_musl/usr/include -I src/core -I src/event -I src/event/modules -I src/event/quic -I src/os/unix -I objs \
+	-o objs/src/os/unix/ngx_setaffinity.o \
+	src/os/unix/ngx_setaffinity.c
+/home/eric/homestun-sdk-check/openwrt-sdk-24.10.5-x86-64_gcc-13.3.0_musl.Linux-x86_64/staging_dir/toolchain-x86_64_gcc-13.3.0_musl/bin/x86_64-openwrt-linux-musl-gcc -c -pipe  -O -W -Wall -Wpointer-arith -Wno-unused-parameter -Werror -g -I/home/eric/homestun-sdk-check/openwrt-sdk-24.10.5-x86-64_gcc-13.3.0_musl.Linux-x86_64/staging_dir/target-x86_64_musl/usr/include -I src/core -I src/event -I src/event/modules -I src/event/quic -I src/os/unix -I objs \
+	-o objs/src/os/unix/ngx_setproctitle.o \
+	src/os/unix/ngx_setproctitle.c
+/home/eric/homestun-sdk-check/openwrt-sdk-24.10.5-x86-64_gcc-13.3.0_musl.Linux-x86_64/staging_dir/toolchain-x86_64_gcc-13.3.0_musl/bin/x86_64-openwrt-linux-musl-gcc -c -pipe  -O -W -Wall -Wpointer-arith -Wno-unused-parameter -Werror -g -I/home/eric/homestun-sdk-check/openwrt-sdk-24.10.5-x86-64_gcc-13.3.0_musl.Linux-x86_64/staging_dir/target-x86_64_musl/usr/include -I src/core -I src/event -I src/event/modules -I src/event/quic -I src/os/unix -I objs \
+	-o objs/src/os/unix/ngx_posix_init.o \
+	src/os/unix/ngx_posix_init.c
+/home/eric/homestun-sdk-check/openwrt-sdk-24.10.5-x86-64_gcc-13.3.0_musl.Linux-x86_64/staging_dir/toolchain-x86_64_gcc-13.3.0_musl/bin/x86_64-openwrt-linux-musl-gcc -c -pipe  -O -W -Wall -Wpointer-arith -Wno-unused-parameter -Werror -g -I/home/eric/homestun-sdk-check/openwrt-sdk-24.10.5-x86-64_gcc-13.3.0_musl.Linux-x86_64/staging_dir/target-x86_64_musl/usr/include -I src/core -I src/event -I src/event/modules -I src/event/quic -I src/os/unix -I objs \
+	-o objs/src/os/unix/ngx_user.o \
+	src/os/unix/ngx_user.c
+/home/eric/homestun-sdk-check/openwrt-sdk-24.10.5-x86-64_gcc-13.3.0_musl.Linux-x86_64/staging_dir/toolchain-x86_64_gcc-13.3.0_musl/bin/x86_64-openwrt-linux-musl-gcc -c -pipe  -O -W -Wall -Wpointer-arith -Wno-unused-parameter -Werror -g -I/home/eric/homestun-sdk-check/openwrt-sdk-24.10.5-x86-64_gcc-13.3.0_musl.Linux-x86_64/staging_dir/target-x86_64_musl/usr/include -I src/core -I src/event -I src/event/modules -I src/event/quic -I src/os/unix -I objs \
+	-o objs/src/os/unix/ngx_dlopen.o \
+	src/os/unix/ngx_dlopen.c
+/home/eric/homestun-sdk-check/openwrt-sdk-24.10.5-x86-64_gcc-13.3.0_musl.Linux-x86_64/staging_dir/toolchain-x86_64_gcc-13.3.0_musl/bin/x86_64-openwrt-linux-musl-gcc -c -pipe  -O -W -Wall -Wpointer-arith -Wno-unused-parameter -Werror -g -I/home/eric/homestun-sdk-check/openwrt-sdk-24.10.5-x86-64_gcc-13.3.0_musl.Linux-x86_64/staging_dir/target-x86_64_musl/usr/include -I src/core -I src/event -I src/event/modules -I src/event/quic -I src/os/unix -I objs \
+	-o objs/src/os/unix/ngx_process_cycle.o \
+	src/os/unix/ngx_process_cycle.c
+/home/eric/homestun-sdk-check/openwrt-sdk-24.10.5-x86-64_gcc-13.3.0_musl.Linux-x86_64/staging_dir/toolchain-x86_64_gcc-13.3.0_musl/bin/x86_64-openwrt-linux-musl-gcc -c -pipe  -O -W -Wall -Wpointer-arith -Wno-unused-parameter -Werror -g -I/home/eric/homestun-sdk-check/openwrt-sdk-24.10.5-x86-64_gcc-13.3.0_musl.Linux-x86_64/staging_dir/target-x86_64_musl/usr/include -I src/core -I src/event -I src/event/modules -I src/event/quic -I src/os/unix -I objs \
+	-o objs/src/os/unix/ngx_linux_init.o \
+	src/os/unix/ngx_linux_init.c
+/home/eric/homestun-sdk-check/openwrt-sdk-24.10.5-x86-64_gcc-13.3.0_musl.Linux-x86_64/staging_dir/toolchain-x86_64_gcc-13.3.0_musl/bin/x86_64-openwrt-linux-musl-gcc -c -pipe  -O -W -Wall -Wpointer-arith -Wno-unused-parameter -Werror -g -I/home/eric/homestun-sdk-check/openwrt-sdk-24.10.5-x86-64_gcc-13.3.0_musl.Linux-x86_64/staging_dir/target-x86_64_musl/usr/include -I src/core -I src/event -I src/event/modules -I src/event/quic -I src/os/unix -I objs \
+	-o objs/src/event/modules/ngx_epoll_module.o \
+	src/event/modules/ngx_epoll_module.c
+/home/eric/homestun-sdk-check/openwrt-sdk-24.10.5-x86-64_gcc-13.3.0_musl.Linux-x86_64/staging_dir/toolchain-x86_64_gcc-13.3.0_musl/bin/x86_64-openwrt-linux-musl-gcc -c -pipe  -O -W -Wall -Wpointer-arith -Wno-unused-parameter -Werror -g -I/home/eric/homestun-sdk-check/openwrt-sdk-24.10.5-x86-64_gcc-13.3.0_musl.Linux-x86_64/staging_dir/target-x86_64_musl/usr/include -I src/core -I src/event -I src/event/modules -I src/event/quic -I src/os/unix -I objs \
+	-o objs/src/os/unix/ngx_linux_sendfile_chain.o \
+	src/os/unix/ngx_linux_sendfile_chain.c
+/home/eric/homestun-sdk-check/openwrt-sdk-24.10.5-x86-64_gcc-13.3.0_musl.Linux-x86_64/staging_dir/toolchain-x86_64_gcc-13.3.0_musl/bin/x86_64-openwrt-linux-musl-gcc -c -pipe  -O -W -Wall -Wpointer-arith -Wno-unused-parameter -Werror -g -I/home/eric/homestun-sdk-check/openwrt-sdk-24.10.5-x86-64_gcc-13.3.0_musl.Linux-x86_64/staging_dir/target-x86_64_musl/usr/include -I src/core -I src/event -I src/event/modules -I src/event/quic -I src/os/unix -I objs \
+	-o objs/src/core/ngx_bpf.o \
+	src/core/ngx_bpf.c
+/home/eric/homestun-sdk-check/openwrt-sdk-24.10.5-x86-64_gcc-13.3.0_musl.Linux-x86_64/staging_dir/toolchain-x86_64_gcc-13.3.0_musl/bin/x86_64-openwrt-linux-musl-gcc -c -pipe  -O -W -Wall -Wpointer-arith -Wno-unused-parameter -Werror -g -I/home/eric/homestun-sdk-check/openwrt-sdk-24.10.5-x86-64_gcc-13.3.0_musl.Linux-x86_64/staging_dir/target-x86_64_musl/usr/include -I src/core -I src/event -I src/event/modules -I src/event/quic -I src/os/unix -I objs \
+	-o objs/src/event/ngx_event_openssl.o \
+	src/event/ngx_event_openssl.c
+/home/eric/homestun-sdk-check/openwrt-sdk-24.10.5-x86-64_gcc-13.3.0_musl.Linux-x86_64/staging_dir/toolchain-x86_64_gcc-13.3.0_musl/bin/x86_64-openwrt-linux-musl-gcc -c -pipe  -O -W -Wall -Wpointer-arith -Wno-unused-parameter -Werror -g -I/home/eric/homestun-sdk-check/openwrt-sdk-24.10.5-x86-64_gcc-13.3.0_musl.Linux-x86_64/staging_dir/target-x86_64_musl/usr/include -I src/core -I src/event -I src/event/modules -I src/event/quic -I src/os/unix -I objs \
+	-o objs/src/event/ngx_event_openssl_cache.o \
+	src/event/ngx_event_openssl_cache.c
+/home/eric/homestun-sdk-check/openwrt-sdk-24.10.5-x86-64_gcc-13.3.0_musl.Linux-x86_64/staging_dir/toolchain-x86_64_gcc-13.3.0_musl/bin/x86_64-openwrt-linux-musl-gcc -c -pipe  -O -W -Wall -Wpointer-arith -Wno-unused-parameter -Werror -g -I/home/eric/homestun-sdk-check/openwrt-sdk-24.10.5-x86-64_gcc-13.3.0_musl.Linux-x86_64/staging_dir/target-x86_64_musl/usr/include -I src/core -I src/event -I src/event/modules -I src/event/quic -I src/os/unix -I objs \
+	-o objs/src/event/ngx_event_openssl_stapling.o \
+	src/event/ngx_event_openssl_stapling.c
+/home/eric/homestun-sdk-check/openwrt-sdk-24.10.5-x86-64_gcc-13.3.0_musl.Linux-x86_64/staging_dir/toolchain-x86_64_gcc-13.3.0_musl/bin/x86_64-openwrt-linux-musl-gcc -c -pipe  -O -W -Wall -Wpointer-arith -Wno-unused-parameter -Werror -g -I/home/eric/homestun-sdk-check/openwrt-sdk-24.10.5-x86-64_gcc-13.3.0_musl.Linux-x86_64/staging_dir/target-x86_64_musl/usr/include -I src/core -I src/event -I src/event/modules -I src/event/quic -I src/os/unix -I objs \
+	-o objs/src/core/ngx_regex.o \
+	src/core/ngx_regex.c
+/home/eric/homestun-sdk-check/openwrt-sdk-24.10.5-x86-64_gcc-13.3.0_musl.Linux-x86_64/staging_dir/toolchain-x86_64_gcc-13.3.0_musl/bin/x86_64-openwrt-linux-musl-gcc -c -pipe  -O -W -Wall -Wpointer-arith -Wno-unused-parameter -Werror -g -I/home/eric/homestun-sdk-check/openwrt-sdk-24.10.5-x86-64_gcc-13.3.0_musl.Linux-x86_64/staging_dir/target-x86_64_musl/usr/include -I src/core -I src/event -I src/event/modules -I src/event/quic -I src/os/unix -I objs -I src/http -I src/http/modules \
+	-o objs/src/http/ngx_http.o \
+	src/http/ngx_http.c
+/home/eric/homestun-sdk-check/openwrt-sdk-24.10.5-x86-64_gcc-13.3.0_musl.Linux-x86_64/staging_dir/toolchain-x86_64_gcc-13.3.0_musl/bin/x86_64-openwrt-linux-musl-gcc -c -pipe  -O -W -Wall -Wpointer-arith -Wno-unused-parameter -Werror -g -I/home/eric/homestun-sdk-check/openwrt-sdk-24.10.5-x86-64_gcc-13.3.0_musl.Linux-x86_64/staging_dir/target-x86_64_musl/usr/include -I src/core -I src/event -I src/event/modules -I src/event/quic -I src/os/unix -I objs -I src/http -I src/http/modules \
+	-o objs/src/http/ngx_http_core_module.o \
+	src/http/ngx_http_core_module.c
+/home/eric/homestun-sdk-check/openwrt-sdk-24.10.5-x86-64_gcc-13.3.0_musl.Linux-x86_64/staging_dir/toolchain-x86_64_gcc-13.3.0_musl/bin/x86_64-openwrt-linux-musl-gcc -c -pipe  -O -W -Wall -Wpointer-arith -Wno-unused-parameter -Werror -g -I/home/eric/homestun-sdk-check/openwrt-sdk-24.10.5-x86-64_gcc-13.3.0_musl.Linux-x86_64/staging_dir/target-x86_64_musl/usr/include -I src/core -I src/event -I src/event/modules -I src/event/quic -I src/os/unix -I objs -I src/http -I src/http/modules \
+	-o objs/src/http/ngx_http_special_response.o \
+	src/http/ngx_http_special_response.c
+/home/eric/homestun-sdk-check/openwrt-sdk-24.10.5-x86-64_gcc-13.3.0_musl.Linux-x86_64/staging_dir/toolchain-x86_64_gcc-13.3.0_musl/bin/x86_64-openwrt-linux-musl-gcc -c -pipe  -O -W -Wall -Wpointer-arith -Wno-unused-parameter -Werror -g -I/home/eric/homestun-sdk-check/openwrt-sdk-24.10.5-x86-64_gcc-13.3.0_musl.Linux-x86_64/staging_dir/target-x86_64_musl/usr/include -I src/core -I src/event -I src/event/modules -I src/event/quic -I src/os/unix -I objs -I src/http -I src/http/modules \
+	-o objs/src/http/ngx_http_request.o \
+	src/http/ngx_http_request.c
+/home/eric/homestun-sdk-check/openwrt-sdk-24.10.5-x86-64_gcc-13.3.0_musl.Linux-x86_64/staging_dir/toolchain-x86_64_gcc-13.3.0_musl/bin/x86_64-openwrt-linux-musl-gcc -c -pipe  -O -W -Wall -Wpointer-arith -Wno-unused-parameter -Werror -g -I/home/eric/homestun-sdk-check/openwrt-sdk-24.10.5-x86-64_gcc-13.3.0_musl.Linux-x86_64/staging_dir/target-x86_64_musl/usr/include -I src/core -I src/event -I src/event/modules -I src/event/quic -I src/os/unix -I objs -I src/http -I src/http/modules \
+	-o objs/src/http/ngx_http_parse.o \
+	src/http/ngx_http_parse.c
+/home/eric/homestun-sdk-check/openwrt-sdk-24.10.5-x86-64_gcc-13.3.0_musl.Linux-x86_64/staging_dir/toolchain-x86_64_gcc-13.3.0_musl/bin/x86_64-openwrt-linux-musl-gcc -c -pipe  -O -W -Wall -Wpointer-arith -Wno-unused-parameter -Werror -g -I/home/eric/homestun-sdk-check/openwrt-sdk-24.10.5-x86-64_gcc-13.3.0_musl.Linux-x86_64/staging_dir/target-x86_64_musl/usr/include -I src/core -I src/event -I src/event/modules -I src/event/quic -I src/os/unix -I objs -I src/http -I src/http/modules \
+	-o objs/src/http/modules/ngx_http_log_module.o \
+	src/http/modules/ngx_http_log_module.c
+/home/eric/homestun-sdk-check/openwrt-sdk-24.10.5-x86-64_gcc-13.3.0_musl.Linux-x86_64/staging_dir/toolchain-x86_64_gcc-13.3.0_musl/bin/x86_64-openwrt-linux-musl-gcc -c -pipe  -O -W -Wall -Wpointer-arith -Wno-unused-parameter -Werror -g -I/home/eric/homestun-sdk-check/openwrt-sdk-24.10.5-x86-64_gcc-13.3.0_musl.Linux-x86_64/staging_dir/target-x86_64_musl/usr/include -I src/core -I src/event -I src/event/modules -I src/event/quic -I src/os/unix -I objs -I src/http -I src/http/modules \
+	-o objs/src/http/ngx_http_request_body.o \
+	src/http/ngx_http_request_body.c
+/home/eric/homestun-sdk-check/openwrt-sdk-24.10.5-x86-64_gcc-13.3.0_musl.Linux-x86_64/staging_dir/toolchain-x86_64_gcc-13.3.0_musl/bin/x86_64-openwrt-linux-musl-gcc -c -pipe  -O -W -Wall -Wpointer-arith -Wno-unused-parameter -Werror -g -I/home/eric/homestun-sdk-check/openwrt-sdk-24.10.5-x86-64_gcc-13.3.0_musl.Linux-x86_64/staging_dir/target-x86_64_musl/usr/include -I src/core -I src/event -I src/event/modules -I src/event/quic -I src/os/unix -I objs -I src/http -I src/http/modules \
+	-o objs/src/http/ngx_http_variables.o \
+	src/http/ngx_http_variables.c
+/home/eric/homestun-sdk-check/openwrt-sdk-24.10.5-x86-64_gcc-13.3.0_musl.Linux-x86_64/staging_dir/toolchain-x86_64_gcc-13.3.0_musl/bin/x86_64-openwrt-linux-musl-gcc -c -pipe  -O -W -Wall -Wpointer-arith -Wno-unused-parameter -Werror -g -I/home/eric/homestun-sdk-check/openwrt-sdk-24.10.5-x86-64_gcc-13.3.0_musl.Linux-x86_64/staging_dir/target-x86_64_musl/usr/include -I src/core -I src/event -I src/event/modules -I src/event/quic -I src/os/unix -I objs -I src/http -I src/http/modules \
+	-o objs/src/http/ngx_http_script.o \
+	src/http/ngx_http_script.c
+/home/eric/homestun-sdk-check/openwrt-sdk-24.10.5-x86-64_gcc-13.3.0_musl.Linux-x86_64/staging_dir/toolchain-x86_64_gcc-13.3.0_musl/bin/x86_64-openwrt-linux-musl-gcc -c -pipe  -O -W -Wall -Wpointer-arith -Wno-unused-parameter -Werror -g -I/home/eric/homestun-sdk-check/openwrt-sdk-24.10.5-x86-64_gcc-13.3.0_musl.Linux-x86_64/staging_dir/target-x86_64_musl/usr/include -I src/core -I src/event -I src/event/modules -I src/event/quic -I src/os/unix -I objs -I src/http -I src/http/modules \
+	-o objs/src/http/ngx_http_upstream.o \
+	src/http/ngx_http_upstream.c
+/home/eric/homestun-sdk-check/openwrt-sdk-24.10.5-x86-64_gcc-13.3.0_musl.Linux-x86_64/staging_dir/toolchain-x86_64_gcc-13.3.0_musl/bin/x86_64-openwrt-linux-musl-gcc -c -pipe  -O -W -Wall -Wpointer-arith -Wno-unused-parameter -Werror -g -I/home/eric/homestun-sdk-check/openwrt-sdk-24.10.5-x86-64_gcc-13.3.0_musl.Linux-x86_64/staging_dir/target-x86_64_musl/usr/include -I src/core -I src/event -I src/event/modules -I src/event/quic -I src/os/unix -I objs -I src/http -I src/http/modules \
+	-o objs/src/http/ngx_http_upstream_round_robin.o \
+	src/http/ngx_http_upstream_round_robin.c
+/home/eric/homestun-sdk-check/openwrt-sdk-24.10.5-x86-64_gcc-13.3.0_musl.Linux-x86_64/staging_dir/toolchain-x86_64_gcc-13.3.0_musl/bin/x86_64-openwrt-linux-musl-gcc -c -pipe  -O -W -Wall -Wpointer-arith -Wno-unused-parameter -Werror -g -I/home/eric/homestun-sdk-check/openwrt-sdk-24.10.5-x86-64_gcc-13.3.0_musl.Linux-x86_64/staging_dir/target-x86_64_musl/usr/include -I src/core -I src/event -I src/event/modules -I src/event/quic -I src/os/unix -I objs -I src/http -I src/http/modules \
+	-o objs/src/http/ngx_http_file_cache.o \
+	src/http/ngx_http_file_cache.c
+/home/eric/homestun-sdk-check/openwrt-sdk-24.10.5-x86-64_gcc-13.3.0_musl.Linux-x86_64/staging_dir/toolchain-x86_64_gcc-13.3.0_musl/bin/x86_64-openwrt-linux-musl-gcc -c -pipe  -O -W -Wall -Wpointer-arith -Wno-unused-parameter -Werror -g -I/home/eric/homestun-sdk-check/openwrt-sdk-24.10.5-x86-64_gcc-13.3.0_musl.Linux-x86_64/staging_dir/target-x86_64_musl/usr/include -I src/core -I src/event -I src/event/modules -I src/event/quic -I src/os/unix -I objs -I src/http -I src/http/modules \
+	-o objs/src/http/ngx_http_write_filter_module.o \
+	src/http/ngx_http_write_filter_module.c
+/home/eric/homestun-sdk-check/openwrt-sdk-24.10.5-x86-64_gcc-13.3.0_musl.Linux-x86_64/staging_dir/toolchain-x86_64_gcc-13.3.0_musl/bin/x86_64-openwrt-linux-musl-gcc -c -pipe  -O -W -Wall -Wpointer-arith -Wno-unused-parameter -Werror -g -I/home/eric/homestun-sdk-check/openwrt-sdk-24.10.5-x86-64_gcc-13.3.0_musl.Linux-x86_64/staging_dir/target-x86_64_musl/usr/include -I src/core -I src/event -I src/event/modules -I src/event/quic -I src/os/unix -I objs -I src/http -I src/http/modules \
+	-o objs/src/http/ngx_http_header_filter_module.o \
+	src/http/ngx_http_header_filter_module.c
+/home/eric/homestun-sdk-check/openwrt-sdk-24.10.5-x86-64_gcc-13.3.0_musl.Linux-x86_64/staging_dir/toolchain-x86_64_gcc-13.3.0_musl/bin/x86_64-openwrt-linux-musl-gcc -c -pipe  -O -W -Wall -Wpointer-arith -Wno-unused-parameter -Werror -g -I/home/eric/homestun-sdk-check/openwrt-sdk-24.10.5-x86-64_gcc-13.3.0_musl.Linux-x86_64/staging_dir/target-x86_64_musl/usr/include -I src/core -I src/event -I src/event/modules -I src/event/quic -I src/os/unix -I objs -I src/http -I src/http/modules \
+	-o objs/src/http/modules/ngx_http_chunked_filter_module.o \
+	src/http/modules/ngx_http_chunked_filter_module.c
+/home/eric/homestun-sdk-check/openwrt-sdk-24.10.5-x86-64_gcc-13.3.0_musl.Linux-x86_64/staging_dir/toolchain-x86_64_gcc-13.3.0_musl/bin/x86_64-openwrt-linux-musl-gcc -c -pipe  -O -W -Wall -Wpointer-arith -Wno-unused-parameter -Werror -g -I/home/eric/homestun-sdk-check/openwrt-sdk-24.10.5-x86-64_gcc-13.3.0_musl.Linux-x86_64/staging_dir/target-x86_64_musl/usr/include -I src/core -I src/event -I src/event/modules -I src/event/quic -I src/os/unix -I objs -I src/http -I src/http/modules \
+	-o objs/src/http/modules/ngx_http_range_filter_module.o \
+	src/http/modules/ngx_http_range_filter_module.c
+/home/eric/homestun-sdk-check/openwrt-sdk-24.10.5-x86-64_gcc-13.3.0_musl.Linux-x86_64/staging_dir/toolchain-x86_64_gcc-13.3.0_musl/bin/x86_64-openwrt-linux-musl-gcc -c -pipe  -O -W -Wall -Wpointer-arith -Wno-unused-parameter -Werror -g -I/home/eric/homestun-sdk-check/openwrt-sdk-24.10.5-x86-64_gcc-13.3.0_musl.Linux-x86_64/staging_dir/target-x86_64_musl/usr/include -I src/core -I src/event -I src/event/modules -I src/event/quic -I src/os/unix -I objs -I src/http -I src/http/modules \
+	-o objs/src/http/modules/ngx_http_gzip_filter_module.o \
+	src/http/modules/ngx_http_gzip_filter_module.c
+/home/eric/homestun-sdk-check/openwrt-sdk-24.10.5-x86-64_gcc-13.3.0_musl.Linux-x86_64/staging_dir/toolchain-x86_64_gcc-13.3.0_musl/bin/x86_64-openwrt-linux-musl-gcc -c -pipe  -O -W -Wall -Wpointer-arith -Wno-unused-parameter -Werror -g -I/home/eric/homestun-sdk-check/openwrt-sdk-24.10.5-x86-64_gcc-13.3.0_musl.Linux-x86_64/staging_dir/target-x86_64_musl/usr/include -I src/core -I src/event -I src/event/modules -I src/event/quic -I src/os/unix -I objs -I src/http -I src/http/modules \
+	-o objs/src/http/ngx_http_postpone_filter_module.o \
+	src/http/ngx_http_postpone_filter_module.c
+/home/eric/homestun-sdk-check/openwrt-sdk-24.10.5-x86-64_gcc-13.3.0_musl.Linux-x86_64/staging_dir/toolchain-x86_64_gcc-13.3.0_musl/bin/x86_64-openwrt-linux-musl-gcc -c -pipe  -O -W -Wall -Wpointer-arith -Wno-unused-parameter -Werror -g -I/home/eric/homestun-sdk-check/openwrt-sdk-24.10.5-x86-64_gcc-13.3.0_musl.Linux-x86_64/staging_dir/target-x86_64_musl/usr/include -I src/core -I src/event -I src/event/modules -I src/event/quic -I src/os/unix -I objs -I src/http -I src/http/modules \
+	-o objs/src/http/modules/ngx_http_charset_filter_module.o \
+	src/http/modules/ngx_http_charset_filter_module.c
+/home/eric/homestun-sdk-check/openwrt-sdk-24.10.5-x86-64_gcc-13.3.0_musl.Linux-x86_64/staging_dir/toolchain-x86_64_gcc-13.3.0_musl/bin/x86_64-openwrt-linux-musl-gcc -c -pipe  -O -W -Wall -Wpointer-arith -Wno-unused-parameter -Werror -g -I/home/eric/homestun-sdk-check/openwrt-sdk-24.10.5-x86-64_gcc-13.3.0_musl.Linux-x86_64/staging_dir/target-x86_64_musl/usr/include -I src/core -I src/event -I src/event/modules -I src/event/quic -I src/os/unix -I objs -I src/http -I src/http/modules \
+	-o objs/src/http/modules/ngx_http_userid_filter_module.o \
+	src/http/modules/ngx_http_userid_filter_module.c
+/home/eric/homestun-sdk-check/openwrt-sdk-24.10.5-x86-64_gcc-13.3.0_musl.Linux-x86_64/staging_dir/toolchain-x86_64_gcc-13.3.0_musl/bin/x86_64-openwrt-linux-musl-gcc -c -pipe  -O -W -Wall -Wpointer-arith -Wno-unused-parameter -Werror -g -I/home/eric/homestun-sdk-check/openwrt-sdk-24.10.5-x86-64_gcc-13.3.0_musl.Linux-x86_64/staging_dir/target-x86_64_musl/usr/include -I src/core -I src/event -I src/event/modules -I src/event/quic -I src/os/unix -I objs -I src/http -I src/http/modules \
+	-o objs/src/http/modules/ngx_http_headers_filter_module.o \
+	src/http/modules/ngx_http_headers_filter_module.c
+/home/eric/homestun-sdk-check/openwrt-sdk-24.10.5-x86-64_gcc-13.3.0_musl.Linux-x86_64/staging_dir/toolchain-x86_64_gcc-13.3.0_musl/bin/x86_64-openwrt-linux-musl-gcc -c -pipe  -O -W -Wall -Wpointer-arith -Wno-unused-parameter -Werror -g -I/home/eric/homestun-sdk-check/openwrt-sdk-24.10.5-x86-64_gcc-13.3.0_musl.Linux-x86_64/staging_dir/target-x86_64_musl/usr/include -I src/core -I src/event -I src/event/modules -I src/event/quic -I src/os/unix -I objs -I src/http -I src/http/modules \
+	-o objs/src/http/ngx_http_copy_filter_module.o \
+	src/http/ngx_http_copy_filter_module.c
+/home/eric/homestun-sdk-check/openwrt-sdk-24.10.5-x86-64_gcc-13.3.0_musl.Linux-x86_64/staging_dir/toolchain-x86_64_gcc-13.3.0_musl/bin/x86_64-openwrt-linux-musl-gcc -c -pipe  -O -W -Wall -Wpointer-arith -Wno-unused-parameter -Werror -g -I/home/eric/homestun-sdk-check/openwrt-sdk-24.10.5-x86-64_gcc-13.3.0_musl.Linux-x86_64/staging_dir/target-x86_64_musl/usr/include -I src/core -I src/event -I src/event/modules -I src/event/quic -I src/os/unix -I objs -I src/http -I src/http/modules \
+	-o objs/src/http/modules/ngx_http_not_modified_filter_module.o \
+	src/http/modules/ngx_http_not_modified_filter_module.c
+/home/eric/homestun-sdk-check/openwrt-sdk-24.10.5-x86-64_gcc-13.3.0_musl.Linux-x86_64/staging_dir/toolchain-x86_64_gcc-13.3.0_musl/bin/x86_64-openwrt-linux-musl-gcc -c -pipe  -O -W -Wall -Wpointer-arith -Wno-unused-parameter -Werror -g -I/home/eric/homestun-sdk-check/openwrt-sdk-24.10.5-x86-64_gcc-13.3.0_musl.Linux-x86_64/staging_dir/target-x86_64_musl/usr/include -I src/core -I src/event -I src/event/modules -I src/event/quic -I src/os/unix -I objs -I src/http -I src/http/modules \
+	-o objs/src/http/modules/ngx_http_static_module.o \
+	src/http/modules/ngx_http_static_module.c
+/home/eric/homestun-sdk-check/openwrt-sdk-24.10.5-x86-64_gcc-13.3.0_musl.Linux-x86_64/staging_dir/toolchain-x86_64_gcc-13.3.0_musl/bin/x86_64-openwrt-linux-musl-gcc -c -pipe  -O -W -Wall -Wpointer-arith -Wno-unused-parameter -Werror -g -I/home/eric/homestun-sdk-check/openwrt-sdk-24.10.5-x86-64_gcc-13.3.0_musl.Linux-x86_64/staging_dir/target-x86_64_musl/usr/include -I src/core -I src/event -I src/event/modules -I src/event/quic -I src/os/unix -I objs -I src/http -I src/http/modules \
+	-o objs/src/http/modules/ngx_http_autoindex_module.o \
+	src/http/modules/ngx_http_autoindex_module.c
+/home/eric/homestun-sdk-check/openwrt-sdk-24.10.5-x86-64_gcc-13.3.0_musl.Linux-x86_64/staging_dir/toolchain-x86_64_gcc-13.3.0_musl/bin/x86_64-openwrt-linux-musl-gcc -c -pipe  -O -W -Wall -Wpointer-arith -Wno-unused-parameter -Werror -g -I/home/eric/homestun-sdk-check/openwrt-sdk-24.10.5-x86-64_gcc-13.3.0_musl.Linux-x86_64/staging_dir/target-x86_64_musl/usr/include -I src/core -I src/event -I src/event/modules -I src/event/quic -I src/os/unix -I objs -I src/http -I src/http/modules \
+	-o objs/src/http/modules/ngx_http_index_module.o \
+	src/http/modules/ngx_http_index_module.c
+/home/eric/homestun-sdk-check/openwrt-sdk-24.10.5-x86-64_gcc-13.3.0_musl.Linux-x86_64/staging_dir/toolchain-x86_64_gcc-13.3.0_musl/bin/x86_64-openwrt-linux-musl-gcc -c -pipe  -O -W -Wall -Wpointer-arith -Wno-unused-parameter -Werror -g -I/home/eric/homestun-sdk-check/openwrt-sdk-24.10.5-x86-64_gcc-13.3.0_musl.Linux-x86_64/staging_dir/target-x86_64_musl/usr/include -I src/core -I src/event -I src/event/modules -I src/event/quic -I src/os/unix -I objs -I src/http -I src/http/modules \
+	-o objs/src/http/modules/ngx_http_mirror_module.o \
+	src/http/modules/ngx_http_mirror_module.c
+/home/eric/homestun-sdk-check/openwrt-sdk-24.10.5-x86-64_gcc-13.3.0_musl.Linux-x86_64/staging_dir/toolchain-x86_64_gcc-13.3.0_musl/bin/x86_64-openwrt-linux-musl-gcc -c -pipe  -O -W -Wall -Wpointer-arith -Wno-unused-parameter -Werror -g -I/home/eric/homestun-sdk-check/openwrt-sdk-24.10.5-x86-64_gcc-13.3.0_musl.Linux-x86_64/staging_dir/target-x86_64_musl/usr/include -I src/core -I src/event -I src/event/modules -I src/event/quic -I src/os/unix -I objs -I src/http -I src/http/modules \
+	-o objs/src/http/modules/ngx_http_try_files_module.o \
+	src/http/modules/ngx_http_try_files_module.c
+/home/eric/homestun-sdk-check/openwrt-sdk-24.10.5-x86-64_gcc-13.3.0_musl.Linux-x86_64/staging_dir/toolchain-x86_64_gcc-13.3.0_musl/bin/x86_64-openwrt-linux-musl-gcc -c -pipe  -O -W -Wall -Wpointer-arith -Wno-unused-parameter -Werror -g -I/home/eric/homestun-sdk-check/openwrt-sdk-24.10.5-x86-64_gcc-13.3.0_musl.Linux-x86_64/staging_dir/target-x86_64_musl/usr/include -I src/core -I src/event -I src/event/modules -I src/event/quic -I src/os/unix -I objs -I src/http -I src/http/modules \
+	-o objs/src/http/modules/ngx_http_auth_basic_module.o \
+	src/http/modules/ngx_http_auth_basic_module.c
+/home/eric/homestun-sdk-check/openwrt-sdk-24.10.5-x86-64_gcc-13.3.0_musl.Linux-x86_64/staging_dir/toolchain-x86_64_gcc-13.3.0_musl/bin/x86_64-openwrt-linux-musl-gcc -c -pipe  -O -W -Wall -Wpointer-arith -Wno-unused-parameter -Werror -g -I/home/eric/homestun-sdk-check/openwrt-sdk-24.10.5-x86-64_gcc-13.3.0_musl.Linux-x86_64/staging_dir/target-x86_64_musl/usr/include -I src/core -I src/event -I src/event/modules -I src/event/quic -I src/os/unix -I objs -I src/http -I src/http/modules \
+	-o objs/src/http/modules/ngx_http_access_module.o \
+	src/http/modules/ngx_http_access_module.c
+/home/eric/homestun-sdk-check/openwrt-sdk-24.10.5-x86-64_gcc-13.3.0_musl.Linux-x86_64/staging_dir/toolchain-x86_64_gcc-13.3.0_musl/bin/x86_64-openwrt-linux-musl-gcc -c -pipe  -O -W -Wall -Wpointer-arith -Wno-unused-parameter -Werror -g -I/home/eric/homestun-sdk-check/openwrt-sdk-24.10.5-x86-64_gcc-13.3.0_musl.Linux-x86_64/staging_dir/target-x86_64_musl/usr/include -I src/core -I src/event -I src/event/modules -I src/event/quic -I src/os/unix -I objs -I src/http -I src/http/modules \
+	-o objs/src/http/modules/ngx_http_limit_conn_module.o \
+	src/http/modules/ngx_http_limit_conn_module.c
+/home/eric/homestun-sdk-check/openwrt-sdk-24.10.5-x86-64_gcc-13.3.0_musl.Linux-x86_64/staging_dir/toolchain-x86_64_gcc-13.3.0_musl/bin/x86_64-openwrt-linux-musl-gcc -c -pipe  -O -W -Wall -Wpointer-arith -Wno-unused-parameter -Werror -g -I/home/eric/homestun-sdk-check/openwrt-sdk-24.10.5-x86-64_gcc-13.3.0_musl.Linux-x86_64/staging_dir/target-x86_64_musl/usr/include -I src/core -I src/event -I src/event/modules -I src/event/quic -I src/os/unix -I objs -I src/http -I src/http/modules \
+	-o objs/src/http/modules/ngx_http_limit_req_module.o \
+	src/http/modules/ngx_http_limit_req_module.c
+/home/eric/homestun-sdk-check/openwrt-sdk-24.10.5-x86-64_gcc-13.3.0_musl.Linux-x86_64/staging_dir/toolchain-x86_64_gcc-13.3.0_musl/bin/x86_64-openwrt-linux-musl-gcc -c -pipe  -O -W -Wall -Wpointer-arith -Wno-unused-parameter -Werror -g -I/home/eric/homestun-sdk-check/openwrt-sdk-24.10.5-x86-64_gcc-13.3.0_musl.Linux-x86_64/staging_dir/target-x86_64_musl/usr/include -I src/core -I src/event -I src/event/modules -I src/event/quic -I src/os/unix -I objs -I src/http -I src/http/modules \
+	-o objs/src/http/modules/ngx_http_realip_module.o \
+	src/http/modules/ngx_http_realip_module.c
+/home/eric/homestun-sdk-check/openwrt-sdk-24.10.5-x86-64_gcc-13.3.0_musl.Linux-x86_64/staging_dir/toolchain-x86_64_gcc-13.3.0_musl/bin/x86_64-openwrt-linux-musl-gcc -c -pipe  -O -W -Wall -Wpointer-arith -Wno-unused-parameter -Werror -g -I/home/eric/homestun-sdk-check/openwrt-sdk-24.10.5-x86-64_gcc-13.3.0_musl.Linux-x86_64/staging_dir/target-x86_64_musl/usr/include -I src/core -I src/event -I src/event/modules -I src/event/quic -I src/os/unix -I objs -I src/http -I src/http/modules \
+	-o objs/src/http/modules/ngx_http_geo_module.o \
+	src/http/modules/ngx_http_geo_module.c
+/home/eric/homestun-sdk-check/openwrt-sdk-24.10.5-x86-64_gcc-13.3.0_musl.Linux-x86_64/staging_dir/toolchain-x86_64_gcc-13.3.0_musl/bin/x86_64-openwrt-linux-musl-gcc -c -pipe  -O -W -Wall -Wpointer-arith -Wno-unused-parameter -Werror -g -I/home/eric/homestun-sdk-check/openwrt-sdk-24.10.5-x86-64_gcc-13.3.0_musl.Linux-x86_64/staging_dir/target-x86_64_musl/usr/include -I src/core -I src/event -I src/event/modules -I src/event/quic -I src/os/unix -I objs -I src/http -I src/http/modules \
+	-o objs/src/http/modules/ngx_http_map_module.o \
+	src/http/modules/ngx_http_map_module.c
+/home/eric/homestun-sdk-check/openwrt-sdk-24.10.5-x86-64_gcc-13.3.0_musl.Linux-x86_64/staging_dir/toolchain-x86_64_gcc-13.3.0_musl/bin/x86_64-openwrt-linux-musl-gcc -c -pipe  -O -W -Wall -Wpointer-arith -Wno-unused-parameter -Werror -g -I/home/eric/homestun-sdk-check/openwrt-sdk-24.10.5-x86-64_gcc-13.3.0_musl.Linux-x86_64/staging_dir/target-x86_64_musl/usr/include -I src/core -I src/event -I src/event/modules -I src/event/quic -I src/os/unix -I objs -I src/http -I src/http/modules \
+	-o objs/src/http/modules/ngx_http_split_clients_module.o \
+	src/http/modules/ngx_http_split_clients_module.c
+/home/eric/homestun-sdk-check/openwrt-sdk-24.10.5-x86-64_gcc-13.3.0_musl.Linux-x86_64/staging_dir/toolchain-x86_64_gcc-13.3.0_musl/bin/x86_64-openwrt-linux-musl-gcc -c -pipe  -O -W -Wall -Wpointer-arith -Wno-unused-parameter -Werror -g -I/home/eric/homestun-sdk-check/openwrt-sdk-24.10.5-x86-64_gcc-13.3.0_musl.Linux-x86_64/staging_dir/target-x86_64_musl/usr/include -I src/core -I src/event -I src/event/modules -I src/event/quic -I src/os/unix -I objs -I src/http -I src/http/modules \
+	-o objs/src/http/modules/ngx_http_referer_module.o \
+	src/http/modules/ngx_http_referer_module.c
+/home/eric/homestun-sdk-check/openwrt-sdk-24.10.5-x86-64_gcc-13.3.0_musl.Linux-x86_64/staging_dir/toolchain-x86_64_gcc-13.3.0_musl/bin/x86_64-openwrt-linux-musl-gcc -c -pipe  -O -W -Wall -Wpointer-arith -Wno-unused-parameter -Werror -g -I/home/eric/homestun-sdk-check/openwrt-sdk-24.10.5-x86-64_gcc-13.3.0_musl.Linux-x86_64/staging_dir/target-x86_64_musl/usr/include -I src/core -I src/event -I src/event/modules -I src/event/quic -I src/os/unix -I objs -I src/http -I src/http/modules \
+	-o objs/src/http/modules/ngx_http_rewrite_module.o \
+	src/http/modules/ngx_http_rewrite_module.c
+/home/eric/homestun-sdk-check/openwrt-sdk-24.10.5-x86-64_gcc-13.3.0_musl.Linux-x86_64/staging_dir/toolchain-x86_64_gcc-13.3.0_musl/bin/x86_64-openwrt-linux-musl-gcc -c -pipe  -O -W -Wall -Wpointer-arith -Wno-unused-parameter -Werror -g -I/home/eric/homestun-sdk-check/openwrt-sdk-24.10.5-x86-64_gcc-13.3.0_musl.Linux-x86_64/staging_dir/target-x86_64_musl/usr/include -I src/core -I src/event -I src/event/modules -I src/event/quic -I src/os/unix -I objs -I src/http -I src/http/modules \
+	-o objs/src/http/modules/ngx_http_ssl_module.o \
+	src/http/modules/ngx_http_ssl_module.c
+/home/eric/homestun-sdk-check/openwrt-sdk-24.10.5-x86-64_gcc-13.3.0_musl.Linux-x86_64/staging_dir/toolchain-x86_64_gcc-13.3.0_musl/bin/x86_64-openwrt-linux-musl-gcc -c -pipe  -O -W -Wall -Wpointer-arith -Wno-unused-parameter -Werror -g -I/home/eric/homestun-sdk-check/openwrt-sdk-24.10.5-x86-64_gcc-13.3.0_musl.Linux-x86_64/staging_dir/target-x86_64_musl/usr/include -I src/core -I src/event -I src/event/modules -I src/event/quic -I src/os/unix -I objs -I src/http -I src/http/modules \
+	-o objs/src/http/modules/ngx_http_proxy_module.o \
+	src/http/modules/ngx_http_proxy_module.c
+/home/eric/homestun-sdk-check/openwrt-sdk-24.10.5-x86-64_gcc-13.3.0_musl.Linux-x86_64/staging_dir/toolchain-x86_64_gcc-13.3.0_musl/bin/x86_64-openwrt-linux-musl-gcc -c -pipe  -O -W -Wall -Wpointer-arith -Wno-unused-parameter -Werror -g -I/home/eric/homestun-sdk-check/openwrt-sdk-24.10.5-x86-64_gcc-13.3.0_musl.Linux-x86_64/staging_dir/target-x86_64_musl/usr/include -I src/core -I src/event -I src/event/modules -I src/event/quic -I src/os/unix -I objs -I src/http -I src/http/modules \
+	-o objs/src/http/modules/ngx_http_empty_gif_module.o \
+	src/http/modules/ngx_http_empty_gif_module.c
+/home/eric/homestun-sdk-check/openwrt-sdk-24.10.5-x86-64_gcc-13.3.0_musl.Linux-x86_64/staging_dir/toolchain-x86_64_gcc-13.3.0_musl/bin/x86_64-openwrt-linux-musl-gcc -c -pipe  -O -W -Wall -Wpointer-arith -Wno-unused-parameter -Werror -g -I/home/eric/homestun-sdk-check/openwrt-sdk-24.10.5-x86-64_gcc-13.3.0_musl.Linux-x86_64/staging_dir/target-x86_64_musl/usr/include -I src/core -I src/event -I src/event/modules -I src/event/quic -I src/os/unix -I objs -I src/http -I src/http/modules \
+	-o objs/src/http/modules/ngx_http_browser_module.o \
+	src/http/modules/ngx_http_browser_module.c
+/home/eric/homestun-sdk-check/openwrt-sdk-24.10.5-x86-64_gcc-13.3.0_musl.Linux-x86_64/staging_dir/toolchain-x86_64_gcc-13.3.0_musl/bin/x86_64-openwrt-linux-musl-gcc -c -pipe  -O -W -Wall -Wpointer-arith -Wno-unused-parameter -Werror -g -I/home/eric/homestun-sdk-check/openwrt-sdk-24.10.5-x86-64_gcc-13.3.0_musl.Linux-x86_64/staging_dir/target-x86_64_musl/usr/include -I src/core -I src/event -I src/event/modules -I src/event/quic -I src/os/unix -I objs -I src/http -I src/http/modules \
+	-o objs/src/http/modules/ngx_http_upstream_hash_module.o \
+	src/http/modules/ngx_http_upstream_hash_module.c
+/home/eric/homestun-sdk-check/openwrt-sdk-24.10.5-x86-64_gcc-13.3.0_musl.Linux-x86_64/staging_dir/toolchain-x86_64_gcc-13.3.0_musl/bin/x86_64-openwrt-linux-musl-gcc -c -pipe  -O -W -Wall -Wpointer-arith -Wno-unused-parameter -Werror -g -I/home/eric/homestun-sdk-check/openwrt-sdk-24.10.5-x86-64_gcc-13.3.0_musl.Linux-x86_64/staging_dir/target-x86_64_musl/usr/include -I src/core -I src/event -I src/event/modules -I src/event/quic -I src/os/unix -I objs -I src/http -I src/http/modules \
+	-o objs/src/http/modules/ngx_http_upstream_ip_hash_module.o \
+	src/http/modules/ngx_http_upstream_ip_hash_module.c
+/home/eric/homestun-sdk-check/openwrt-sdk-24.10.5-x86-64_gcc-13.3.0_musl.Linux-x86_64/staging_dir/toolchain-x86_64_gcc-13.3.0_musl/bin/x86_64-openwrt-linux-musl-gcc -c -pipe  -O -W -Wall -Wpointer-arith -Wno-unused-parameter -Werror -g -I/home/eric/homestun-sdk-check/openwrt-sdk-24.10.5-x86-64_gcc-13.3.0_musl.Linux-x86_64/staging_dir/target-x86_64_musl/usr/include -I src/core -I src/event -I src/event/modules -I src/event/quic -I src/os/unix -I objs -I src/http -I src/http/modules \
+	-o objs/src/http/modules/ngx_http_upstream_least_conn_module.o \
+	src/http/modules/ngx_http_upstream_least_conn_module.c
+/home/eric/homestun-sdk-check/openwrt-sdk-24.10.5-x86-64_gcc-13.3.0_musl.Linux-x86_64/staging_dir/toolchain-x86_64_gcc-13.3.0_musl/bin/x86_64-openwrt-linux-musl-gcc -c -pipe  -O -W -Wall -Wpointer-arith -Wno-unused-parameter -Werror -g -I/home/eric/homestun-sdk-check/openwrt-sdk-24.10.5-x86-64_gcc-13.3.0_musl.Linux-x86_64/staging_dir/target-x86_64_musl/usr/include -I src/core -I src/event -I src/event/modules -I src/event/quic -I src/os/unix -I objs -I src/http -I src/http/modules \
+	-o objs/src/http/modules/ngx_http_upstream_random_module.o \
+	src/http/modules/ngx_http_upstream_random_module.c
+/home/eric/homestun-sdk-check/openwrt-sdk-24.10.5-x86-64_gcc-13.3.0_musl.Linux-x86_64/staging_dir/toolchain-x86_64_gcc-13.3.0_musl/bin/x86_64-openwrt-linux-musl-gcc -c -pipe  -O -W -Wall -Wpointer-arith -Wno-unused-parameter -Werror -g -I/home/eric/homestun-sdk-check/openwrt-sdk-24.10.5-x86-64_gcc-13.3.0_musl.Linux-x86_64/staging_dir/target-x86_64_musl/usr/include -I src/core -I src/event -I src/event/modules -I src/event/quic -I src/os/unix -I objs -I src/http -I src/http/modules \
+	-o objs/src/http/modules/ngx_http_upstream_keepalive_module.o \
+	src/http/modules/ngx_http_upstream_keepalive_module.c
+/home/eric/homestun-sdk-check/openwrt-sdk-24.10.5-x86-64_gcc-13.3.0_musl.Linux-x86_64/staging_dir/toolchain-x86_64_gcc-13.3.0_musl/bin/x86_64-openwrt-linux-musl-gcc -c -pipe  -O -W -Wall -Wpointer-arith -Wno-unused-parameter -Werror -g -I/home/eric/homestun-sdk-check/openwrt-sdk-24.10.5-x86-64_gcc-13.3.0_musl.Linux-x86_64/staging_dir/target-x86_64_musl/usr/include -I src/core -I src/event -I src/event/modules -I src/event/quic -I src/os/unix -I objs -I src/http -I src/http/modules \
+	-o objs/src/http/modules/ngx_http_upstream_zone_module.o \
+	src/http/modules/ngx_http_upstream_zone_module.c
+/home/eric/homestun-sdk-check/openwrt-sdk-24.10.5-x86-64_gcc-13.3.0_musl.Linux-x86_64/staging_dir/toolchain-x86_64_gcc-13.3.0_musl/bin/x86_64-openwrt-linux-musl-gcc -c -pipe  -O -W -Wall -Wpointer-arith -Wno-unused-parameter -Werror -g -I/home/eric/homestun-sdk-check/openwrt-sdk-24.10.5-x86-64_gcc-13.3.0_musl.Linux-x86_64/staging_dir/target-x86_64_musl/usr/include -I src/core -I src/event -I src/event/modules -I src/event/quic -I src/os/unix -I objs -I src/http -I src/http/modules \
+	-o objs/src/http/modules/ngx_http_upstream_sticky_module.o \
+	src/http/modules/ngx_http_upstream_sticky_module.c
+/home/eric/homestun-sdk-check/openwrt-sdk-24.10.5-x86-64_gcc-13.3.0_musl.Linux-x86_64/staging_dir/toolchain-x86_64_gcc-13.3.0_musl/bin/x86_64-openwrt-linux-musl-gcc -c -pipe  -O -W -Wall -Wpointer-arith -Wno-unused-parameter -Werror -g -I/home/eric/homestun-sdk-check/openwrt-sdk-24.10.5-x86-64_gcc-13.3.0_musl.Linux-x86_64/staging_dir/target-x86_64_musl/usr/include -I src/core -I src/event -I src/event/modules -I src/event/quic -I src/os/unix -I objs -I src/stream \
+	-o objs/src/stream/ngx_stream.o \
+	src/stream/ngx_stream.c
+/home/eric/homestun-sdk-check/openwrt-sdk-24.10.5-x86-64_gcc-13.3.0_musl.Linux-x86_64/staging_dir/toolchain-x86_64_gcc-13.3.0_musl/bin/x86_64-openwrt-linux-musl-gcc -c -pipe  -O -W -Wall -Wpointer-arith -Wno-unused-parameter -Werror -g -I/home/eric/homestun-sdk-check/openwrt-sdk-24.10.5-x86-64_gcc-13.3.0_musl.Linux-x86_64/staging_dir/target-x86_64_musl/usr/include -I src/core -I src/event -I src/event/modules -I src/event/quic -I src/os/unix -I objs -I src/stream \
+	-o objs/src/stream/ngx_stream_variables.o \
+	src/stream/ngx_stream_variables.c
+/home/eric/homestun-sdk-check/openwrt-sdk-24.10.5-x86-64_gcc-13.3.0_musl.Linux-x86_64/staging_dir/toolchain-x86_64_gcc-13.3.0_musl/bin/x86_64-openwrt-linux-musl-gcc -c -pipe  -O -W -Wall -Wpointer-arith -Wno-unused-parameter -Werror -g -I/home/eric/homestun-sdk-check/openwrt-sdk-24.10.5-x86-64_gcc-13.3.0_musl.Linux-x86_64/staging_dir/target-x86_64_musl/usr/include -I src/core -I src/event -I src/event/modules -I src/event/quic -I src/os/unix -I objs -I src/stream \
+	-o objs/src/stream/ngx_stream_script.o \
+	src/stream/ngx_stream_script.c
+/home/eric/homestun-sdk-check/openwrt-sdk-24.10.5-x86-64_gcc-13.3.0_musl.Linux-x86_64/staging_dir/toolchain-x86_64_gcc-13.3.0_musl/bin/x86_64-openwrt-linux-musl-gcc -c -pipe  -O -W -Wall -Wpointer-arith -Wno-unused-parameter -Werror -g -I/home/eric/homestun-sdk-check/openwrt-sdk-24.10.5-x86-64_gcc-13.3.0_musl.Linux-x86_64/staging_dir/target-x86_64_musl/usr/include -I src/core -I src/event -I src/event/modules -I src/event/quic -I src/os/unix -I objs -I src/stream \
+	-o objs/src/stream/ngx_stream_handler.o \
+	src/stream/ngx_stream_handler.c
+/home/eric/homestun-sdk-check/openwrt-sdk-24.10.5-x86-64_gcc-13.3.0_musl.Linux-x86_64/staging_dir/toolchain-x86_64_gcc-13.3.0_musl/bin/x86_64-openwrt-linux-musl-gcc -c -pipe  -O -W -Wall -Wpointer-arith -Wno-unused-parameter -Werror -g -I/home/eric/homestun-sdk-check/openwrt-sdk-24.10.5-x86-64_gcc-13.3.0_musl.Linux-x86_64/staging_dir/target-x86_64_musl/usr/include -I src/core -I src/event -I src/event/modules -I src/event/quic -I src/os/unix -I objs -I src/stream \
+	-o objs/src/stream/ngx_stream_core_module.o \
+	src/stream/ngx_stream_core_module.c
+/home/eric/homestun-sdk-check/openwrt-sdk-24.10.5-x86-64_gcc-13.3.0_musl.Linux-x86_64/staging_dir/toolchain-x86_64_gcc-13.3.0_musl/bin/x86_64-openwrt-linux-musl-gcc -c -pipe  -O -W -Wall -Wpointer-arith -Wno-unused-parameter -Werror -g -I/home/eric/homestun-sdk-check/openwrt-sdk-24.10.5-x86-64_gcc-13.3.0_musl.Linux-x86_64/staging_dir/target-x86_64_musl/usr/include -I src/core -I src/event -I src/event/modules -I src/event/quic -I src/os/unix -I objs -I src/stream \
+	-o objs/src/stream/ngx_stream_log_module.o \
+	src/stream/ngx_stream_log_module.c
+/home/eric/homestun-sdk-check/openwrt-sdk-24.10.5-x86-64_gcc-13.3.0_musl.Linux-x86_64/staging_dir/toolchain-x86_64_gcc-13.3.0_musl/bin/x86_64-openwrt-linux-musl-gcc -c -pipe  -O -W -Wall -Wpointer-arith -Wno-unused-parameter -Werror -g -I/home/eric/homestun-sdk-check/openwrt-sdk-24.10.5-x86-64_gcc-13.3.0_musl.Linux-x86_64/staging_dir/target-x86_64_musl/usr/include -I src/core -I src/event -I src/event/modules -I src/event/quic -I src/os/unix -I objs -I src/stream \
+	-o objs/src/stream/ngx_stream_proxy_module.o \
+	src/stream/ngx_stream_proxy_module.c
+/home/eric/homestun-sdk-check/openwrt-sdk-24.10.5-x86-64_gcc-13.3.0_musl.Linux-x86_64/staging_dir/toolchain-x86_64_gcc-13.3.0_musl/bin/x86_64-openwrt-linux-musl-gcc -c -pipe  -O -W -Wall -Wpointer-arith -Wno-unused-parameter -Werror -g -I/home/eric/homestun-sdk-check/openwrt-sdk-24.10.5-x86-64_gcc-13.3.0_musl.Linux-x86_64/staging_dir/target-x86_64_musl/usr/include -I src/core -I src/event -I src/event/modules -I src/event/quic -I src/os/unix -I objs -I src/stream \
+	-o objs/src/stream/ngx_stream_upstream.o \
+	src/stream/ngx_stream_upstream.c
+/home/eric/homestun-sdk-check/openwrt-sdk-24.10.5-x86-64_gcc-13.3.0_musl.Linux-x86_64/staging_dir/toolchain-x86_64_gcc-13.3.0_musl/bin/x86_64-openwrt-linux-musl-gcc -c -pipe  -O -W -Wall -Wpointer-arith -Wno-unused-parameter -Werror -g -I/home/eric/homestun-sdk-check/openwrt-sdk-24.10.5-x86-64_gcc-13.3.0_musl.Linux-x86_64/staging_dir/target-x86_64_musl/usr/include -I src/core -I src/event -I src/event/modules -I src/event/quic -I src/os/unix -I objs -I src/stream \
+	-o objs/src/stream/ngx_stream_upstream_round_robin.o \
+	src/stream/ngx_stream_upstream_round_robin.c
+/home/eric/homestun-sdk-check/openwrt-sdk-24.10.5-x86-64_gcc-13.3.0_musl.Linux-x86_64/staging_dir/toolchain-x86_64_gcc-13.3.0_musl/bin/x86_64-openwrt-linux-musl-gcc -c -pipe  -O -W -Wall -Wpointer-arith -Wno-unused-parameter -Werror -g -I/home/eric/homestun-sdk-check/openwrt-sdk-24.10.5-x86-64_gcc-13.3.0_musl.Linux-x86_64/staging_dir/target-x86_64_musl/usr/include -I src/core -I src/event -I src/event/modules -I src/event/quic -I src/os/unix -I objs -I src/stream \
+	-o objs/src/stream/ngx_stream_write_filter_module.o \
+	src/stream/ngx_stream_write_filter_module.c
+/home/eric/homestun-sdk-check/openwrt-sdk-24.10.5-x86-64_gcc-13.3.0_musl.Linux-x86_64/staging_dir/toolchain-x86_64_gcc-13.3.0_musl/bin/x86_64-openwrt-linux-musl-gcc -c -pipe  -O -W -Wall -Wpointer-arith -Wno-unused-parameter -Werror -g -I/home/eric/homestun-sdk-check/openwrt-sdk-24.10.5-x86-64_gcc-13.3.0_musl.Linux-x86_64/staging_dir/target-x86_64_musl/usr/include -I src/core -I src/event -I src/event/modules -I src/event/quic -I src/os/unix -I objs -I src/stream \
+	-o objs/src/stream/ngx_stream_ssl_module.o \
+	src/stream/ngx_stream_ssl_module.c
+/home/eric/homestun-sdk-check/openwrt-sdk-24.10.5-x86-64_gcc-13.3.0_musl.Linux-x86_64/staging_dir/toolchain-x86_64_gcc-13.3.0_musl/bin/x86_64-openwrt-linux-musl-gcc -c -pipe  -O -W -Wall -Wpointer-arith -Wno-unused-parameter -Werror -g -I/home/eric/homestun-sdk-check/openwrt-sdk-24.10.5-x86-64_gcc-13.3.0_musl.Linux-x86_64/staging_dir/target-x86_64_musl/usr/include -I src/core -I src/event -I src/event/modules -I src/event/quic -I src/os/unix -I objs -I src/stream \
+	-o objs/src/stream/ngx_stream_limit_conn_module.o \
+	src/stream/ngx_stream_limit_conn_module.c
+/home/eric/homestun-sdk-check/openwrt-sdk-24.10.5-x86-64_gcc-13.3.0_musl.Linux-x86_64/staging_dir/toolchain-x86_64_gcc-13.3.0_musl/bin/x86_64-openwrt-linux-musl-gcc -c -pipe  -O -W -Wall -Wpointer-arith -Wno-unused-parameter -Werror -g -I/home/eric/homestun-sdk-check/openwrt-sdk-24.10.5-x86-64_gcc-13.3.0_musl.Linux-x86_64/staging_dir/target-x86_64_musl/usr/include -I src/core -I src/event -I src/event/modules -I src/event/quic -I src/os/unix -I objs -I src/stream \
+	-o objs/src/stream/ngx_stream_access_module.o \
+	src/stream/ngx_stream_access_module.c
+/home/eric/homestun-sdk-check/openwrt-sdk-24.10.5-x86-64_gcc-13.3.0_musl.Linux-x86_64/staging_dir/toolchain-x86_64_gcc-13.3.0_musl/bin/x86_64-openwrt-linux-musl-gcc -c -pipe  -O -W -Wall -Wpointer-arith -Wno-unused-parameter -Werror -g -I/home/eric/homestun-sdk-check/openwrt-sdk-24.10.5-x86-64_gcc-13.3.0_musl.Linux-x86_64/staging_dir/target-x86_64_musl/usr/include -I src/core -I src/event -I src/event/modules -I src/event/quic -I src/os/unix -I objs -I src/stream \
+	-o objs/src/stream/ngx_stream_geo_module.o \
+	src/stream/ngx_stream_geo_module.c
+/home/eric/homestun-sdk-check/openwrt-sdk-24.10.5-x86-64_gcc-13.3.0_musl.Linux-x86_64/staging_dir/toolchain-x86_64_gcc-13.3.0_musl/bin/x86_64-openwrt-linux-musl-gcc -c -pipe  -O -W -Wall -Wpointer-arith -Wno-unused-parameter -Werror -g -I/home/eric/homestun-sdk-check/openwrt-sdk-24.10.5-x86-64_gcc-13.3.0_musl.Linux-x86_64/staging_dir/target-x86_64_musl/usr/include -I src/core -I src/event -I src/event/modules -I src/event/quic -I src/os/unix -I objs -I src/stream \
+	-o objs/src/stream/ngx_stream_map_module.o \
+	src/stream/ngx_stream_map_module.c
+/home/eric/homestun-sdk-check/openwrt-sdk-24.10.5-x86-64_gcc-13.3.0_musl.Linux-x86_64/staging_dir/toolchain-x86_64_gcc-13.3.0_musl/bin/x86_64-openwrt-linux-musl-gcc -c -pipe  -O -W -Wall -Wpointer-arith -Wno-unused-parameter -Werror -g -I/home/eric/homestun-sdk-check/openwrt-sdk-24.10.5-x86-64_gcc-13.3.0_musl.Linux-x86_64/staging_dir/target-x86_64_musl/usr/include -I src/core -I src/event -I src/event/modules -I src/event/quic -I src/os/unix -I objs -I src/stream \
+	-o objs/src/stream/ngx_stream_split_clients_module.o \
+	src/stream/ngx_stream_split_clients_module.c
+/home/eric/homestun-sdk-check/openwrt-sdk-24.10.5-x86-64_gcc-13.3.0_musl.Linux-x86_64/staging_dir/toolchain-x86_64_gcc-13.3.0_musl/bin/x86_64-openwrt-linux-musl-gcc -c -pipe  -O -W -Wall -Wpointer-arith -Wno-unused-parameter -Werror -g -I/home/eric/homestun-sdk-check/openwrt-sdk-24.10.5-x86-64_gcc-13.3.0_musl.Linux-x86_64/staging_dir/target-x86_64_musl/usr/include -I src/core -I src/event -I src/event/modules -I src/event/quic -I src/os/unix -I objs -I src/stream \
+	-o objs/src/stream/ngx_stream_return_module.o \
+	src/stream/ngx_stream_return_module.c
+/home/eric/homestun-sdk-check/openwrt-sdk-24.10.5-x86-64_gcc-13.3.0_musl.Linux-x86_64/staging_dir/toolchain-x86_64_gcc-13.3.0_musl/bin/x86_64-openwrt-linux-musl-gcc -c -pipe  -O -W -Wall -Wpointer-arith -Wno-unused-parameter -Werror -g -I/home/eric/homestun-sdk-check/openwrt-sdk-24.10.5-x86-64_gcc-13.3.0_musl.Linux-x86_64/staging_dir/target-x86_64_musl/usr/include -I src/core -I src/event -I src/event/modules -I src/event/quic -I src/os/unix -I objs -I src/stream \
+	-o objs/src/stream/ngx_stream_pass_module.o \
+	src/stream/ngx_stream_pass_module.c
+/home/eric/homestun-sdk-check/openwrt-sdk-24.10.5-x86-64_gcc-13.3.0_musl.Linux-x86_64/staging_dir/toolchain-x86_64_gcc-13.3.0_musl/bin/x86_64-openwrt-linux-musl-gcc -c -pipe  -O -W -Wall -Wpointer-arith -Wno-unused-parameter -Werror -g -I/home/eric/homestun-sdk-check/openwrt-sdk-24.10.5-x86-64_gcc-13.3.0_musl.Linux-x86_64/staging_dir/target-x86_64_musl/usr/include -I src/core -I src/event -I src/event/modules -I src/event/quic -I src/os/unix -I objs -I src/stream \
+	-o objs/src/stream/ngx_stream_set_module.o \
+	src/stream/ngx_stream_set_module.c
+/home/eric/homestun-sdk-check/openwrt-sdk-24.10.5-x86-64_gcc-13.3.0_musl.Linux-x86_64/staging_dir/toolchain-x86_64_gcc-13.3.0_musl/bin/x86_64-openwrt-linux-musl-gcc -c -pipe  -O -W -Wall -Wpointer-arith -Wno-unused-parameter -Werror -g -I/home/eric/homestun-sdk-check/openwrt-sdk-24.10.5-x86-64_gcc-13.3.0_musl.Linux-x86_64/staging_dir/target-x86_64_musl/usr/include -I src/core -I src/event -I src/event/modules -I src/event/quic -I src/os/unix -I objs -I src/stream \
+	-o objs/src/stream/ngx_stream_upstream_hash_module.o \
+	src/stream/ngx_stream_upstream_hash_module.c
+/home/eric/homestun-sdk-check/openwrt-sdk-24.10.5-x86-64_gcc-13.3.0_musl.Linux-x86_64/staging_dir/toolchain-x86_64_gcc-13.3.0_musl/bin/x86_64-openwrt-linux-musl-gcc -c -pipe  -O -W -Wall -Wpointer-arith -Wno-unused-parameter -Werror -g -I/home/eric/homestun-sdk-check/openwrt-sdk-24.10.5-x86-64_gcc-13.3.0_musl.Linux-x86_64/staging_dir/target-x86_64_musl/usr/include -I src/core -I src/event -I src/event/modules -I src/event/quic -I src/os/unix -I objs -I src/stream \
+	-o objs/src/stream/ngx_stream_upstream_least_conn_module.o \
+	src/stream/ngx_stream_upstream_least_conn_module.c
+/home/eric/homestun-sdk-check/openwrt-sdk-24.10.5-x86-64_gcc-13.3.0_musl.Linux-x86_64/staging_dir/toolchain-x86_64_gcc-13.3.0_musl/bin/x86_64-openwrt-linux-musl-gcc -c -pipe  -O -W -Wall -Wpointer-arith -Wno-unused-parameter -Werror -g -I/home/eric/homestun-sdk-check/openwrt-sdk-24.10.5-x86-64_gcc-13.3.0_musl.Linux-x86_64/staging_dir/target-x86_64_musl/usr/include -I src/core -I src/event -I src/event/modules -I src/event/quic -I src/os/unix -I objs -I src/stream \
+	-o objs/src/stream/ngx_stream_upstream_random_module.o \
+	src/stream/ngx_stream_upstream_random_module.c
+/home/eric/homestun-sdk-check/openwrt-sdk-24.10.5-x86-64_gcc-13.3.0_musl.Linux-x86_64/staging_dir/toolchain-x86_64_gcc-13.3.0_musl/bin/x86_64-openwrt-linux-musl-gcc -c -pipe  -O -W -Wall -Wpointer-arith -Wno-unused-parameter -Werror -g -I/home/eric/homestun-sdk-check/openwrt-sdk-24.10.5-x86-64_gcc-13.3.0_musl.Linux-x86_64/staging_dir/target-x86_64_musl/usr/include -I src/core -I src/event -I src/event/modules -I src/event/quic -I src/os/unix -I objs -I src/stream \
+	-o objs/src/stream/ngx_stream_upstream_zone_module.o \
+	src/stream/ngx_stream_upstream_zone_module.c
+/home/eric/homestun-sdk-check/openwrt-sdk-24.10.5-x86-64_gcc-13.3.0_musl.Linux-x86_64/staging_dir/toolchain-x86_64_gcc-13.3.0_musl/bin/x86_64-openwrt-linux-musl-gcc -c -pipe  -O -W -Wall -Wpointer-arith -Wno-unused-parameter -Werror -g -I/home/eric/homestun-sdk-check/openwrt-sdk-24.10.5-x86-64_gcc-13.3.0_musl.Linux-x86_64/staging_dir/target-x86_64_musl/usr/include -I src/core -I src/event -I src/event/modules -I src/event/quic -I src/os/unix -I objs -I src/stream \
+	-o objs/src/stream/ngx_stream_ssl_preread_module.o \
+	src/stream/ngx_stream_ssl_preread_module.c
+/home/eric/homestun-sdk-check/openwrt-sdk-24.10.5-x86-64_gcc-13.3.0_musl.Linux-x86_64/staging_dir/toolchain-x86_64_gcc-13.3.0_musl/bin/x86_64-openwrt-linux-musl-gcc -c -pipe  -O -W -Wall -Wpointer-arith -Wno-unused-parameter -Werror -g -I/home/eric/homestun-sdk-check/openwrt-sdk-24.10.5-x86-64_gcc-13.3.0_musl.Linux-x86_64/staging_dir/target-x86_64_musl/usr/include -I src/core -I src/event -I src/event/modules -I src/event/quic -I src/os/unix -I objs \
+	-o objs/ngx_modules.o \
+	objs/ngx_modules.c
+sed -e "s|%%PREFIX%%|/var/run/homepublish|" \
+	-e "s|%%PID_PATH%%|/var/run/homepublish/logs/nginx.pid|" \
+	-e "s|%%CONF_PATH%%|/var/run/homepublish/conf/nginx.conf|" \
+	-e "s|%%ERROR_LOG_PATH%%|/var/run/homepublish/logs/error.log|" \
+	< man/nginx.8 > objs/nginx.8
+/home/eric/homestun-sdk-check/openwrt-sdk-24.10.5-x86-64_gcc-13.3.0_musl.Linux-x86_64/staging_dir/toolchain-x86_64_gcc-13.3.0_musl/bin/x86_64-openwrt-linux-musl-gcc -o objs/nginx \
+objs/src/core/nginx.o \
+objs/src/core/ngx_log.o \
+objs/src/core/ngx_palloc.o \
+objs/src/core/ngx_array.o \
+objs/src/core/ngx_list.o \
+objs/src/core/ngx_hash.o \
+objs/src/core/ngx_buf.o \
+objs/src/core/ngx_queue.o \
+objs/src/core/ngx_output_chain.o \
+objs/src/core/ngx_string.o \
+objs/src/core/ngx_parse.o \
+objs/src/core/ngx_parse_time.o \
+objs/src/core/ngx_inet.o \
+objs/src/core/ngx_file.o \
+objs/src/core/ngx_crc32.o \
+objs/src/core/ngx_murmurhash.o \
+objs/src/core/ngx_md5.o \
+objs/src/core/ngx_sha1.o \
+objs/src/core/ngx_rbtree.o \
+objs/src/core/ngx_radix_tree.o \
+objs/src/core/ngx_slab.o \
+objs/src/core/ngx_times.o \
+objs/src/core/ngx_shmtx.o \
+objs/src/core/ngx_connection.o \
+objs/src/core/ngx_cycle.o \
+objs/src/core/ngx_spinlock.o \
+objs/src/core/ngx_rwlock.o \
+objs/src/core/ngx_cpuinfo.o \
+objs/src/core/ngx_conf_file.o \
+objs/src/core/ngx_module.o \
+objs/src/core/ngx_resolver.o \
+objs/src/core/ngx_open_file_cache.o \
+objs/src/core/ngx_crypt.o \
+objs/src/core/ngx_proxy_protocol.o \
+objs/src/core/ngx_syslog.o \
+objs/src/event/ngx_event.o \
+objs/src/event/ngx_event_timer.o \
+objs/src/event/ngx_event_posted.o \
+objs/src/event/ngx_event_accept.o \
+objs/src/event/ngx_event_udp.o \
+objs/src/event/ngx_event_connect.o \
+objs/src/event/ngx_event_pipe.o \
+objs/src/os/unix/ngx_time.o \
+objs/src/os/unix/ngx_errno.o \
+objs/src/os/unix/ngx_alloc.o \
+objs/src/os/unix/ngx_files.o \
+objs/src/os/unix/ngx_socket.o \
+objs/src/os/unix/ngx_recv.o \
+objs/src/os/unix/ngx_readv_chain.o \
+objs/src/os/unix/ngx_udp_recv.o \
+objs/src/os/unix/ngx_send.o \
+objs/src/os/unix/ngx_writev_chain.o \
+objs/src/os/unix/ngx_udp_send.o \
+objs/src/os/unix/ngx_udp_sendmsg_chain.o \
+objs/src/os/unix/ngx_channel.o \
+objs/src/os/unix/ngx_shmem.o \
+objs/src/os/unix/ngx_process.o \
+objs/src/os/unix/ngx_daemon.o \
+objs/src/os/unix/ngx_setaffinity.o \
+objs/src/os/unix/ngx_setproctitle.o \
+objs/src/os/unix/ngx_posix_init.o \
+objs/src/os/unix/ngx_user.o \
+objs/src/os/unix/ngx_dlopen.o \
+objs/src/os/unix/ngx_process_cycle.o \
+objs/src/os/unix/ngx_linux_init.o \
+objs/src/event/modules/ngx_epoll_module.o \
+objs/src/os/unix/ngx_linux_sendfile_chain.o \
+objs/src/core/ngx_bpf.o \
+objs/src/event/ngx_event_openssl.o \
+objs/src/event/ngx_event_openssl_cache.o \
+objs/src/event/ngx_event_openssl_stapling.o \
+objs/src/core/ngx_regex.o \
+objs/src/http/ngx_http.o \
+objs/src/http/ngx_http_core_module.o \
+objs/src/http/ngx_http_special_response.o \
+objs/src/http/ngx_http_request.o \
+objs/src/http/ngx_http_parse.o \
+objs/src/http/modules/ngx_http_log_module.o \
+objs/src/http/ngx_http_request_body.o \
+objs/src/http/ngx_http_variables.o \
+objs/src/http/ngx_http_script.o \
+objs/src/http/ngx_http_upstream.o \
+objs/src/http/ngx_http_upstream_round_robin.o \
+objs/src/http/ngx_http_file_cache.o \
+objs/src/http/ngx_http_write_filter_module.o \
+objs/src/http/ngx_http_header_filter_module.o \
+objs/src/http/modules/ngx_http_chunked_filter_module.o \
+objs/src/http/modules/ngx_http_range_filter_module.o \
+objs/src/http/modules/ngx_http_gzip_filter_module.o \
+objs/src/http/ngx_http_postpone_filter_module.o \
+objs/src/http/modules/ngx_http_charset_filter_module.o \
+objs/src/http/modules/ngx_http_userid_filter_module.o \
+objs/src/http/modules/ngx_http_headers_filter_module.o \
+objs/src/http/ngx_http_copy_filter_module.o \
+objs/src/http/modules/ngx_http_not_modified_filter_module.o \
+objs/src/http/modules/ngx_http_static_module.o \
+objs/src/http/modules/ngx_http_autoindex_module.o \
+objs/src/http/modules/ngx_http_index_module.o \
+objs/src/http/modules/ngx_http_mirror_module.o \
+objs/src/http/modules/ngx_http_try_files_module.o \
+objs/src/http/modules/ngx_http_auth_basic_module.o \
+objs/src/http/modules/ngx_http_access_module.o \
+objs/src/http/modules/ngx_http_limit_conn_module.o \
+objs/src/http/modules/ngx_http_limit_req_module.o \
+objs/src/http/modules/ngx_http_realip_module.o \
+objs/src/http/modules/ngx_http_geo_module.o \
+objs/src/http/modules/ngx_http_map_module.o \
+objs/src/http/modules/ngx_http_split_clients_module.o \
+objs/src/http/modules/ngx_http_referer_module.o \
+objs/src/http/modules/ngx_http_rewrite_module.o \
+objs/src/http/modules/ngx_http_ssl_module.o \
+objs/src/http/modules/ngx_http_proxy_module.o \
+objs/src/http/modules/ngx_http_empty_gif_module.o \
+objs/src/http/modules/ngx_http_browser_module.o \
+objs/src/http/modules/ngx_http_upstream_hash_module.o \
+objs/src/http/modules/ngx_http_upstream_ip_hash_module.o \
+objs/src/http/modules/ngx_http_upstream_least_conn_module.o \
+objs/src/http/modules/ngx_http_upstream_random_module.o \
+objs/src/http/modules/ngx_http_upstream_keepalive_module.o \
+objs/src/http/modules/ngx_http_upstream_zone_module.o \
+objs/src/http/modules/ngx_http_upstream_sticky_module.o \
+objs/src/stream/ngx_stream.o \
+objs/src/stream/ngx_stream_variables.o \
+objs/src/stream/ngx_stream_script.o \
+objs/src/stream/ngx_stream_handler.o \
+objs/src/stream/ngx_stream_core_module.o \
+objs/src/stream/ngx_stream_log_module.o \
+objs/src/stream/ngx_stream_proxy_module.o \
+objs/src/stream/ngx_stream_upstream.o \
+objs/src/stream/ngx_stream_upstream_round_robin.o \
+objs/src/stream/ngx_stream_write_filter_module.o \
+objs/src/stream/ngx_stream_ssl_module.o \
+objs/src/stream/ngx_stream_limit_conn_module.o \
+objs/src/stream/ngx_stream_access_module.o \
+objs/src/stream/ngx_stream_geo_module.o \
+objs/src/stream/ngx_stream_map_module.o \
+objs/src/stream/ngx_stream_split_clients_module.o \
+objs/src/stream/ngx_stream_return_module.o \
+objs/src/stream/ngx_stream_pass_module.o \
+objs/src/stream/ngx_stream_set_module.o \
+objs/src/stream/ngx_stream_upstream_hash_module.o \
+objs/src/stream/ngx_stream_upstream_least_conn_module.o \
+objs/src/stream/ngx_stream_upstream_random_module.o \
+objs/src/stream/ngx_stream_upstream_zone_module.o \
+objs/src/stream/ngx_stream_ssl_preread_module.o \
+objs/ngx_modules.o \
+-L/home/eric/homestun-sdk-check/openwrt-sdk-24.10.5-x86-64_gcc-13.3.0_musl.Linux-x86_64/staging_dir/target-x86_64_musl/usr/lib -Wl,-Map,/home/eric/homestun-sdk-check/tcp-ingress-p5/build/relink/nginx.map -lcrypt -lpcre2-8 -lssl -lcrypto -lz \
+-Wl,-E
+make[1]: Leaving directory '/home/eric/homestun-sdk-check/tcp-ingress-p5/build/nginx-1.30.6'
+nginx:       ELF 64-bit LSB executable, x86-64, version 1 (SYSV), dynamically linked, interpreter /lib/ld-musl-x86_64.so.1, with debug_info, not stripped
+sslh-select: ELF 64-bit LSB executable, x86-64, version 1 (SYSV), dynamically linked, interpreter /lib/ld-musl-x86_64.so.1, with debug_info, not stripped
+P5_COMPONENT_CROSS_BUILD_COMPLETE_NO_HOST_EXECUTION

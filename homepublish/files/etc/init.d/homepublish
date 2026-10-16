@@ -16,7 +16,7 @@ stop_service() {
  if test -S /var/run/homepublish/control.sock; then
   echo '{"action":"stop"}' | /usr/bin/lua /usr/share/homepublish/product-device-cli.lua >/dev/null
  else
-  /usr/bin/lua -e "package.path='/usr/share/homepublish/?.lua;'..package.path; require('product-controller').new(require('product-device-provider')).stop()" >/dev/null
+  /usr/bin/lua -e "package.path='/usr/share/homepublish/?.lua;'..package.path; require('product-controller').new(require('product-system-provider')).stop()" >/dev/null
  fi
 }
 status_service() {

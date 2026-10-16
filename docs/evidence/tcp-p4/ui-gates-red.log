@@ -1,0 +1,16 @@
+AssertionError [ERR_ASSERTION]: shared actual-state action gating missing
++ actual - expected
+
++ 'undefined'
+- 'function'
+
+    at D:\DevPortal\homelede\homepublish-product\luci-app-homepublish\tests\p4-overview-browser.cjs:11:83
+    at runNextTicks (node:internal/process/task_queues:65:5)
+    at process.processImmediate (node:internal/timers:541:9) {
+  generatedMessage: false,
+  code: 'ERR_ASSERTION',
+  actual: 'undefined',
+  expected: 'function',
+  operator: 'strictEqual',
+  diff: 'simple'
+}

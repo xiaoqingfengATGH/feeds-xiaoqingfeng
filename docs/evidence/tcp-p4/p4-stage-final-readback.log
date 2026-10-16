@@ -1,0 +1,3 @@
+PASS authorization marker absent: installed capability denied
+PASS current live revision1 intent7 disabled latch stopped (journal SHA equals current before/after baseline)
+P4_STAGE_FINAL_CLEANUP_READBACK_GREEN

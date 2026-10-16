@@ -1,0 +1,5 @@
+{
+  "product-system-provider.lua": "6da5dc7b4093579fa790d34932c3a46b75d79696ba581ef8d0ea97d1be65ecad",
+  "product-daemon.lua": "6e3db00b358d58ee50189f489586c912ce03aaf2ef37a0f16b1ac810e428333e",
+  "product-cli.lua": "c3af588b7c4631fd08871822f0552f434f55e697b1abcd79979e32cc4cefc650"
+}

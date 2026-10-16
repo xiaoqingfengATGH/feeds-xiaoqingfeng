@@ -3,7 +3,11 @@
 local P=require('product-provider');local W=require('product-wire');local M={}
 function M.new(provider,options)
  options=options or {}
- local clock=options.clock or function()return {now=os.time(),boot_id='untrusted',trusted=false}end
+ local clock=options.clock or function()
+  local f=io.open('/proc/sys/kernel/random/boot_id','r')
+  local boot=f and f:read('*l');if f then f:close() end
+  return {now=os.time(),boot_id=boot or 'untrusted',trusted=type(boot)=='string' and #boot>0}
+ end
  local function now()return clock().now end
  local C={generation=nil}
  local schedule
@@ -12,8 +16,17 @@ function M.new(provider,options)
   local t=clock()
   return t.trusted==true and s.runtime.clock_trusted==true and t.boot_id==s.runtime.boot_id and t.now>=s.runtime.clock_at and t.now<s.runtime.expires_at
  end
- local function status() return assert(P.handle({action='status'})) end
- local function change(fn) return assert(P.controller_transaction(fn)) end
+ local function decorate(s)
+  -- Endpoint capability is scope-validated, never a global production switch.
+  if s.saved_config and s.saved_config.schema_version==2 and type(provider.runtime_plan)=='function' then
+   local ok,effective=pcall(provider.runtime_plan,s.saved_config)
+   local supported=ok and type(effective)=='table'
+   s.capabilities.start=supported;s.capabilities.apply=supported
+  end
+  return s
+ end
+ local function status() return decorate(assert(P.handle({action='status'}))) end
+ local function change(fn) return decorate(assert(P.controller_transaction(fn))) end
  local function finish(phase,err,cleanup,stage)
   return change(function(s)
    if s.runtime.generation==C.generation then

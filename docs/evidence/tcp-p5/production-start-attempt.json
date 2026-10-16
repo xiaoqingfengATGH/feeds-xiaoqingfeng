@@ -1,0 +1,174 @@
+{
+  "desired_state": {
+    "state": "enabled",
+    "manual_stop_latch": false
+  },
+  "saved_revision": 2,
+  "attempted_revision": 2,
+  "pending_config": {
+    "apply_required": false,
+    "saved_revision": 2
+  },
+  "capabilities": {
+    "stop": true,
+    "start": true,
+    "preflight": true,
+    "network_inventory": true,
+    "apply": true
+  },
+  "approval": {
+    "revision": 2
+  },
+  "runtime": {
+    "cleanup": "unknown",
+    "services": {
+      "p5web": {
+        "ready": true,
+        "hostname": "home.iwonderful.top",
+        "generation": 7
+      }
+    },
+    "phase": "running",
+    "attempt_count": 0,
+    "clock_at": 1792077942,
+    "boot_id": "3d88e3f4-7a3a-4cda-a480-0ffcb4751a39",
+    "active_verified": true,
+    "clock_trusted": true,
+    "generation": 7,
+    "stage": "ready",
+    "running_since": 1792077942
+  },
+  "attempted_config": {
+    "access_profile": {
+      "listeners": [
+        {
+          "listener_id": "p5",
+          "network": "lan",
+          "address": "192.168.1.2",
+          "family": "ipv4",
+          "port": 50881
+        }
+      ]
+    },
+    "services": [
+      {
+        "service_id": "p5web",
+        "type": "https_proxy",
+        "certificate_mode": "inherit",
+        "name": "P5 retained production test",
+        "hostname": "home.iwonderful.top",
+        "upstream_scheme": "http",
+        "enabled": true,
+        "backend": {
+          "host": "127.0.0.1",
+          "allowed_ranges": [
+            "127.0.0.0/8"
+          ],
+          "addressFamily": "ipv4",
+          "port": 50882
+        },
+        "authentication_review": {
+          "management": false,
+          "authentication": "confirmed"
+        }
+      }
+    ],
+    "default_certificate_ref": "acme:home_rsa",
+    "publication_policy": {
+      "mode": "continuous",
+      "boot_restore": false
+    },
+    "schema_version": 2
+  },
+  "active_config": {
+    "access_profile": {
+      "listeners": [
+        {
+          "listener_id": "p5",
+          "network": "lan",
+          "address": "192.168.1.2",
+          "family": "ipv4",
+          "port": 50881
+        }
+      ]
+    },
+    "services": [
+      {
+        "service_id": "p5web",
+        "type": "https_proxy",
+        "certificate_mode": "inherit",
+        "name": "P5 retained production test",
+        "hostname": "home.iwonderful.top",
+        "upstream_scheme": "http",
+        "enabled": true,
+        "backend": {
+          "host": "127.0.0.1",
+          "allowed_ranges": [
+            "127.0.0.0/8"
+          ],
+          "addressFamily": "ipv4",
+          "port": 50882
+        },
+        "authentication_review": {
+          "management": false,
+          "authentication": "confirmed"
+        }
+      }
+    ],
+    "default_certificate_ref": "acme:home_rsa",
+    "publication_policy": {
+      "mode": "continuous",
+      "boot_restore": false
+    },
+    "schema_version": 2
+  },
+  "schema_versions": [
+    1,
+    2
+  ],
+  "saved_config": {
+    "access_profile": {
+      "listeners": [
+        {
+          "listener_id": "p5",
+          "network": "lan",
+          "address": "192.168.1.2",
+          "family": "ipv4",
+          "port": 50881
+        }
+      ]
+    },
+    "services": [
+      {
+        "service_id": "p5web",
+        "type": "https_proxy",
+        "certificate_mode": "inherit",
+        "name": "P5 retained production test",
+        "hostname": "home.iwonderful.top",
+        "upstream_scheme": "http",
+        "enabled": true,
+        "backend": {
+          "host": "127.0.0.1",
+          "allowed_ranges": [
+            "127.0.0.0/8"
+          ],
+          "addressFamily": "ipv4",
+          "port": 50882
+        },
+        "authentication_review": {
+          "management": false,
+          "authentication": "confirmed"
+        }
+      }
+    ],
+    "default_certificate_ref": "acme:home_rsa",
+    "publication_policy": {
+      "mode": "continuous",
+      "boot_restore": false
+    },
+    "schema_version": 2
+  },
+  "active_revision": 2,
+  "state_version": 1,
+  "intent_revision": 7
+}

@@ -1,0 +1,13 @@
+CERTS [
+  { v: '', t: '未选择' },
+  { v: 'acme:home.iwonderful.top_ecc', t: 'home.iwonderful.top · ECC' },
+  { v: 'acme:home.iwonderful.top', t: 'home.iwonderful.top · RSA' }
+]
+MODAL_AFTER_SAVE  []
+PASS native Add+Save retained original binding and configuration, did not start
+PASS ordinary LuCI Start -> real rpcd CLI daemon production provider -> verified TLS A
+MODAL_AFTER_SAVE  []
+PASS native edit Save pending retains A
+PASS ordinary LuCI Apply new production generation B
+PASS ordinary LuCI Stop closes held verified TLS and confirms cleanup
+PASS overview poll retains root identity and has no null/undefined

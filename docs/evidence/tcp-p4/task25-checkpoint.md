@@ -1,0 +1,1 @@
+Checkpoint: task25 first RED/GREEN actual device logs retained; controller clock fix deployed and verified SHA by runner. Next strengthen capability contract, held expiry connections, bounded budget exhaustion, final regression. No live mutations/commit.

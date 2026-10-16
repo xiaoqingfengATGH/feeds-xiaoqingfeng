@@ -1,0 +1,44 @@
+{
+  "revision": 1,
+  "source_address_policy": {
+    "https_proxy": "trusted_internal_proxy_only",
+    "tcp_forward": "proxy_address",
+    "ssh": "proxy_address",
+    "tls_passthrough": "proxy_address"
+  },
+  "warnings": [],
+  "services": [
+    {
+      "service_id": "tls",
+      "type": "tls_passthrough"
+    },
+    {
+      "service_id": "raw",
+      "type": "tcp_forward"
+    },
+    {
+      "service_id": "web",
+      "type": "https_proxy"
+    },
+    {
+      "service_id": "ssh",
+      "type": "ssh"
+    }
+  ],
+  "blockers": [
+    {
+      "retryable": true,
+      "field": "access_profile.listeners.network",
+      "error": "Network inventory unavailable or malformed",
+      "error_code": "NETWORK_UNAVAILABLE"
+    },
+    {
+      "retryable": false,
+      "field": "schema_version",
+      "error": "V2 runtime preflight unavailable until P3",
+      "error_code": "DEPENDENCY_UNAVAILABLE"
+    }
+  ],
+  "endpoints": [],
+  "ready": false
+}

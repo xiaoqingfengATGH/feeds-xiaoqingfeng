@@ -1,0 +1,143 @@
+CONSOLE Failed to load resource: the server responded with a status of 404 (Not Found)
+LOADED HomePublish — 发布入口设置
+精确选择本机监听地址；保存不启动。IPv4 上级路由器需要手工转发到本机地址及端口，公网端口由上级配置决定。
+监听设置
+地址族
+IPv4
+IPv6
+IPv4 / IPv6 双栈
+IPv4 网络
+lan · br-lan
+docker · docker0
+loopback · lo
+IPv4 地址
+192.168.1.2/24
+IPv4 防火墙区域
+lan
+IPv6 网络
+lan · br-lan
+docker · docker0
+loopback · lo
+IPv6 地址
+IPv6 防火墙区域
+缺失或不唯一，发布前需要解决
+TCP 监听端口
+默认证书
+HTTPS 默认证书
+未选择
+home.iwonderful.top · ECC · Jan 2 14:19:01 2027 GMT
+home.iwonderful.top · RSA · Jan 2 20:59:28 2027 GMT
+仅供 HTTPS 反代继承，TLS 透传、SSH 和 TCP 转发不需要本机证书。
+发布策略
+发布期限
+持续：直到停止
+临时：原截止不延长
+临时时长（分钟）
+开机恢复
+手动停止或临时剩余时间不确定时不会恢复。
+
+保存只更新本应用配置，不启动发布
+
+保存重置
+ENTRY DOM [{"id":"widget.cbid.json.cfg_listener.family","text":"IPv4IPv6IPv4 / IPv6 双栈","value":"ipv4"},{"id":"widget.cbid.json.cfg_listener.ipv4_network","text":"lan · br-landocker · docker0loopback · lo","value":"lan"},{"id":"widget.cbid.json.cfg_listener.ipv4_address","text":"192.168.1.2/24","value":"192.168.1.2"},{"id":"cbid.json.cfg_listener.ipv4_zone","text":"","value":"lan"},{"id":"widget.cbid.json.cfg_listener.ipv6_network","text":"lan · br-landocker · docker0loopback · lo","value":"lan"},{"id":"widget.cbid.json.cfg_listener.ipv6_address","text":"","value":""},{"id":"cbid.json.cfg_listener.ipv6_zone","text":"","value":"缺失或不唯一，发布前需要解决"},{"id":"widget.cbid.json.cfg_listener.port","text":"","value":"25444"},{"id":"widget.cbid.json.cfg_policy.default_certificate_ref","text":"未选择home.iwonderful.top · ECC · Jan  2 14:19:01 2027 GMThome.iwonderful.top · RSA · Jan  2 20:59:28 2027 GMT","value":""},{"id":"widget.cbid.json.cfg_policy.mode","text":"持续：直到停止临时：原截止不延长","value":"continuous"},{"id":"widget.cbid.json.cfg_policy.temporary_minutes","text":"","value":"30"},{"id":"cbbd3cdf5e","text":"","value":"1"},{"id":"hp-save","text":"保存","value":""},{"id":"hp-reset","text":"重置","value":""}]
+PASS entry native form/save/private native journal/readback/reload, no activation
+SERVICES DOM [ 'Add', '保存', '重置' ]
+MODAL 新服务
+基本设置
+接入设置
+后端设置
+高级设置
+参与发布
+名称
+发布方式
+HTTPS 反向代理
+TLS 透传
+原生 SSH 共入口
+独立端口 TCP 转发
+域名 / 独立端口
+null
+域名（精确匹配）
+独立 TCP 监听端口
+HTTPS 证书模式
+继承入口默认证书
+独立指定
+独立证书
+未选择
+home.iwonderful.top · ECC
+home.iwonderful.top · RSA
+证书
+null
+后端
+null
+后端地址
+填写主机名或裸 IP 地址，不含协议、路径及端口。
+后端端口
+后端协议
+HTTP
+HTTPS（系统 CA 验证）
+后端 HTTPS 校验域名
+始终验证证书，使用系统 CA；即使后端是 IP 也需填写校验域名。
+允许连接的后端网段
++
+限制本应用可以连接的后端地址范围，不是允许访问服务的客户端来源网段。
+业务鉴权确认
+尚未确认
+已确认后端业务鉴权
+管理服务
+Dismiss Save
+AFTER MODAL SAVE 新服务
+基本设置
+接入设置
+后端设置
+高级设置
+参与发布
+名称
+发布方式
+HTTPS 反向代理
+TLS 透传
+原生 SSH 共入口
+独立端口 TCP 转发
+域名 / 独立端口
+null
+域名（精确匹配）
+独立 TCP 监听端口
+HTTPS 证书模式
+继承入口默认证书
+独立指定
+独立证书
+未选择
+home.iwonderful.top · ECC
+home.iwonderful.top · RSA
+证书
+null
+后端
+null
+后端地址
+填写主机名或裸 IP 地址，不含协议、路径及端口。
+后端端口
+后端协议
+HTTP
+HTTPS（系统 CA 验证）
+后端 HTTPS 校验域名
+始终验证证书，使用系统 CA；即使后端是 IP 也需填写校验域名。
+允许连接的后端网段
+192.168.1.0/24
++
+限制本应用可以连接的后端地址范围，不是允许访问服务的客户端来源网段。
+业务鉴权确认
+尚未确认
+已确认后端业务鉴权
+管理服务
+Dismiss Save
+locator.waitFor: Timeout 30000ms exceeded.
+Call log:
+[2m  - waiting for locator('.modal') to be hidden[22m
+[2m    64 × locator resolved to visible <div role="dialog" aria-modal="true" class="modal cbi-modal">…</div>[22m
+
+    at D:\DevPortal\homelede\homepublish-product\luci-app-homepublish\tests\tcp-ingress-device-probe.cjs:34:519 {
+  log: [
+    "  - waiting for locator('.modal') to be hidden",
+    '    64 × locator resolved to visible <div role="dialog" aria-modal="true" class="modal cbi-modal">…</div>'
+  ],
+  name: 'TimeoutError'
+}

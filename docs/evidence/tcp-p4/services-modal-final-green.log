@@ -1,0 +1,35 @@
+ACTUAL_NEW_SERVICE_ACCESS_DOM 新服务
+基本设置
+接入设置
+后端设置
+高级设置
+参与发布
+名称
+发布方式
+HTTPS 反向代理
+TLS 透传
+原生 SSH 共入口
+独立端口 TCP 转发
+域名（精确匹配）
+HTTPS 证书模式
+继承入口默认证书
+独立指定
+后端地址
+填写主机名或裸 IP 地址，不含协议、路径及端口。
+后端端口
+后端协议
+HTTP
+HTTPS（系统 CA 验证）
+允许连接的后端网段
++
+限制本应用可以连接的后端地址范围，不是允许访问服务的客户端来源网段。
+业务鉴权确认
+尚未确认
+已确认后端业务鉴权
+管理服务
+关闭 保存
+PASS dependencies https_proxy
+PASS dependencies tls_passthrough
+PASS dependencies ssh
+PASS dependencies tcp_forward
+P4_SERVICES_MODAL_REAL_GREEN no mutations, cancel preserves live state

@@ -1,0 +1,12 @@
+AssertionError [ERR_ASSERTION]: poll replaced native Map DOM
+
+false !== true
+
+    at D:\DevPortal\homelede\homepublish-product\luci-app-homepublish\tests\p4-overview-browser.cjs:19:8 {
+  generatedMessage: false,
+  code: 'ERR_ASSERTION',
+  actual: false,
+  expected: true,
+  operator: 'strictEqual',
+  diff: 'simple'
+}

@@ -38,15 +38,34 @@ return baseclass.extend({
    return a.key_type<b.key_type?-1:1;
   });
  },
- actionDialog:function(root,s,kind,updated,failed){
-  var api=this,d=E('dialog'),busy=false;
+ endpoint:function(host,port){return (String(host || '').indexOf(':')>=0?'['+host+']':host || '未知')+':'+(port || '未知');},
+ serviceType:function(type){return ({https_proxy:'HTTPS 反向代理',tls_passthrough:'TLS 透传',ssh:'原生 SSH',ssh_shared:'原生 SSH',tcp_forward:'独立 TCP'})[type] || type || '未知';},
+ actionGates:function(s,opts){
+  s=s || {};opts=opts || {};var r=s.runtime || {},d=s.desired_state || {},caps=s.capabilities || {},pending=!!(s.pending_config && s.pending_config.apply_required),running=this.running(s),clean=r.cleanup==='confirmed',stable=r.phase==='stopped' || r.phase==='failed' || r.phase==='blocked';
+  function gate(reason){return {allowed:!reason,reason:reason || '需确认发布范围'};}
+  var common=opts.busy?'操作处理中':opts.unknown?'状态未知，请先刷新':opts.dirty?'存在未保存修改，请先保存或重置':!s.saved_revision || !s.saved_config?'请先保存配置':'';
+  var cleanupReason=!clean?'清理未确认，先停止并重试':'';
+  return {start:gate(common || cleanupReason || (caps.start!==true?'当前通道不支持启动':!stable?'当前阶段不能启动':'')),apply:gate(common || (!running?cleanupReason:'') || (caps.apply!==true?'当前通道不支持应用':!running || d.manual_stop_latch?'当前没有可替换的运行组':!pending?'无待应用变更':'')),stop:gate(opts.busy?'操作处理中':caps.stop!==true?'当前通道不支持停止':opts.unknown || r.phase!=='stopped' || !clean || !!s.active_config || d.state==='enabled'?'':'已停止且清理完成')};
+ },
+ actionDialog:function(root,s,kind,updated,failed,submitting){
+  var api=this,busy=false,config=(kind==='stop'?s.active_config:s.saved_config) || {},r=s.runtime || {};
   function button(id,text,fn){return E('button',{id:id,type:'button',class:'cbi-button',click:fn},text);}
-  var config=kind==='stop'?s.active_config:s.saved_config;
-  var diff=kind==='stop'?['停止当前整组服务；关闭所有已建立连接，撤销发布意图。']:api.diff(s.active_config,s.saved_config);
-  d.append(E('h3',{},kind==='stop'?'停止全部服务':kind==='apply'?'整组应用变更':'开启已保存服务'),E('ul',{id:'hp-confirm-diff'},(diff.length?diff:['整个已保存运行组']).map(function(x){return E('li',{},x);})),E('p',{},'整组连接将关闭 / 替换，应用存在短暂停机；临时截止不延长：'+((s.runtime || {}).expires_at || '首次开启建立截止')),E('p',{},'监听与接入范围：'+JSON.stringify(config && config.access_profile || {})),E('p',{role:'alert'}),button('hp-edit-cancel','取消',function(){if(!busy)d.close();}),button('hp-edit-submit','确认',function(){
-   if(busy)return;busy=true;d.querySelector('#hp-edit-submit').disabled=true;
-   return Promise.resolve().then(function(){return kind==='stop'?api.stop():api[kind](s.saved_revision,true);}).then(api.checked).then(function(){return api.status();}).then(api.checked).then(function(st){updated(st);d.close();}).catch(function(e){d.querySelector('[role=alert]').textContent='操作失败 / 状态未知：'+e.message;failed(e);}).finally(function(){busy=false;var submit=d.querySelector('#hp-edit-submit');if(submit)submit.disabled=false;});
-  }));root.appendChild(d);d.addEventListener('close',function(){d.remove();});d.showModal();return d;
+  var diff=kind==='stop'?['停止当前整组服务，关闭已有连接并撤销发布意图']:api.diff(s.active_config,s.saved_config),alert=E('p',{role:'alert'});
+  var scope=E('div',{id:'hp-confirm-scope'},[
+   E('p',{},'配置版本：'+(kind==='stop'?s.active_revision:s.saved_revision)+'；整组操作，应用有短暂停机，不延长原临时截止。'),
+   E('ul',{},((config.access_profile || {}).listeners || []).map(function(l){return E('li',{},'监听 '+api.endpoint(l.address,l.port || l.internal_port)+' · '+l.family+' · 网络 '+(l.network || l.interface || '未知'));})),
+   E('ul',{},(config.services || []).filter(function(v){return v.enabled!==false;}).map(function(v){return E('li',{},(v.name || v.service_id)+' · '+api.serviceType(v.type)+' · '+(v.hostname || (v.type==='tcp_forward'?'独立端口 '+v.listen_port:'共享入口'))+' → '+api.endpoint((v.backend || {}).host,(v.backend || {}).port)+'；证书：'+(v.type==='https_proxy'?(v.certificate_mode==='inherit'?'继承 '+(config.default_certificate_ref || '未选择'):v.certificate_ref || '未选择'):v.type==='tls_passthrough'?'后端提供':'不需要'));})),
+   E('p',{},'策略：'+((config.publication_policy || {}).mode==='temporary'?'临时 '+((config.publication_policy || {}).temporary_duration || 0)+' 秒':'持续直到停止')+'；原截止：'+(r.expires_at || '首次启动后建立'))
+  ]);
+  var submit=button('hp-edit-submit','确认',function(){
+   if(busy)return;busy=true;submit.disabled=true;if(submitting)submitting(true);
+   return Promise.resolve().then(function(){return api.status();}).then(api.checked).then(function(current){
+    if(current.saved_revision!==s.saved_revision || current.active_revision!==s.active_revision || (current.runtime || {}).generation!==r.generation)throw new Error('配置或运行状态已变化，请刷新后重新确认');
+    if(!api.actionGates(current)[kind].allowed)throw new Error('当前状态不允许此操作，请刷新');
+    return kind==='stop'?api.stop():api[kind](s.saved_revision,true);
+   }).then(api.checked).then(function(){return api.status();}).then(api.checked).then(function(st){updated(st);ui.hideModal();}).catch(function(e){alert.textContent=api.errorText(e)+'；请刷新并重新确认';failed(e);}).finally(function(){busy=false;submit.disabled=false;if(submitting)submitting(false);});
+  });
+  return ui.showModal(kind==='stop'?'停止全部服务':kind==='apply'?'整组应用变更':'开启已保存服务',[scope,E('details',{},[E('summary',{},'变更明细'),E('ul',{id:'hp-confirm-diff'},diff.map(function(x){return E('li',{},x);}))]),alert,E('div',{class:'right'},[button('hp-edit-cancel','取消',function(){if(!busy)ui.hideModal();}),submit])]);
  },
  diff:function(before,after){
   before=before || {};after=after || {};var out=[];
@@ -54,9 +73,10 @@ return baseclass.extend({
   function cert(c,v){return {mode:v.certificate_mode || 'override',binding:v.certificate_mode==='inherit'?'继承入口默认':'独立指定',resolved:v.certificate_mode==='inherit'?c.default_certificate_ref:v.certificate_ref};}
   changed('入口默认证书',before.default_certificate_ref,after.default_certificate_ref);
   var old=before.services || [],next=after.services || [];
-  old.forEach(function(v){var n=next.find(function(x){return x.service_id===v.service_id;});if(!n){out.push('删除 '+v.hostname+'（应用关闭其连接，并替换整组）');return;}
-   var prefix=v.hostname+' / ';changed(prefix+'名称',v.name,n.name);changed(prefix+'域名',v.hostname,n.hostname);changed(prefix+'后端 / 家庭网段',v.backend,n.backend);changed(prefix+'证书绑定 / 解析证书',cert(before,v),cert(after,n));changed(prefix+'参与发布',v.enabled!==false,n.enabled!==false);changed(prefix+'业务鉴权 / 管理服务',v.authentication_review,n.authentication_review);
-  });next.forEach(function(v){if(!old.some(function(x){return x.service_id===v.service_id;}))out.push('新增 '+v.hostname+'：'+JSON.stringify(v)+'；证书 '+JSON.stringify(cert(after,v)));});
+  var api=this;function identity(v){return api.serviceType(v.type)+' · '+(v.name || v.hostname || v.service_id || '未命名')+'（'+(v.service_id || '未知 ID')+'）';}
+  old.forEach(function(v){var n=next.find(function(x){return x.service_id===v.service_id;});if(!n){out.push('删除 '+identity(v)+'（应用关闭其连接，并替换整组）');return;}
+   var prefix=identity(v)+' / ';changed(prefix+'名称',v.name,n.name);changed(prefix+'发布方式',api.serviceType(v.type),api.serviceType(n.type));changed(prefix+'独立监听端口',v.listen_port,n.listen_port);changed(prefix+'域名',v.hostname,n.hostname);changed(prefix+'后端 / 家庭网段',v.backend,n.backend);changed(prefix+'证书绑定 / 解析证书',cert(before,v),cert(after,n));changed(prefix+'参与发布',v.enabled!==false,n.enabled!==false);changed(prefix+'业务鉴权 / 管理服务',v.authentication_review,n.authentication_review);
+  });next.forEach(function(v){if(!old.some(function(x){return x.service_id===v.service_id;}))out.push('新增 '+identity(v)+'：'+JSON.stringify(v)+'；证书 '+JSON.stringify(cert(after,v)));});
   changed('监听 / 接入方式',before.access_profile,after.access_profile);changed('发布策略 / 开机恢复',before.publication_policy,after.publication_policy);return out;
  },
  text:function(s){

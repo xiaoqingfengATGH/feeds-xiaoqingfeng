@@ -1,0 +1,1 @@
+{"legitimate_during_load":true,"slow_eof":24,"timeout_seconds":3,"slow_clients":24,"unknown_eof":2,"peak":{"fds":29,"rss_kib":532},"base":{"fds":5,"rss_kib":528},"final":{"fds":5,"rss_kib":528}}

@@ -1,0 +1,1153 @@
+{
+  "boundary": "ordinary installed LuCI; real HTTP ubus; no interception",
+  "calls": [
+    {
+      "method": "status",
+      "http": 200
+    },
+    {
+      "method": "certificates",
+      "http": 200
+    },
+    {
+      "method": "validate",
+      "http": 200
+    },
+    {
+      "method": "save",
+      "http": 200
+    },
+    {
+      "method": "status",
+      "http": 200
+    },
+    {
+      "method": "status",
+      "http": 200
+    },
+    {
+      "method": "certificates",
+      "http": 200
+    },
+    {
+      "method": "status",
+      "http": 200
+    },
+    {
+      "method": "status",
+      "http": 200
+    },
+    {
+      "method": "status",
+      "http": 200
+    },
+    {
+      "method": "start",
+      "http": 200
+    },
+    {
+      "method": "status",
+      "http": 200
+    },
+    {
+      "method": "status",
+      "http": 200
+    },
+    {
+      "method": "status",
+      "http": 200
+    },
+    {
+      "method": "certificates",
+      "http": 200
+    },
+    {
+      "method": "validate",
+      "http": 200
+    },
+    {
+      "method": "save",
+      "http": 200
+    },
+    {
+      "method": "status",
+      "http": 200
+    },
+    {
+      "method": "status",
+      "http": 200
+    },
+    {
+      "method": "certificates",
+      "http": 200
+    },
+    {
+      "method": "status",
+      "http": 200
+    },
+    {
+      "method": "status",
+      "http": 200
+    },
+    {
+      "method": "status",
+      "http": 200
+    },
+    {
+      "method": "apply",
+      "http": 200
+    },
+    {
+      "method": "status",
+      "http": 200
+    },
+    {
+      "method": "status",
+      "http": 200
+    },
+    {
+      "method": "status",
+      "http": 200
+    },
+    {
+      "method": "status",
+      "http": 200
+    },
+    {
+      "method": "stop",
+      "http": 200
+    },
+    {
+      "method": "status",
+      "http": 200
+    },
+    {
+      "method": "status",
+      "http": 200
+    },
+    {
+      "method": "status",
+      "http": 200
+    },
+    {
+      "method": "status",
+      "http": 200
+    },
+    {
+      "method": "status",
+      "http": 200
+    },
+    {
+      "method": "status",
+      "http": 200
+    }
+  ],
+  "checks": [
+    "native Add+Save retained original binding and configuration, did not start",
+    "ordinary LuCI Start -> real rpcd CLI daemon production provider -> verified TLS A",
+    "native edit Save pending retains A",
+    "ordinary LuCI Apply new production generation B",
+    "ordinary LuCI Stop closes held verified TLS and confirms cleanup",
+    "overview poll retains root identity and has no null/undefined"
+  ],
+  "before": {
+    "desired_state": {
+      "state": "disabled",
+      "manual_stop_latch": true
+    },
+    "saved_revision": 1,
+    "runtime": {
+      "phase": "stopped",
+      "cleanup": "confirmed",
+      "stage": "boot_cleanup",
+      "active_verified": false
+    },
+    "capabilities": {
+      "stop": true,
+      "start": false,
+      "preflight": true,
+      "network_inventory": true,
+      "apply": false
+    },
+    "schema_versions": [
+      1,
+      2
+    ],
+    "pending_config": {
+      "saved_revision": 1,
+      "apply_required": true
+    },
+    "intent_revision": 7,
+    "state_version": 1,
+    "saved_config": {
+      "access_profile": {
+        "listeners": [
+          {
+            "listener_id": "shared_ipv4",
+            "network": "lan",
+            "address": "192.168.1.2",
+            "family": "ipv4",
+            "port": 8443
+          }
+        ]
+      },
+      "services": [],
+      "default_certificate_ref": "acme:home.iwonderful.top_ecc",
+      "publication_policy": {
+        "mode": "continuous",
+        "boot_restore": false
+      },
+      "schema_version": 2
+    }
+  },
+  "saved": {
+    "desired_state": {
+      "state": "disabled",
+      "manual_stop_latch": true
+    },
+    "saved_revision": 2,
+    "runtime": {
+      "phase": "stopped",
+      "cleanup": "confirmed",
+      "stage": "boot_cleanup",
+      "active_verified": false
+    },
+    "capabilities": {
+      "stop": true,
+      "start": true,
+      "preflight": true,
+      "network_inventory": true,
+      "apply": true
+    },
+    "schema_versions": [
+      1,
+      2
+    ],
+    "pending_config": {
+      "saved_revision": 2,
+      "apply_required": true
+    },
+    "intent_revision": 7,
+    "state_version": 1,
+    "saved_config": {
+      "access_profile": {
+        "listeners": [
+          {
+            "listener_id": "shared_ipv4",
+            "network": "lan",
+            "address": "192.168.1.2",
+            "family": "ipv4",
+            "port": 8443
+          }
+        ]
+      },
+      "services": [
+        {
+          "service_id": "svc_1",
+          "type": "https_proxy",
+          "certificate_ref": "acme:home.iwonderful.top",
+          "certificate_mode": "override",
+          "name": "P5 ordinary retained HTTPS",
+          "hostname": "home.iwonderful.top",
+          "upstream_scheme": "http",
+          "enabled": true,
+          "backend": {
+            "host": "127.0.0.1",
+            "allowed_ranges": [
+              "127.0.0.0/8"
+            ],
+            "addressFamily": "ipv4",
+            "port": 50882
+          },
+          "authentication_review": {
+            "management": false,
+            "authentication": "confirmed"
+          }
+        }
+      ],
+      "default_certificate_ref": "acme:home.iwonderful.top_ecc",
+      "publication_policy": {
+        "mode": "continuous",
+        "boot_restore": false
+      },
+      "schema_version": 2
+    }
+  },
+  "start": {
+    "desired_state": {
+      "state": "enabled",
+      "manual_stop_latch": false
+    },
+    "capabilities": {
+      "stop": true,
+      "start": true,
+      "preflight": true,
+      "network_inventory": true,
+      "apply": true
+    },
+    "attempted_revision": 2,
+    "attempted_config": {
+      "access_profile": {
+        "listeners": [
+          {
+            "listener_id": "shared_ipv4",
+            "network": "lan",
+            "address": "192.168.1.2",
+            "family": "ipv4",
+            "port": 8443
+          }
+        ]
+      },
+      "services": [
+        {
+          "service_id": "svc_1",
+          "type": "https_proxy",
+          "certificate_ref": "acme:home.iwonderful.top",
+          "certificate_mode": "override",
+          "name": "P5 ordinary retained HTTPS",
+          "hostname": "home.iwonderful.top",
+          "upstream_scheme": "http",
+          "enabled": true,
+          "backend": {
+            "host": "127.0.0.1",
+            "allowed_ranges": [
+              "127.0.0.0/8"
+            ],
+            "addressFamily": "ipv4",
+            "port": 50882
+          },
+          "authentication_review": {
+            "management": false,
+            "authentication": "confirmed"
+          }
+        }
+      ],
+      "default_certificate_ref": "acme:home.iwonderful.top_ecc",
+      "publication_policy": {
+        "mode": "continuous",
+        "boot_restore": false
+      },
+      "schema_version": 2
+    },
+    "saved_config": {
+      "access_profile": {
+        "listeners": [
+          {
+            "listener_id": "shared_ipv4",
+            "network": "lan",
+            "address": "192.168.1.2",
+            "family": "ipv4",
+            "port": 8443
+          }
+        ]
+      },
+      "services": [
+        {
+          "service_id": "svc_1",
+          "type": "https_proxy",
+          "certificate_ref": "acme:home.iwonderful.top",
+          "certificate_mode": "override",
+          "name": "P5 ordinary retained HTTPS",
+          "hostname": "home.iwonderful.top",
+          "upstream_scheme": "http",
+          "enabled": true,
+          "backend": {
+            "host": "127.0.0.1",
+            "allowed_ranges": [
+              "127.0.0.0/8"
+            ],
+            "addressFamily": "ipv4",
+            "port": 50882
+          },
+          "authentication_review": {
+            "management": false,
+            "authentication": "confirmed"
+          }
+        }
+      ],
+      "default_certificate_ref": "acme:home.iwonderful.top_ecc",
+      "publication_policy": {
+        "mode": "continuous",
+        "boot_restore": false
+      },
+      "schema_version": 2
+    },
+    "approval": {
+      "revision": 2
+    },
+    "runtime": {
+      "cleanup": "unknown",
+      "services": {
+        "svc_1": {
+          "ready": true,
+          "hostname": "home.iwonderful.top",
+          "generation": 8
+        }
+      },
+      "phase": "running",
+      "attempt_count": 0,
+      "clock_at": 1792133362,
+      "boot_id": "3d88e3f4-7a3a-4cda-a480-0ffcb4751a39",
+      "active_verified": true,
+      "clock_trusted": true,
+      "generation": 8,
+      "stage": "ready",
+      "running_since": 1792133362
+    },
+    "saved_revision": 2,
+    "active_config": {
+      "access_profile": {
+        "listeners": [
+          {
+            "listener_id": "shared_ipv4",
+            "network": "lan",
+            "address": "192.168.1.2",
+            "family": "ipv4",
+            "port": 8443
+          }
+        ]
+      },
+      "services": [
+        {
+          "service_id": "svc_1",
+          "type": "https_proxy",
+          "certificate_ref": "acme:home.iwonderful.top",
+          "certificate_mode": "override",
+          "name": "P5 ordinary retained HTTPS",
+          "hostname": "home.iwonderful.top",
+          "upstream_scheme": "http",
+          "enabled": true,
+          "backend": {
+            "host": "127.0.0.1",
+            "allowed_ranges": [
+              "127.0.0.0/8"
+            ],
+            "addressFamily": "ipv4",
+            "port": 50882
+          },
+          "authentication_review": {
+            "management": false,
+            "authentication": "confirmed"
+          }
+        }
+      ],
+      "default_certificate_ref": "acme:home.iwonderful.top_ecc",
+      "publication_policy": {
+        "mode": "continuous",
+        "boot_restore": false
+      },
+      "schema_version": 2
+    },
+    "schema_versions": [
+      1,
+      2
+    ],
+    "pending_config": {
+      "saved_revision": 2,
+      "apply_required": false
+    },
+    "active_revision": 2,
+    "state_version": 1,
+    "intent_revision": 8
+  },
+  "apply": {
+    "desired_state": {
+      "state": "enabled",
+      "manual_stop_latch": false
+    },
+    "capabilities": {
+      "stop": true,
+      "start": true,
+      "preflight": true,
+      "network_inventory": true,
+      "apply": true
+    },
+    "attempted_revision": 3,
+    "attempted_config": {
+      "access_profile": {
+        "listeners": [
+          {
+            "listener_id": "shared_ipv4",
+            "network": "lan",
+            "address": "192.168.1.2",
+            "family": "ipv4",
+            "port": 8443
+          }
+        ]
+      },
+      "services": [
+        {
+          "service_id": "svc_1",
+          "type": "https_proxy",
+          "certificate_ref": "acme:home.iwonderful.top",
+          "certificate_mode": "override",
+          "name": "P5 ordinary retained HTTPS",
+          "hostname": "home.iwonderful.top",
+          "upstream_scheme": "http",
+          "enabled": true,
+          "backend": {
+            "host": "127.0.0.1",
+            "allowed_ranges": [
+              "127.0.0.0/8"
+            ],
+            "addressFamily": "ipv4",
+            "port": 50883
+          },
+          "authentication_review": {
+            "management": false,
+            "authentication": "confirmed"
+          }
+        }
+      ],
+      "default_certificate_ref": "acme:home.iwonderful.top_ecc",
+      "publication_policy": {
+        "mode": "continuous",
+        "boot_restore": false
+      },
+      "schema_version": 2
+    },
+    "saved_config": {
+      "access_profile": {
+        "listeners": [
+          {
+            "listener_id": "shared_ipv4",
+            "network": "lan",
+            "address": "192.168.1.2",
+            "family": "ipv4",
+            "port": 8443
+          }
+        ]
+      },
+      "services": [
+        {
+          "service_id": "svc_1",
+          "type": "https_proxy",
+          "certificate_ref": "acme:home.iwonderful.top",
+          "certificate_mode": "override",
+          "name": "P5 ordinary retained HTTPS",
+          "hostname": "home.iwonderful.top",
+          "upstream_scheme": "http",
+          "enabled": true,
+          "backend": {
+            "host": "127.0.0.1",
+            "allowed_ranges": [
+              "127.0.0.0/8"
+            ],
+            "addressFamily": "ipv4",
+            "port": 50883
+          },
+          "authentication_review": {
+            "management": false,
+            "authentication": "confirmed"
+          }
+        }
+      ],
+      "default_certificate_ref": "acme:home.iwonderful.top_ecc",
+      "publication_policy": {
+        "mode": "continuous",
+        "boot_restore": false
+      },
+      "schema_version": 2
+    },
+    "approval": {
+      "revision": 3
+    },
+    "runtime": {
+      "cleanup": "unknown",
+      "services": {
+        "svc_1": {
+          "ready": true,
+          "hostname": "home.iwonderful.top",
+          "generation": 9
+        }
+      },
+      "phase": "running",
+      "attempt_count": 0,
+      "clock_at": 1792133373,
+      "boot_id": "3d88e3f4-7a3a-4cda-a480-0ffcb4751a39",
+      "active_verified": true,
+      "clock_trusted": true,
+      "generation": 9,
+      "stage": "ready",
+      "running_since": 1792133374
+    },
+    "saved_revision": 3,
+    "active_config": {
+      "access_profile": {
+        "listeners": [
+          {
+            "listener_id": "shared_ipv4",
+            "network": "lan",
+            "address": "192.168.1.2",
+            "family": "ipv4",
+            "port": 8443
+          }
+        ]
+      },
+      "services": [
+        {
+          "service_id": "svc_1",
+          "type": "https_proxy",
+          "certificate_ref": "acme:home.iwonderful.top",
+          "certificate_mode": "override",
+          "name": "P5 ordinary retained HTTPS",
+          "hostname": "home.iwonderful.top",
+          "upstream_scheme": "http",
+          "enabled": true,
+          "backend": {
+            "host": "127.0.0.1",
+            "allowed_ranges": [
+              "127.0.0.0/8"
+            ],
+            "addressFamily": "ipv4",
+            "port": 50883
+          },
+          "authentication_review": {
+            "management": false,
+            "authentication": "confirmed"
+          }
+        }
+      ],
+      "default_certificate_ref": "acme:home.iwonderful.top_ecc",
+      "publication_policy": {
+        "mode": "continuous",
+        "boot_restore": false
+      },
+      "schema_version": 2
+    },
+    "schema_versions": [
+      1,
+      2
+    ],
+    "pending_config": {
+      "saved_revision": 3,
+      "apply_required": false
+    },
+    "active_revision": 3,
+    "state_version": 1,
+    "intent_revision": 9
+  },
+  "stop": {
+    "pending_config": {
+      "saved_revision": 3,
+      "apply_required": false
+    },
+    "capabilities": {
+      "stop": true,
+      "start": true,
+      "preflight": true,
+      "network_inventory": true,
+      "apply": true
+    },
+    "attempted_revision": 3,
+    "attempted_config": {
+      "access_profile": {
+        "listeners": [
+          {
+            "listener_id": "shared_ipv4",
+            "network": "lan",
+            "address": "192.168.1.2",
+            "family": "ipv4",
+            "port": 8443
+          }
+        ]
+      },
+      "services": [
+        {
+          "service_id": "svc_1",
+          "type": "https_proxy",
+          "certificate_ref": "acme:home.iwonderful.top",
+          "certificate_mode": "override",
+          "name": "P5 ordinary retained HTTPS",
+          "hostname": "home.iwonderful.top",
+          "upstream_scheme": "http",
+          "enabled": true,
+          "backend": {
+            "host": "127.0.0.1",
+            "allowed_ranges": [
+              "127.0.0.0/8"
+            ],
+            "addressFamily": "ipv4",
+            "port": 50883
+          },
+          "authentication_review": {
+            "management": false,
+            "authentication": "confirmed"
+          }
+        }
+      ],
+      "default_certificate_ref": "acme:home.iwonderful.top_ecc",
+      "publication_policy": {
+        "mode": "continuous",
+        "boot_restore": false
+      },
+      "schema_version": 2
+    },
+    "saved_config": {
+      "access_profile": {
+        "listeners": [
+          {
+            "listener_id": "shared_ipv4",
+            "network": "lan",
+            "address": "192.168.1.2",
+            "family": "ipv4",
+            "port": 8443
+          }
+        ]
+      },
+      "services": [
+        {
+          "service_id": "svc_1",
+          "type": "https_proxy",
+          "certificate_ref": "acme:home.iwonderful.top",
+          "certificate_mode": "override",
+          "name": "P5 ordinary retained HTTPS",
+          "hostname": "home.iwonderful.top",
+          "upstream_scheme": "http",
+          "enabled": true,
+          "backend": {
+            "host": "127.0.0.1",
+            "allowed_ranges": [
+              "127.0.0.0/8"
+            ],
+            "addressFamily": "ipv4",
+            "port": 50883
+          },
+          "authentication_review": {
+            "management": false,
+            "authentication": "confirmed"
+          }
+        }
+      ],
+      "default_certificate_ref": "acme:home.iwonderful.top_ecc",
+      "publication_policy": {
+        "mode": "continuous",
+        "boot_restore": false
+      },
+      "schema_version": 2
+    },
+    "runtime": {
+      "cleanup": "confirmed",
+      "services": {
+        "svc_1": {
+          "ready": true,
+          "hostname": "home.iwonderful.top",
+          "generation": 9
+        }
+      },
+      "phase": "stopped",
+      "attempt_count": 0,
+      "clock_at": 1792133373,
+      "boot_id": "3d88e3f4-7a3a-4cda-a480-0ffcb4751a39",
+      "active_verified": false,
+      "clock_trusted": true,
+      "generation": 9,
+      "stage": "stop",
+      "running_since": 1792133374
+    },
+    "saved_revision": 3,
+    "active_config": {
+      "access_profile": {
+        "listeners": [
+          {
+            "listener_id": "shared_ipv4",
+            "network": "lan",
+            "address": "192.168.1.2",
+            "family": "ipv4",
+            "port": 8443
+          }
+        ]
+      },
+      "services": [
+        {
+          "service_id": "svc_1",
+          "type": "https_proxy",
+          "certificate_ref": "acme:home.iwonderful.top",
+          "certificate_mode": "override",
+          "name": "P5 ordinary retained HTTPS",
+          "hostname": "home.iwonderful.top",
+          "upstream_scheme": "http",
+          "enabled": true,
+          "backend": {
+            "host": "127.0.0.1",
+            "allowed_ranges": [
+              "127.0.0.0/8"
+            ],
+            "addressFamily": "ipv4",
+            "port": 50883
+          },
+          "authentication_review": {
+            "management": false,
+            "authentication": "confirmed"
+          }
+        }
+      ],
+      "default_certificate_ref": "acme:home.iwonderful.top_ecc",
+      "publication_policy": {
+        "mode": "continuous",
+        "boot_restore": false
+      },
+      "schema_version": 2
+    },
+    "schema_versions": [
+      1,
+      2
+    ],
+    "desired_state": {
+      "state": "disabled",
+      "manual_stop_latch": true
+    },
+    "intent_revision": 10,
+    "state_version": 1,
+    "active_revision": 3
+  },
+  "final": {
+    "pending_config": {
+      "saved_revision": 3,
+      "apply_required": false
+    },
+    "capabilities": {
+      "stop": true,
+      "start": true,
+      "preflight": true,
+      "network_inventory": true,
+      "apply": true
+    },
+    "attempted_revision": 3,
+    "attempted_config": {
+      "access_profile": {
+        "listeners": [
+          {
+            "listener_id": "shared_ipv4",
+            "network": "lan",
+            "address": "192.168.1.2",
+            "family": "ipv4",
+            "port": 8443
+          }
+        ]
+      },
+      "services": [
+        {
+          "service_id": "svc_1",
+          "type": "https_proxy",
+          "certificate_ref": "acme:home.iwonderful.top",
+          "certificate_mode": "override",
+          "name": "P5 ordinary retained HTTPS",
+          "hostname": "home.iwonderful.top",
+          "upstream_scheme": "http",
+          "enabled": true,
+          "backend": {
+            "host": "127.0.0.1",
+            "allowed_ranges": [
+              "127.0.0.0/8"
+            ],
+            "addressFamily": "ipv4",
+            "port": 50883
+          },
+          "authentication_review": {
+            "management": false,
+            "authentication": "confirmed"
+          }
+        }
+      ],
+      "default_certificate_ref": "acme:home.iwonderful.top_ecc",
+      "publication_policy": {
+        "mode": "continuous",
+        "boot_restore": false
+      },
+      "schema_version": 2
+    },
+    "saved_config": {
+      "access_profile": {
+        "listeners": [
+          {
+            "listener_id": "shared_ipv4",
+            "network": "lan",
+            "address": "192.168.1.2",
+            "family": "ipv4",
+            "port": 8443
+          }
+        ]
+      },
+      "services": [
+        {
+          "service_id": "svc_1",
+          "type": "https_proxy",
+          "certificate_ref": "acme:home.iwonderful.top",
+          "certificate_mode": "override",
+          "name": "P5 ordinary retained HTTPS",
+          "hostname": "home.iwonderful.top",
+          "upstream_scheme": "http",
+          "enabled": true,
+          "backend": {
+            "host": "127.0.0.1",
+            "allowed_ranges": [
+              "127.0.0.0/8"
+            ],
+            "addressFamily": "ipv4",
+            "port": 50883
+          },
+          "authentication_review": {
+            "management": false,
+            "authentication": "confirmed"
+          }
+        }
+      ],
+      "default_certificate_ref": "acme:home.iwonderful.top_ecc",
+      "publication_policy": {
+        "mode": "continuous",
+        "boot_restore": false
+      },
+      "schema_version": 2
+    },
+    "runtime": {
+      "cleanup": "confirmed",
+      "services": {
+        "svc_1": {
+          "ready": true,
+          "hostname": "home.iwonderful.top",
+          "generation": 9
+        }
+      },
+      "phase": "stopped",
+      "attempt_count": 0,
+      "clock_at": 1792133373,
+      "boot_id": "3d88e3f4-7a3a-4cda-a480-0ffcb4751a39",
+      "active_verified": false,
+      "clock_trusted": true,
+      "generation": 9,
+      "stage": "stop",
+      "running_since": 1792133374
+    },
+    "saved_revision": 3,
+    "active_config": {
+      "access_profile": {
+        "listeners": [
+          {
+            "listener_id": "shared_ipv4",
+            "network": "lan",
+            "address": "192.168.1.2",
+            "family": "ipv4",
+            "port": 8443
+          }
+        ]
+      },
+      "services": [
+        {
+          "service_id": "svc_1",
+          "type": "https_proxy",
+          "certificate_ref": "acme:home.iwonderful.top",
+          "certificate_mode": "override",
+          "name": "P5 ordinary retained HTTPS",
+          "hostname": "home.iwonderful.top",
+          "upstream_scheme": "http",
+          "enabled": true,
+          "backend": {
+            "host": "127.0.0.1",
+            "allowed_ranges": [
+              "127.0.0.0/8"
+            ],
+            "addressFamily": "ipv4",
+            "port": 50883
+          },
+          "authentication_review": {
+            "management": false,
+            "authentication": "confirmed"
+          }
+        }
+      ],
+      "default_certificate_ref": "acme:home.iwonderful.top_ecc",
+      "publication_policy": {
+        "mode": "continuous",
+        "boot_restore": false
+      },
+      "schema_version": 2
+    },
+    "schema_versions": [
+      1,
+      2
+    ],
+    "desired_state": {
+      "state": "disabled",
+      "manual_stop_latch": true
+    },
+    "intent_revision": 10,
+    "state_version": 1,
+    "active_revision": 3
+  },
+  "result": "P5_ORDINARY_LUCI_PRODUCTION_HTTPS_GREEN",
+  "readback": {
+    "pending_config": {
+      "saved_revision": 3,
+      "apply_required": false
+    },
+    "capabilities": {
+      "stop": true,
+      "start": true,
+      "preflight": true,
+      "network_inventory": true,
+      "apply": true
+    },
+    "attempted_revision": 3,
+    "attempted_config": {
+      "access_profile": {
+        "listeners": [
+          {
+            "listener_id": "shared_ipv4",
+            "network": "lan",
+            "address": "192.168.1.2",
+            "family": "ipv4",
+            "port": 8443
+          }
+        ]
+      },
+      "services": [
+        {
+          "service_id": "svc_1",
+          "type": "https_proxy",
+          "certificate_ref": "acme:home.iwonderful.top",
+          "certificate_mode": "override",
+          "name": "P5 ordinary retained HTTPS",
+          "hostname": "home.iwonderful.top",
+          "upstream_scheme": "http",
+          "enabled": true,
+          "backend": {
+            "host": "127.0.0.1",
+            "allowed_ranges": [
+              "127.0.0.0/8"
+            ],
+            "addressFamily": "ipv4",
+            "port": 50883
+          },
+          "authentication_review": {
+            "management": false,
+            "authentication": "confirmed"
+          }
+        }
+      ],
+      "default_certificate_ref": "acme:home.iwonderful.top_ecc",
+      "publication_policy": {
+        "mode": "continuous",
+        "boot_restore": false
+      },
+      "schema_version": 2
+    },
+    "saved_config": {
+      "access_profile": {
+        "listeners": [
+          {
+            "listener_id": "shared_ipv4",
+            "network": "lan",
+            "address": "192.168.1.2",
+            "family": "ipv4",
+            "port": 8443
+          }
+        ]
+      },
+      "services": [
+        {
+          "service_id": "svc_1",
+          "type": "https_proxy",
+          "certificate_ref": "acme:home.iwonderful.top",
+          "certificate_mode": "override",
+          "name": "P5 ordinary retained HTTPS",
+          "hostname": "home.iwonderful.top",
+          "upstream_scheme": "http",
+          "enabled": true,
+          "backend": {
+            "host": "127.0.0.1",
+            "allowed_ranges": [
+              "127.0.0.0/8"
+            ],
+            "addressFamily": "ipv4",
+            "port": 50883
+          },
+          "authentication_review": {
+            "management": false,
+            "authentication": "confirmed"
+          }
+        }
+      ],
+      "default_certificate_ref": "acme:home.iwonderful.top_ecc",
+      "publication_policy": {
+        "mode": "continuous",
+        "boot_restore": false
+      },
+      "schema_version": 2
+    },
+    "runtime": {
+      "cleanup": "confirmed",
+      "services": {
+        "svc_1": {
+          "ready": true,
+          "hostname": "home.iwonderful.top",
+          "generation": 9
+        }
+      },
+      "phase": "stopped",
+      "attempt_count": 0,
+      "clock_at": 1792133373,
+      "boot_id": "3d88e3f4-7a3a-4cda-a480-0ffcb4751a39",
+      "active_verified": false,
+      "clock_trusted": true,
+      "generation": 9,
+      "stage": "stop",
+      "running_since": 1792133374
+    },
+    "saved_revision": 3,
+    "active_config": {
+      "access_profile": {
+        "listeners": [
+          {
+            "listener_id": "shared_ipv4",
+            "network": "lan",
+            "address": "192.168.1.2",
+            "family": "ipv4",
+            "port": 8443
+          }
+        ]
+      },
+      "services": [
+        {
+          "service_id": "svc_1",
+          "type": "https_proxy",
+          "certificate_ref": "acme:home.iwonderful.top",
+          "certificate_mode": "override",
+          "name": "P5 ordinary retained HTTPS",
+          "hostname": "home.iwonderful.top",
+          "upstream_scheme": "http",
+          "enabled": true,
+          "backend": {
+            "host": "127.0.0.1",
+            "allowed_ranges": [
+              "127.0.0.0/8"
+            ],
+            "addressFamily": "ipv4",
+            "port": 50883
+          },
+          "authentication_review": {
+            "management": false,
+            "authentication": "confirmed"
+          }
+        }
+      ],
+      "default_certificate_ref": "acme:home.iwonderful.top_ecc",
+      "publication_policy": {
+        "mode": "continuous",
+        "boot_restore": false
+      },
+      "schema_version": 2
+    },
+    "schema_versions": [
+      1,
+      2
+    ],
+    "desired_state": {
+      "state": "disabled",
+      "manual_stop_latch": true
+    },
+    "intent_revision": 10,
+    "state_version": 1,
+    "active_revision": 3
+  }
+}

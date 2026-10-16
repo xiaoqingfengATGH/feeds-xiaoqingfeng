@@ -1,0 +1,19 @@
+CERTS [
+  { v: '', t: '未选择' },
+  { v: 'acme:home.iwonderful.top_ecc', t: 'home.iwonderful.top · ECC' },
+  { v: 'acme:home.iwonderful.top', t: 'home.iwonderful.top · RSA' }
+]
+Command failed: ubus call service delete {"name":"homepublish-p5-ordinary-held"} (Not found)
+AssertionError [ERR_ASSERTION]: Expected values to be strictly equal:
+
+1 !== 0
+
+    at modalSave (D:\DevPortal\homelede\homepublish-product\luci-app-homepublish\tests\p5-ordinary-browser.cjs:11:150)
+    at async D:\DevPortal\homelede\homepublish-product\luci-app-homepublish\tests\p5-ordinary-browser.cjs:16:716 {
+  generatedMessage: true,
+  code: 'ERR_ASSERTION',
+  actual: 1,
+  expected: 0,
+  operator: 'strictEqual',
+  diff: 'simple'
+}

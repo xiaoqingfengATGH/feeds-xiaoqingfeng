@@ -27,10 +27,22 @@ function M.new(o)
   if #enabled==0 or not o.authorize(p) then return nil,'installed v2 scope denied' end
   return p
  end
+ local function verify_bindings(listeners)
+  local N=require('network-inventory');local inventory,err=N.collect()
+  if not inventory then return nil,err.error end
+  for _,l in ipairs(listeners) do
+   local resolved,e=N.resolve(l,inventory)
+   if not resolved then return nil,e.error end
+  end
+  return true
+ end
  function V.plan(c)
   local p,e=V.runtime_plan(c);if not p then return nil,e end
+  local bound,err=verify_bindings(p.access_profile.listeners);if not bound then return nil,err end
   local snapshots={};local bindings={};local backend={}
-  local deps={resolve=I.resolve,mixed_ports=o.mixed_ports,authorize_listener=o.authorize_listener,authorize_backend=o.authorize_backend,healthy=function()return true end}
+  local ports=o.mixed_ports
+  if type(ports)=='function' then ports=ports(p);if not ports then return nil,'internal ports unavailable' end end
+  local deps={resolve=I.resolve,mixed_ports=ports,authorize_listener=o.authorize_listener,authorize_backend=o.authorize_backend,healthy=function()return true end}
   deps.certificate_snapshot=function(ref,host)
    local key=ref..'|'..host;if bindings[key] then return bindings[key] end
    local source=assert(I.certificate_source(ref,host));local i=#snapshots+1
@@ -54,7 +66,21 @@ function M.new(o)
   for _,s in ipairs(p.services) do
    local ready=false;local port=s.type=='tcp_forward' and s.listen_port or shared
    for _=1,3 do
-    if s.type=='https_proxy' or s.type=='tls_passthrough' then
+    if s.type=='tls_passthrough' and not o.passthrough_trust then
+     -- Transport-only probe: SNI routing and TLS handshake, no HTTP or
+     -- ingress certificate identity imposed on an opaque backend service.
+     local endpoint=address:find(':',1,true) and '['..address..']' or address
+     local f=io.popen("timeout 3 openssl s_client -brief -connect "..q(endpoint..':'..port)..' -servername '..q(s.hostname).." </dev/null 2>&1; printf '\\nHP_TLS_EXIT=%s\\n' \"$?\"")
+     local text=f and f:read('*a') or '';if f then f:close() end
+     local established,protocol,cipher,status=false,false,false,nil
+     for line in text:gmatch('[^\r\n]+') do
+      if line=='CONNECTION ESTABLISHED' then established=true end
+      if line:match('^Protocol version: TLSv1%.[23]$') then protocol=true end
+      if line:match('^Ciphersuite: [A-Z0-9_%-]+$') and not line:find('NONE',1,true) then cipher=true end
+      local code=line:match('^HP_TLS_EXIT=(%d+)$');if code then status=tonumber(code) end
+     end
+     ready=established and protocol and cipher and status==0
+    elseif s.type=='https_proxy' or s.type=='tls_passthrough' then
      local trust=s.type=='tls_passthrough' and o.passthrough_trust or nil
      local endpoint=address:find(':',1,true) and '['..address..']' or address
      ready=run("env -u CURL_CA_BUNDLE -u SSL_CERT_FILE -u SSL_CERT_DIR curl -q --noproxy '*' --connect-timeout 1 --max-time 2 --fail --silent --output /dev/null"..(trust and ' --cacert '..q(trust) or '')..' --resolve '..q(s.hostname..':'..port..':'..endpoint)..' '..q('https://'..s.hostname..':'..port..'/'))
@@ -72,6 +98,7 @@ function M.new(o)
   if not active or not G.healthy() then return false end
   if os.time()>=(next_check or 0) then
    next_check=os.time()+30
+   if not verify_bindings(active.listeners) then return false end
    for _,s in ipairs(active.snapshots) do if identity(s.source)~=s.identity then return false end end
    for _,s in ipairs(active.services) do
     local b=B.select(s.backend,{resolve=I.resolve,authorize_backend=o.authorize_backend,healthy=function()return true end})

@@ -1,0 +1,6 @@
+seeded private v1
+lua: /tmp/homepublish-p2-ui/device-tcp-p2-ui.lua:15: unknown request field
+stack traceback:
+	[C]: in function 'assert'
+	/tmp/homepublish-p2-ui/device-tcp-p2-ui.lua:15: in main chunk
+	[C]: ?

@@ -1,0 +1,4 @@
+exit=1
+Connecting to ::1
+286B553B7B7F0000:error:0A000126:SSL routines::unexpected eof while reading:ssl/record/rec_layer_s3.c:698:
+286B553B7B7F0000:error:0A000197:SSL routines:SSL_shutdown:shutdown while in init:ssl/ssl_lib.c:2804:

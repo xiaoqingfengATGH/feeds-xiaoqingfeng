@@ -1,0 +1,666 @@
+PASS Cancel Start performs zero mutations
+PASS actual LuCI Start activates installed four-protocol generation; real HTTPS marker A
+SERVICE_BUTTONS [
+  'tlstls_passthroughtls.fixture.home由后端提供127.0.0.1:49546编辑删除',
+  'rawtcp_forward49550不需要127.0.0.1:49546编辑删除',
+  'webhttps_proxyhome.iwonderful.top继承入口默认127.0.0.1:49545编辑删除',
+  'sshssh继承共享入口不需要127.0.0.1:49547编辑删除'
+]
+MODAL_BUTTONS [ '关闭', '保存' ]
+PASS native services edit+Save revision2 retains four-protocol active revision1 and real marker A
+REAL_APPLY_STATUS {"desired_state":{"state":"enabled","manual_stop_latch":false},"saved_revision":2,"attempted_revision":1,"pending_config":{"apply_required":true,"saved_revision":2},"capabilities":{"stop":true,"start":true,"preflight":true,"network_inventory":true,"apply":true},"approval":{"revision":1},"runtime":{"cleanup":"unknown","services":{"ssh":{"ready":true,"generation":1},"web":{"ready":true,"hostname":"home.iwonderful.top","generation":1},"tls":{"ready":true,"hostname":"tls.fixture.home","generation":1},"raw":{"ready":true,"generation":1}},"phase":"running","attempt_count":0,"clock_at":1792074456,"boot_id":"3d88e3f4-7a3a-4cda-a480-0ffcb4751a39","active_verified":true,"clock_trusted":true,"generation":1,"stage":"ready","running_since":1792074457},"attempted_config":{"access_profile":{"listeners":[{"listener_id":"v6","network":"lan","address":"fd89:878e:a47f:0:0:0:0:1","family":"ipv6","port":49543}]},"services":[{"enabled":true,"type":"tls_passthrough","name":"tls","hostname":"tls.fixture.home","service_id":"tls","backend":{"host":"127.0.0.1","allowed_ranges":["127.0.0.0/8"],"addressFamily":"ipv4","port":49546},"authentication_review":{"management":false,"authentication":"confirmed"}},{"enabled":true,"type":"tcp_forward","name":"raw","service_id":"raw","listen_port":49550,"backend":{"host":"127.0.0.1","allowed_ranges":["127.0.0.0/8"],"addressFamily":"ipv4","port":49546},"authentication_review":{"management":false,"authentication":"confirmed"}},{"service_id":"web","type":"https_proxy","certificate_mode":"inherit","name":"web","hostname":"home.iwonderful.top","upstream_scheme":"http","enabled":true,"backend":{"host":"127.0.0.1","allowed_ranges":["127.0.0.0/8"],"addressFamily":"ipv4","port":49545},"authentication_review":{"management":false,"authentication":"confirmed"}},{"enabled":true,"type":"ssh","name":"ssh","service_id":"ssh","backend":{"host":"127.0.0.1","allowed_ranges":["127.0.0.0/8"],"addressFamily":"ipv4","port":49547},"authentication_review":{"management":false,"authentication":"confirmed"}}],"default_certificate_ref":"acme:home_rsa","publication_policy":{"mode":"continuous","boot_restore":false},"schema_version":2},"active_config":{"access_profile":{"listeners":[{"listener_id":"v6","network":"lan","address":"fd89:878e:a47f:0:0:0:0:1","family":"ipv6","port":49543}]},"services":[{"enabled":true,"type":"tls_passthrough","name":"tls","hostname":"tls.fixture.home","service_id":"tls","backend":{"host":"127.0.0.1","allowed_ranges":["127.0.0.0/8"],"addressFamily":"ipv4","port":49546},"authentication_review":{"management":false,"authentication":"confirmed"}},{"enabled":true,"type":"tcp_forward","name":"raw","service_id":"raw","listen_port":49550,"backend":{"host":"127.0.0.1","allowed_ranges":["127.0.0.0/8"],"addressFamily":"ipv4","port":49546},"authentication_review":{"management":false,"authentication":"confirmed"}},{"service_id":"web","type":"https_proxy","certificate_mode":"inherit","name":"web","hostname":"home.iwonderful.top","upstream_scheme":"http","enabled":true,"backend":{"host":"127.0.0.1","allowed_ranges":["127.0.0.0/8"],"addressFamily":"ipv4","port":49545},"authentication_review":{"management":false,"authentication":"confirmed"}},{"enabled":true,"type":"ssh","name":"ssh","service_id":"ssh","backend":{"host":"127.0.0.1","allowed_ranges":["127.0.0.0/8"],"addressFamily":"ipv4","port":49547},"authentication_review":{"management":false,"authentication":"confirmed"}}],"default_certificate_ref":"acme:home_rsa","publication_policy":{"mode":"continuous","boot_restore":false},"schema_version":2},"schema_versions":[1,2],"saved_config":{"access_profile":{"listeners":[{"listener_id":"v6","network":"lan","address":"fd89:878e:a47f:0:0:0:0:1","family":"ipv6","port":49543}]},"services":[{"enabled":true,"type":"tls_passthrough","name":"tls","hostname":"tls.fixture.home","service_id":"tls","backend":{"host":"127.0.0.1","allowed_ranges":["127.0.0.0/8"],"addressFamily":"ipv4","port":49546},"authentication_review":{"management":false,"authentication":"confirmed"}},{"enabled":true,"type":"tcp_forward","name":"raw","service_id":"raw","listen_port":49550,"backend":{"host":"127.0.0.1","allowed_ranges":["127.0.0.0/8"],"addressFamily":"ipv4","port":49546},"authentication_review":{"management":false,"authentication":"confirmed"}},{"service_id":"web","type":"https_proxy","certificate_mode":"inherit","name":"web","hostname":"home.iwonderful.top","upstream_scheme":"http","enabled":true,"backend":{"host":"127.0.0.1","allowed_ranges":["127.0.0.0/8"],"addressFamily":"ipv4","port":49556},"authentication_review":{"management":false,"authentication":"confirmed"}},{"enabled":true,"type":"ssh","name":"ssh","service_id":"ssh","backend":{"host":"127.0.0.1","allowed_ranges":["127.0.0.0/8"],"addressFamily":"ipv4","port":49547},"authentication_review":{"management":false,"authentication":"confirmed"}}],"default_certificate_ref":"acme:home_rsa","publication_policy":{"mode":"continuous","boot_restore":false},"schema_version":2},"active_revision":1,"state_version":1,"intent_revision":1}
+REAL_APPLY_DOM 已保存待应用；旧运行配置不会随保存切换
+
+发布状态
+发布状态
+运行中（本机已验证）
+配置状态
+已保存：2；运行：1；已保存待应用
+发布策略
+持续直到停止；截止：未开始；开机恢复：关闭
+公网入口
+IPv4 / IPv6 公网未验证；本机就绪不代表公网可达
+入口状态
+入口	本机监听	地址族	关联网络	配置来源	公网验证
+v6	[fd89:878e:a47f:0:0:0:0:1]:49543	ipv6	lan	运行快照（逐服务就绪另验）	公网未验证
+服务发布状态
+已保存配置	名称	发布方式	匹配 / 端口	家庭后端	地址族路径	当前运行状态
+参与下次发布	tls（tls）	TLS 透传	tls.fixture.home	127.0.0.1:49546	ipv6 → ipv4	内部已就绪
+参与下次发布	raw（raw）	独立 TCP	TCP 49550	127.0.0.1:49546	ipv6 → ipv4	内部已就绪
+参与下次发布；待应用	web（web）	HTTPS 反向代理	home.iwonderful.top	127.0.0.1:49545	ipv6 → ipv4	内部已就绪
+参与下次发布	ssh（ssh）	原生 SSH	共享 SSH 入口	127.0.0.1:49547	ipv6 → ipv4	内部已就绪
+发布操作
+启动发布
+启动发布操作处理中
+应用变更
+应用变更操作处理中
+停止发布
+停止发布操作处理中
+刷新 / 重试
+刷新 / 重试
+配置
+编辑发布服务
+内部状态与失败 / 清理详情
+PASS Cancel Apply retains generation A
+PASS actual LuCI Apply activates revision2/new four-protocol generation and real marker B
+PASS four real TLS/HTTPS/SSH/raw-TCP clients held before Stop
+PASS actual LuCI Stop closes all four held sessions and listeners; owned snapshots absent; manual latch persisted
+{
+  "boundary": "Actual installed LuCI loader and rpc.declare requests forwarded by test-only fixed SSH transport to root-private installed-module controller, NOT public rpcd/session ACL lifecycle acceptance",
+  "routes": [
+    "http://127.0.0.1:1081/cgi-bin/luci/admin/services/homepublish/overview",
+    "http://127.0.0.1:1081/cgi-bin/luci/admin/services/homepublish/services",
+    "http://127.0.0.1:1081/cgi-bin/luci/admin/services/homepublish/overview"
+  ],
+  "calls": [
+    {
+      "method": "status",
+      "responseError": null,
+      "saved_revision": 1,
+      "phase": "stopped"
+    },
+    {
+      "method": "status",
+      "responseError": null,
+      "saved_revision": 1,
+      "phase": "stopped"
+    },
+    {
+      "method": "status",
+      "responseError": null,
+      "saved_revision": 1,
+      "phase": "stopped"
+    },
+    {
+      "method": "start",
+      "responseError": null,
+      "saved_revision": 1,
+      "phase": "running"
+    },
+    {
+      "method": "status",
+      "responseError": null,
+      "saved_revision": 1,
+      "phase": "running"
+    },
+    {
+      "method": "status",
+      "responseError": null,
+      "saved_revision": 1,
+      "phase": "running"
+    },
+    {
+      "method": "status",
+      "responseError": null,
+      "saved_revision": 1,
+      "phase": "running"
+    },
+    {
+      "method": "certificates",
+      "responseError": null
+    },
+    {
+      "method": "validate",
+      "responseError": null
+    },
+    {
+      "method": "save",
+      "responseError": null,
+      "saved_revision": 2,
+      "phase": "running"
+    },
+    {
+      "method": "status",
+      "responseError": null,
+      "saved_revision": 2,
+      "phase": "running"
+    },
+    {
+      "method": "status",
+      "responseError": null,
+      "saved_revision": 2,
+      "phase": "running"
+    },
+    {
+      "method": "certificates",
+      "responseError": null
+    },
+    {
+      "method": "status",
+      "responseError": null,
+      "saved_revision": 2,
+      "phase": "running"
+    },
+    {
+      "method": "status",
+      "responseError": null,
+      "saved_revision": 2,
+      "phase": "running"
+    },
+    {
+      "method": "status",
+      "responseError": null,
+      "saved_revision": 2,
+      "phase": "running"
+    },
+    {
+      "method": "apply",
+      "responseError": null,
+      "saved_revision": 2,
+      "phase": "running"
+    },
+    {
+      "method": "status",
+      "responseError": null,
+      "saved_revision": 2,
+      "phase": "running"
+    },
+    {
+      "method": "status",
+      "responseError": null,
+      "saved_revision": 2,
+      "phase": "running"
+    },
+    {
+      "method": "status",
+      "responseError": null,
+      "saved_revision": 2,
+      "phase": "running"
+    },
+    {
+      "method": "stop",
+      "responseError": null,
+      "saved_revision": 2,
+      "phase": "stopped"
+    },
+    {
+      "method": "status",
+      "responseError": null,
+      "saved_revision": 2,
+      "phase": "stopped"
+    }
+  ],
+  "checks": [
+    "Cancel Start performs zero mutations",
+    "actual LuCI Start activates installed four-protocol generation; real HTTPS marker A",
+    "native services edit+Save revision2 retains four-protocol active revision1 and real marker A",
+    "Cancel Apply retains generation A",
+    "actual LuCI Apply activates revision2/new four-protocol generation and real marker B",
+    "four real TLS/HTTPS/SSH/raw-TCP clients held before Stop",
+    "actual LuCI Stop closes all four held sessions and listeners; owned snapshots absent; manual latch persisted"
+  ],
+  "start": {
+    "generation": 1,
+    "active_revision": 1
+  },
+  "saved": {
+    "desired_state": {
+      "state": "enabled",
+      "manual_stop_latch": false
+    },
+    "saved_revision": 2,
+    "attempted_revision": 1,
+    "pending_config": {
+      "apply_required": true,
+      "saved_revision": 2
+    },
+    "capabilities": {
+      "stop": true,
+      "start": true,
+      "preflight": true,
+      "network_inventory": true,
+      "apply": true
+    },
+    "approval": {
+      "revision": 1
+    },
+    "runtime": {
+      "cleanup": "unknown",
+      "services": {
+        "ssh": {
+          "ready": true,
+          "generation": 1
+        },
+        "web": {
+          "ready": true,
+          "hostname": "home.iwonderful.top",
+          "generation": 1
+        },
+        "tls": {
+          "ready": true,
+          "hostname": "tls.fixture.home",
+          "generation": 1
+        },
+        "raw": {
+          "ready": true,
+          "generation": 1
+        }
+      },
+      "phase": "running",
+      "attempt_count": 0,
+      "clock_at": 1792074456,
+      "boot_id": "3d88e3f4-7a3a-4cda-a480-0ffcb4751a39",
+      "active_verified": true,
+      "clock_trusted": true,
+      "generation": 1,
+      "stage": "ready",
+      "running_since": 1792074457
+    },
+    "attempted_config": {
+      "access_profile": {
+        "listeners": [
+          {
+            "listener_id": "v6",
+            "network": "lan",
+            "address": "fd89:878e:a47f:0:0:0:0:1",
+            "family": "ipv6",
+            "port": 49543
+          }
+        ]
+      },
+      "services": [
+        {
+          "enabled": true,
+          "type": "tls_passthrough",
+          "name": "tls",
+          "hostname": "tls.fixture.home",
+          "service_id": "tls",
+          "backend": {
+            "host": "127.0.0.1",
+            "allowed_ranges": [
+              "127.0.0.0/8"
+            ],
+            "addressFamily": "ipv4",
+            "port": 49546
+          },
+          "authentication_review": {
+            "management": false,
+            "authentication": "confirmed"
+          }
+        },
+        {
+          "enabled": true,
+          "type": "tcp_forward",
+          "name": "raw",
+          "service_id": "raw",
+          "listen_port": 49550,
+          "backend": {
+            "host": "127.0.0.1",
+            "allowed_ranges": [
+              "127.0.0.0/8"
+            ],
+            "addressFamily": "ipv4",
+            "port": 49546
+          },
+          "authentication_review": {
+            "management": false,
+            "authentication": "confirmed"
+          }
+        },
+        {
+          "service_id": "web",
+          "type": "https_proxy",
+          "certificate_mode": "inherit",
+          "name": "web",
+          "hostname": "home.iwonderful.top",
+          "upstream_scheme": "http",
+          "enabled": true,
+          "backend": {
+            "host": "127.0.0.1",
+            "allowed_ranges": [
+              "127.0.0.0/8"
+            ],
+            "addressFamily": "ipv4",
+            "port": 49545
+          },
+          "authentication_review": {
+            "management": false,
+            "authentication": "confirmed"
+          }
+        },
+        {
+          "enabled": true,
+          "type": "ssh",
+          "name": "ssh",
+          "service_id": "ssh",
+          "backend": {
+            "host": "127.0.0.1",
+            "allowed_ranges": [
+              "127.0.0.0/8"
+            ],
+            "addressFamily": "ipv4",
+            "port": 49547
+          },
+          "authentication_review": {
+            "management": false,
+            "authentication": "confirmed"
+          }
+        }
+      ],
+      "default_certificate_ref": "acme:home_rsa",
+      "publication_policy": {
+        "mode": "continuous",
+        "boot_restore": false
+      },
+      "schema_version": 2
+    },
+    "active_config": {
+      "access_profile": {
+        "listeners": [
+          {
+            "listener_id": "v6",
+            "network": "lan",
+            "address": "fd89:878e:a47f:0:0:0:0:1",
+            "family": "ipv6",
+            "port": 49543
+          }
+        ]
+      },
+      "services": [
+        {
+          "enabled": true,
+          "type": "tls_passthrough",
+          "name": "tls",
+          "hostname": "tls.fixture.home",
+          "service_id": "tls",
+          "backend": {
+            "host": "127.0.0.1",
+            "allowed_ranges": [
+              "127.0.0.0/8"
+            ],
+            "addressFamily": "ipv4",
+            "port": 49546
+          },
+          "authentication_review": {
+            "management": false,
+            "authentication": "confirmed"
+          }
+        },
+        {
+          "enabled": true,
+          "type": "tcp_forward",
+          "name": "raw",
+          "service_id": "raw",
+          "listen_port": 49550,
+          "backend": {
+            "host": "127.0.0.1",
+            "allowed_ranges": [
+              "127.0.0.0/8"
+            ],
+            "addressFamily": "ipv4",
+            "port": 49546
+          },
+          "authentication_review": {
+            "management": false,
+            "authentication": "confirmed"
+          }
+        },
+        {
+          "service_id": "web",
+          "type": "https_proxy",
+          "certificate_mode": "inherit",
+          "name": "web",
+          "hostname": "home.iwonderful.top",
+          "upstream_scheme": "http",
+          "enabled": true,
+          "backend": {
+            "host": "127.0.0.1",
+            "allowed_ranges": [
+              "127.0.0.0/8"
+            ],
+            "addressFamily": "ipv4",
+            "port": 49545
+          },
+          "authentication_review": {
+            "management": false,
+            "authentication": "confirmed"
+          }
+        },
+        {
+          "enabled": true,
+          "type": "ssh",
+          "name": "ssh",
+          "service_id": "ssh",
+          "backend": {
+            "host": "127.0.0.1",
+            "allowed_ranges": [
+              "127.0.0.0/8"
+            ],
+            "addressFamily": "ipv4",
+            "port": 49547
+          },
+          "authentication_review": {
+            "management": false,
+            "authentication": "confirmed"
+          }
+        }
+      ],
+      "default_certificate_ref": "acme:home_rsa",
+      "publication_policy": {
+        "mode": "continuous",
+        "boot_restore": false
+      },
+      "schema_version": 2
+    },
+    "schema_versions": [
+      1,
+      2
+    ],
+    "saved_config": {
+      "access_profile": {
+        "listeners": [
+          {
+            "listener_id": "v6",
+            "network": "lan",
+            "address": "fd89:878e:a47f:0:0:0:0:1",
+            "family": "ipv6",
+            "port": 49543
+          }
+        ]
+      },
+      "services": [
+        {
+          "enabled": true,
+          "type": "tls_passthrough",
+          "name": "tls",
+          "hostname": "tls.fixture.home",
+          "service_id": "tls",
+          "backend": {
+            "host": "127.0.0.1",
+            "allowed_ranges": [
+              "127.0.0.0/8"
+            ],
+            "addressFamily": "ipv4",
+            "port": 49546
+          },
+          "authentication_review": {
+            "management": false,
+            "authentication": "confirmed"
+          }
+        },
+        {
+          "enabled": true,
+          "type": "tcp_forward",
+          "name": "raw",
+          "service_id": "raw",
+          "listen_port": 49550,
+          "backend": {
+            "host": "127.0.0.1",
+            "allowed_ranges": [
+              "127.0.0.0/8"
+            ],
+            "addressFamily": "ipv4",
+            "port": 49546
+          },
+          "authentication_review": {
+            "management": false,
+            "authentication": "confirmed"
+          }
+        },
+        {
+          "service_id": "web",
+          "type": "https_proxy",
+          "certificate_mode": "inherit",
+          "name": "web",
+          "hostname": "home.iwonderful.top",
+          "upstream_scheme": "http",
+          "enabled": true,
+          "backend": {
+            "host": "127.0.0.1",
+            "allowed_ranges": [
+              "127.0.0.0/8"
+            ],
+            "addressFamily": "ipv4",
+            "port": 49556
+          },
+          "authentication_review": {
+            "management": false,
+            "authentication": "confirmed"
+          }
+        },
+        {
+          "enabled": true,
+          "type": "ssh",
+          "name": "ssh",
+          "service_id": "ssh",
+          "backend": {
+            "host": "127.0.0.1",
+            "allowed_ranges": [
+              "127.0.0.0/8"
+            ],
+            "addressFamily": "ipv4",
+            "port": 49547
+          },
+          "authentication_review": {
+            "management": false,
+            "authentication": "confirmed"
+          }
+        }
+      ],
+      "default_certificate_ref": "acme:home_rsa",
+      "publication_policy": {
+        "mode": "continuous",
+        "boot_restore": false
+      },
+      "schema_version": 2
+    },
+    "active_revision": 1,
+    "state_version": 1,
+    "intent_revision": 1
+  },
+  "apply": {
+    "generation": 2,
+    "active_revision": 2
+  },
+  "heldBefore": {
+    "homepublish-p3-clients": {
+      "instances": {
+        "held49543": {
+          "running": true,
+          "pid": 116941,
+          "command": [
+            "/bin/sh",
+            "-c",
+            "exec openssl s_client -connect [::1]:49543 -servername tls.fixture.home -CAfile /tmp/homepublish-tcp-p3/controller-fixture/tls.pem -verify_return_error -quiet -ign_eof >/tmp/homepublish-tcp-p3/controller-fixture/held-49543.log 2>&1"
+          ],
+          "term_timeout": 5
+        },
+        "held49550": {
+          "running": true,
+          "pid": 116942,
+          "command": [
+            "/bin/sh",
+            "-c",
+            "exec openssl s_client -connect [::1]:49550 -servername tls.fixture.home -CAfile /tmp/homepublish-tcp-p3/controller-fixture/tls.pem -verify_return_error -quiet -ign_eof >/tmp/homepublish-tcp-p3/controller-fixture/held-49550.log 2>&1"
+          ],
+          "term_timeout": 5
+        },
+        "heldssh": {
+          "running": true,
+          "pid": 116944,
+          "command": [
+            "/usr/bin/dbclient",
+            "-y",
+            "-y",
+            "-N",
+            "-i",
+            "/tmp/homepublish-tcp-p3/controller-fixture/ssh-client.key",
+            "-p",
+            "49543",
+            "root@::1"
+          ],
+          "term_timeout": 5
+        },
+        "heldweb": {
+          "running": true,
+          "pid": 116943,
+          "command": [
+            "/bin/sh",
+            "-c",
+            "exec openssl s_client -connect [::1]:49543 -servername home.iwonderful.top -verify_hostname home.iwonderful.top -CAfile /etc/ssl/certs/ca-certificates.crt -verify_return_error -quiet -ign_eof >/tmp/homepublish-tcp-p3/controller-fixture/held-web.log 2>&1"
+          ],
+          "term_timeout": 5
+        }
+      }
+    }
+  },
+  "connectionsBefore": "Active Internet connections (w/o servers)\nProto Recv-Q Send-Q Local Address           Foreign Address         State       \ntcp        0      0 192.168.1.2:22          192.168.1.2:46254       TIME_WAIT   \ntcp        0      0 192.168.1.2:22          192.168.1.2:46122       TIME_WAIT   \ntcp        0      0 192.168.1.2:22          192.168.1.2:38966       TIME_WAIT   \ntcp        0      0 192.168.1.2:22          192.168.1.2:39662       TIME_WAIT   \ntcp        0      0 127.0.0.1:49546         127.0.0.1:52832         TIME_WAIT   \ntcp        0      0 192.168.1.2:54320       192.168.1.2:22          TIME_WAIT   \ntcp        0      0 192.168.1.2:54324       192.168.1.2:22          TIME_WAIT   \ntcp        0      0 192.168.1.2:54344       192.168.1.2:22          TIME_WAIT   \ntcp        0      0 192.168.1.2:54366       192.168.1.2:22          TIME_WAIT   \ntcp        0      0 192.168.1.2:54406       192.168.1.2:22          TIME_WAIT   \ntcp        0      0 192.168.1.2:22          192.168.1.2:54360       TIME_WAIT   \ntcp        0      0 192.168.1.2:22          192.168.1.2:46150       TIME_WAIT   \ntcp        0      0 192.168.1.2:22          192.168.1.2:45354       TIME_WAIT   \ntcp        0      0 192.168.1.2:22          192.168.1.2:59428       TIME_WAIT   \ntcp        0      0 192.168.1.2:22          192.168.1.2:59610       TIME_WAIT   \ntcp        0      0 192.168.1.2:22          192.168.1.2:54354       TIME_WAIT   \ntcp        0      0 127.0.0.1:49544         127.0.0.1:39112         TIME_WAIT   \ntcp        0      0 192.168.1.2:22          192.168.1.2:39018       TIME_WAIT   \ntcp        0      0 192.168.1.2:22          192.168.1.2:59638       TIME_WAIT   \ntcp        0      0 192.168.1.2:22          192.168.1.2:45346       TIME_WAIT   \ntcp        0      0 192.168.1.2:80          192.168.1.2:49982       ESTABLISHED \ntcp        0      0 127.0.0.1:49546         127.0.0.1:52860         ESTABLISHED \ntcp        0      0 192.168.1.2:22          192.168.1.2:59512       TIME_WAIT   \ntcp        0      0 192.168.1.2:39626       192.168.1.2:22          TIME_WAIT   \ntcp        0      0 192.168.1.2:39680       192.168.1.2:22          ESTABLISHED \ntcp        0      0 127.0.0.1:49547         127.0.0.1:52038         ESTABLISHED \ntcp        0      0 192.168.1.2:22          192.168.1.2:59580       TIME_WAIT   \ntcp        0      0 192.168.1.2:22          192.168.1.2:59564       TIME_WAIT   \ntcp        0      0 192.168.1.2:22          192.168.1.2:59594       TIME_WAIT   \ntcp        0      0 192.168.1.2:22          192.168.1.2:38998       TIME_WAIT   \ntcp        0      0 192.168.1.2:22          192.168.1.2:39654       TIME_WAIT   \ntcp        0      0 192.168.1.2:22          192.168.1.2:59534       TIME_WAIT   \ntcp        0      0 127.0.0.1:49546         127.0.0.1:33416         TIME_WAIT   \ntcp        0      0 192.168.1.2:22          192.168.1.2:46180       TIME_WAIT   \ntcp        0      0 192.168.1.2:22          192.168.1.2:54392       TIME_WAIT   \ntcp        0      0 192.168.1.2:22          192.168.1.2:39028       TIME_WAIT   \ntcp        0      0 192.168.1.2:22          192.168.1.2:46134       TIME_WAIT   \ntcp        0      0 192.168.1.2:22          192.168.1.2:39648       TIME_WAIT   \ntcp        0      0 192.168.1.2:22          192.168.1.2:39012       TIME_WAIT   \ntcp        0      0 127.0.0.1:49544         127.0.0.1:58676         ESTABLISHED \ntcp        0      0 127.0.0.1:49544         127.0.0.1:58660         TIME_WAIT   \ntcp        0      0 192.168.1.2:59370       192.168.1.2:22          TIME_WAIT   \ntcp        0      0 192.168.1.2:59380       192.168.1.2:22          TIME_WAIT   \ntcp        0      0 192.168.1.2:59420       192.168.1.2:22          TIME_WAIT   \ntcp        0      0 192.168.1.2:59444       192.168.1.2:22          TIME_WAIT   \ntcp        0      0 192.168.1.2:59458       192.168.1.2:22          TIME_WAIT   \ntcp        0      0 127.0.0.1:34782         127.0.0.1:49544         TIME_WAIT   \ntcp        0      0 192.168.1.2:59500       192.168.1.2:22          TIME_WAIT   \ntcp        0      0 192.168.1.2:59548       192.168.1.2:22          TIME_WAIT   \ntcp        0      0 192.168.1.2:59550       192.168.1.2:22          TIME_WAIT   \ntcp        0      0 192.168.1.2:59646       192.168.1.2:22          TIME_WAIT   \ntcp        0      0 192.168.1.2:59650       192.168.1.2:22          TIME_WAIT   \ntcp        0      0 127.0.0.1:49546         127.0.0.1:52868         ESTABLISHED \ntcp        0      0 127.0.0.1:33432         127.0.0.1:49546         TIME_WAIT   \ntcp        0      0 127.0.0.1:33446         127.0.0.1:49546         TIME_WAIT   \ntcp        0      0 192.168.1.2:22          192.168.1.2:59618       TIME_WAIT   \ntcp        0      0 192.168.1.2:22          192.168.1.2:46196       TIME_WAIT   \ntcp        0      0 192.168.1.2:46176       120.27.197.138:443      TIME_WAIT   \ntcp        0      0 192.168.1.2:22          192.168.1.2:59396       TIME_WAIT   \ntcp        0      0 127.0.0.1:49556         127.0.0.1:53640         TIME_WAIT   \ntcp        0      0 192.168.1.2:22          192.168.1.2:54338       TIME_WAIT   \ntcp        0      0 192.168.1.2:22          192.168.1.2:59508       TIME_WAIT   \ntcp        0      0 192.168.1.2:45332       192.168.1.2:22          TIME_WAIT   \ntcp        0      0 192.168.1.2:45340       192.168.1.2:22          TIME_WAIT   \ntcp        0      0 192.168.1.2:45368       192.168.1.2:22          TIME_WAIT   \ntcp        0      0 127.0.0.1:49544         127.0.0.1:58658         TIME_WAIT   \ntcp        0      0 127.0.0.1:49544         127.0.0.1:39110         TIME_WAIT   \ntcp        0      0 192.168.1.2:46164       192.168.1.2:22          TIME_WAIT   \ntcp        0      0 192.168.1.2:22          192.168.1.2:59592       TIME_WAIT   \ntcp        0      0 192.168.1.2:46178       192.168.1.2:22          TIME_WAIT   \ntcp        0      0 192.168.1.2:46212       192.168.1.2:22          TIME_WAIT   \ntcp        0      0 192.168.1.2:46228       192.168.1.2:22          TIME_WAIT   \ntcp        0      0 192.168.1.2:46244       192.168.1.2:22          TIME_WAIT   \ntcp        0      0 192.168.1.2:46264       192.168.1.2:22          TIME_WAIT   \ntcp        0      0 192.168.1.2:46280       192.168.1.2:22          TIME_WAIT   \ntcp        0      0 192.168.1.2:46294       192.168.1.2:22          TIME_WAIT   \ntcp        0      0 192.168.1.2:22          192.168.1.2:38986       TIME_WAIT   \ntcp        0      0 192.168.1.2:22          192.168.1.2:38938       TIME_WAIT   \ntcp        0      0 127.0.0.1:54814         127.0.0.1:49545         TIME_WAIT   \ntcp        0      0 192.168.1.2:22          192.168.1.2:39680       ESTABLISHED \ntcp        0      0 127.0.0.1:34628         127.0.0.1:49547         TIME_WAIT   \ntcp        0      0 192.168.1.2:22          192.168.1.2:39646       TIME_WAIT   \ntcp        0      0 192.168.1.2:22          192.168.1.2:38978       TIME_WAIT   \ntcp        0      0 127.0.0.1:52848         127.0.0.1:49546         TIME_WAIT   \ntcp        0      0 127.0.0.1:52856         127.0.0.1:49546         TIME_WAIT   \ntcp        0      0 127.0.0.1:52860         127.0.0.1:49546         ESTABLISHED \ntcp        0      0 127.0.0.1:52868         127.0.0.1:49546         ESTABLISHED \ntcp        0      0 192.168.1.2:22          192.168.1.2:39666       TIME_WAIT   \ntcp        0      0 192.168.1.2:22          192.168.1.2:46300       TIME_WAIT   \ntcp        0      0 192.168.1.2:22          192.168.1.2:39630       TIME_WAIT   \ntcp        0      0 127.0.0.1:52028         127.0.0.1:49547         TIME_WAIT   \ntcp        0      0 127.0.0.1:52038         127.0.0.1:49547         ESTABLISHED \ntcp        0      0 192.168.1.2:22          192.168.1.2:38988       TIME_WAIT   \ntcp        0      0 192.168.1.2:22          192.168.1.2:38908       TIME_WAIT   \ntcp        0      0 192.168.1.2:22          192.168.1.2:59412       TIME_WAIT   \ntcp        0      0 192.168.1.2:22          192.168.1.2:59528       TIME_WAIT   \ntcp        0      0 127.0.0.1:49556         127.0.0.1:53632         TIME_WAIT   \ntcp        0      0 192.168.1.2:22          192.168.1.2:54342       TIME_WAIT   \ntcp        0      0 192.168.1.2:22          192.168.1.2:38954       TIME_WAIT   \ntcp        0      0 192.168.1.2:22          192.168.1.2:45318       TIME_WAIT   \ntcp        0      0 192.168.1.2:22          192.168.1.2:59402       TIME_WAIT   \ntcp        0      0 192.168.1.2:22          192.168.1.2:45380       TIME_WAIT   \ntcp        0      0 192.168.1.2:22          192.168.1.2:54376       TIME_WAIT   \ntcp        0      0 192.168.1.2:22          192.168.1.2:59486       TIME_WAIT   \ntcp        0      0 192.168.1.2:22          192.168.1.2:46258       TIME_WAIT   \ntcp        0      0 127.0.0.1:58676         127.0.0.1:49544         ESTABLISHED \ntcp        0      0 192.168.1.2:22          192.168.1.2:59566       TIME_WAIT   \ntcp        0      0 192.168.1.2:22          47.93.22.202:6955       ESTABLISHED \ntcp        0      0 192.168.1.2:22          192.168.1.2:39612       TIME_WAIT   \ntcp        0      0 192.168.1.2:22          192.168.1.2:39670       TIME_WAIT   \ntcp        0      0 192.168.1.2:49944       192.168.1.2:80          TIME_WAIT   \ntcp        0      0 192.168.1.2:49956       192.168.1.2:80          TIME_WAIT   \ntcp        0      0 192.168.1.2:49960       192.168.1.2:80          TIME_WAIT   \ntcp        0      0 192.168.1.2:49964       192.168.1.2:80          TIME_WAIT   \ntcp        0      0 192.168.1.2:49976       192.168.1.2:80          TIME_WAIT   \ntcp        0      0 192.168.1.2:49980       192.168.1.2:80          TIME_WAIT   \ntcp        0      0 192.168.1.2:49982       192.168.1.2:80          ESTABLISHED \ntcp        0      0 192.168.1.2:22          192.168.1.2:38984       TIME_WAIT   \ntcp        0      0 192.168.1.2:22          192.168.1.2:46266       TIME_WAIT   \ntcp        0      0 192.168.1.2:22          192.168.1.2:59626       TIME_WAIT   \ntcp        0      0 192.168.1.2:22          192.168.1.2:39656       TIME_WAIT   \ntcp        0  10172 192.168.1.2:22          123.118.214.120:22527   ESTABLISHED \ntcp        0      0 192.168.1.2:22          192.168.1.2:41750       TIME_WAIT   \ntcp        0      0 192.168.1.2:22          192.168.1.2:38924       TIME_WAIT   \ntcp        0      0 127.0.0.1:49545         127.0.0.1:36052         TIME_WAIT   \ntcp        0      0 127.0.0.1:49545         127.0.0.1:54826         TIME_WAIT   \ntcp        0      0 192.168.1.2:22          192.168.1.2:59470       TIME_WAIT   \ntcp        0      0 ::1:49543               ::1:40246               TIME_WAIT   \ntcp        0      0 ::1:49543               ::1:40252               ESTABLISHED \ntcp        0      0 ::1:59504               ::1:49550               TIME_WAIT   \ntcp        0      0 ::1:59506               ::1:49550               ESTABLISHED \ntcp        0      0 ::1:49543               ::1:40278               ESTABLISHED \ntcp        0      0 ::1:49550               ::1:59506               ESTABLISHED \ntcp        0      0 ::1:48106               ::1:49550               TIME_WAIT   \ntcp        0      0 ::1:39768               ::1:49543               TIME_WAIT   \ntcp        0      0 ::1:39784               ::1:49543               TIME_WAIT   \ntcp        0      0 ::1:40216               ::1:49543               TIME_WAIT   \ntcp        0      0 ::1:40252               ::1:49543               ESTABLISHED \ntcp        0      0 ::1:40266               ::1:49543               ESTABLISHED \ntcp        0      0 ::1:40278               ::1:49543               ESTABLISHED \ntcp        0      0 ::1:49543               ::1:40266               ESTABLISHED \ntcp        0      0 ::1:49543               ::1:40760               TIME_WAIT   \ntcp        0      0 ::1:49543               ::1:40230               TIME_WAIT   \ntcp        0      0 ::1:49543               ::1:40766               TIME_WAIT   \n",
+  "heldAfter": {
+    "homepublish-p3-clients": {
+      "instances": {
+        "held49543": {
+          "running": false,
+          "command": [
+            "/bin/sh",
+            "-c",
+            "exec openssl s_client -connect [::1]:49543 -servername tls.fixture.home -CAfile /tmp/homepublish-tcp-p3/controller-fixture/tls.pem -verify_return_error -quiet -ign_eof >/tmp/homepublish-tcp-p3/controller-fixture/held-49543.log 2>&1"
+          ],
+          "term_timeout": 5,
+          "exit_code": 1
+        },
+        "held49550": {
+          "running": false,
+          "command": [
+            "/bin/sh",
+            "-c",
+            "exec openssl s_client -connect [::1]:49550 -servername tls.fixture.home -CAfile /tmp/homepublish-tcp-p3/controller-fixture/tls.pem -verify_return_error -quiet -ign_eof >/tmp/homepublish-tcp-p3/controller-fixture/held-49550.log 2>&1"
+          ],
+          "term_timeout": 5,
+          "exit_code": 1
+        },
+        "heldssh": {
+          "running": false,
+          "command": [
+            "/usr/bin/dbclient",
+            "-y",
+            "-y",
+            "-N",
+            "-i",
+            "/tmp/homepublish-tcp-p3/controller-fixture/ssh-client.key",
+            "-p",
+            "49543",
+            "root@::1"
+          ],
+          "term_timeout": 5,
+          "exit_code": 1
+        },
+        "heldweb": {
+          "running": false,
+          "command": [
+            "/bin/sh",
+            "-c",
+            "exec openssl s_client -connect [::1]:49543 -servername home.iwonderful.top -verify_hostname home.iwonderful.top -CAfile /etc/ssl/certs/ca-certificates.crt -verify_return_error -quiet -ign_eof >/tmp/homepublish-tcp-p3/controller-fixture/held-web.log 2>&1"
+          ],
+          "term_timeout": 5,
+          "exit_code": 1
+        }
+      }
+    }
+  },
+  "result": "P4_UI_REAL_PRIVATE_RPC_LIFECYCLE_GREEN"
+}
+{"desired_state":{"state":"disabled","manual_stop_latch":false},"capabilities":{"stop":true,"start":false,"preflight":true,"network_inventory":true,"apply":false},"runtime":{"phase":"stopped","cleanup":"confirmed","stage":"boot_cleanup","active_verified":false},"pending_config":{"apply_required":true,"saved_revision":1},"schema_versions":[1,2],"saved_revision":1,"intent_revision":0,"state_version":1,"saved_config":{"access_profile":{"listeners":[{"listener_id":"v6","network":"lan","address":"fd89:878e:a47f:0:0:0:0:1","family":"ipv6","port":49543}]},"services":[{"enabled":true,"type":"tls_passthrough","name":"tls","hostname":"tls.fixture.home","service_id":"tls","backend":{"host":"127.0.0.1","allowed_ranges":["127.0.0.0/8"],"addressFamily":"ipv4","port":49546},"authentication_review":{"management":false,"authentication":"confirmed"}},{"enabled":true,"type":"tcp_forward","name":"raw","service_id":"raw","listen_port":49550,"backend":{"host":"127.0.0.1","allowed_ranges":["127.0.0.0/8"],"addressFamily":"ipv4","port":49546},"authentication_review":{"management":false,"authentication":"confirmed"}},{"service_id":"web","type":"https_proxy","certificate_mode":"inherit","name":"web","hostname":"home.iwonderful.top","upstream_scheme":"http","enabled":true,"backend":{"host":"127.0.0.1","allowed_ranges":["127.0.0.0/8"],"addressFamily":"ipv4","port":49545},"authentication_review":{"management":false,"authentication":"confirmed"}},{"enabled":true,"type":"ssh","name":"ssh","service_id":"ssh","backend":{"host":"127.0.0.1","allowed_ranges":["127.0.0.0/8"],"addressFamily":"ipv4","port":49547},"authentication_review":{"management":false,"authentication":"confirmed"}}],"default_certificate_ref":"acme:home_rsa","publication_policy":{"mode":"continuous","boot_restore":false},"schema_version":2}}
+{"desired_state":{"state":"disabled","manual_stop_latch":true},"saved_revision":2,"attempted_revision":2,"pending_config":{"apply_required":false,"saved_revision":2},"capabilities":{"stop":true,"start":true,"preflight":true,"network_inventory":true,"apply":true},"runtime":{"cleanup":"confirmed","services":{"ssh":{"ready":true,"generation":2},"web":{"ready":true,"hostname":"home.iwonderful.top","generation":2},"tls":{"ready":true,"hostname":"tls.fixture.home","generation":2},"raw":{"ready":true,"generation":2}},"phase":"stopped","attempt_count":0,"clock_at":1792074470,"boot_id":"3d88e3f4-7a3a-4cda-a480-0ffcb4751a39","active_verified":false,"clock_trusted":true,"generation":2,"stage":"stop","running_since":1792074470},"attempted_config":{"access_profile":{"listeners":[{"listener_id":"v6","network":"lan","address":"fd89:878e:a47f:0:0:0:0:1","family":"ipv6","port":49543}]},"services":[{"enabled":true,"type":"tls_passthrough","name":"tls","hostname":"tls.fixture.home","service_id":"tls","backend":{"host":"127.0.0.1","allowed_ranges":["127.0.0.0/8"],"addressFamily":"ipv4","port":49546},"authentication_review":{"management":false,"authentication":"confirmed"}},{"enabled":true,"type":"tcp_forward","name":"raw","service_id":"raw","listen_port":49550,"backend":{"host":"127.0.0.1","allowed_ranges":["127.0.0.0/8"],"addressFamily":"ipv4","port":49546},"authentication_review":{"management":false,"authentication":"confirmed"}},{"service_id":"web","type":"https_proxy","certificate_mode":"inherit","name":"web","hostname":"home.iwonderful.top","upstream_scheme":"http","enabled":true,"backend":{"host":"127.0.0.1","allowed_ranges":["127.0.0.0/8"],"addressFamily":"ipv4","port":49556},"authentication_review":{"management":false,"authentication":"confirmed"}},{"enabled":true,"type":"ssh","name":"ssh","service_id":"ssh","backend":{"host":"127.0.0.1","allowed_ranges":["127.0.0.0/8"],"addressFamily":"ipv4","port":49547},"authentication_review":{"management":false,"authentication":"confirmed"}}],"default_certificate_ref":"acme:home_rsa","publication_policy":{"mode":"continuous","boot_restore":false},"schema_version":2},"active_config":{"access_profile":{"listeners":[{"listener_id":"v6","network":"lan","address":"fd89:878e:a47f:0:0:0:0:1","family":"ipv6","port":49543}]},"services":[{"enabled":true,"type":"tls_passthrough","name":"tls","hostname":"tls.fixture.home","service_id":"tls","backend":{"host":"127.0.0.1","allowed_ranges":["127.0.0.0/8"],"addressFamily":"ipv4","port":49546},"authentication_review":{"management":false,"authentication":"confirmed"}},{"enabled":true,"type":"tcp_forward","name":"raw","service_id":"raw","listen_port":49550,"backend":{"host":"127.0.0.1","allowed_ranges":["127.0.0.0/8"],"addressFamily":"ipv4","port":49546},"authentication_review":{"management":false,"authentication":"confirmed"}},{"service_id":"web","type":"https_proxy","certificate_mode":"inherit","name":"web","hostname":"home.iwonderful.top","upstream_scheme":"http","enabled":true,"backend":{"host":"127.0.0.1","allowed_ranges":["127.0.0.0/8"],"addressFamily":"ipv4","port":49556},"authentication_review":{"management":false,"authentication":"confirmed"}},{"enabled":true,"type":"ssh","name":"ssh","service_id":"ssh","backend":{"host":"127.0.0.1","allowed_ranges":["127.0.0.0/8"],"addressFamily":"ipv4","port":49547},"authentication_review":{"management":false,"authentication":"confirmed"}}],"default_certificate_ref":"acme:home_rsa","publication_policy":{"mode":"continuous","boot_restore":false},"schema_version":2},"schema_versions":[1,2],"saved_config":{"access_profile":{"listeners":[{"listener_id":"v6","network":"lan","address":"fd89:878e:a47f:0:0:0:0:1","family":"ipv6","port":49543}]},"services":[{"enabled":true,"type":"tls_passthrough","name":"tls","hostname":"tls.fixture.home","service_id":"tls","backend":{"host":"127.0.0.1","allowed_ranges":["127.0.0.0/8"],"addressFamily":"ipv4","port":49546},"authentication_review":{"management":false,"authentication":"confirmed"}},{"enabled":true,"type":"tcp_forward","name":"raw","service_id":"raw","listen_port":49550,"backend":{"host":"127.0.0.1","allowed_ranges":["127.0.0.0/8"],"addressFamily":"ipv4","port":49546},"authentication_review":{"management":false,"authentication":"confirmed"}},{"service_id":"web","type":"https_proxy","certificate_mode":"inherit","name":"web","hostname":"home.iwonderful.top","upstream_scheme":"http","enabled":true,"backend":{"host":"127.0.0.1","allowed_ranges":["127.0.0.0/8"],"addressFamily":"ipv4","port":49556},"authentication_review":{"management":false,"authentication":"confirmed"}},{"enabled":true,"type":"ssh","name":"ssh","service_id":"ssh","backend":{"host":"127.0.0.1","allowed_ranges":["127.0.0.0/8"],"addressFamily":"ipv4","port":49547},"authentication_review":{"management":false,"authentication":"confirmed"}}],"default_certificate_ref":"acme:home_rsa","publication_policy":{"mode":"continuous","boot_restore":false},"schema_version":2},"intent_revision":4,"state_version":1,"active_revision":2}
+PASS real business certificate/key source hashes + ownership/mode preserved server-only
+PASS final owned listeners absent; private keys removed; live journal/config/management baseline unchanged
+P4_UI_LIFECYCLE_FIXTURE_CLEAN_GREEN

@@ -1,0 +1,125 @@
+#!/bin/sh /etc/rc.common
+# Keep the init script enabled for boot/config triggers; UCI gates the instance.
+START=95
+STOP=10
+USE_PROCD=1
+
+homekms_reload_dns() {
+	/etc/init.d/dnsmasq reload
+}
+
+# Own exactly one named section; never rewrite anonymous/user SRV records.
+homekms_sync_discovery() {
+	local active="$1" port="$2" domain hostname target srv current
+	current=$(uci -q get dhcp.homekms) || current=''
+	if [ "$active" != 1 ]; then
+		[ -n "$current" ] || return 0
+		uci -q delete dhcp.homekms && uci commit dhcp && homekms_reload_dns
+		return $?
+	fi
+	domain=$(uci -q get 'dhcp.@dnsmasq[0].domain') || domain=lan
+	hostname=$(uci -q get 'system.@system[0].hostname') || hostname=OpenWrt
+	case "$domain:$hostname" in
+		*[!a-zA-Z0-9.:-]*|:*|*:) logger -t homekms 'Invalid DNS discovery hostname/domain'; return 1;;
+	esac
+	srv="_vlmcs._tcp.$domain"
+	target="$hostname.$domain"
+	if [ "$current" = srvhost ] &&
+		[ "$(uci -q get dhcp.homekms.srv)" = "$srv" ] &&
+		[ "$(uci -q get dhcp.homekms.target)" = "$target" ] &&
+		[ "$(uci -q get dhcp.homekms.port)" = "$port" ]; then
+		return 0
+	fi
+	uci set dhcp.homekms=srvhost &&
+		uci set "dhcp.homekms.srv=$srv" &&
+		uci set "dhcp.homekms.target=$target" &&
+		uci set "dhcp.homekms.port=$port" &&
+		uci commit dhcp && homekms_reload_dns
+}
+
+start_service() {
+	local enabled port wan_access auto_discovery
+	config_load homekms
+	config_get_bool enabled main enabled 0
+	if [ "$enabled" != 1 ]; then
+		homekms_sync_discovery 0 1688
+		return $?
+	fi
+	config_get port main port 1688
+	case "$port" in ''|*[!0-9]*) logger -t homekms 'Invalid port'; return 1;; esac
+	[ "${#port}" -le 5 ] && [ "$port" -ge 1024 ] && [ "$port" -le 65535 ] || {
+		logger -t homekms 'Port must be 1024..65535'; return 1;
+	}
+	[ -r "${HOMEKMS_DATA:-/usr/share/homekms/pykms/KmsDataBase.xml}" ] || {
+		logger -t homekms 'Embedded database missing'; return 1;
+	}
+	config_get_bool wan_access main wan_access 0
+	config_get_bool auto_discovery main auto_discovery 0
+	homekms_sync_discovery "$auto_discovery" "$port" || return 1
+	procd_open_instance main
+	procd_set_param command /usr/bin/python3 -B -u /usr/share/homekms/pykms/pykms_Server.py 0.0.0.0 "$port" -F STDOUT
+	procd_set_param user homekms
+	procd_set_param group homekms
+	procd_set_param respawn 3600 5 5
+	procd_set_param stdout 1
+	procd_set_param stderr 1
+	procd_set_param term_timeout 5
+	procd_set_param file /etc/config/homekms /usr/share/homekms/pykms/KmsDataBase.xml
+	if [ "$wan_access" = 1 ]; then
+		procd_open_data
+		json_add_array firewall
+		json_add_object ''
+		json_add_string type rule
+		json_add_string family ipv4
+		json_add_string src wan
+		json_add_string proto tcp
+		json_add_string dest_port "$port"
+		json_add_string target ACCEPT
+		json_close_object
+		json_close_array
+		procd_close_data
+	fi
+	procd_close_instance
+}
+
+# Run only AFTER service.set/delete has completed, so fw4 reads the new data.
+# Instance restart/removal does not reliably emit service.data.update for the
+# removed firewall key. An empty get_data result does not remove installed nft
+# rules by itself. Rebuild synchronously, including port changes and stop/off.
+# Use fw4 directly: a child rc.common inherits procd's locked fd 1000 and may
+# mistake our lock for its own. fw4 opens its own fd/lock and does not reenter
+# homekms. Never start a firewall that the administrator deliberately stopped.
+homekms_reload_firewall() {
+	[ -e /var/run/fw4.state ] || return 0
+	/sbin/fw4 reload
+}
+
+service_started() {
+	homekms_reload_firewall
+}
+
+reload_service() {
+	# start's service_started hook runs after rc_procd has committed the data.
+	# Do not stop/start: removing the service also removes its reload triggers.
+	start
+}
+
+# rc.common calls this AFTER procd_kill. A stop_service hook is too early:
+# procd_kill would delete its newly registered triggers again.
+service_stopped() {
+	# Register an empty service (no Python process, no WAN rule), with triggers.
+	rc_procd service_triggers_only
+	# Revoke WAN access even if DNS cleanup fails; preserve either failure.
+	local rc=0
+	homekms_reload_firewall || rc=$?
+	homekms_sync_discovery 0 1688 || rc=$?
+	return "$rc"
+}
+
+service_triggers_only() {
+	return 0
+}
+
+service_triggers() {
+	procd_add_reload_trigger homekms
+}

@@ -1,0 +1,129 @@
+#!/usr/bin/python3
+"""Fixed, read-only rpcd exec plugin. No caller-selected commands or paths."""
+import json
+import sys
+import os
+import re
+import subprocess
+
+METHODS = {'status': {}, 'logs': {}}
+
+
+def listener_rows(table, inodes, port, family):
+    rows = []
+    for line in table.splitlines()[1:]:
+        fields = line.split()
+        if len(fields) < 10 or fields[3] != '0A' or fields[9] not in inodes:
+            continue
+        try:
+            address, value = fields[1].split(':')
+            if int(value, 16) == port:
+                row = {'family': family, 'address': address, 'port': port}
+                if row not in rows:
+                    rows.append(row)
+        except ValueError:
+            continue
+    return rows
+
+
+def command(argv):
+    # Fixed argv at every call site; shell is deliberately never used.
+    return subprocess.check_output(argv, stderr=subprocess.DEVNULL, timeout=3)
+
+
+def owned_listeners(pid, port):
+    try:
+        inodes = set()
+        for fd in os.listdir('/proc/%d/fd' % pid):
+            try:
+                link = os.readlink('/proc/%d/fd/%s' % (pid, fd))
+                if re.fullmatch(r'socket:\[[0-9]+\]', link):
+                    inodes.add(link[8:-1])
+            except FileNotFoundError:
+                continue
+        rows = []
+        for family in ('tcp', 'tcp6'):
+            try:
+                with open('/proc/%d/net/%s' % (pid, family)) as stream:
+                    rows.extend(listener_rows(stream.read(), inodes, port, family))
+            except FileNotFoundError:
+                if family == 'tcp':
+                    return [], False
+        return rows, True
+    except OSError:
+        return [], False
+
+
+def status():
+    result = {'running': False, 'pid': None, 'port': None,
+              'listening': False, 'listeners': [], 'checked': False}
+    try:
+        service = json.loads(command(['/bin/ubus', 'call', 'service', 'list', '{"name":"homekms"}']))
+        instance = service.get('homekms', {}).get('instances', {}).get('main', {})
+        pid = instance.get('pid')
+        result['running'] = instance.get('running') is True
+        if result['running'] and type(pid) is int and pid > 0:
+            result['pid'] = pid
+        try:
+            value = command(['/sbin/uci', '-q', 'get', 'homekms.main.port']).decode().strip()
+        except subprocess.CalledProcessError:
+            value = '1688'
+        if not re.fullmatch(r'[0-9]{1,5}', value) or not 1024 <= int(value) <= 65535:
+            result['error'] = 'invalid_port'
+            return result
+        result['port'] = int(value)
+        if result['pid']:
+            rows, checked = owned_listeners(pid, result['port'])
+            result.update(listeners=rows, checked=checked, listening=bool(rows))
+        else:
+            result['checked'] = True
+    except (OSError, ValueError, subprocess.SubprocessError, AttributeError):
+        result['error'] = 'status_unavailable'
+    return result
+
+
+def bound_logs(raw):
+    # Keep newest service-tagged records, not arbitrary system messages.
+    lines = [line for line in raw.decode('utf-8', 'replace').splitlines()
+             if re.search(r' homekms(?:\[[0-9]+\])?: ', line)]
+    text = '\n'.join(lines[-50:])
+    data = text.encode('utf-8')
+    truncated = len(lines) > 50 or len(data) > 16384
+    if len(data) > 16384:
+        text = data[-16384:].decode('utf-8', 'ignore')
+    return {'text': text, 'truncated': truncated, 'available': True}
+
+
+def logs():
+    try:
+        # -e matches the raw message, before logread adds date/facility.
+        # -l limits the ring BEFORE filtering and can hide older service logs.
+        # Snapshot the finite ring with a fixed prefix; bound_logs then checks
+        # the exact service tag and applies the line/byte limits after filtering.
+        return bound_logs(command(['/sbin/logread', '-e', '^homekms']))
+    except (OSError, subprocess.SubprocessError):
+        return {'text': '', 'truncated': False, 'available': False}
+
+
+def main():
+    if sys.argv[1:] == ['list']:
+        print(json.dumps(METHODS))
+        return 0
+    if len(sys.argv) != 3 or sys.argv[1] != 'call' or sys.argv[2] not in METHODS:
+        return 1
+    try:
+        raw = sys.stdin.read(1025)
+        params = json.loads(raw or '{}')
+        if len(raw) > 1024 or not isinstance(params, dict) or set(params) - {'ubus_rpc_session'}:
+            return 1
+        if 'ubus_rpc_session' in params and (not isinstance(params['ubus_rpc_session'], str) or
+                re.fullmatch(r'[0-9a-f]{32}', params['ubus_rpc_session']) is None):
+            return 1
+    except ValueError:
+        return 1
+    print(json.dumps(status() if sys.argv[2] == 'status' else logs(), ensure_ascii=False))
+    return 0
+
+
+if __name__ == '__main__':
+    sys.exit(main())

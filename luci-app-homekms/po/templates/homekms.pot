@@ -1,0 +1,76 @@
+msgid ""
+msgstr ""
+"Content-Type: text/plain; charset=UTF-8\n"
+"Language: \n"
+
+msgid "A listening socket is verified against the main service PID and configured port."
+msgstr ""
+
+msgid "Allow WAN access"
+msgstr ""
+
+msgid "DNS auto-discovery"
+msgstr ""
+
+msgid "Disabled by default. Exposes this service to the WAN zone."
+msgstr ""
+
+msgid "Disabled by default. Save & Apply publishes a DNS SRV record through system dnsmasq in the local DNS domain while the service is enabled. Compatible clients must use this router as their DNS server and search the same domain. When disabled or stopped, the HomeKMS discovery record is removed from system dnsmasq. If a DNS proxy or a separate DNS instance handles client queries, refresh its configuration after SRV record changes and verify that it serves the record. Otherwise, specify the HomeKMS address and port manually on clients. HomeKMS does not automatically refresh other DNS services."
+msgstr ""
+
+msgid "Enable service"
+msgstr ""
+
+msgid "Engine"
+msgstr ""
+
+msgid "HomeKMS"
+msgstr ""
+
+msgid "Latest snapshot: at most 50 lines and 16 KiB of UTF-8 text."
+msgstr ""
+
+msgid "Listening"
+msgstr ""
+
+msgid "Logs unavailable."
+msgstr ""
+
+msgid "No HomeKMS log entries."
+msgstr ""
+
+msgid "Not listening"
+msgstr ""
+
+msgid "Older log content was truncated."
+msgstr ""
+
+msgid "PID-associated TCP listener"
+msgstr ""
+
+msgid "Provides KMS services for Microsoft volume-licensed products."
+msgstr ""
+
+msgid "Recent HomeKMS logs"
+msgstr ""
+
+msgid "Running"
+msgstr ""
+
+msgid "Save & Apply starts or stops the service."
+msgstr ""
+
+msgid "Service status"
+msgstr ""
+
+msgid "Stopped"
+msgstr ""
+
+msgid "TCP port"
+msgstr ""
+
+msgid "Unavailable"
+msgstr ""
+
+msgid "py-kms 1.0.1 (embedded product database)"
+msgstr ""

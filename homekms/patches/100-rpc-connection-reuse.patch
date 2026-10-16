@@ -1,0 +1,24 @@
+From: HomeKMS maintainers
+Subject: [PATCH] Keep RPC associations open between activation requests
+
+The upstream handler explicitly closes after one activation response, although
+its bind acknowledgement advertises multiplexing. Clients which retain the RPC
+association fail, or reconnect with a warning (vlmcs). Continue the existing
+receive loop until EOF/error instead, and use sendall to avoid a short response.
+No bind or KMS payload semantics are changed.
+
+--- a/py-kms/pykms_Server.py
++++ b/py-kms/pykms_Server.py
+@@ -521,9 +521,9 @@
+                                 pretty_printer(num_text = [-3, 18, 19], where = "srv")
+
+                         try:
+-                                self.request.send(res)
+-                                if packetType == rpcBase.packetType['request']:
+-                                        break
++                                # One RPC association may carry multiple requests.
++                                # Only EOF or a transport error ends the connection.
++                                self.request.sendall(res)
+                         except socket.error as e:
+                                 pretty_printer(log_obj = loggersrv.error,
+                                                put_text = "{reverse}{red}{bold}While sending: %s{end}" %str(e))

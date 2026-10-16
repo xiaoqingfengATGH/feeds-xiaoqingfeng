@@ -1,0 +1,6 @@
+{
+  "homekms-read": {
+    "description": "Read HomeKMS listener state and bounded service logs",
+    "read": { "ubus": { "homekms": [ "status", "logs" ] } }
+  }
+}

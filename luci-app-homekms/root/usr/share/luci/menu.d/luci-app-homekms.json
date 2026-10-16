@@ -1,0 +1,8 @@
+{
+	"admin/services/homekms": {
+		"title": "HomeKMS",
+		"order": 60,
+		"action": { "type": "view", "path": "homekms" },
+		"depends": { "acl": [ "luci-app-homekms" ], "uci": { "homekms": true } }
+	}
+}

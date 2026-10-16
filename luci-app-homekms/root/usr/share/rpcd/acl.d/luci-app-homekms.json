@@ -1,0 +1,12 @@
+{
+	"luci-app-homekms": {
+		"description": "Configure HomeKMS and read service status and logs",
+		"read": {
+			"uci": [ "homekms" ],
+			"ubus": { "homekms": [ "status", "logs" ] }
+		},
+		"write": {
+			"uci": [ "homekms" ]
+		}
+	}
+}

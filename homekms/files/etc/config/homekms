@@ -1,0 +1,5 @@
+config homekms 'main'
+	option enabled '0'
+	option port '1688'
+	option wan_access '0'
+	option auto_discovery '0'

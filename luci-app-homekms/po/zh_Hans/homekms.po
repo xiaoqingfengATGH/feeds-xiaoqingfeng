@@ -1,0 +1,76 @@
+msgid ""
+msgstr ""
+"Content-Type: text/plain; charset=UTF-8\n"
+"Language: zh_Hans\n"
+
+msgid "A listening socket is verified against the main service PID and configured port."
+msgstr "监听状态依据服务主进程 PID 和已配置端口核验。"
+
+msgid "Allow WAN access"
+msgstr "允许 WAN 访问"
+
+msgid "DNS auto-discovery"
+msgstr "DNS 自动发现"
+
+msgid "Disabled by default. Exposes this service to the WAN zone."
+msgstr "默认关闭。开启后允许 WAN 区域访问此服务。"
+
+msgid "Disabled by default. Save & Apply publishes a DNS SRV record through system dnsmasq in the local DNS domain while the service is enabled. Compatible clients must use this router as their DNS server and search the same domain. When disabled or stopped, the HomeKMS discovery record is removed from system dnsmasq. If a DNS proxy or a separate DNS instance handles client queries, refresh its configuration after SRV record changes and verify that it serves the record. Otherwise, specify the HomeKMS address and port manually on clients. HomeKMS does not automatically refresh other DNS services."
+msgstr "默认关闭。服务启用时，保存并应用会通过系统 dnsmasq 在本地 DNS 域中发布 DNS SRV 记录。兼容的客户端须使用本路由器作为 DNS 服务器，并在同一域中查询。关闭此选项或停止服务后，会从系统 dnsmasq 移除 HomeKMS 自动发现记录。若客户端查询由 DNS 代理或独立 DNS 实例处理，须在 SRV 记录变更后同步刷新其配置，并确认该实例能够返回记录；否则请在客户端手动指定 HomeKMS 地址和端口。HomeKMS 不会自动刷新其他 DNS 服务。"
+
+msgid "Enable service"
+msgstr "启用服务"
+
+msgid "Engine"
+msgstr "引擎"
+
+msgid "HomeKMS"
+msgstr "HomeKMS"
+
+msgid "Latest snapshot: at most 50 lines and 16 KiB of UTF-8 text."
+msgstr "最新日志快照：最多 50 行、16 KiB UTF-8 文本。"
+
+msgid "Listening"
+msgstr "正在监听"
+
+msgid "Logs unavailable."
+msgstr "日志不可用。"
+
+msgid "No HomeKMS log entries."
+msgstr "暂无 HomeKMS 日志。"
+
+msgid "Not listening"
+msgstr "未监听"
+
+msgid "Older log content was truncated."
+msgstr "较早的日志内容已截断。"
+
+msgid "PID-associated TCP listener"
+msgstr "主进程关联的 TCP 监听状态"
+
+msgid "Provides KMS services for Microsoft volume-licensed products."
+msgstr "为MS批量产品许可提供KMS服务"
+
+msgid "Recent HomeKMS logs"
+msgstr "最近的 HomeKMS 日志"
+
+msgid "Running"
+msgstr "运行中"
+
+msgid "Save & Apply starts or stops the service."
+msgstr "保存并应用后启动或停止服务。"
+
+msgid "Service status"
+msgstr "服务状态"
+
+msgid "Stopped"
+msgstr "已停止"
+
+msgid "TCP port"
+msgstr "TCP 端口"
+
+msgid "Unavailable"
+msgstr "状态不可用"
+
+msgid "py-kms 1.0.1 (embedded product database)"
+msgstr "py-kms 1.0.1（内置产品数据库）"

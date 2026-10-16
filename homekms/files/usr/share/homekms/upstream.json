@@ -1,0 +1,8 @@
+{
+  "engine": "py-kms",
+  "version": "1.0.1",
+  "commit": "b0e1615dec06293c927625006a99e6ec54a001aa",
+  "source": "https://github.com/Py-KMS-Organization/py-kms",
+  "license": "Unlicense",
+  "database_sha256": "5dbb9e02471d854920e431298cfc9924b7e553fd3711b10235821a949dd80a30"
+}

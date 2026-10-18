@@ -14,6 +14,13 @@ NAME=homelede-autoconfig
 # Runs once on first boot only. Idempotent guards inside.
 firstboot()
 {
+    # Multi-WAN is opt-in. Only apply on a fresh initialization; the
+    # existing /etc/config/homeledeInit guard preserves later user choices.
+    if [ -x /etc/init.d/mwan3 ]; then
+        /etc/init.d/mwan3 disable
+        /etc/init.d/mwan3 stop
+    fi
+
     # --- timezone & NTP (lean: keep) ------------------------------------
     uci -q batch <<'UCIEOF'
 set system.@system[0].timezone='CST-8'

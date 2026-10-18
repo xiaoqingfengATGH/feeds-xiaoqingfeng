@@ -2,7 +2,7 @@ include $(TOPDIR)/rules.mk
 
 PKG_NAME:=homekms
 PKG_VERSION:=1.0.0
-PKG_RELEASE:=1
+PKG_RELEASE:=2
 PKG_SOURCE_VERSION:=b0e1615dec06293c927625006a99e6ec54a001aa
 PKG_SOURCE:=py-kms-$(PKG_SOURCE_VERSION).tar.gz
 PKG_SOURCE_URL:=https://codeload.github.com/Py-KMS-Organization/py-kms/tar.gz/$(PKG_SOURCE_VERSION)?
@@ -35,6 +35,8 @@ define Package/homekms/install
 	$(INSTALL_DATA) $(PKG_BUILD_DIR)/py-kms/KmsDataBase.xml $(1)/usr/share/homekms/pykms/
 	$(INSTALL_DATA) $(PKG_BUILD_DIR)/LICENSE $(1)/usr/share/homekms/LICENSE
 	$(CP) ./files/* $(1)/
+	# CP preserves checkout directory modes (0775 with umask 0002).
+	chmod 0755 $(1)/etc/homestatus-probes
 	chmod 0755 $(1)/etc/init.d/homekms $(1)/usr/libexec/rpcd/homekms $(1)/etc/homestatus-probes/homekms
 endef
 

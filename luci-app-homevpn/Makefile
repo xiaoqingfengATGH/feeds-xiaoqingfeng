@@ -15,7 +15,7 @@ LUCI_DEPENDS:=+strongswan-swanctl +strongswan-mod-eap-mschapv2 +strongswan-mod-g
 	+iputils-arping
 LUCI_PKGARCH:=all
 PKG_VERSION:=2.1.0
-PKG_RELEASE:=31
+PKG_RELEASE:=32
 # Keep the translation package upgradeable before its first git revision.
 PKG_PO_VERSION:=$(PKG_VERSION)-r$(PKG_RELEASE)
 PKG_LICENSE:=MIT
@@ -24,6 +24,9 @@ PKG_MAINTAINER:=xiaoqingfeng <xiaoqingfengatgm@gmail.com>
 # build directory, then preserves its mode with cp -pR during installation.
 # Do not use PKG_FILE_MODES: it also applies to probe-free translation IPKs.
 define Build/Prepare/luci-app-homevpn
+	# root/* is copied with permissions preserved. A checkout under umask
+	# 0002 creates 0775 directories, rejected by HomeStatus's safety checks.
+	chmod 0755 $(PKG_BUILD_DIR)/root/etc/homestatus-probes
 	$(INSTALL_BIN) ./root/etc/homestatus-probes/homevpn $(PKG_BUILD_DIR)/root/etc/homestatus-probes/homevpn
 endef
 

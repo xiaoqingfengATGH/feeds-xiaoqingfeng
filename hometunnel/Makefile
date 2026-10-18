@@ -44,6 +44,8 @@ define Build/Compile
 endef
 
 define Package/hometunnel/install
+	$(INSTALL_DIR) $(1)/etc/homestatus-probes
+	$(INSTALL_BIN) ./files/etc/homestatus-probes/hometunnel $(1)/etc/homestatus-probes/hometunnel
 	$(INSTALL_DIR) $(1)/etc/config
 	$(INSTALL_CONF) ./files/etc/config/hometunnel $(1)/etc/config/hometunnel
 	$(INSTALL_DIR) $(1)/etc/init.d

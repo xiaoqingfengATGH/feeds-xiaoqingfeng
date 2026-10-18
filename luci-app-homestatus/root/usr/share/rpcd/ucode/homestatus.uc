@@ -24,7 +24,7 @@
 
 'use strict';
 
-import { readfile, realpath, dirname, basename, lsdir, access, popen } from 'fs';
+import { readfile, realpath, dirname, basename, lsdir, access, popen, lstat } from 'fs';
 import { cursor } from 'uci';
 import { statvfs } from 'luci.core';
 import { isnan } from 'math';
@@ -622,6 +622,25 @@ function probe_app(app, ctx) {
 
 	try {
 		switch (kind) {
+		case 'script': {
+			// A fixed directory and basename, never arbitrary shell commands.
+			const name = app.script;
+			if (type(name) != 'string' || !match(name, /^[A-Za-z0-9][A-Za-z0-9_-]*$/))
+				return { running: null, detail: '状态脚本名称不合法' };
+			const path = `/etc/homestatus-probes/${name}`;
+			for (let dir in [ '/', '/etc', '/etc/homestatus-probes', path ]) {
+				const st = lstat(dir);
+				if (!st || st.uid != 0 || st.perm.group_write || st.perm.other_write ||
+				    st.type != (dir == path ? 'file' : 'directory') || !st.perm.user_exec)
+					return { running: null, detail: '状态脚本不存在或权限不安全' };
+			}
+			// Ignore stdout; only the bounded exit status is the contract.
+			const fd = popen(`/usr/bin/timeout 3 ${path} >/dev/null 2>&1`);
+			const rc = fd.close();
+			return { running: rc == 0 ? true : rc == 1 ? false : null,
+				detail: rc == 0 ? '运行中' : rc == 1 ? '已停止' : '状态脚本失败或超时' };
+		}
+
 		case 'exe':
 		case 'pid': {
 			const pat = app.match ?? app.init ?? app.id;
@@ -730,6 +749,7 @@ function build_apps(cfg) {
 				match: s.match,
 				port: s.port,
 				path: s.path,
+				script: s.script,
 				note: s.note,
 				uci: s.uci,
 				order: int(s.order ?? 999),

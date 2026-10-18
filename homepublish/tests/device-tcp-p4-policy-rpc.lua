@@ -1,6 +1,6 @@
 -- Fixed private RPC transport; never registered as a production rpcd endpoint.
 package.path='/usr/share/homepublish/?.lua;'..package.path
-package.cpath='/tmp/homepublish-tcp-p3/?.so;'..package.cpath
+dofile('/tmp/homepublish-tcp-p3/device-legacy-lua-scope.lua')
 local n=require('nixio');local fs=require('nixio.fs');local J=require('product-json')
 local path='/tmp/homepublish-tcp-p3/controller-fixture/policy.sock'
 local function read(s)local b='';while not b:find('\n',1,true) do local p=s:recv(4096);assert(p and #p>0,'closed');b=b..p end;return b:match('^([^\n]*)') end

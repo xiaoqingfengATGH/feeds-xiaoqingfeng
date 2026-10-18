@@ -1,6 +1,6 @@
 -- Device-only controller public JSON boundary, fixed adapter and private native store.
 package.path='/tmp/homepublish-tcp-p3/?.lua;/usr/share/homepublish/?.lua;'..package.path
-package.cpath='/tmp/homepublish-tcp-p3/?.so;'..package.cpath
+dofile('/tmp/homepublish-tcp-p3/device-legacy-lua-scope.lua')
 local J=require('product-json');local P=require('product-provider')
 local C=require('product-controller').new(require('device-tcp-p3-controller-adapter'))
 local q=J.decode(io.read('*a'));local r

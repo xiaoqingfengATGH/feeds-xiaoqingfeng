@@ -2,26 +2,25 @@
 -- Shared conventional v2 adapter. Options come only from fixed installed code.
 local R=require('direct-renderer');local B=require('direct-backend');local I=require('device-integrations');local M={}
 local function q(s)return "'"..s:gsub("'","'\\''").."'"end
-local function run(s)return os.execute(s)==0 end
+
 local function identity(source)
  local f=io.popen('sha256sum '..q(source.certificate)..' '..q(source.key)..' 2>/dev/null');if not f then return nil end
  local s=f:read('*a');f:close();return s~='' and s or nil
 end
-local function connected(address,port,banner)
- local n=require('nixio');local s=n.socket(address:find(':',1,true) and 'inet6' or 'inet','stream');if not s then return false end
- s:setopt('socket','rcvtimeo',2);s:setopt('socket','sndtimeo',2)
- local ok=s:connect(address,port)
- if ok and banner then s:send('SSH-2.0-HomePublish_Readiness\r\n');local text=s:recv(256);ok=type(text)=='string' and text:match('^SSH%-2%.0%-')~=nil end
- s:close();return ok==true
-end
+
 function M.new(o)
- local G=require('product-procd-group').new(o);local active,next_check
+ local G=require('product-procd-group').new(o);local active,next_check,lease_deadline
+ local firewall=o.firewall
+ local function lease()
+  if not lease_deadline then return 10 end
+  local remaining=lease_deadline-os.time();if remaining<=0 then return nil end
+  return math.min(10,remaining)
+ end
  local V={}
  function V.runtime_plan(c)
   if not o.available() then return nil,'installed v2 capability unavailable' end
   local p,e=require('canonical-v2').validate(c);if not p then return nil,e end
   local enabled={};for _,s in ipairs(p.services) do if s.enabled then
-   if s.authentication_review.authentication~='confirmed' or s.authentication_review.management then return nil,'authentication review required' end
    enabled[#enabled+1]=s
   end end;p.services=enabled
   if #enabled==0 or not o.authorize(p) then return nil,'installed v2 scope denied' end
@@ -42,6 +41,8 @@ function M.new(o)
   local snapshots={};local bindings={};local backend={}
   local ports=o.mixed_ports
   if type(ports)=='function' then ports=ports(p);if not ports then return nil,'internal ports unavailable' end end
+  -- Select only authorized, scoped addresses. The required backend selector
+  -- callback is deliberately non-probing: target availability is never a gate.
   local deps={resolve=I.resolve,mixed_ports=ports,authorize_listener=o.authorize_listener,authorize_backend=o.authorize_backend,healthy=function()return true end}
   deps.certificate_snapshot=function(ref,host)
    local key=ref..'|'..host;if bindings[key] then return bindings[key] end
@@ -53,46 +54,31 @@ function M.new(o)
   local r,err=R.render(p,deps);if not r then return nil,err end
   -- Fixed device profile can only narrow exact authorized addresses to loopback.
   r.configuration=o.narrow(r.configuration);if r.sslh_configuration then r.sslh_configuration=o.narrow(r.sslh_configuration) end
-  r.services=p.services;r.listeners=p.access_profile.listeners;r.snapshots=snapshots;r.selected=backend
+  local rules
+  if firewall then
+   local inventory,e=require('network-inventory').collect();if not inventory then return nil,type(e)=='table' and e.error or e end
+   rules,e=require('product-firewall-plan').plan(p,inventory);if not rules then return nil,type(e)=='table' and e.error or e end
+  end
+  r.services=p.services;r.listeners=p.access_profile.listeners;r.snapshots=snapshots;r.selected=backend;r.firewall_rules=rules
+  if G.preflight then local ok,why=G.preflight(r);if not ok then return nil,why end end
   return r
  end
- function V.start(p,g)
-  if not o.available() then return false end
-  local ok=G.start(p,g);if ok then active=p;next_check=os.time()+30 end;return ok
+ function V.start(p,g,remaining)
+  if not o.available() then return false,'installed v2 capability unavailable' end
+  lease_deadline=remaining and remaining>0 and os.time()+math.ceil(remaining/1000) or nil
+  local ok,err=G.start(p,g);if ok then active=p;next_check=os.time()+30 end;return ok,err
  end
  function V.readiness(p)
-  local healthy=G.healthy();local out={}
-  local address=o.probe_address(p.listeners[1]);local shared=p.listeners[1].port
-  for _,s in ipairs(p.services) do
-   local ready=false;local port=s.type=='tcp_forward' and s.listen_port or shared
-   for _=1,3 do
-    if s.type=='tls_passthrough' and not o.passthrough_trust then
-     -- Transport-only probe: SNI routing and TLS handshake, no HTTP or
-     -- ingress certificate identity imposed on an opaque backend service.
-     local endpoint=address:find(':',1,true) and '['..address..']' or address
-     local f=io.popen("timeout 3 openssl s_client -brief -connect "..q(endpoint..':'..port)..' -servername '..q(s.hostname).." </dev/null 2>&1; printf '\\nHP_TLS_EXIT=%s\\n' \"$?\"")
-     local text=f and f:read('*a') or '';if f then f:close() end
-     local established,protocol,cipher,status=false,false,false,nil
-     for line in text:gmatch('[^\r\n]+') do
-      if line=='CONNECTION ESTABLISHED' then established=true end
-      if line:match('^Protocol version: TLSv1%.[23]$') then protocol=true end
-      if line:match('^Ciphersuite: [A-Z0-9_%-]+$') and not line:find('NONE',1,true) then cipher=true end
-      local code=line:match('^HP_TLS_EXIT=(%d+)$');if code then status=tonumber(code) end
-     end
-     ready=established and protocol and cipher and status==0
-    elseif s.type=='https_proxy' or s.type=='tls_passthrough' then
-     local trust=s.type=='tls_passthrough' and o.passthrough_trust or nil
-     local endpoint=address:find(':',1,true) and '['..address..']' or address
-     ready=run("env -u CURL_CA_BUNDLE -u SSL_CERT_FILE -u SSL_CERT_DIR curl -q --noproxy '*' --connect-timeout 1 --max-time 2 --fail --silent --output /dev/null"..(trust and ' --cacert '..q(trust) or '')..' --resolve '..q(s.hostname..':'..port..':'..endpoint)..' '..q('https://'..s.hostname..':'..port..'/'))
-    else
-     local b=p.selected[s.service_id]
-     ready=connected(b.address,b.port,s.type=='ssh') and connected(address,port,s.type=='ssh')
-    end
-    if ready then break end;os.execute('sleep 1')
-   end
-   out[s.service_id]={ready=healthy and ready,generation=p.generation}
+  -- Startup readiness describes our components, not target availability. Targets
+  -- may start later or reject HTTP/TLS/SSH without stopping unrelated services.
+  local healthy,err=G.healthy();local out={}
+  if healthy and firewall then
+   local ttl=lease()
+   if not ttl then healthy=false;err='firewall publication lease expired'
+   else healthy,err=firewall.reconcile(p.firewall_rules or {},ttl) end
   end
-  for _,v in pairs(out) do if not v.ready then return false,out end end;return healthy,out
+  for _,s in ipairs(p.services) do out[s.service_id]={ready=healthy==true,generation=p.generation} end
+  return healthy==true,out,err
  end
  function V.renew()
   if not active or not G.healthy() then return false end
@@ -104,9 +90,18 @@ function M.new(o)
     local b=B.select(s.backend,{resolve=I.resolve,authorize_backend=o.authorize_backend,healthy=function()return true end})
     local old=active.selected[s.service_id];if not b or b.address~=old.address or b.port~=old.port then return false end
    end
-  end;return true
+  end
+  if firewall then local ttl=lease();if not ttl then return false end;return firewall.reconcile(active.firewall_rules or {},ttl) end
+  return true
  end
- function V.stop()local ok=G.stop();if ok then active=nil;next_check=nil end;return ok end
+ function V.stop()
+  -- Always revoke before terminating listeners. Still terminate components on
+  -- nft failure, but retain cleanup=unknown so the controller retries removal.
+  local revoked=true;if firewall then revoked=firewall.clear() end
+  local stopped=G.stop();if stopped then active=nil;next_check=nil;lease_deadline=nil end
+  return revoked==true and stopped==true
+ end
+ function V.firewall_status()return firewall and firewall.status() or {state='unmanaged',rule_count=0} end
  return V
 end
 return M

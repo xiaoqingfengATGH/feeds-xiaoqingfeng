@@ -1,8 +1,21 @@
 -- SPDX-License-Identifier: Apache-2.0
-local root='/tmp/homepublish-tcp-p1-backup'
-package.cpath=root..'/?.so;'..package.cpath
-local store=require('homepublish_store')
+local root='/root/homepublish-lua-store/p1'
+local store=dofile(root..'/device-p1-lua-scope.lua').store
 local fs=require('nixio.fs')
+local mode=os.getenv('HP_BACKUP_FAIL')
+if mode then
+ assert(mode=='write' or mode=='sync' or mode=='close','unknown fault')
+ local n=require('nixio');local original_open=n.open
+ n.open=function(path,...)
+  local fd=assert(original_open(path,...))
+  if path~=root..'/store/migration-v1' then return fd end
+  return {
+   write=function(_,bytes) if mode=='write' then return nil,5 end;return fd:write(bytes) end,
+   sync=function() if mode=='sync' then return nil,5 end;return fd:sync() end,
+   close=function() local ok=fd:close();if mode=='close' then return nil,5 end;return ok end
+  }
+ end
+end
 local original=' {"state_version":1,"legacy":"exact bytes"}\n\000tail'
 local updated='{"state_version":1,"saved":{"schema_version":2}}\n'
 local function read(name) local f=io.open(root..'/store/'..name,'rb');if not f then return nil end local s=f:read('*a');f:close();return s end

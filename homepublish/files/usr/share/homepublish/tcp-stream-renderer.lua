@@ -5,7 +5,7 @@ local A=require('direct-address');local B=require('direct-backend');local M={}
 local function render(plan,p)
  local shared={};for k,v in pairs(plan) do if k~='tcp' then shared[k]=v end end
  local r
- if #plan.services>0 or plan.passthrough or plan.ssh then
+ if #plan.services>0 or plan.passthrough or plan.ssh or (plan.http_services and #plan.http_services>0) then
   local e;r,e=require('direct-renderer').render(shared,p);assert(r,e)
  else
   r={configuration='worker_processes 1;\ndaemon off;\npid nginx.pid;\nerror_log stderr error;\nevents { worker_connections 64; }\n',backends={},activation_ready=false,blocker='fixed runtime provider and authoritative DNS/ownership readiness required'}
@@ -18,7 +18,7 @@ local function render(plan,p)
   local listens={}
   for _,base in ipairs(plan.access_profile.listeners) do
    local l={};for k,v in pairs(base) do l[k]=v end;l.internal_port=s.listen_port;l.service_id=s.service_id
-   local words,f=A.parse(l.address);assert(f==l.family and l.protocol=='tcp','TCP listener family/protocol')
+   local words,f=A.parse_listener(l);assert(f==l.family and l.protocol=='tcp','TCP listener family/protocol')
    assert(type(p.authorize_listener)=='function' and p.authorize_listener(l)==true,'TCP listener denied')
    local key=f..':'..table.concat(words,':')..':'..s.listen_port;assert(not seen[key],'duplicate TCP socket');seen[key]=true
    local host=f=='ipv6' and '['..l.address..']' or l.address

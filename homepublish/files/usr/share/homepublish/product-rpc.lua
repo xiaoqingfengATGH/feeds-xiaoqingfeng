@@ -9,7 +9,7 @@ local function run()
   local ok,result=pcall(wire.decode,bytes:gsub('\n$',''))
   io.write(json.encode(ok and result or {error='Request rejected or state unavailable',error_code='STATE_UNKNOWN',field='state',retryable=true}),'\n');return
  end
- assert(#arg==1 and ({migration_preview=true,network_inventory=true,preflight=true,certificates=true,status=true,validate=true,save=true,stop=true,start=true,apply=true})[arg[1]],'unsupported method')
+ assert(#arg==1 and ({ddns_profiles=true,migration_preview=true,network_inventory=true,preflight=true,certificates=true,status=true,validate=true,save=true,stop=true,start=true,apply=true})[arg[1]],'unsupported method')
  local r=json.decode(bytes);assert(type(r)=='table','request object')
  -- uhttpd injects transport session metadata after its ACL check. Never send it to the controller.
  if r.ubus_rpc_session~=nil then

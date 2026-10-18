@@ -1,6 +1,6 @@
-import pathlib,subprocess,hashlib,json
-R=pathlib.Path('D:/DevPortal/homelede/homepublish-product'); E=R/'docs/evidence/tcp-p5'
-SSH=['ssh','-o','ProxyCommand=none','-o','ProxyJump=none','-o','IdentitiesOnly=yes','-o','BatchMode=yes','-i','D:/DevPortal/CloudHosts/HomePri.key','-p','222','root@127.0.0.1']
+import pathlib,subprocess,hashlib,json,os
+R=pathlib.Path(__file__).resolve().parents[2]; E=R/'docs/evidence/tcp-p5'
+SSH=['ssh','-o','ProxyCommand=none','-o','ProxyJump=none','-o','StrictHostKeyChecking=yes','-o','IdentitiesOnly=yes','-o','BatchMode=yes','-i',os.environ.get('HOMEPUBLISH_SSH_KEY','D:/DevPortal/CloudHosts/HomePri.key'),'-p',os.environ.get('HOMEPUBLISH_SSH_PORT','22'),'root@'+os.environ.get('HOMEPUBLISH_SSH_HOST','192.168.1.2')]
 def remote(c,data=None):
  p=subprocess.run(SSH+[c],input=data,capture_output=True,timeout=90)
  print(p.stdout.decode(),end='');print(p.stderr.decode(),end='');p.check_returncode();return p.stdout.decode()

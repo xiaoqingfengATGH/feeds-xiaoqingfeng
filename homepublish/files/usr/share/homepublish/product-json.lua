@@ -48,7 +48,7 @@ function M.decode(s)
  local r=value(0);ws();assert(i==#s+1,'JSON trailing');return r
 end
 function M.encode(v)
- local arrays={certificates=true,sans=true,schema_versions=true,listeners=true,methods_allowed=true,allowed_ranges=true,networks=true,addresses=true,zones=true,blockers=true,blocking_issues=true,warnings=true,endpoints=true}
+ local arrays={profiles=true,domains=true,record_types=true,certificates=true,sans=true,schema_versions=true,listeners=true,methods_allowed=true,allowed_ranges=true,networks=true,addresses=true,zones=true,blockers=true,blocking_issues=true,warnings=true,endpoints=true}
  local function enc(x,field,parent)
   if type(x)=='string' then return '"'..x:gsub('[%z\1-\31\\"]',function(c) return string.format('\\u%04x',c:byte()) end)..'"' end
   if type(x)=='boolean' then return x and 'true' or 'false' end
@@ -56,7 +56,7 @@ function M.encode(v)
   assert(type(x)=='table','JSON type');local out={}
   local count,numeric=0,false
   for k in pairs(x) do count=count+1;if type(k)=='number' then numeric=true end end
-  local is_array=arrays[field] or (field=='services' and parent~='runtime') or numeric
+  local is_array=arrays[field] or (field=='results' and parent=='ddns') or (field=='services' and parent~='runtime') or numeric
   if is_array then
    for k in pairs(x) do assert(type(k)=='number' and k%1==0 and k>=1 and k<=count,'JSON array key') end
    for i=1,count do assert(rawget(x,i)~=nil,'JSON sparse array');out[#out+1]=enc(x[i],nil,field) end

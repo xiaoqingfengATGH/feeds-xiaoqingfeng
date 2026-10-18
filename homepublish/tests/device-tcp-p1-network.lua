@@ -41,7 +41,7 @@ for _,a in ipairs(normalized.networks[1].addresses) do scopes[a.address]=a.scope
 assert(scopes['fd00::1']=='ula' and scopes['fd01::1']=='ula' and scopes['2001:db8::1']=='gua')
 local binding={network='edge',family='ipv4',address='192.168.8.1'}
 local v,e=inventory.resolve(binding,normalized)
-check_error(v,e,'ZONE_AMBIGUOUS','access_profile.listeners.network')
+assert(v and v.zone==nil and #v.zones==2, 'binding eligibility must not require unique firewall zone')
 local one=assert(inventory.normalize(snap,{{name='trusted',network={'edge'}}}))
 assert(inventory.resolve(binding,one).device=='br-edge')
 binding.address='192.168.8.2'

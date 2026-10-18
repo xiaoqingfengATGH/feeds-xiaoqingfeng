@@ -36,7 +36,7 @@ uci.cursor=function(...)
 end
 if late then
  package.path='/usr/share/homepublish/?.lua;'..package.path
- package.cpath='/tmp/homepublish-tcp-p3/?.so;'..package.cpath
+ dofile('/tmp/homepublish-tcp-p3/device-legacy-lua-scope.lua')
  local J=require('product-json');local C=require('product-controller').new(require('product-device-provider'))
  local q=J.decode(io.read('*a'));assert(q.action=='start' and q.revision==1 and q.approved==true)
  local before=C.start(1,true);assert(before.runtime.phase=='running')

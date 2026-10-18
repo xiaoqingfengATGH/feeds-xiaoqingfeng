@@ -1,0 +1,34 @@
+/* Installed LuCI loader; read-only static assets, local RPC fixtures only. */
+const fs=require('node:fs'),path=require('node:path');
+let code=fs.readFileSync(path.join(__dirname,'upstream-tls-form-probe.cjs'),'utf8');
+code=code.replace("else if(m==='ddns_profiles')data={available:false,profiles:[]}","else if(m==='ddns_profiles')data={available:true,profiles:[{profile_id:'opaque-one',name:'家庭域名',provider:'DNSPod',a:{enabled:true,domains:['home.iwonderful.top']},aaaa:{enabled:false,domains:[]}}]}");
+code=code.replace("await page.getByRole('button',{name:'Edit',exact:true}).click()","await page.getByRole('button',{name:'Add',exact:true}).click()");
+code=code.replace("await modal.waitFor();const field", "await modal.waitFor({timeout:3000}).catch(async e=>{console.error(errors,await page.locator('.modal').textContent());throw e;});const field");
+const start=code.indexOf(" await tab('access');"),end=code.indexOf(' }finally{',start);
+code=code.slice(0,start)+`
+ await tab('access');
+ assert.equal(await field('dns_mode').inputValue(),'ddns_go');
+ assert.equal(await field('dns_suffix').inputValue(),'iwonderful.top');
+ assert.equal(await modal.locator('select[data-dns-candidates]').inputValue(),'iwonderful.top');
+ assert.ok((await modal.textContent()).includes('home.iwonderful.top'));
+ await field('dns_label').fill('nas');await field('dns_label').blur();
+ assert.equal(await field('hostname').inputValue(),'nas.iwonderful.top');
+ await field('dns_suffix').fill('custom.example.test');await field('dns_suffix').blur();
+ assert.equal(await field('hostname').inputValue(),'nas.custom.example.test');
+ assert.equal(await modal.locator('select[data-dns-candidates]').inputValue(),'','custom suffix must not show a stale selected reference');
+ await tab('general');await field('name').fill('NAS');await field('type').selectOption('http_proxy');
+ await tab('backend');await field('backend_host').fill('192.0.2.2');await field('backend_port').fill('8080');
+ await modal.getByRole('button',{name:'Save',exact:true}).click();await modal.waitFor({state:'hidden'});
+ const payload=await page.evaluate(async()=>{const dom=await L.require('dom'),api=await L.require('view.homepublish.product');return api.collectConfig(dom.findClassInstance(document.querySelector('.cbi-map')));});
+ assert.equal(payload.services[1].hostname,'nas.custom.example.test');
+ assert.deepEqual(payload.services[1].dns,{mode:'ddns_go',profile_id:'opaque-one',record_types:['A']});
+ await page.getByRole('button',{name:'Edit',exact:true}).nth(1).click();await modal.waitFor();await tab('access');
+ assert.equal(await field('dns_label').inputValue(),'nas');
+ assert.equal(await field('dns_suffix').inputValue(),'custom.example.test');
+ await field('dns_mode').selectOption('manual');
+ await tab('general');await field('type').selectOption('http_proxy');await tab('access');
+ assert.equal(await field('dns_mode').inputValue(),'manual','explicit choice must survive redraw');
+ assert.deepEqual(errors,[]);
+ console.log(JSON.stringify({newDefault:true,explicitChoiceRetained:true,productionWrites:false}));
+`+code.slice(end);
+const Module=require('node:module'),m=new Module(__filename,module);m.filename=__filename;m.paths=module.paths;m._compile(code,__filename);

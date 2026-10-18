@@ -1,11 +1,14 @@
 -- SPDX-License-Identifier: Apache-2.0
-local root,case=arg[1],arg[2]
-local fixture=assert(loadfile(root..'/homepublish/tests/test-canonical.lua'))().fixture
-local path=root..'/homepublish/files/usr/share/homepublish/'
+local root,case='/root/homepublish-lua-store/p1',arg[2]
+local scope=dofile(root..'/device-p1-lua-scope.lua')
+local fixture=function()
+ return {schema_version=1,services={{service_id='nas',name='NAS',hostname='nas.example.test',backend={addressFamily='ipv4',host='192.168.1.10',port=8080,allowed_ranges={'192.168.1.0/24'}},certificate_ref='acme:nas',authentication_review={authentication='confirmed',management=false}}},access_profile={methods_allowed={'manual_ipv4'},listeners={{family='ipv4',address='192.168.1.2',interface='wan',zone='wan',protocol='tcp',internal_port=8443,external_port=18443}}}}
+end
+local path='/usr/share/homepublish/'
 local model=dofile(path..'canonical.lua')
 local provider=dofile(path..'product-provider.lua')
 local wire=dofile(path..'product-wire.lua')
-local store=require('homepublish_store')
+local store=scope.store
 local function sparse(v) return {[1]=v,[2]=v,[4]=v,[100]={secret='SENTINEL_ONLY'}} end
 if case=='sparse' then
  for _,field in ipairs({'services','listeners','methods_allowed','allowed_ranges'}) do

@@ -1,21 +1,20 @@
--- Invocation-local parser adversaries against the unchanged installed readiness path.
+-- Startup readiness is component-only; target TLS/HTTP failures are irrelevant.
 package.path='/usr/share/homepublish/?.lua;'..package.path
-package.loaded['product-procd-group']={new=function()return {healthy=function()return true end} end}
-local V=require('product-v2-runtime').new({probe_address=function()return '127.0.0.1' end})
-local p={generation=7,listeners={{port=1}},services={{service_id='tls',type='tls_passthrough',hostname='opaque.home.test'}}}
+local healthy=true
+package.loaded['product-procd-group']={new=function()return {healthy=function()return healthy,'sslh process is not running' end} end}
+local V=require('product-v2-runtime').new({})
+local p={generation=7,services={{service_id='tls',type='tls_passthrough'},
+ {service_id='web',type='https_proxy'},{service_id='ssh',type='ssh'},
+ {service_id='tcp',type='tcp_forward'}}}
 local oldp,olde=io.popen,os.execute
-os.execute=function()return 0 end
-local cases={
- {'fatal-after-established','CONNECTION ESTABLISHED\nProtocol version: TLSv1.3\nCiphersuite: TLS_AES_256_GCM_SHA384\nerror: handshake failure\nHP_TLS_EXIT=1\n',false},
- {'none-cipher','New, (NONE), Cipher is (NONE)\nHP_TLS_EXIT=0\n',false},
- {'refused','connect:errno=111\nHP_TLS_EXIT=1\n',false},
- {'timeout','CONNECTION ESTABLISHED\nProtocol version: TLSv1.3\nCiphersuite: TLS_AES_256_GCM_SHA384\nHP_TLS_EXIT=124\n',false},
- {'forged-substring','prefix CONNECTION ESTABLISHED suffix\nHP_TLS_EXIT=0\n',false},
- {'missing-status','CONNECTION ESTABLISHED\nProtocol version: TLSv1.3\nCiphersuite: TLS_AES_256_GCM_SHA384\n',false},
- {'success','CONNECTION ESTABLISHED\nProtocol version: TLSv1.3\nCiphersuite: TLS_AES_256_GCM_SHA384\nHP_TLS_EXIT=0\n',true}}
-for _,c in ipairs(cases) do
- io.popen=function()return {read=function()return c[2] end,close=function()return true end} end
- local ok,out=V.readiness(p);assert(ok==c[3] and out.tls.ready==c[3],c[1]..' false readiness result: '..tostring(ok));print(c[1]..' GREEN')
-end
+io.popen=function()error('startup must not execute TLS or HTTP probes')end
+os.execute=function()error('startup must not execute target probes')end
+local ok,out=V.readiness(p)
+assert(ok,'healthy components must start regardless of target state')
+for _,s in ipairs(p.services) do assert(out[s.service_id].ready and out[s.service_id].generation==7) end
+healthy=false
+local failed,results,err=V.readiness(p)
+assert(not failed and err=='sslh process is not running')
+for _,s in ipairs(p.services) do assert(not results[s.service_id].ready) end
 io.popen,os.execute=oldp,olde
 print('P5_READINESS_ADVERSARIES_GREEN')

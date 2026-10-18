@@ -1,7 +1,10 @@
 -- SPDX-License-Identifier: Apache-2.0
-local root=arg[1] or '.'
-local fixture=assert(loadfile(root..'/homepublish/tests/test-canonical.lua'))().fixture
-local path=root..'/homepublish/files/usr/share/homepublish/'
+local root='/root/homepublish-lua-store/p1'
+local scope=dofile(root..'/device-p1-lua-scope.lua')
+local fixture=function()
+ return {schema_version=1,services={{service_id='nas',name='NAS',hostname='nas.example.test',backend={addressFamily='ipv4',host='192.168.1.10',port=8080,allowed_ranges={'192.168.1.0/24'}},certificate_ref='acme:nas',authentication_review={authentication='confirmed',management=false}}},access_profile={methods_allowed={'manual_ipv4'},listeners={{family='ipv4',address='192.168.1.2',interface='wan',zone='wan',protocol='tcp',internal_port=8443,external_port=18443}}}}
+end
+local path='/usr/share/homepublish/'
 local f=loadfile(path..'product-provider.lua')
 assert(f,'persistent canonical provider missing')
 local provider=f()
@@ -13,7 +16,7 @@ local again=assert(provider.handle({action='status'}))
 assert(again.saved_revision==1 and again.saved_config.services[1].hostname=='nas.example.test')
 assert(again.approval==nil)
 print('PASS real scoped persistence, readback, initial disabled intent')
-local wire=dofile(path..'product-wire.lua');local store=require('homepublish_store')
+local wire=dofile(path..'product-wire.lua');local store=scope.store
 local before=wire.encode(again)
 for _,request in ipairs({
  {action='save',expected_revision=1,config=fixture(),desired_state={state='enabled'}},

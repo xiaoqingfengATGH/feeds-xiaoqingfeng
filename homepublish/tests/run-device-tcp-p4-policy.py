@@ -3,8 +3,9 @@
 import hashlib,json,pathlib,subprocess,sys,time
 ROOT=pathlib.Path(__file__).resolve().parents[2]
 E=ROOT/'docs/evidence/tcp-p4';E.mkdir(parents=True,exist_ok=True)
-SSH=['ssh','-o','ProxyCommand=none','-o','ProxyJump=none','-o','IdentitiesOnly=yes','-o','BatchMode=yes','-i','D:/DevPortal/CloudHosts/HomePri.key','-p','222','root@127.0.0.1']
-SCP=['scp','-O','-o','ProxyCommand=none','-o','ProxyJump=none','-o','IdentitiesOnly=yes','-o','BatchMode=yes','-i','D:/DevPortal/CloudHosts/HomePri.key','-P','222']
+from p5_resume_support import SSH, upload
+from legacy_lua_runner_support import prepare_legacy_fixture
+if '--deploy-supported' in sys.argv: raise SystemExit('deployment is forbidden in isolated regressions')
 REMOTE='/tmp/homepublish-tcp-p3'
 INSTALLED=True
 def ssh(cmd,data=None,check=True):
@@ -12,7 +13,9 @@ def ssh(cmd,data=None,check=True):
  if check and r.returncode: raise RuntimeError((cmd,r.returncode,r.stdout,r.stderr))
  return r
 files=list((ROOT/'homepublish/files/usr/share/homepublish').glob('*.lua'))+[ROOT/'homepublish/tests/device-tcp-p3-controller-cli.lua',ROOT/'homepublish/tests/device-tcp-p3-controller-adapter.lua',ROOT/'homepublish/tests/device-tcp-p4-policy-rpc.lua']
-for f in files: subprocess.run(SCP+[str(f).replace('\\','/'),'root@127.0.0.1:'+REMOTE+'/'],check=True,capture_output=True)
+prepare_legacy_fixture(ssh, ROOT)
+files.append(ROOT/'homepublish/tests/device-legacy-lua-scope.lua')
+for f in files: upload(f, REMOTE+'/'+f.name)
 if INSTALLED and '--deploy-supported' in sys.argv:
  names=['product-device-provider.lua','product-device-v2-profile.lua','product-v2-runtime.lua','product-procd-group.lua','product-controller.lua','direct-renderer.lua','tcp-route-plan.lua','tcp-stream-renderer.lua','sslh-renderer.lua']
  ssh('umask 077; mkdir -p /root/homepublish-p3-installed-backup')
@@ -20,7 +23,7 @@ if INSTALLED and '--deploy-supported' in sys.argv:
   ssh('test -e /root/homepublish-p3-installed-backup/'+name+' || { test ! -e /usr/share/homepublish/'+name+' || cp /usr/share/homepublish/'+name+' /root/homepublish-p3-installed-backup/'+name+'; }; cp '+REMOTE+'/'+name+' /usr/share/homepublish/'+name+'; chmod 0644 /usr/share/homepublish/'+name)
  for f in files:
   if f.name in names:assert ssh('sha256sum /usr/share/homepublish/'+f.name).stdout.split()[0]==hashlib.sha256(f.read_bytes()).hexdigest()
-subprocess.run(SCP+['C:/Users/xiaoq/AppData/Local/hermes/profiles/ta/cache/scratch/tcp-p3-controller-store.so','root@127.0.0.1:'+REMOTE+'/homepublish_store.so'],check=True,capture_output=True)
+# Lua store isolation is validated before lifecycle cleanup can run.
 def request(q):
  r=ssh('lua '+REMOTE+('/device-tcp-p4-policy-rpc.lua' if INSTALLED else '/device-tcp-p3-controller-cli.lua'),json.dumps(q));print(r.stdout.strip());return json.loads(r.stdout)
 c={'schema_version':2,'access_profile':{'listeners':[{'listener_id':'v6','family':'ipv6','network':'lan','address':'fd89:878e:a47f::1','port':49543}]},'publication_policy':{'mode':'continuous','boot_restore':False},'services':[]}
@@ -126,11 +129,11 @@ baseline=ssh(baseline_cmd).stdout;(E/'task25-baseline.txt').write_text(baseline)
 fixture=REMOTE+'/controller-fixture'
 try:
  ssh('test ! -e '+fixture+' && umask 077; mkdir -p '+fixture)
- ssh('rm -rf '+REMOTE+'/controller-store') # fixed compiled test-only store
+ ssh('rm -rf /root/homepublish-lua-store/legacy-controller-store') # exclusive private fixture
  if INSTALLED:ssh('touch '+fixture+'/authorized')
  ssh(('touch ' if '--stale' in sys.argv else 'rm -f ')+REMOTE+'/controller-stale-generation')
  ssh('openssl req -x509 -newkey rsa:2048 -nodes -days 1 -subj /CN=tls.fixture.home -addext subjectAltName=DNS:tls.fixture.home -keyout '+fixture+'/tls.key -out '+fixture+'/tls.pem >/dev/null 2>&1')
- conf='worker_processes 1; daemon off; pid backend.pid; error_log stderr error; events {worker_connections 32;} http {access_log off; client_body_temp_path body; proxy_temp_path proxy; fastcgi_temp_path fastcgi; uwsgi_temp_path uwsgi; scgi_temp_path scgi; server {listen 127.0.0.1:49546 ssl; ssl_certificate '+fixture+'/tls.pem; ssl_certificate_key '+fixture+"/tls.key; return 200 'HP_TASK21_BACKEND';}}"
+ conf='worker_processes 1; daemon off; pid backend.pid; error_log stderr error; events {worker_connections 32;} http {access_log off; client_body_temp_path body; proxy_temp_path proxy; server {listen 127.0.0.1:49546 ssl; ssl_certificate '+fixture+'/tls.pem; ssl_certificate_key '+fixture+"/tls.key; return 200 'HP_TASK21_BACKEND';}}"
  if INSTALLED:
   conf=conf[:-1]+" server {listen 127.0.0.1:49545; return 200 'HP_TASK21_WEB';} server {listen 127.0.0.1:49556; return 200 'HP_P4_WEB_B';}}"
   ssh('test ! -e /root/homepublish-p3-controller-auth && umask 077; mkdir /root/homepublish-p3-controller-auth; dropbearkey -t ed25519 -f '+fixture+'/ssh-host.key >'+fixture+'/host-public 2>&1; dropbearkey -t ed25519 -f '+fixture+'/ssh-client.key >'+fixture+'/client-public 2>&1; grep \'^ssh-ed25519 \' '+fixture+'/client-public > /root/homepublish-p3-controller-auth/authorized_keys; chmod 0600 /root/homepublish-p3-controller-auth/authorized_keys '+fixture+'/*.key')

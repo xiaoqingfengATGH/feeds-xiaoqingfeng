@@ -1,9 +1,9 @@
 -- SPDX-License-Identifier: Apache-2.0
--- Internal API: callers supply typed requests; storage location is compiled, not client-selected.
+-- Internal API: callers supply typed requests; storage location is fixed, not client-selected.
 local source=debug.getinfo(1,'S').source:sub(2):match('^(.*)/')
 local model=dofile(source..'/canonical.lua')
 local wire=dofile(source..'/product-wire.lua')
-local store=require('homepublish_store')
+local store=dofile(source..'/product-store.lua')
 local M={}
 local function failure(code,field,message,retryable)
  return {error_code=code,field=field,error=message,retryable=retryable==true}
@@ -62,7 +62,7 @@ local function public(state)
  -- r9: 已安装即真实能力；后端权威校验保留（CLI→device-test channel→controller 拒绝路径不动）
  out.schema_versions={1,2}
  local supported=not state.saved_config or state.saved_config.schema_version==1
- out.capabilities={start=supported,apply=supported,stop=true,network_inventory=true,preflight=true}
+ out.capabilities={start=supported,apply=supported,stop=true,network_inventory=true,preflight=true,service_types={'http_proxy','https_proxy','tls_passthrough','ssh','tcp_forward'}}
  out.pending_config={saved_revision=state.saved_revision,apply_required=state.saved_revision>0 and state.saved_revision~=state.active_revision}
  return out
 end
@@ -70,6 +70,9 @@ function M.handle(request,structured)
  if type(request)~='table' or getmetatable(request)~=nil then return nil,'request object required' end
  local allowed=request.action=='migration_preview' and {action=true,expected_revision=true} or request.action=='save' and {action=true,expected_revision=true,config=true} or request.action=='validate' and {action=true,config=true} or request.action=='preflight' and {action=true,revision=true} or {action=true}
  for k in pairs(request) do if not allowed[k] then return nil,'unknown request field' end end
+ if request.action=='ddns_profiles' then
+  return dofile(source..'/product-ddns.lua').profiles()
+ end
  if request.action=='network_inventory' then
   return dofile(source..'/network-inventory.lua').collect()
  end

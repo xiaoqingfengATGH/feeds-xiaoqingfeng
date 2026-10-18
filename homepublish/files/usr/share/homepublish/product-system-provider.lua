@@ -11,8 +11,12 @@ end
 local function allocate(c)
  local n=require('nixio');local held,used,out={},{},{}
  for _,l in ipairs(c.access_profile.listeners) do used[l.port]=true end
- for _,s in ipairs(c.services) do used[s.backend.port]=true;if s.listen_port then used[s.listen_port]=true end end
- for _,key in ipairs({'https','reject'}) do
+ for _,s in ipairs(c.services) do
+  used[s.backend.port]=true
+  if s.backend.backup then used[s.backend.backup.port]=true end
+  if s.listen_port then used[s.listen_port]=true end
+ end
+ for _,key in ipairs({'https','http','reject'}) do
   for _=1,32 do
    local sock=n.socket('inet','stream');if not sock then break end
    if sock:bind('127.0.0.1',0) then
@@ -22,11 +26,12 @@ local function allocate(c)
   end
  end
  for _,s in ipairs(held) do s:close() end
- if out.https and out.reject then return out end
+ if out.https and out.http and out.reject then return out end
 end
 local V=require('product-v2-runtime').new({
  name='homepublish-runtime',root='/tmp/homepublish-runtime',nginx=nginx,
  sslh='/usr/libexec/homepublish/sslh-select',available=available,mixed_ports=allocate,
+ firewall=require('product-firewall').new(),
  authorize=function()return true end,
  authorize_listener=function(l)
   local inventory=N.collect();return inventory~=nil and N.resolve(l,inventory)~=nil
@@ -48,5 +53,5 @@ function M.runtime_plan(c)
  return V.runtime_plan(c)
 end
 function M.plan(c)local p,e=M.runtime_plan(c);if not p then return nil,e end;return V.plan(p)end
-M.start=V.start;M.readiness=V.readiness;M.renew=V.renew;M.stop=V.stop
+M.start=V.start;M.readiness=V.readiness;M.renew=V.renew;M.stop=V.stop;M.firewall_status=V.firewall_status
 return M

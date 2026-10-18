@@ -16,7 +16,7 @@ local function select(b,p)
  local candidates={}
  for i=1,n do
   local s=rawget(r.addresses,i);local w,f=A.parse(s);assert(b.addressFamily=='hostname' or f==b.addressFamily,'literal family')
-  assert(A.household(s) and A.in_ranges(s,b.allowed_ranges),'backend outside scope')
+  assert(A.backend_allowed(s,b.allowed_ranges),'backend outside scope')
   assert(type(p.authorize_backend)=='function' and p.authorize_backend(s,port,f)==true,'backend ownership/management denied')
   local key={};for _,v in ipairs(w) do key[#key+1]=string.format('%04x',v) end
   candidates[#candidates+1]={address=s,family=f,key=table.concat(key)}

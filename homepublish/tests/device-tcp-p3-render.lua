@@ -18,7 +18,7 @@ c.services[1].upstream_scheme='https';c.services[1].upstream_tls={verify=true,se
 r,e=R.render(c,p);assert(r,e);assert(r.configuration:find('proxy_ssl_verify on;',1,true));assert(r.configuration:find('proxy_ssl_name home.iwonderful.top;',1,true));write('runtime/https.conf',narrowed(r))
 c.services[1].upstream_tls.server_name='wrong.fixture.home';r,e=R.render(c,p);assert(r,e);write('runtime/wrong-name.conf',narrowed(r))
 c.services[1].upstream_tls.server_name='home.iwonderful.top';c.services[1].backend.port=49447;r,e=R.render(c,p);assert(r,e);write('runtime/untrusted.conf',narrowed(r))
-c.services[1].upstream_tls.verify=false;assert(not C.validate(c));assert(not R.render(c,p));print('PASS upstream verify=false rejected')
+c.services[1].upstream_tls.verify=false;assert(C.validate(c));assert(R.render(c,p));print('PASS upstream verify=false accepted explicitly')
 c.services[1].upstream_tls.verify=true;c.access_profile.listeners[1].address='::1';assert(not C.validate(c));assert(not R.render(c,p));print('PASS production loopback ingress remains forbidden')
 -- Appended regression coverage, not independently claimed RED cases.
 c.access_profile.listeners[1].address='fd89:878e:a47f::1'

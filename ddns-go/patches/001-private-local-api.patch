@@ -1,0 +1,877 @@
+diff --git a/dns/index.go b/dns/index.go
+index 888e2c6..6e4049c 100644
+--- a/dns/index.go
++++ b/dns/index.go
+@@ -1,6 +1,7 @@
+ package dns
+ 
+ import (
++	"sync"
+ 	"time"
+ 
+ 	"github.com/jeessy2/ddns-go/v6/config"
+@@ -38,16 +39,41 @@ var (
+ 	Ipcache = [][2]util.IpCache{}
+ )
+ 
+-// RunTimer 定时运行
++var runLock sync.Mutex
++var localUpdates = make(chan struct{}, 1)
++
++// RequestUpdate coalesces requests without performing DNS work in HTTP handlers.
++func RequestUpdate() {
++	select {
++	case localUpdates <- struct{}{}:
++	default:
++	}
++}
++
++// RunTimer is the sole worker for timer and local API update requests.
+ func RunTimer(delay time.Duration) {
++	RunOnce()
++	timer := time.NewTimer(delay)
++	defer timer.Stop()
+ 	for {
+-		RunOnce()
+-		time.Sleep(delay)
++		select {
++		case <-localUpdates:
++			runOnce(true)
++		case <-timer.C:
++			RunOnce()
++			timer.Reset(delay)
++		}
+ 	}
+ }
+ 
+-// RunOnce RunOnce
+-func RunOnce() {
++// RunOnce serializes provider/cache access with local API updates.
++func RunOnce() { runOnce(false) }
++func runOnce(force bool) {
++	runLock.Lock()
++	defer runLock.Unlock()
++	if force {
++		util.ForceCompareGlobal = true
++	}
+ 	conf, err := config.GetConfigCached()
+ 	if err != nil {
+ 		return
+diff --git a/dns/local_api_dnspod_test.go b/dns/local_api_dnspod_test.go
+new file mode 100644
+index 0000000..850af6e
+--- /dev/null
++++ b/dns/local_api_dnspod_test.go
+@@ -0,0 +1,67 @@
++package dns
++
++import (
++	"fmt"
++	"github.com/jeessy2/ddns-go/v6/config"
++	"github.com/jeessy2/ddns-go/v6/util"
++	"io"
++	"net/http"
++	"net/http/httptest"
++	"testing"
++)
++
++// Isolated adapter contract: mock HTTP only, no public DNS or provider accounts.
++func TestLocalAPIDnspodAdapterContract(t *testing.T) {
++	for _, tc := range []struct{ name, records, write string }{{"create", "[]", "/Record.Create"}, {"reuse_update", `[{"id":"record-7","value":"192.0.2.1"}]`, "/Record.Modify"}, {"unchanged", `[{"id":"record-7","value":"192.0.2.2"}]`, ""}} {
++		t.Run(tc.name, func(t *testing.T) {
++			calls := []string{}
++			srv := httptest.NewServer(http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
++				r.ParseForm()
++				calls = append(calls, r.URL.Path)
++				if r.Form.Get("domain") != "example.com" || r.Form.Get("sub_domain") != "new" || r.Form.Get("record_type") != "A" {
++					t.Error("bad record", r.Form)
++				}
++				if r.URL.Path == "/Record.List" {
++					fmt.Fprintf(w, `{"status":{"code":"1"},"records":%s}`, tc.records)
++				} else {
++					if r.URL.Path != tc.write {
++						t.Error("wrong mutation", r.URL.Path)
++					}
++					if tc.write == "/Record.Modify" && r.Form.Get("record_id") != "record-7" {
++						t.Error("did not reuse record")
++					}
++					if r.Form.Get("value") != "192.0.2.2" {
++						t.Error("wrong IP")
++					}
++					io.WriteString(w, `{"status":{"code":"1"}}`)
++				}
++			}))
++			defer srv.Close()
++			client := &http.Client{Transport: localRewriteTransport{base: srv.URL}}
++			d := Dnspod{DNS: config.DNS{ID: "fixture", Secret: "fixture"}, TTL: "600", httpClient: client, Domains: config.Domains{Ipv4Addr: "192.0.2.2", Ipv4Cache: &util.IpCache{}, Ipv6Cache: &util.IpCache{}, Ipv4Domains: []*config.Domain{{DomainName: "example.com", SubDomain: "new"}}}}
++			d.AddUpdateDomainRecords()
++			want := 1
++			if tc.write != "" {
++				want = 2
++			}
++			if len(calls) != want {
++				t.Fatalf("calls=%v", calls)
++			}
++		})
++	}
++}
++
++type localRewriteTransport struct{ base string }
++
++func (tr localRewriteTransport) RoundTrip(r *http.Request) (*http.Response, error) {
++	if r.URL.Host != "dnsapi.cn" {
++		return nil, fmt.Errorf("unexpected network target")
++	}
++	target := tr.base + r.URL.Path
++	req, err := http.NewRequest(r.Method, target, r.Body)
++	if err != nil {
++		return nil, err
++	}
++	req.Header = r.Header.Clone()
++	return http.DefaultTransport.RoundTrip(req)
++}
+diff --git a/dns/local_api_test.go b/dns/local_api_test.go
+new file mode 100644
+index 0000000..6f67db0
+--- /dev/null
++++ b/dns/local_api_test.go
+@@ -0,0 +1,44 @@
++package dns
++
++import (
++	"github.com/jeessy2/ddns-go/v6/config"
++	"github.com/jeessy2/ddns-go/v6/util"
++	"path/filepath"
++	"testing"
++	"time"
++)
++
++func TestLocalUpdateSerializesRunOnce(t *testing.T) {
++	t.Setenv(util.ConfigFilePathENV, filepath.Join(t.TempDir(), "config.yaml"))
++	c := config.Config{}
++	if err := c.SaveConfig(); err != nil {
++		t.Fatal(err)
++	}
++	runLock.Lock()
++	done := make(chan struct{})
++	go func() { runOnce(true); close(done) }()
++	select {
++	case <-done:
++		runLock.Unlock()
++		t.Fatal("worker bypassed RunOnce serialization")
++	case <-time.After(20 * time.Millisecond):
++	}
++	runLock.Unlock()
++	select {
++	case <-done:
++	case <-time.After(time.Second):
++		t.Fatal("worker blocked")
++	}
++}
++func TestLocalUpdateCoalesces(t *testing.T) {
++	for len(localUpdates) > 0 {
++		<-localUpdates
++	}
++	for i := 0; i < 100; i++ {
++		RequestUpdate()
++	}
++	if len(localUpdates) != 1 {
++		t.Fatal("queue is not bounded/coalescing")
++	}
++	<-localUpdates
++}
+diff --git a/localapi/api.go b/localapi/api.go
+new file mode 100644
+index 0000000..b48d2eb
+--- /dev/null
++++ b/localapi/api.go
+@@ -0,0 +1,95 @@
++// Package localapi provides the opt-in, filesystem-authorized API, never WebUI routes.
++package localapi
++
++import (
++	"crypto/sha256"
++	"encoding/hex"
++	"encoding/json"
++	"fmt"
++	"github.com/jeessy2/ddns-go/v6/config"
++	"net/http"
++	"strings"
++)
++
++type API struct {
++	load  func() (config.Config, error)
++	save  func(*config.Config) error
++	queue func()
++}
++type Family struct {
++	Enabled bool     `json:"enabled"`
++	Domains []string `json:"domains"`
++}
++type Profile struct {
++	ID       string `json:"profile_id"`
++	Name     string `json:"name"`
++	Provider string `json:"provider"`
++	A        Family `json:"a"`
++	AAAA     Family `json:"aaaa"`
++}
++
++// profileID uses only position and public labels, never credentials or their hashes.
++// The ordered label list makes selectors stale on reordering. Identical labels are
++// indistinguishable: give profiles distinct names before using this API.
++func profileID(c config.Config, index int) string {
++	labels := make([][2]string, len(c.DnsConf))
++	for i, d := range c.DnsConf {
++		labels[i] = [2]string{d.Name, d.DNS.Name}
++	}
++	b, _ := json.Marshal(labels)
++	sum := sha256.Sum256(b)
++	return fmt.Sprintf("p%d-%s", index, hex.EncodeToString(sum[:12]))
++}
++func domainName(s string) string {
++	s = strings.TrimSpace(strings.SplitN(s, "?", 2)[0])
++	if p := strings.Split(s, ":"); len(p) == 2 {
++		if p[0] == "@" || p[0] == "" {
++			s = p[1]
++		} else {
++			s = p[0] + "." + p[1]
++		}
++	}
++	return strings.ToLower(strings.TrimSuffix(s, "."))
++}
++func safeDomains(ds []string) []string {
++	out := []string{}
++	for _, s := range ds {
++		out = append(out, domainName(s))
++	}
++	return out
++}
++func reply(w http.ResponseWriter, status int, v any) {
++	w.Header().Set("Content-Type", "application/json")
++	w.WriteHeader(status)
++	json.NewEncoder(w).Encode(v)
++}
++func New(load func() (config.Config, error), save func(*config.Config) error, queue func()) http.Handler {
++	a := &API{load: load, save: save, queue: queue}
++	m := http.NewServeMux()
++	m.HandleFunc("/v1/domains/ensure", a.ensure)
++	m.HandleFunc("/v1/profiles", a.profiles)
++	m.HandleFunc("/v1/health", func(w http.ResponseWriter, r *http.Request) {
++		if r.Method != "GET" {
++			w.WriteHeader(405)
++			return
++		}
++		reply(w, 200, map[string]any{"api_version": 1})
++	})
++	return m
++}
++func (a *API) profiles(w http.ResponseWriter, r *http.Request) {
++	if r.Method != "GET" {
++		w.WriteHeader(405)
++		return
++	}
++	c, err := a.load()
++	if err != nil {
++		reply(w, 503, map[string]string{"error": "config_unavailable"})
++		return
++	}
++	ps := []Profile{}
++	for i, d := range c.DnsConf {
++		ps = append(ps, Profile{profileID(c, i), d.Name, d.DNS.Name, Family{d.Ipv4.Enable, safeDomains(d.Ipv4.Domains)}, Family{d.Ipv6.Enable, safeDomains(d.Ipv6.Domains)}})
++	}
++	reply(w, 200, map[string]any{"api_version": 1, "profiles": ps})
++}
+diff --git a/localapi/api_test.go b/localapi/api_test.go
+new file mode 100644
+index 0000000..ce1b229
+--- /dev/null
++++ b/localapi/api_test.go
+@@ -0,0 +1,90 @@
++package localapi
++
++import (
++	"encoding/json"
++	"github.com/jeessy2/ddns-go/v6/config"
++	"net/http/httptest"
++	"strings"
++	"testing"
++)
++
++func fixture() config.Config {
++	var c config.Config
++	d := config.DnsConfig{Name: "home", DNS: config.DNS{Name: "dnspod", ID: "SECRET-ID", Secret: "SECRET-TOKEN", ExtParam: "SECRET-EXT"}}
++	d.Ipv4.Enable = true
++	d.Ipv6.Enable = true
++	d.Ipv4.Domains = []string{"www:example.com?record_id=secret"}
++	c.DnsConf = []config.DnsConfig{d}
++	c.Password = "SECRET-PASSWORD"
++	return c
++}
++func TestEnsure(t *testing.T) {
++	for _, families := range []string{`["A"]`, `["AAAA"]`, `["A","AAAA"]`} {
++		t.Run(families, func(t *testing.T) {
++			c := fixture()
++			original := c.DnsConf[0].Ipv4.Domains[0]
++			saves, queued := 0, 0
++			h := New(func() (config.Config, error) { return c, nil }, func(next *config.Config) error { c = *next; saves++; return nil }, func() { queued++ })
++			body := `{"profile_id":"` + profileID(c, 0) + `","hostname":"WWW.Example.COM.","record_types":` + families + `}`
++			for n := 0; n < 2; n++ {
++				r := httptest.NewRecorder()
++				req := httptest.NewRequest("POST", "/v1/domains/ensure", strings.NewReader(body))
++				req.Header.Set("Content-Type", "application/json")
++				h.ServeHTTP(r, req)
++				if r.Code != 200 {
++					t.Fatal(r.Code, r.Body.String())
++				}
++			}
++			if c.DnsConf[0].Ipv4.Domains[0] != original {
++				t.Fatal("custom entry changed")
++			}
++			want := 0
++			if strings.Contains(families, "AAAA") {
++				want = 1
++			}
++			if len(c.DnsConf[0].Ipv6.Domains) != want {
++				t.Fatal(c)
++			}
++			if saves != want || queued != want {
++				t.Fatalf("saves=%d queue=%d", saves, queued)
++			}
++		})
++	}
++}
++func TestAmbiguousProfileRejected(t *testing.T) {
++	c := fixture()
++	c.DnsConf = append(c.DnsConf, c.DnsConf[0])
++	h := New(func() (config.Config, error) { return c, nil }, func(*config.Config) error { t.Fatal("saved ambiguous profile"); return nil }, nil)
++	r := httptest.NewRecorder()
++	req := httptest.NewRequest("POST", "/v1/domains/ensure", strings.NewReader(`{"profile_id":"`+profileID(c, 0)+`","hostname":"new.example.com","record_types":["A"]}`))
++	req.Header.Set("Content-Type", "application/json")
++	h.ServeHTTP(r, req)
++	if r.Code != 409 {
++		t.Fatal(r.Code)
++	}
++}
++func TestSafeProfiles(t *testing.T) {
++	c := fixture()
++	h := New(func() (config.Config, error) { return c, nil }, nil, nil)
++	r := httptest.NewRecorder()
++	h.ServeHTTP(r, httptest.NewRequest("GET", "/v1/profiles", nil))
++	if r.Code != 200 {
++		t.Fatal(r.Code, r.Body.String())
++	}
++	s := r.Body.String()
++	for _, secret := range []string{"SECRET", "record_id", "secret", "password", "dnsconf"} {
++		if strings.Contains(s, secret) {
++			t.Fatal("leaked metadata", s)
++		}
++	}
++	var result struct {
++		APIVersion int `json:"api_version"`
++		Profiles   []struct {
++			ID       string `json:"profile_id"`
++			Provider string `json:"provider"`
++		}
++	}
++	if json.Unmarshal(r.Body.Bytes(), &result) != nil || result.APIVersion != 1 || len(result.Profiles) != 1 || result.Profiles[0].ID == "" || result.Profiles[0].Provider != "dnspod" {
++		t.Fatal(s)
++	}
++}
+diff --git a/localapi/ensure.go b/localapi/ensure.go
+new file mode 100644
+index 0000000..6415f5c
+--- /dev/null
++++ b/localapi/ensure.go
+@@ -0,0 +1,145 @@
++package localapi
++
++import (
++	"encoding/json"
++	"github.com/jeessy2/ddns-go/v6/config"
++	"io"
++	"mime"
++	"net"
++	"net/http"
++	"regexp"
++	"strings"
++	"sync"
++)
++
++// Only local API transactions are serialized. Upstream full-form saves retain
++// their existing semantics; clients must not edit the same config concurrently.
++var transaction sync.Mutex
++var label = regexp.MustCompile(`^[a-z0-9](?:[a-z0-9-]{0,61}[a-z0-9])?$`)
++
++func validHostname(s string) bool {
++	if len(s) > 253 || net.ParseIP(s) != nil {
++		return false
++	}
++	ls := strings.Split(s, ".")
++	if len(ls) < 2 {
++		return false
++	}
++	for _, l := range ls {
++		if !label.MatchString(l) {
++			return false
++		}
++	}
++	return true
++}
++func (a *API) ensure(w http.ResponseWriter, r *http.Request) {
++	fail := func(code int, s string) { reply(w, code, map[string]string{"error": s}) }
++	if r.Method != "POST" {
++		w.Header().Set("Allow", "POST")
++		fail(405, "method_not_allowed")
++		return
++	}
++	ct, _, err := mime.ParseMediaType(r.Header.Get("Content-Type"))
++	if err != nil || ct != "application/json" {
++		fail(415, "json_required")
++		return
++	}
++	var req struct {
++		ProfileID   string   `json:"profile_id"`
++		Hostname    string   `json:"hostname"`
++		RecordTypes []string `json:"record_types"`
++	}
++	r.Body = http.MaxBytesReader(w, r.Body, 4096)
++	dec := json.NewDecoder(r.Body)
++	dec.DisallowUnknownFields()
++	if dec.Decode(&req) != nil {
++		fail(400, "invalid_json")
++		return
++	}
++	var extra any
++	if dec.Decode(&extra) != io.EOF {
++		fail(400, "trailing_json")
++		return
++	}
++	host := strings.ToLower(strings.TrimSuffix(req.Hostname, "."))
++	if !validHostname(host) || len(req.RecordTypes) == 0 || len(req.RecordTypes) > 2 {
++		fail(400, "invalid_request")
++		return
++	}
++	seen := map[string]bool{}
++	for _, f := range req.RecordTypes {
++		if (f != "A" && f != "AAAA") || seen[f] {
++			fail(400, "invalid_record_types")
++			return
++		}
++		seen[f] = true
++	}
++	transaction.Lock()
++	defer transaction.Unlock()
++	c, err := a.load()
++	if err != nil {
++		fail(503, "config_unavailable")
++		return
++	}
++	index := -1
++	for i := range c.DnsConf {
++		if profileID(c, i) == req.ProfileID {
++			index = i
++			break
++		}
++	}
++	if index < 0 {
++		fail(409, "stale_profile")
++		return
++	}
++	// Clone all domain slices before appending: cached config is a shallow value.
++	c.DnsConf = append([]config.DnsConfig(nil), c.DnsConf...)
++	for i := range c.DnsConf {
++		d := &c.DnsConf[i]
++		d.Ipv4.Domains = append([]string(nil), d.Ipv4.Domains...)
++		d.Ipv6.Domains = append([]string(nil), d.Ipv6.Domains...)
++	}
++	d := &c.DnsConf[index]
++	for i, other := range c.DnsConf {
++		if i != index && other.Name == d.Name && other.DNS.Name == d.DNS.Name {
++			fail(409, "ambiguous_profile_name")
++			return
++		}
++	}
++	if (seen["A"] && !d.Ipv4.Enable) || (seen["AAAA"] && !d.Ipv6.Enable) {
++		fail(409, "family_disabled")
++		return
++	}
++	added, already := []string{}, []string{}
++	for _, f := range req.RecordTypes {
++		ds := &d.Ipv4.Domains
++		if f == "AAAA" {
++			ds = &d.Ipv6.Domains
++		}
++		found := false
++		for _, s := range *ds {
++			if domainName(s) == host {
++				found = true
++				break
++			}
++		}
++		if found {
++			already = append(already, f)
++		} else {
++			*ds = append(*ds, host)
++			added = append(added, f)
++		}
++	}
++	queued := false
++	if len(added) > 0 {
++		if err := a.save(&c); err != nil {
++			fail(500, "save_failed")
++			return
++		}
++		if a.queue != nil {
++			a.queue()
++			queued = true
++		}
++	}
++	reply(w, 200, map[string]any{"api_version": 1, "added": added, "already": already, "update_queued": queued})
++}
+diff --git a/localapi/persistence_test.go b/localapi/persistence_test.go
+new file mode 100644
+index 0000000..f7175b2
+--- /dev/null
++++ b/localapi/persistence_test.go
+@@ -0,0 +1,65 @@
++package localapi
++
++import (
++	"github.com/jeessy2/ddns-go/v6/config"
++	"github.com/jeessy2/ddns-go/v6/util"
++	"net/http/httptest"
++	"os"
++	"path/filepath"
++	"reflect"
++	"strings"
++	"testing"
++)
++
++func TestNativePersistenceAndCacheFailure(t *testing.T) {
++	dir := t.TempDir()
++	path := filepath.Join(dir, "config.yaml")
++	t.Setenv(util.ConfigFilePathENV, path)
++	original := fixture()
++	original.Username = "fixture-user"
++	original.WebhookURL = "https://example.invalid/hook"
++	original.DnsConf[0].TTL = "900"
++	original.DnsConf[0].Ipv4.Cmd = "fixture-only"
++	original.Lang = "en"
++	if err := original.SaveConfig(); err != nil {
++		t.Fatal(err)
++	}
++	cached, err := config.GetConfigCached()
++	if err != nil {
++		t.Fatal(err)
++	}
++	id := profileID(cached, 0)
++	queued := 0
++	h := New(config.GetConfigCached, (*config.Config).SaveConfig, func() { queued++ })
++	send := func(host string) int {
++		r := httptest.NewRecorder()
++		req := httptest.NewRequest("POST", "/v1/domains/ensure", strings.NewReader(`{"profile_id":"`+id+`","hostname":"`+host+`","record_types":["A","AAAA"]}`))
++		req.Header.Set("Content-Type", "application/json")
++		h.ServeHTTP(r, req)
++		return r.Code
++	}
++	// Real SaveConfig failure after loading the cache, without mutating its slices.
++	os.Setenv(util.ConfigFilePathENV, filepath.Join(dir, "missing", "config.yaml"))
++	if send("fail.example.com") != 500 {
++		t.Fatal("expected real persistence failure")
++	}
++	after, _ := config.GetConfigCached()
++	if !reflect.DeepEqual(cached, after) || queued != 0 {
++		t.Fatal("cache changed after failed save")
++	}
++	os.Setenv(util.ConfigFilePathENV, path)
++	if send("new.example.com") != 200 {
++		t.Fatal("save failed")
++	}
++	after, err = config.GetConfigCached()
++	if err != nil {
++		t.Fatal(err)
++	}
++	expected := original
++	expected.DnsConf = append([]config.DnsConfig(nil), original.DnsConf...)
++	expected.DnsConf[0].Ipv4.Domains = append(append([]string(nil), original.DnsConf[0].Ipv4.Domains...), "new.example.com")
++	expected.DnsConf[0].Ipv6.Domains = []string{"new.example.com"}
++	if !reflect.DeepEqual(expected, after) || queued != 1 {
++		t.Fatalf("supported fields not preserved: %#v", after)
++	}
++}
+diff --git a/localapi/socket.go b/localapi/socket.go
+new file mode 100644
+index 0000000..67aa6a9
+--- /dev/null
++++ b/localapi/socket.go
+@@ -0,0 +1,53 @@
++package localapi
++
++import (
++	"errors"
++	"fmt"
++	"net"
++	"os"
++	"path/filepath"
++	"syscall"
++	"time"
++)
++
++// Listen requires an existing private directory. A stale socket is removed only
++// after a failed dial; regular files and live listeners are never replaced.
++func Listen(path string) (net.Listener, error) {
++	if !filepath.IsAbs(path) {
++		return nil, fmt.Errorf("local API path must be absolute")
++	}
++	st, err := os.Lstat(filepath.Dir(path))
++	if err != nil {
++		return nil, err
++	}
++	if !st.IsDir() || st.Mode().Perm()&0077 != 0 {
++		return nil, fmt.Errorf("local API directory must be private")
++	}
++	if st, err := os.Lstat(path); err == nil {
++		if st.Mode()&os.ModeSocket == 0 {
++			return nil, fmt.Errorf("local API path is not a socket")
++		}
++		c, e := net.DialTimeout("unix", path, time.Second)
++		if e == nil {
++			c.Close()
++			return nil, fmt.Errorf("local API socket already active")
++		}
++		if !errors.Is(e, syscall.ECONNREFUSED) {
++			return nil, fmt.Errorf("cannot establish stale socket: %w", e)
++		}
++		if err := os.Remove(path); err != nil {
++			return nil, err
++		}
++	} else if !os.IsNotExist(err) {
++		return nil, err
++	}
++	l, err := net.Listen("unix", path)
++	if err != nil {
++		return nil, err
++	}
++	if err := os.Chmod(path, 0600); err != nil {
++		l.Close()
++		return nil, err
++	}
++	return l, nil
++}
+diff --git a/localapi/socket_test.go b/localapi/socket_test.go
+new file mode 100644
+index 0000000..2602a45
+--- /dev/null
++++ b/localapi/socket_test.go
+@@ -0,0 +1,99 @@
++package localapi
++
++import (
++	"context"
++	"errors"
++	"github.com/jeessy2/ddns-go/v6/config"
++	"io"
++	"net"
++	"net/http"
++	"net/http/httptest"
++	"os"
++	"path/filepath"
++	"strings"
++	"testing"
++)
++
++func TestSocketPermissionsIsolation(t *testing.T) {
++	p := filepath.Join(t.TempDir(), "api.sock")
++	os.Chmod(filepath.Dir(p), 0700)
++	l, err := Listen(p)
++	if err != nil {
++		t.Fatal(err)
++	}
++	defer l.Close()
++	st, _ := os.Stat(p)
++	if st.Mode().Perm() != 0600 {
++		t.Fatal(st.Mode())
++	}
++	h := New(nil, nil, nil)
++	srv := &http.Server{Handler: h}
++	defer srv.Close()
++	go srv.Serve(l)
++	client := &http.Client{Transport: &http.Transport{DialContext: func(context.Context, string, string) (net.Conn, error) { return net.Dial("unix", p) }}}
++	for path, want := range map[string]int{"/v1/health": 200, "/save": 404, "/": 404} {
++		res, err := client.Get("http://unix" + path)
++		if err != nil {
++			t.Fatal(err)
++		}
++		io.Copy(io.Discard, res.Body)
++		res.Body.Close()
++		if res.StatusCode != want {
++			t.Fatal(path, res.StatusCode)
++		}
++	}
++	if _, err := Listen(p); err == nil {
++		t.Fatal("replaced active socket")
++	}
++	regular := filepath.Join(t.TempDir(), "file")
++	os.WriteFile(regular, []byte("keep"), 0600)
++	if _, err := Listen(regular); err == nil {
++		t.Fatal("replaced regular file")
++	}
++}
++func TestValidationAndSaveFailure(t *testing.T) {
++	c := fixture()
++	c.DnsConf[0].Ipv6.Enable = false
++	before := c.DnsConf[0].Ipv4.Domains[0]
++	saves, queued := 0, 0
++	h := New(func() (config.Config, error) { return c, nil }, func(*config.Config) error { saves++; return errors.New("disk full") }, func() { queued++ })
++	id := profileID(c, 0)
++	cases := []struct {
++		body string
++		want int
++	}{
++		{`{"profile_id":"` + id + `","hostname":"new.example.com","record_types":["A"]}`, 500},
++		{`{"profile_id":"` + id + `","hostname":"new.example.com","record_types":["AAAA"]}`, 409},
++		{`{"profile_id":"old","hostname":"new.example.com","record_types":["A"]}`, 409},
++		{`{"profile_id":"` + id + `","hostname":"*.example.com","record_types":["A"]}`, 400},
++		{`{"profile_id":"` + id + `","hostname":"example.com:80","record_types":["A"]}`, 400},
++		{`{"profile_id":"` + id + `","hostname":"new.example.com","record_types":["TXT"]}`, 400},
++		{`{"unknown":true}`, 400}, {`{} {}`, 400}, {strings.Repeat(" ", 4097) + `{}`, 400},
++	}
++	for _, tc := range cases {
++		r := httptest.NewRecorder()
++		req := httptest.NewRequest("POST", "/v1/domains/ensure", strings.NewReader(tc.body))
++		req.Header.Set("Content-Type", "application/json")
++		h.ServeHTTP(r, req)
++		if r.Code != tc.want {
++			t.Fatal(tc.body, r.Code, r.Body.String())
++		}
++	}
++	if len(c.DnsConf[0].Ipv4.Domains) != 1 || c.DnsConf[0].Ipv4.Domains[0] != before || saves != 1 || queued != 0 {
++		t.Fatal("failed operation changed config")
++	}
++	other := fixture()
++	other.DnsConf = append(other.DnsConf, other.DnsConf[0])
++	other.DnsConf[1].Name = "second"
++	old := profileID(other, 0)
++	other.DnsConf[0], other.DnsConf[1] = other.DnsConf[1], other.DnsConf[0]
++	if old == profileID(other, 0) {
++		t.Fatal("reorder not detected")
++	}
++	a := fixture()
++	b := fixture()
++	b.DnsConf[0].DNS.Secret = "rotated"
++	if profileID(a, 0) != profileID(b, 0) {
++		t.Fatal("secret used in selector")
++	}
++}
+diff --git a/localapi/validation_test.go b/localapi/validation_test.go
+new file mode 100644
+index 0000000..d6db4d2
+--- /dev/null
++++ b/localapi/validation_test.go
+@@ -0,0 +1,56 @@
++package localapi
++
++import (
++	"github.com/jeessy2/ddns-go/v6/config"
++	"net/http/httptest"
++	"strings"
++	"testing"
++)
++
++func TestFreshAppendFamilies(t *testing.T) {
++	for _, fs := range [][]string{{"A"}, {"AAAA"}, {"A", "AAAA"}} {
++		c := fixture()
++		c.DnsConf[0].Ipv4.Domains = nil
++		h := New(func() (config.Config, error) { return c, nil }, func(n *config.Config) error { c = *n; return nil }, func() {})
++		families := `["` + strings.Join(fs, `","`) + `"]`
++		body := `{"profile_id":"` + profileID(c, 0) + `","hostname":"new.example.com","record_types":` + families + `}`
++		for i := 0; i < 2; i++ {
++			r := httptest.NewRecorder()
++			req := httptest.NewRequest("POST", "/v1/domains/ensure", strings.NewReader(body))
++			req.Header.Set("Content-Type", "application/json")
++			h.ServeHTTP(r, req)
++			if r.Code != 200 {
++				t.Fatal(r.Body.String())
++			}
++		}
++		for _, f := range fs {
++			ds := c.DnsConf[0].Ipv4.Domains
++			if f == "AAAA" {
++				ds = c.DnsConf[0].Ipv6.Domains
++			}
++			if len(ds) != 1 || ds[0] != "new.example.com" {
++				t.Fatal(ds)
++			}
++		}
++	}
++}
++func TestProtocolValidation(t *testing.T) {
++	h := New(nil, nil, nil)
++	for _, tc := range []struct {
++		method, path, ct, body string
++		status                 int
++	}{{"GET", "/v1/domains/ensure", "", "", 405}, {"POST", "/v1/profiles", "", "", 405}, {"POST", "/v1/health", "", "", 405}, {"POST", "/v1/domains/ensure", "text/plain", "{}", 415}, {"POST", "/v1/domains/ensure", "application/json", "{", 400}} {
++		r := httptest.NewRecorder()
++		req := httptest.NewRequest(tc.method, tc.path, strings.NewReader(tc.body))
++		req.Header.Set("Content-Type", tc.ct)
++		h.ServeHTTP(r, req)
++		if r.Code != tc.status {
++			t.Fatal(tc, r.Code)
++		}
++	}
++	for _, host := range []string{"*.example.com", "example.com:80", "example.com/path", "example..com", "-host.example.com", "host_.example.com", "localhost", "192.0.2.1", strings.Repeat("a", 64) + ".com", strings.Repeat("a.", 127) + "com"} {
++		if validHostname(host) {
++			t.Fatal("accepted", host)
++		}
++	}
++}
+diff --git a/main.go b/main.go
+index c3b0a0c..5b55e3d 100644
+--- a/main.go
++++ b/main.go
+@@ -17,6 +17,7 @@ import (
+ 
+ 	"github.com/jeessy2/ddns-go/v6/config"
+ 	"github.com/jeessy2/ddns-go/v6/dns"
++	"github.com/jeessy2/ddns-go/v6/localapi"
+ 	"github.com/jeessy2/ddns-go/v6/util"
+ 	"github.com/jeessy2/ddns-go/v6/util/osutil"
+ 	"github.com/jeessy2/ddns-go/v6/util/update"
+@@ -47,6 +48,7 @@ var serviceType = flag.String("s", "", "Service management (install|uninstall|re
+ var configFilePath = flag.String("c", util.GetConfigFilePathDefault(), "Custom configuration file path")
+ 
+ // Web 服务
++var localAPIPath = flag.String("local-api", "", "Opt-in private Unix socket API path (private parent directory required)")
+ var noWebService = flag.Bool("noweb", false, "No web service")
+ 
+ // 跳过验证证书
+@@ -159,6 +161,19 @@ func run() {
+ 	// 初始化语言
+ 	util.InitLogLang(conf.Lang)
+ 
++	if *localAPIPath != "" {
++		l, err := localapi.Listen(*localAPIPath)
++		if err != nil {
++			log.Fatalf("Local API: %v", err)
++		}
++		srv := &http.Server{Handler: localapi.New(config.GetConfigCached, (*config.Config).SaveConfig, dns.RequestUpdate), ReadHeaderTimeout: 5 * time.Second, ReadTimeout: 10 * time.Second, WriteTimeout: 10 * time.Second, IdleTimeout: 30 * time.Second, MaxHeaderBytes: 8192}
++		go func() {
++			if err := srv.Serve(l); err != nil {
++				log.Fatalf("Local API: %v", err)
++			}
++		}()
++	}
++
+ 	if !*noWebService {
+ 		go func() {
+ 			// 启动web服务
+@@ -287,6 +302,9 @@ func getService() service.Service {
+ 		Option:       options,
+ 	}
+ 
++	if *localAPIPath != "" {
++		svcConfig.Arguments = append(svcConfig.Arguments, "-local-api", *localAPIPath)
++	}
+ 	if *noWebService {
+ 		svcConfig.Arguments = append(svcConfig.Arguments, "-noweb")
+ 	}

@@ -23,6 +23,10 @@ function M.new(provider,options)
    local supported=ok and type(effective)=='table'
    s.capabilities.start=supported;s.capabilities.apply=supported
   end
+  if type(provider.firewall_status)=='function' then
+   local ok,f=pcall(provider.firewall_status)
+   s.firewall=ok and f or {state='update_failed',error='firewall status unavailable'}
+  end
   return s
  end
  local function status() return decorate(assert(P.handle({action='status'}))) end
@@ -88,11 +92,11 @@ function M.new(provider,options)
   if apply and not provider.stop() then return finish('blocked','cleanup unknown','unknown','replace_cleanup') end
   local remaining=s.runtime.expires_at and math.max(0,s.runtime.expires_at-now())*1000 or 0
   if s.runtime.expires_at and remaining==0 then return C.stop() end
-  local ok=provider.start(plan,C.generation,remaining)
+  local ok,failure=provider.start(plan,C.generation,remaining)
   local stage='start'
   if ok then
    stage='readiness';local results
-   if provider.readiness then ok,results=provider.readiness(plan) else ok=false end
+   if provider.readiness then ok,results,failure=provider.readiness(plan) else ok=false;failure=nil end
    ok=ok==true
    if #effective.services>1 and not results then ok=false end
    if results then
@@ -110,7 +114,10 @@ function M.new(provider,options)
   end
   if not ok then
    local clean=provider.stop()
-   return finish('blocked','provider '..stage..' failed',clean and 'confirmed' or 'unknown',stage)
+   -- Preserve the journal's 128-byte error contract, including recovery reason.
+   local reason=type(failure)=='string' and failure~='' and failure or 'provider '..stage..' failed'
+   reason=reason:gsub('[%c]',' '):sub(1,128)
+   return finish('blocked',reason,clean and 'confirmed' or 'unknown',stage)
   end
   local current=status()
   if current.intent_revision~=C.generation or (not recovery and current.saved_revision~=revision) or current.desired_state.state~='enabled' or current.desired_state.manual_stop_latch or (current.runtime.expires_at and now()>=current.runtime.expires_at) then return C.stop() end
@@ -137,8 +144,26 @@ function M.new(provider,options)
   if not clean or not s.active_config or not s.active_config.publication_policy.boot_restore or s.desired_state.state~='enabled' or s.desired_state.manual_stop_latch then return s end
   return schedule('controller restart')
  end
- function C.start(revision,approved) return launch(revision,approved,false) end
- function C.apply(revision,approved) return launch(revision,approved,true) end
+ local function explicit_launch(revision,approved,apply)
+  local result=launch(revision,approved,apply)
+  if not result.error and result.runtime and result.runtime.phase=='running' and result.runtime.active_verified==true then
+   local config=result.active_config
+   local needed=false
+   for _,s in ipairs(config and config.services or {}) do
+    if s.enabled==true and s.dns and s.dns.mode=='ddns_go' and (s.type=='http_proxy' or s.type=='https_proxy' or s.type=='tls_passthrough') then needed=true end
+   end
+   result.ddns={results={},warnings={}}
+   if needed then
+    -- Forwarding is already accepted. DNS is best-effort, never a lifecycle gate.
+    -- Never call this from recovery/tick/status or while holding a store lock.
+    local ok,dns=pcall(function()return require('product-ddns').ensure(config)end)
+    result.ddns=ok and dns or {results={},warnings={{error='域名自动更新未完成，请检查 ddns-go 后重试。'}}}
+   end
+  end
+  return result
+ end
+ function C.start(revision,approved) return explicit_launch(revision,approved,false) end
+ function C.apply(revision,approved) return explicit_launch(revision,approved,true) end
  function C.tick(event_generation)
   local s,err=P.handle({action='status'})
   if not s then return {error=err or 'state unavailable'} end
@@ -148,6 +173,10 @@ function M.new(provider,options)
    return C.stop()
   end
   if s.runtime.expires_at and (now()>=s.runtime.expires_at or (options.clock and not valid_clock(s))) then return C.stop() end
+  if s.runtime.phase=='blocked' and s.runtime.cleanup=='unknown' then
+   local clean=provider.stop()
+   return finish('blocked',s.runtime.last_error,clean and 'confirmed' or 'unknown','cleanup_retry')
+  end
   if s.runtime.phase=='running' and not provider.renew() then
    local clean=provider.stop();s=finish('blocked','provider unavailable',clean and 'confirmed' or 'unknown','renew')
    if not clean then return s end

@@ -34,6 +34,14 @@ def traffic(addr,types):
   code="local n=require('nixio');local s=assert(n.socket('"+('inet6' if ':' in addr else 'inet')+"','stream'));s:setopt('socket','rcvtimeo',5);assert(s:connect('"+addr+"',50885));assert(s:send('P5_MATRIX_RAW')==13);assert(s:recv(13)=='P5_MATRIX_RAW');s:close();print('P5_MATRIX_RAW_GREEN')"
   remote('lua -e '+shlex.quote(code))
 
+# Fail before entering lifecycle cleanup: a stale/native provider must not let
+# this fixture mutate live state or dispatch Stop against another controller.
+check_live()
+remote('test ! -e /tmp/homepublish-runtime; test -d /root/homepublish-lua-store')
+upload(R/'homepublish/tests/device-tcp-p5-matrix-cli.lua','/root/homepublish-p5/matrix-cli.lua')
+assert remote('sha256sum /root/homepublish-p5/matrix-cli.lua').split()[0]==hashlib.sha256((R/'homepublish/tests/device-tcp-p5-matrix-cli.lua').read_bytes()).hexdigest()
+assert isinstance(req({'action':'status'})['saved_revision'],int)
+check_live()
 try:
  check_live();remote("test ! -e /tmp/homepublish-runtime; test ! -e /root/homepublish-p5/matrix-auth; umask 077; mkdir -p /root/homepublish-p5/matrix-auth; chmod 700 /root/homepublish-p5/matrix-auth; dropbearkey -t ed25519 -f /root/homepublish-p5/matrix-auth/host >/dev/null 2>&1; dropbearkey -t ed25519 -f /root/homepublish-p5/matrix-auth/client > /root/homepublish-p5/matrix-auth/client.pub 2>/dev/null; sed -n '/^ssh-ed25519 /p' /root/homepublish-p5/matrix-auth/client.pub > /root/homepublish-p5/matrix-auth/authorized_keys; chmod 600 /root/homepublish-p5/matrix-auth/*")
  upload(R/'homepublish/tests/device-tcp-p5-matrix-cli.lua','/root/homepublish-p5/matrix-cli.lua')

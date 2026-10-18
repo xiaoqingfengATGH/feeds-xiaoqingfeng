@@ -5,7 +5,7 @@ def exercise(g):
  ssh,request,c,E,REMOTE=(g[k] for k in ('ssh','request','c','E','REMOTE'))
  root=g['ROOT'];fixture=REMOTE+'/controller-fixture'
  helper=root/'homepublish/tests/device-tcp-p4-negative-cli.lua'
- subprocess.run(g['SCP']+[helper.resolve().as_posix(),'root@127.0.0.1:'+REMOTE+'/'],check=True,capture_output=True)
+ g['upload'](helper,REMOTE+'/'+helper.name)
  assert ssh('sha256sum '+REMOTE+'/'+helper.name).stdout.split()[0]==hashlib.sha256(helper.read_bytes()).hexdigest()
  s=request({'action':'save','expected_revision':0,'config':c});assert s['saved_revision']==1
  for mode,code in [('addressgone','ADDRESS_UNAVAILABLE'),('zonegone','ZONE_AMBIGUOUS'),('readfail','NETWORK_UNAVAILABLE')]:

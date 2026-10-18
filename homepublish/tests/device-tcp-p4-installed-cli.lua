@@ -1,6 +1,6 @@
 -- Private journal JSON CLI; provider is the unchanged installed module.
 package.path='/usr/share/homepublish/?.lua;'..package.path
-package.cpath='/tmp/homepublish-tcp-p3/?.so;'..package.cpath
+dofile('/tmp/homepublish-tcp-p3/device-legacy-lua-scope.lua')
 local J=require('product-json');local P=require('product-provider')
 local provider=require('product-device-provider')
 assert(type(provider.runtime_plan)=='function','installed v2 adapter capability missing')

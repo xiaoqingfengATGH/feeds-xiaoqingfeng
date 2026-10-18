@@ -25,6 +25,17 @@ function M.parse(s)
  need(loop or (w[1]>=0x2000 and w[1]<=0x3fff) or (w[1]>=0xfc00 and w[1]<=0xfdff),'unsafe IPv6')
  return w,'ipv6'
 end
+-- Wildcards belong only to explicitly automatic listeners, never backends/CIDRs.
+-- Keep M.parse strict; callers must still authorize ownership and scope.
+function M.parse_listener(l)
+ need(type(l)=='table','listener required')
+ if l.bind_mode=='auto' then
+  if l.family=='ipv4' and l.address=='0.0.0.0' then return {0,0},'ipv4' end
+  if l.family=='ipv6' and l.address=='::' then return {0,0,0,0,0,0,0,0},'ipv6' end
+  error('automatic listener requires exact family wildcard')
+ end
+ local w,f=M.parse(l.address);need(f==l.family,'listener family');return w,f
+end
 function M.in_ranges(s,ranges)
  local w,f=M.parse(s);need(type(ranges)=='table','ranges required')
  local found=false;local n=0
@@ -43,5 +54,13 @@ function M.household(s)
  local w,f=M.parse(s);if f=='ipv6' then return true end
  local a,b=math.floor(w[1]/256),w[1]%256
  return a==10 or a==127 or (a==172 and b>=16 and b<=31) or (a==192 and b==168)
+end
+-- Omitted per-rule CIDRs use fixed LAN safety, never unrestricted Internet.
+-- Explicit legacy ranges retain their original (possibly narrower) semantics.
+function M.backend_allowed(s,ranges)
+ local w,f=M.parse(s)
+ if ranges~=nil then return M.household(s) and M.in_ranges(s,ranges) end
+ if f=='ipv6' then return w[1]>=0xfc00 and w[1]<=0xfdff end
+ return M.household(s)
 end
 return M

@@ -1,7 +1,8 @@
-local root=assert(arg[1]); package.path=root..'/?.lua;'..package.path;package.cpath=root..'/?.so;'..package.cpath
-local P=dofile(root..'/product-provider.lua')
-local W=dofile(root..'/product-wire.lua')
-local S=require('homepublish_store')
+local root='/root/homepublish-lua-store/p1'
+local scope=dofile(root..'/device-p1-lua-scope.lua')
+local P=scope.provider()
+local W=dofile('/usr/share/homepublish/product-wire.lua')
+local S=scope.store
 local function copy(v) return W.decode(W.encode(v)) end
 local c={schema_version=2,services={{service_id='tcp',name='TCP',enabled=true,type='tcp_forward',listen_port=24444,backend={addressFamily='ipv4',host='192.168.1.8',port=22,allowed_ranges={'192.168.1.0/24'}},authentication_review={authentication='confirmed',management=false}}},access_profile={listeners={{listener_id='lan4',family='ipv4',network='lan',address='192.168.1.2',port=24443}}},publication_policy={mode='continuous',boot_restore=false}}
 local inv=assert(P.handle{action='network_inventory'});assert(inv.status=='ok' and #inv.networks>0,'scoped inventory missing')
@@ -47,14 +48,14 @@ print('PASS older-store transition gate preserves saved and active v1; legacy ma
 local function command(cmd)
  local p=assert(io.popen(cmd));local b=p:read('*a');p:close();return b
 end
-local J=dofile(root..'/product-json.lua')
+local J=dofile('/usr/share/homepublish/product-json.lua')
 local function encode(method,body)
- return command("printf '%s' '"..body.."' | lua "..root..'/product-rpc.lua '..method)
+ return command("printf '%s' '"..body.."' | lua "..'/usr/share/homepublish/product-rpc.lua '..method)
 end
 local encoded=encode('network_inventory','{}');assert(W.decode(encoded).action=='network_inventory','inventory transport unavailable')
 assert(W.decode(encode('preflight','{"revision":5}')).revision==5)
 local function call(method,body)
- return J.decode(command("printf '%s' '"..body.."' | lua "..root..'/product-rpc.lua '..method..' | LUA_CPATH="'..root..'/?.so;;" lua '..root..'/product-cli.lua | lua '..root..'/product-rpc.lua response'))
+ return J.decode(command("printf '%s' '"..body.."' | lua "..'/usr/share/homepublish/product-rpc.lua '..method..' | lua '..root..'/cli.lua | lua /usr/share/homepublish/product-rpc.lua response'))
 end
 assert(call('preflight','{"revision":0}').error_code=='REVISION_CONFLICT')
 assert(call('network_inventory','{"path":"/etc/shadow"}').error_code=='INVALID_CONFIG')

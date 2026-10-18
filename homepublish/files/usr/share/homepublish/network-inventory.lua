@@ -67,9 +67,10 @@ end
 local function bad() return failure('NETWORK_UNAVAILABLE','access_profile.listeners.network','Network inventory unavailable or malformed') end
 function M.normalize(snapshot, zones)
   if type(snapshot)~='table' or not array(snapshot.interface) or not array(zones) then return bad() end
-  local mapping={}
+  local mapping,zone_set={},{}
   for _,z in ipairs(zones) do
-    if type(z)~='table' or not text(z.name) then return bad() end
+    if type(z)~='table' or not text(z.name) or #z.name>64 or not z.name:match('^[a-zA-Z0-9_][a-zA-Z0-9_%-]*$') then return bad() end
+    zone_set[z.name]=true
     local nets=z.network or {}
     if type(nets)=='string' then
       local list={}; for n in nets:gmatch('%S+') do list[#list+1]=n end; nets=list
@@ -80,7 +81,9 @@ function M.normalize(snapshot, zones)
       mapping[n]=mapping[n] or {}; mapping[n][z.name]=true
     end
   end
-  local result={status='ok', networks={}}
+  local result={status='ok', networks={},zones={}}
+  for name in pairs(zone_set) do result.zones[#result.zones+1]=name end
+  table.sort(result.zones)
   for _,iface in ipairs(snapshot.interface) do
     if type(iface)~='table' or not text(iface.interface) or type(iface.up)~='boolean' then return bad() end
     local device=iface.l3_device or iface.device
@@ -124,6 +127,7 @@ function M.normalize(snapshot, zones)
   end
   table.sort(result.networks,function(a,b) return signature(a)<signature(b) end)
   local summaries={}
+  for _,z in ipairs(result.zones) do summaries[#summaries+1]='z'..token(z) end
   for _,n in ipairs(result.networks) do summaries[#summaries+1]=token(signature(n)) end
   -- Collision-free canonical summary, not a cryptographic digest.
   result.summary=table.concat(summaries,'|')
@@ -150,6 +154,13 @@ function M.collect()
   return M.normalize(value.snapshot,value.zones)
 end
 function M.resolve(binding, inventory)
+  if type(binding)=='table' and binding.bind_mode=='auto' then
+    local wildcard=binding.family=='ipv4' and '0.0.0.0' or binding.family=='ipv6' and '::'
+    if not wildcard or binding.address~=wildcard or binding.network~='' then
+      return failure('INVALID_CONFIG','access_profile.listeners','Invalid auto listener')
+    end
+    return {bind_mode='auto',network='',device='',zones={},family=binding.family,address=wildcard,scope='wildcard',internal=false}
+  end
   if type(binding)~='table' or type(inventory)~='table' or inventory.status~='ok' or not array(inventory.networks) then return bad() end
   local matches={}
   for _,n in ipairs(inventory.networks) do if n.network==binding.network then matches[#matches+1]=n end end
@@ -163,7 +174,21 @@ function M.resolve(binding, inventory)
     if selected and a.family==binding.family and identity(a.family,a.address)==selected then found=a end
   end
   if not found then return failure('ADDRESS_UNAVAILABLE','access_profile.listeners.address','Selected address is unavailable on this network') end
-  if #n.zones~=1 then return failure('ZONE_AMBIGUOUS','access_profile.listeners.network','Selected network must map to exactly one firewall zone') end
-  return {network=n.network,device=n.device,zone=n.zones[1],family=found.family,address=found.address,scope=found.scope,internal=found.internal,inventory_summary=inventory.summary}
+  return {network=n.network,device=n.device,zone=#n.zones==1 and n.zones[1] or nil,zones=n.zones,family=found.family,address=found.address,scope=found.scope,internal=found.internal,inventory_summary=inventory.summary}
+end
+-- Independent of listener/network ownership and link state. Call after canonical validation.
+function M.validate_firewall(firewall,inventory)
+  if firewall==nil then return true end
+  if type(inventory)~='table' or inventory.status~='ok' or not array(inventory.zones) then
+    return failure('ZONE_UNAVAILABLE','access_profile.firewall','Firewall zone inventory unavailable')
+  end
+  local known={};for _,z in ipairs(inventory.zones) do known[z]=true end
+  for _,key in ipairs({'ipv4_zones','ipv6_zones'}) do
+    if type(firewall)~='table' or not array(firewall[key]) then return failure('INVALID_CONFIG','access_profile.firewall.'..key,'Firewall zone array required') end
+    for _,z in ipairs(firewall[key]) do
+      if not known[z] then return failure('ZONE_UNAVAILABLE','access_profile.firewall.'..key,'Selected firewall zone does not exist: '..tostring(z)) end
+    end
+  end
+  return true
 end
 return M

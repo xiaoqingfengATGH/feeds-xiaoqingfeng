@@ -1,0 +1,18 @@
+#!/bin/sh
+# Own the integration, not the upstream automount package source.
+set -eu
+entry=/etc/hotplug.d/block/15-automount
+vendor=/usr/libexec/homelede/automount-vendor
+filter=/usr/libexec/homelede/automount-filter
+[ -f "$entry" ] || exit 0
+[ -f "$filter" ] || exit 1
+if ! grep -q 'HOMELEDE_AUTOMOUNT_FILTER' "$entry"; then
+    # Refresh the original after an automount package upgrade.
+    cp -p "$entry" "$vendor.new"
+    mv -f "$vendor.new" "$vendor"
+fi
+[ -f "$vendor" ] || exit 1
+cmp -s "$filter" "$entry" && exit 0
+cp "$filter" "$entry.new"
+chmod 0755 "$entry.new"
+mv -f "$entry.new" "$entry"

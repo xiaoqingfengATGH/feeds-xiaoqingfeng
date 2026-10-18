@@ -94,6 +94,9 @@ UCIEOF
 
 start()
 {
+    # Reconcile the wrapper after an upstream automount package upgrade.
+    /usr/libexec/homelede/install-automount-filter || return 1
+
     [ -f /etc/config/homeledeInit ] || firstboot
 
     # LuCI menu cache refresh after firstboot file moves.

@@ -1,0 +1,3 @@
+#!/bin/sh
+# Run after automount's zzz-move-automount on first boot / firmware upgrade.
+/usr/libexec/homelede/install-automount-filter

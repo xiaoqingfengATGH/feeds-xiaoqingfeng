@@ -1,0 +1,19 @@
+#!/bin/sh
+# HomeLede: never ask mount to guess the filesystem of boot/unknown partitions.
+# HOMELEDE_AUTOMOUNT_FILTER -- also identifies this wrapper to the installer.
+case "$ACTION" in
+    add)
+        device=${DEVPATH##*/}
+        case "$device" in ''|*[!a-zA-Z0-9_-]*) exit 0 ;; esac
+        info=$(block info "/dev/$device" 2>/dev/null) || exit 0
+        fstype=$(printf '%s\n' "$info" | sed -n 's/.* TYPE="\([^"]*\)".*/\1/p')
+        case "$fstype" in
+            ext2|ext3|ext4|f2fs|vfat|exfat|ntfs|ntfs3|btrfs|xfs|hfs|hfsplus) ;;
+            *) exit 0 ;;
+        esac
+        ;;
+    remove) ;;
+    *) exit 0 ;;
+esac
+[ -f /usr/libexec/homelede/automount-vendor ] || exit 0
+exec /bin/sh /usr/libexec/homelede/automount-vendor

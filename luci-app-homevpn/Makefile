@@ -20,6 +20,12 @@ PKG_RELEASE:=31
 PKG_PO_VERSION:=$(PKG_VERSION)-r$(PKG_RELEASE)
 PKG_LICENSE:=MIT
 PKG_MAINTAINER:=xiaoqingfeng <xiaoqingfengatgm@gmail.com>
+# luci.mk calls this package-specific hook after copying root/* into the
+# build directory, then preserves its mode with cp -pR during installation.
+# Do not use PKG_FILE_MODES: it also applies to probe-free translation IPKs.
+define Build/Prepare/luci-app-homevpn
+	$(INSTALL_BIN) ./root/etc/homestatus-probes/homevpn $(PKG_BUILD_DIR)/root/etc/homestatus-probes/homevpn
+endef
 
 # /etc/config/homevpn ships as a package file but is NOT a conffile by
 # default — without this marker opkg --force-reinstall / upgrades happily

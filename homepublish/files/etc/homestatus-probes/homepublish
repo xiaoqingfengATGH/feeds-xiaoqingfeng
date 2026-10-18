@@ -1,0 +1,16 @@
+#!/usr/bin/lua
+-- HomeStatus status-script contract: 0 running, 1 stopped, 2 unknown.
+-- Read-only; uses the same controller status and running predicate as the UI.
+package.path='/usr/share/homepublish/?.lua;'..package.path
+local ok,s=pcall(function()
+ local J=require('product-json')
+ return J.decode(require('product-channel').request(J.encode({action='status'})))
+end)
+if not ok or type(s)~='table' or s.error then print('状态读取失败');os.exit(2) end
+local r=s.runtime or {}
+local d=s.desired_state or {}
+if r.phase=='running' and r.active_verified==true and d.state=='enabled' and not d.manual_stop_latch then
+ print('运行中');os.exit(0)
+end
+if r.phase=='stopped' and r.cleanup=='confirmed' then print('已停止');os.exit(1) end
+print('运行状态未确认');os.exit(2)

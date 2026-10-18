@@ -1,0 +1,67 @@
+#!/bin/sh
+# SPDX-License-Identifier: Apache-2.0
+# HomeStatus: 0 running, 1 stopped, 2 unknown. Root, read-only, no ubus.
+# LuCI status.js shows two separate procd instances. For the application
+# summary, ondemand means the switch daemon is alive (idle tunnel is normal);
+# alwayson means its cloudflared data plane is alive. This is process liveness,
+# NOT remote switch state, Cloudflare connectivity or configuration readiness.
+# Do not call init.d running or hometunnel.sh status here: the former uses
+# ubus and can deadlock inside rpcd; the latter also makes remote requests.
+
+command -v uci >/dev/null 2>&1 || exit 2
+command -v tr >/dev/null 2>&1 || exit 2
+section=$(uci -q get hometunnel.global 2>/dev/null) || exit 2
+[ "$section" = hometunnel ] || exit 2
+mode=$(uci -q get hometunnel.global.mode 2>/dev/null) || mode=ondemand
+case "$mode" in
+	ondemand|alwayson) ;;
+	*) exit 2 ;;
+esac
+
+# Keep this literal path private: tests rewrite a COPY to a synthetic procfs.
+proc=/proc
+[ -r "$proc/self/stat" ] && [ -d "$proc/1" ] || exit 2
+unknown=0
+seen=0
+dirs=$(printf '%s\n' "$proc"/[0-9]*)
+set -f
+IFS='
+'
+for dir in $dirs; do
+	[ -d "$dir" ] || continue
+	seen=1
+	cmd=$(tr '\000' '\n' 2>/dev/null < "$dir/cmdline") || {
+		# Processes can exit during the scan. Persistent unreadability is unknown.
+		[ ! -d "$dir" ] || unknown=1
+		continue
+	}
+	[ -n "$cmd" ] || continue # kernel threads / zombies have no cmdline
+	set -- $cmd
+	if [ "$mode" = ondemand ]; then
+		# Exact invocation used by hometunnel-ctl's procd instance.
+		[ "$#" -eq 2 ] && [ "$1" = /bin/sh ] &&
+			[ "$2" = /usr/share/hometunnel/ctl-loop.sh ] && exit 0
+	else
+		# Same locally-managed cloudflared command as the hometunnel instance;
+		# exclude other tunnels, quick tunnels and command-line lookalikes.
+		[ "$1" = /usr/bin/cloudflared ] || continue
+		shift
+		[ "${1:-}" = tunnel ] || continue
+		shift
+		config=0
+		run=0
+		while [ "$#" -gt 0 ]; do
+			case "$1" in
+				--config)
+					shift
+					[ "${1:-}" = /etc/hometunnel/config.yml ] && config=1
+					;;
+				run) [ "$#" -eq 1 ] && run=1 ;;
+			esac
+			[ "$#" -gt 0 ] && shift
+		done
+		[ "$config" -eq 1 ] && [ "$run" -eq 1 ] && exit 0
+	fi
+done
+[ "$seen" -eq 1 ] && [ "$unknown" -eq 0 ] || exit 2
+exit 1

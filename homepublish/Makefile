@@ -28,6 +28,8 @@ endef
 
 define Package/homepublish/install
 	$(INSTALL_DIR) $(1)/usr/libexec $(1)/usr/share/homepublish $(1)/etc/config $(1)/etc/init.d $(1)/etc/homepublish
+	$(INSTALL_DIR) $(1)/etc/homestatus-probes
+	$(INSTALL_BIN) ./files/etc/homestatus-probes/homepublish $(1)/etc/homestatus-probes/homepublish
 	$(INSTALL_DATA) ./files/usr/share/homepublish/*.lua $(1)/usr/share/homepublish/
 	$(INSTALL_DIR) $(1)/usr/share/nftables.d/table-post
 	$(INSTALL_DATA) ./files/usr/share/nftables.d/table-post/90-homepublish.nft $(1)/usr/share/nftables.d/table-post/90-homepublish.nft

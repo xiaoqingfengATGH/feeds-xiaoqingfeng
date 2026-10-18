@@ -299,6 +299,7 @@ return view.extend({
 		o.value('cmd', _('命令行子串'));
 		o.value('port', _('本地监听端口'));
 		o.value('path', _('运行时文件存在'));
+		o.value('script', _('状态脚本'));
 		o.default = 'exe';
 		o.rmempty = false;
 		/* The collapsed grid prints the raw config value ("port"), not the
@@ -310,6 +311,14 @@ return view.extend({
 			var idx = (this.keylist || []).indexOf(val);
 
 			return idx >= 0 ? this.vallist[idx] : val;
+		};
+
+		o = s.option(form.Value, 'script', _('状态脚本名称'),
+			_('执行 /etc/homestatus-probes/ 下的脚本。退出码：0=运行中，1=已停止，其他或超时=未知。脚本和目录必须由 root 所有，且组和其他用户不可写；超时 3 秒。'));
+		o.depends('probe', 'script');
+		o.rmempty = false;
+		o.validate = function(section_id, value) {
+			return /^[A-Za-z0-9][A-Za-z0-9_-]*$/.test(value || '') || _('仅支持字母、数字、下划线和连字符，首字符为字母或数字');
 		};
 
 		o = s.option(form.Value, 'init', _('init 脚本名'),

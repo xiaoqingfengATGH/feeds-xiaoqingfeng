@@ -35,7 +35,7 @@ define Package/homekms/install
 	$(INSTALL_DATA) $(PKG_BUILD_DIR)/py-kms/KmsDataBase.xml $(1)/usr/share/homekms/pykms/
 	$(INSTALL_DATA) $(PKG_BUILD_DIR)/LICENSE $(1)/usr/share/homekms/LICENSE
 	$(CP) ./files/* $(1)/
-	chmod 0755 $(1)/etc/init.d/homekms $(1)/usr/libexec/rpcd/homekms
+	chmod 0755 $(1)/etc/init.d/homekms $(1)/usr/libexec/rpcd/homekms $(1)/etc/homestatus-probes/homekms
 endef
 
 $(eval $(call BuildPackage,homekms))

@@ -1,0 +1,79 @@
+#!/usr/bin/python3 -B
+"""Read-only HomeStatus adapter: 0 running, 1 stopped, 2 unknown.
+
+LuCI homekms.js uses status.checked then status.running; listening is a
+separate indicator, NOT a running gate. Never call homekms.status/service.list
+via ubus here: the caller may itself be an rpcd exec plugin.
+"""
+import os
+import re
+import subprocess
+import sys
+
+SERVICE_ARGV = [b'/usr/bin/python3', b'-B', b'-u',
+                b'/usr/share/homekms/pykms/pykms_Server.py']
+
+
+def process_state(proc_root='/proc'):
+    """Identify init.d's fixed main command without re-entering ubus.
+
+    As in RPC owned_listeners(), unreadable fd/tcp observations are unknown;
+    missing optional tcp6 is supported. No socket/listener is still running.
+    proc_root is only an internal test seam, never an argument/environment knob.
+    """
+    uncertain = False
+    try:
+        names = os.listdir(proc_root)
+    except OSError:
+        return 2
+    for name in names:
+        if not name.isdigit() or int(name) <= 0:
+            continue
+        base = os.path.join(proc_root, name)
+        try:
+            with open(os.path.join(base, 'cmdline'), 'rb') as stream:
+                argv = stream.read().split(b'\0')
+            if argv[:4] != SERVICE_ARGV:
+                continue
+            # Match the RPC's checked condition, not its separate listening flag.
+            for fd in os.listdir(os.path.join(base, 'fd')):
+                try:
+                    os.readlink(os.path.join(base, 'fd', fd))
+                except FileNotFoundError:
+                    continue
+            for family in ('tcp', 'tcp6'):
+                try:
+                    with open(os.path.join(base, 'net', family)) as stream:
+                        stream.read()
+                except FileNotFoundError:
+                    if family == 'tcp':
+                        raise
+            return 0
+        except FileNotFoundError:
+            # A process can exit while enumerating. A missing main-process
+            # observation is not affirmative evidence that the service stopped.
+            uncertain = True
+        except OSError:
+            uncertain = True
+    return 2 if uncertain else 1
+
+
+def main():
+    if len(sys.argv) != 1:
+        return 2
+    try:
+        try:
+            value = subprocess.check_output(
+                ['/sbin/uci', '-q', 'get', 'homekms.main.port'],
+                stderr=subprocess.DEVNULL, timeout=3).decode().strip()
+        except subprocess.CalledProcessError:
+            value = '1688'  # Same legacy/default fallback as homekms.status.
+        if not re.fullmatch(r'[0-9]{1,5}', value) or not 1024 <= int(value) <= 65535:
+            return 2
+        return process_state()
+    except (OSError, ValueError, subprocess.SubprocessError):
+        return 2
+
+
+if __name__ == '__main__':
+    sys.exit(main())

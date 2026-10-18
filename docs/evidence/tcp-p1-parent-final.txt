@@ -1,0 +1,22 @@
+PASS real scoped inventory
+PASS v2 persistence, optimistic revision, Save not Start, truthful preflight and TCP-only endpoint
+PASS precise live network/address blockers and stale preflight
+PASS unsafe backup rejects provider transition without state change; equal private backup safely reusable
+PASS transaction-backed migration original backup and active v1 preservation
+PASS older-store transition gate preserves saved and active v1; legacy malformed request API
+PASS final save revision transport guards
+PASS scoped transport encoding, malformed fields/types, structured errors and real inventory
+PASS canonical defaults and typed service
+PASS strict known fields, types, references and uniqueness
+PASS empty services saveable, runtime plan still rejects empty publication
+PASS address scope, IPv6, methods, duration bounds and detached plans
+PASS canonical defaults and typed service
+PASS strict known fields, types, references and uniqueness
+PASS empty services saveable, runtime plan still rejects empty publication
+PASS address scope, IPv6, methods, duration bounds and detached plans
+PASS shared default inheritance, independent override, case-normalized uniqueness and legacy references
+789ff382ae64fd53948b0d2e0f8a25dd19b9b00542189d45f3cfc0d251d90472  product-rpc.lua
+cbdb53f0e1ac1b0956a801e05b4e2a8dee9d2c157b83be70dfb06eb97e468e91  device-tcp-p1-provider.lua
+7ab1d8a2a9eb699ec8b0ece78f15eb377e4b8c15dae17a7bf2bbb4feb80ae28f  homepublish_store.so
+PARENT_FIXTURE_ABSENT
+EXIT=0

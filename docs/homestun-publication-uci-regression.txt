@@ -1,0 +1,65 @@
+test_provision_rejects_before_token_snapshot (__main__.TokenValidation.test_provision_rejects_before_token_snapshot) ... ok
+test_publisher_whole_file_before_sequence_or_transport (__main__.TokenValidation.test_publisher_whole_file_before_sequence_or_transport) ... ok
+
+----------------------------------------------------------------------
+Ran 2 tests in 28.953s
+
+OK
+test_callback_native_adapter_exists (__main__.Publication.test_callback_native_adapter_exists) ... ok
+test_native_optin_provision_callback_and_cleanup (__main__.Publication.test_native_optin_provision_callback_and_cleanup) ... ok
+test_real_http_callback_to_worker (__main__.Publication.test_real_http_callback_to_worker) ... ok
+
+----------------------------------------------------------------------
+Ran 3 tests in 9.736s
+
+OK
+test_occupied_port_preserves_foreign_socket_and_traffic (__main__.Boundary.test_occupied_port_preserves_foreign_socket_and_traffic) ... [E] set_reuse_port /home/eric/homestun-natmap-20260214/src/hev-misc.c:201
+ok
+test_pidfd_getfd_denied_before_engine_exec (__main__.Boundary.test_pidfd_getfd_denied_before_engine_exec) ... ok
+test_startup_race_preserves_foreign_socket_and_traffic (__main__.Boundary.test_startup_race_preserves_foreign_socket_and_traffic) ... [E] set_reuse_port /home/eric/homestun-natmap-20260214/src/hev-misc.c:201
+ok
+test_unavailable_seccomp_never_executes_engines (__main__.Boundary.test_unavailable_seccomp_never_executes_engines) ... NATMap seccomp boundary: Invalid argument
+ok
+
+----------------------------------------------------------------------
+Ran 4 tests in 9.389s
+
+OK
+test_tcp_children_expire_together (__main__.Lifecycle.test_tcp_children_expire_together) ... ok
+
+----------------------------------------------------------------------
+Ran 1 test in 3.294s
+
+OK
+test_compile_install_target_artifacts_only (__main__.Recipe.test_compile_install_target_artifacts_only) ... mkdir -p /tmp/homestun-recipe-187if1ar/build/homestun-0.1.0
+cp -fpR ./src/lease-supervisor.c ./src/publisher.c /tmp/homestun-recipe-187if1ar/build/homestun-0.1.0/
+gcc  -Os -static -Wall -Wextra -Werror -o /tmp/homestun-recipe-187if1ar/build/homestun-0.1.0/homestun-publish /tmp/homestun-recipe-187if1ar/build/homestun-0.1.0/publisher.c 
+gcc  -Os -static -Wall -Wextra -Werror -o /tmp/homestun-recipe-187if1ar/build/homestun-0.1.0/homestun-lease /tmp/homestun-recipe-187if1ar/build/homestun-0.1.0/lease-supervisor.c 
+mkdir -p /tmp/homestun-recipe-187if1ar/root/usr/libexec /tmp/homestun-recipe-187if1ar/root/usr/share/homestun /tmp/homestun-recipe-187if1ar/root/etc/config /tmp/homestun-recipe-187if1ar/root/etc/init.d /tmp/homestun-recipe-187if1ar/root/etc/homestun
+install -m0755 /tmp/homestun-recipe-187if1ar/build/homestun-0.1.0/homestun-lease /tmp/homestun-recipe-187if1ar/root/usr/libexec/homestun-lease
+install -m0755 /tmp/homestun-recipe-187if1ar/build/homestun-0.1.0/homestun-publish /tmp/homestun-recipe-187if1ar/root/usr/libexec/homestun-publish
+install -m0644 ./files/usr/share/homestun/*.lua /tmp/homestun-recipe-187if1ar/root/usr/share/homestun/
+install -m0755 ./files/usr/share/homestun/lease-run.sh /tmp/homestun-recipe-187if1ar/root/usr/share/homestun/
+install -m0600 ./files/etc/config/homestun /tmp/homestun-recipe-187if1ar/root/etc/config/homestun
+install -m0755 ./files/etc/init.d/homestun /tmp/homestun-recipe-187if1ar/root/etc/init.d/homestun
+chmod 0700 /tmp/homestun-recipe-187if1ar/root/etc/homestun
+ok
+
+----------------------------------------------------------------------
+Ran 1 test in 1.306s
+
+OK
+test_target_build_and_disabled_defaults (__main__.Package.test_target_build_and_disabled_defaults) ... FAIL
+
+======================================================================
+FAIL: test_target_build_and_disabled_defaults (__main__.Package.test_target_build_and_disabled_defaults)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/mnt/d/DevPortal/homelede/feeds-xiaoqingfeng-homestun/homestun/tests/test-package.py", line 14, in test_target_build_and_disabled_defaults
+    self.assertNotIn('token',defaults)
+AssertionError: 'token' unexpectedly found in "config service 'main'\n\toption enabled '0'\n\toption exposure_approved '0'\n\toption publication_enabled '0'\n\t# Reference only; root-owned 0600 credential, never a plaintext UCI secret.\n\toption router_token_file '/etc/homestun/router.token'\n\toption listen '127.0.0.1'\n\toption port '18443'\n\toption bind_port '18444'\n\toption ttl '60'\n\toption stun_server 'turn.cloudflare.com'\n\toption http_server 'example.com'\n\toption cert '/etc/homestun/cert.pem'\n\toption key '/etc/homestun/key.pem'\n\n# Add explicitly reviewed host sections before enabling. No upstream defaults.\n"
+
+----------------------------------------------------------------------
+Ran 1 test in 0.011s
+
+FAILED (failures=1)

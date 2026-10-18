@@ -1,0 +1,45 @@
+CERTS [
+  { v: '', t: '未选择' },
+  { v: 'acme:home.iwonderful.top_ecc', t: 'home.iwonderful.top · ECC' },
+  { v: 'acme:home.iwonderful.top', t: 'home.iwonderful.top · RSA' }
+]
+Command failed: ubus call service delete {"name":"homepublish-p5-ordinary-held"} (Not found)
+locator.selectOption: Timeout 30000ms exceeded.
+Call log:
+[2m  - waiting for locator('#modal_overlay input[id$=".certificate_ref"],#modal_overlay select[id$=".certificate_ref"]')[22m
+[2m    - locator resolved to <select class="cbi-input-select form-select" id="widget.cbid.json.services0.certificate_ref">…</select>[22m
+[2m  - attempting select option action[22m
+[2m    2 × waiting for element to be visible and enabled[22m
+[2m      - did not find some options[22m
+[2m    - retrying select option action[22m
+[2m    - waiting 20ms[22m
+[2m    2 × waiting for element to be visible and enabled[22m
+[2m      - did not find some options[22m
+[2m    - retrying select option action[22m
+[2m      - waiting 100ms[22m
+[2m    60 × waiting for element to be visible and enabled[22m
+[2m       - did not find some options[22m
+[2m     - retrying select option action[22m
+[2m       - waiting 500ms[22m
+
+    at field (D:\DevPortal\homelede\homepublish-product\luci-app-homepublish\tests\p5-ordinary-browser.cjs:9:186)
+    at async D:\DevPortal\homelede\homepublish-product\luci-app-homepublish\tests\p5-ordinary-browser.cjs:16:370 {
+  log: [
+    `  - waiting for locator('#modal_overlay input[id$=".certificate_ref"],#modal_overlay select[id$=".certificate_ref"]')`,
+    '    - locator resolved to <select class="cbi-input-select form-select" id="widget.cbid.json.services0.certificate_ref">…</select>',
+    '  - attempting select option action',
+    '    2 × waiting for element to be visible and enabled',
+    '      - did not find some options',
+    '    - retrying select option action',
+    '    - waiting 20ms',
+    '    2 × waiting for element to be visible and enabled',
+    '      - did not find some options',
+    '    - retrying select option action',
+    '      - waiting 100ms',
+    '    60 × waiting for element to be visible and enabled',
+    '       - did not find some options',
+    '     - retrying select option action',
+    '       - waiting 500ms'
+  ],
+  name: 'TimeoutError'
+}

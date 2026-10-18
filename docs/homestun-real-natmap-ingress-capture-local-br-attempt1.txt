@@ -1,0 +1,10 @@
+READY interface=br-lan peer=192.168.1.2 tcp_port=18444 seconds=90 headers_only no_promisc
+epoch=1791797617 if=br-lan direction=in src=104.20.23.154:80 dst=192.168.1.2:18444 flags=0x12 iplen=60 captured=40
+epoch=1791797617 if=br-lan direction=in src=104.20.23.154:80 dst=192.168.1.2:18444 flags=0x18 iplen=369 captured=40
+epoch=1791797617 if=br-lan direction=in src=141.101.90.1:3478 dst=192.168.1.2:18444 flags=0x12 iplen=60 captured=40
+epoch=1791797618 if=br-lan direction=in src=141.101.90.1:3478 dst=192.168.1.2:18444 flags=0x10 iplen=52 captured=40
+epoch=1791797618 if=br-lan direction=in src=141.101.90.1:3478 dst=192.168.1.2:18444 flags=0x18 iplen=92 captured=40
+epoch=1791797618 if=br-lan direction=in src=141.101.90.1:3478 dst=192.168.1.2:18444 flags=0x11 iplen=52 captured=40
+epoch=1791797648 if=br-lan direction=in src=104.20.23.154:80 dst=192.168.1.2:18444 flags=0x18 iplen=368 captured=40
+epoch=1791797678 if=br-lan direction=in src=104.20.23.154:80 dst=192.168.1.2:18444 flags=0x18 iplen=369 captured=40
+END packets=8

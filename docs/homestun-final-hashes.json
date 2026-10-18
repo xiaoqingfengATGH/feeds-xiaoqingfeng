@@ -1,0 +1,17 @@
+{
+  "core.lua": "c6e148db828a47f478176ccaa85fb5a92c52e203985ac6bdac70de7425744a0d",
+  "lease-supervisor.bin": "62bf9f14e1ecc5a76e69dce08092116cd8cabf92896ac25d38ac01186b1eef1a",
+  "lease-supervisor.c": "5881738d8ec50fdcf827d6037f16f781e067635af03ce0440cb5d207e0a1ff9d",
+  "preparation-fault.bin": "3b0d9a6bb1cdb6807d46af6ed6868b11715a1ad7c5152a0a23de0aa037177d07",
+  "preparation-fault.c": "46b78740c09eab31ab3fb7dc9c1c7857e3e27f32e674c56691824cea56c13459",
+  "router-failure.sh": "a599036e35d7e2785265266af807b278b4e56843f47907ae66eba8c22950d325",
+  "router-faults.sh": "0ee7cc34c964c057dc6374cee5232e8d869b098265be5314afbb9d5e8e8189ac",
+  "router-guardian-stop.sh": "dbfc4679bb9d89e327edef27012a189bb650f446fb4b388315fd9ee6aedc5af6",
+  "router-lock-window.sh": "477918b959b1edade65c250a360aa463c497f0b6f1e5bd6404195a69112c1ef5",
+  "router-preparation-crash.sh": "73a88c424564e69845f15a4916697a9e7d710c16fda031f3003b089f91042e20",
+  "router-preparation.sh": "994be3983e7bd6d839d17f3e2943724c256f218a27c01f7cc307e6478b920778",
+  "router-smoke.sh": "7ed918edabce707e3b88dc23ede5b31fd989e04e79dfa862d76632d6246f1d9d",
+  "router-term.sh": "2007f718dcd5143e3afaa50d5f1304fdc47873604cb482b2cbef19096d68f048",
+  "router-trust.sh": "9d77d7aa41c6edce7502893a669bc586313dfb5c4a9fa5bc9be96756c1f1a993",
+  "test-core.lua": "d5e85d919ca295bea5f96a1a95cd7faf684303705c77b487fc0b0973ae4e653e"
+}

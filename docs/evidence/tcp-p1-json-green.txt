@@ -1,0 +1,5 @@
+PASS actual preflight/inventory empty JSON arrays, runtime service object, sparse/mixed refusal
+PUBLIC_PREFLIGHT {"warnings":[],"revision":7,"source_address_policy":{"ssh":"proxy_address","tls_passthrough":"proxy_address","tcp_forward":"proxy_address","https_proxy":"trusted_internal_proxy_only"},"services":[],"inventory_summary":"107:3:lan|6:br-lan|4:true|z3:lan|a4:ipv411:192.168.1.22:247:private|a4:ipv624:fd89:878e:a47f:0:0:0:0:12:603:ula|36:6:docker|7:docker0|5:false|z6:docker|22:8:loopback|2:lo|4:true","blockers":[{"retryable":false,"field":"services","error":"No enabled services","error_code":"NO_ENABLED_SERVICES"},{"retryable":false,"field":"schema_version","error":"V2 runtime preflight unavailable until P3","error_code":"DEPENDENCY_UNAVAILABLE"}],"ready":false,"endpoints":[]}
+PUBLIC_INVENTORY {"status":"ok","summary":"22:5:empty|4:eth9|5:false","networks":[{"zones":[],"network":"empty","up":false,"device":"eth9","addresses":[]}]}
+EXIT=0
+Python json.loads: actual public array shapes verified.

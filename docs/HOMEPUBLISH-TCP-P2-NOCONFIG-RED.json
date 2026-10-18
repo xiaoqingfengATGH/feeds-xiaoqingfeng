@@ -1,0 +1,73 @@
+{
+  "url": "http://127.0.0.1:1081/cgi-bin/luci/admin/services/homepublish/entry",
+  "controls": [
+    {
+      "field": "family",
+      "value": "ipv4",
+      "options": [
+        {
+          "value": "ipv4",
+          "text": "IPv4"
+        },
+        {
+          "value": "ipv6",
+          "text": "IPv6"
+        },
+        {
+          "value": "dual",
+          "text": "IPv4 / IPv6 双栈"
+        }
+      ]
+    },
+    {
+      "field": "ipv4_network",
+      "value": "lan",
+      "options": [
+        {
+          "value": "lan",
+          "text": "lan · br-lan"
+        },
+        {
+          "value": "docker",
+          "text": "docker · docker0"
+        },
+        {
+          "value": "loopback",
+          "text": "loopback · lo"
+        }
+      ]
+    },
+    {
+      "field": "ipv4_address",
+      "value": "",
+      "options": []
+    },
+    {
+      "field": "ipv6_network",
+      "value": "lan",
+      "options": [
+        {
+          "value": "lan",
+          "text": "lan · br-lan"
+        },
+        {
+          "value": "docker",
+          "text": "docker · docker0"
+        },
+        {
+          "value": "loopback",
+          "text": "loopback · lo"
+        }
+      ]
+    },
+    {
+      "field": "ipv6_address",
+      "value": "",
+      "options": []
+    }
+  ],
+  "modules": [
+    "http://127.0.0.1:1081/luci-static/resources/view/homepublish/entry.js?v=26.268.60624~3e89467-1792030147",
+    "http://127.0.0.1:1081/luci-static/resources/view/homepublish/product.js?v=26.268.60624~3e89467-1792030147"
+  ]
+}

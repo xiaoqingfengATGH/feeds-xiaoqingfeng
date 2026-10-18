@@ -1,0 +1,73 @@
+{
+  "backup": "/root/homepublish-p4-ui-backup/20261015-213537",
+  "files": [
+    {
+      "name": "product.js",
+      "sha256": "8ab25a3dd5efd0d73b5e76543444d3f2984f89578f7c25296f9a3a07f40b8b10"
+    },
+    {
+      "name": "overview.js",
+      "sha256": "73e297b698d07f475f60ed4643acf5fd3c9c0cb5718d2719946aea3be2b2e2d6"
+    }
+  ],
+  "before": {
+    "pending_config": {
+      "saved_revision": 0,
+      "apply_required": false
+    },
+    "capabilities": {
+      "stop": true,
+      "start": true,
+      "preflight": true,
+      "network_inventory": true,
+      "apply": true
+    },
+    "runtime": {
+      "phase": "stopped",
+      "cleanup": "confirmed",
+      "stage": "boot_cleanup",
+      "active_verified": false
+    },
+    "schema_versions": [
+      1,
+      2
+    ],
+    "saved_revision": 0,
+    "intent_revision": 7,
+    "state_version": 1,
+    "desired_state": {
+      "state": "disabled",
+      "manual_stop_latch": true
+    }
+  },
+  "after": {
+    "pending_config": {
+      "saved_revision": 0,
+      "apply_required": false
+    },
+    "capabilities": {
+      "stop": true,
+      "start": true,
+      "preflight": true,
+      "network_inventory": true,
+      "apply": true
+    },
+    "runtime": {
+      "phase": "stopped",
+      "cleanup": "confirmed",
+      "stage": "boot_cleanup",
+      "active_verified": false
+    },
+    "schema_versions": [
+      1,
+      2
+    ],
+    "saved_revision": 0,
+    "intent_revision": 7,
+    "state_version": 1,
+    "desired_state": {
+      "state": "disabled",
+      "manual_stop_latch": true
+    }
+  }
+}

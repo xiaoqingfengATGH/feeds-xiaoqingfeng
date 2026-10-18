@@ -1,0 +1,11 @@
+PASS ingress=v4 backend=ipv4 shared TLS + native SSH + independent TCP simultaneous graph; no ingress certificate snapshot
+PASS ingress=v6 backend=ipv4 shared TLS + native SSH + independent TCP simultaneous graph; no ingress certificate snapshot
+PASS raw garbage/client-PROXY/idle EOF within 4 seconds
+PASS nonHTTPS ipv4 unknown/suffix/noSNI/garbage/PROXY/idle rejection
+PASS ingress=v4 backend=ipv6 shared TLS + native SSH + independent TCP simultaneous graph; no ingress certificate snapshot
+PASS ingress=v6 backend=ipv6 shared TLS + native SSH + independent TCP simultaneous graph; no ingress certificate snapshot
+PASS raw garbage/client-PROXY/idle EOF within 4 seconds
+PASS nonHTTPS ipv6 unknown/suffix/noSNI/garbage/PROXY/idle rejection
+PASS non-idempotent POST counts: primary /ok=1 /drop=1; upstream close gives502; alternate=0; no replay
+P3_TASK20_MATRIX_ISOLATED_GREEN
+PASS cleanup readback rc=0; management/global DNS/journal/config baselines compared

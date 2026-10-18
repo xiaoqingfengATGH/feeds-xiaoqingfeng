@@ -1,0 +1,3 @@
+# Host-built test artifacts; production packages compile from source.
+/tests/lease-supervisor.bin
+/tests/preparation-fault.bin

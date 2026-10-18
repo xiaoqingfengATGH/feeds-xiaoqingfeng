@@ -1,0 +1,342 @@
+[
+  {
+    "url": "http://127.0.0.1:1081/cgi-bin/luci/admin/services/homepublish/entry?filter=final",
+    "controls": [
+      {
+        "field": "family",
+        "value": "ipv4",
+        "visible": true,
+        "options": [
+          {
+            "value": "ipv4",
+            "text": "IPv4"
+          },
+          {
+            "value": "ipv6",
+            "text": "IPv6"
+          },
+          {
+            "value": "dual",
+            "text": "IPv4 / IPv6 双栈"
+          }
+        ]
+      },
+      {
+        "field": "ipv4_network",
+        "value": "lan",
+        "visible": true,
+        "options": [
+          {
+            "value": "lan",
+            "text": "lan · br-lan"
+          }
+        ]
+      },
+      {
+        "field": "ipv4_address",
+        "value": "192.168.1.2",
+        "visible": true,
+        "options": [
+          {
+            "value": "192.168.1.2",
+            "text": "192.168.1.2/24"
+          }
+        ]
+      },
+      {
+        "field": "ipv6_network",
+        "value": "lan",
+        "visible": false,
+        "options": [
+          {
+            "value": "lan",
+            "text": "lan · br-lan"
+          }
+        ]
+      },
+      {
+        "field": "ipv6_address",
+        "value": "fd89:878e:a47f::1",
+        "visible": false,
+        "options": [
+          {
+            "value": "fd89:878e:a47f::1",
+            "text": "fd89:878e:a47f::1/60 · 内网 IPv6，不能据此直接公网访问"
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "url": "http://127.0.0.1:1081/cgi-bin/luci/admin/services/homepublish/entry?filter=final",
+    "controls": [
+      {
+        "field": "family",
+        "value": "ipv6",
+        "visible": true,
+        "options": [
+          {
+            "value": "ipv4",
+            "text": "IPv4"
+          },
+          {
+            "value": "ipv6",
+            "text": "IPv6"
+          },
+          {
+            "value": "dual",
+            "text": "IPv4 / IPv6 双栈"
+          }
+        ]
+      },
+      {
+        "field": "ipv4_network",
+        "value": "lan",
+        "visible": false,
+        "options": [
+          {
+            "value": "lan",
+            "text": "lan · br-lan"
+          }
+        ]
+      },
+      {
+        "field": "ipv4_address",
+        "value": "192.168.1.2",
+        "visible": false,
+        "options": [
+          {
+            "value": "192.168.1.2",
+            "text": "192.168.1.2/24"
+          }
+        ]
+      },
+      {
+        "field": "ipv6_network",
+        "value": "lan",
+        "visible": true,
+        "options": [
+          {
+            "value": "lan",
+            "text": "lan · br-lan"
+          }
+        ]
+      },
+      {
+        "field": "ipv6_address",
+        "value": "fd89:878e:a47f::1",
+        "visible": true,
+        "options": [
+          {
+            "value": "fd89:878e:a47f::1",
+            "text": "fd89:878e:a47f::1/60 · 内网 IPv6，不能据此直接公网访问"
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "url": "http://127.0.0.1:1081/cgi-bin/luci/admin/services/homepublish/entry?filter=final",
+    "controls": [
+      {
+        "field": "family",
+        "value": "dual",
+        "visible": true,
+        "options": [
+          {
+            "value": "ipv4",
+            "text": "IPv4"
+          },
+          {
+            "value": "ipv6",
+            "text": "IPv6"
+          },
+          {
+            "value": "dual",
+            "text": "IPv4 / IPv6 双栈"
+          }
+        ]
+      },
+      {
+        "field": "ipv4_network",
+        "value": "lan",
+        "visible": true,
+        "options": [
+          {
+            "value": "lan",
+            "text": "lan · br-lan"
+          }
+        ]
+      },
+      {
+        "field": "ipv4_address",
+        "value": "192.168.1.2",
+        "visible": true,
+        "options": [
+          {
+            "value": "192.168.1.2",
+            "text": "192.168.1.2/24"
+          }
+        ]
+      },
+      {
+        "field": "ipv6_network",
+        "value": "lan",
+        "visible": true,
+        "options": [
+          {
+            "value": "lan",
+            "text": "lan · br-lan"
+          }
+        ]
+      },
+      {
+        "field": "ipv6_address",
+        "value": "fd89:878e:a47f::1",
+        "visible": true,
+        "options": [
+          {
+            "value": "fd89:878e:a47f::1",
+            "text": "fd89:878e:a47f::1/60 · 内网 IPv6，不能据此直接公网访问"
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "url": "http://127.0.0.1:1081/cgi-bin/luci/admin/services/homepublish/entry?filter=final",
+    "controls": [
+      {
+        "field": "family",
+        "value": "ipv4",
+        "visible": true,
+        "options": [
+          {
+            "value": "ipv4",
+            "text": "IPv4"
+          },
+          {
+            "value": "ipv6",
+            "text": "IPv6"
+          },
+          {
+            "value": "dual",
+            "text": "IPv4 / IPv6 双栈"
+          }
+        ]
+      },
+      {
+        "field": "ipv4_network",
+        "value": "lan",
+        "visible": true,
+        "options": [
+          {
+            "value": "lan",
+            "text": "lan · br-lan"
+          }
+        ]
+      },
+      {
+        "field": "ipv4_address",
+        "value": "192.168.1.2",
+        "visible": true,
+        "options": [
+          {
+            "value": "192.168.1.2",
+            "text": "192.168.1.2/24"
+          }
+        ]
+      },
+      {
+        "field": "ipv6_network",
+        "value": "lan",
+        "visible": false,
+        "options": [
+          {
+            "value": "lan",
+            "text": "lan · br-lan"
+          }
+        ]
+      },
+      {
+        "field": "ipv6_address",
+        "value": "fd89:878e:a47f::1",
+        "visible": false,
+        "options": [
+          {
+            "value": "fd89:878e:a47f::1",
+            "text": "fd89:878e:a47f::1/60 · 内网 IPv6，不能据此直接公网访问"
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "url": "http://127.0.0.1:1081/cgi-bin/luci/admin/services/homepublish/entry?filter=final",
+    "controls": [
+      {
+        "field": "family",
+        "value": "dual",
+        "visible": true,
+        "options": [
+          {
+            "value": "ipv4",
+            "text": "IPv4"
+          },
+          {
+            "value": "ipv6",
+            "text": "IPv6"
+          },
+          {
+            "value": "dual",
+            "text": "IPv4 / IPv6 双栈"
+          }
+        ]
+      },
+      {
+        "field": "ipv4_network",
+        "value": "lan",
+        "visible": true,
+        "options": [
+          {
+            "value": "lan",
+            "text": "lan · br-lan"
+          }
+        ]
+      },
+      {
+        "field": "ipv4_address",
+        "value": "192.168.1.2",
+        "visible": true,
+        "options": [
+          {
+            "value": "192.168.1.2",
+            "text": "192.168.1.2/24"
+          }
+        ]
+      },
+      {
+        "field": "ipv6_network",
+        "value": "lan",
+        "visible": true,
+        "options": [
+          {
+            "value": "lan",
+            "text": "lan · br-lan"
+          }
+        ]
+      },
+      {
+        "field": "ipv6_address",
+        "value": "fd89:878e:a47f::1",
+        "visible": true,
+        "options": [
+          {
+            "value": "fd89:878e:a47f::1",
+            "text": "fd89:878e:a47f::1/60 · 内网 IPv6，不能据此直接公网访问"
+          }
+        ]
+      }
+    ]
+  }
+]

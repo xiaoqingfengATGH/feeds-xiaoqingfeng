@@ -1,0 +1,18 @@
+✔ actual target TypedSection adds an editable row while enabled; final Save rejects incomplete row and commits valid rows (4.8319ms)
+✔ final Save still rejects duplicate hostnames and missing exposure approval without commit (0.9992ms)
+✔ Save stages then commits homestun only and refreshes committed status (3.3858ms)
+✔ failed save or commit cannot claim refreshed committed status (2.2313ms)
+✔ hostname and upstream reject public, management, injection and ambiguous inputs (2.0082ms)
+✔ independent menu and least-privilege ACL permit only homestun UCI and status (1.8139ms)
+✔ settings render disabled flags, safe fields, honest status and no activation controls (3.104ms)
+✔ package depends independently on core and LuCI, without activation hooks (1.5748ms)
+✔ enabled form requires integer ranges, numeric distinct ports, reviewed 1..16 unique services (1.6874ms)
+✔ disabled damaged configuration can be saved without repairing inactive fields (0.2029ms)
+ℹ tests 10
+ℹ suites 0
+ℹ pass 10
+ℹ fail 0
+ℹ cancelled 0
+ℹ skipped 0
+ℹ todo 0
+ℹ duration_ms 148.9867

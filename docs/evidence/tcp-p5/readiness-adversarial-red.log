@@ -1,0 +1,5 @@
+lua: /root/homepublish-p5/readiness.lua:18: fatal-after-established false readiness result: true
+stack traceback:
+	[C]: in function 'assert'
+	/root/homepublish-p5/readiness.lua:18: in main chunk
+	[C]: ?

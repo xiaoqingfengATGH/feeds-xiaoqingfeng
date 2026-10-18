@@ -1,0 +1,12 @@
+AssertionError [ERR_ASSERTION]: v2 shared API must expose real network inventory
+
+false !== true
+
+    at D:\DevPortal\homelede\homepublish-product\luci-app-homepublish\tests\tcp-ingress-device-probe.cjs:18:9 {
+  generatedMessage: false,
+  code: 'ERR_ASSERTION',
+  actual: false,
+  expected: true,
+  operator: 'strictEqual',
+  diff: 'simple'
+}

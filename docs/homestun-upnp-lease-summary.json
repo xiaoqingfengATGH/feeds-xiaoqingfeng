@@ -1,0 +1,130 @@
+{
+  "generation": "homestun-upnp-20261012T103350Z",
+  "local_deadline_seconds": 120,
+  "requested_lease_seconds": 300,
+  "mode": "UPnP explicit mapping; no STUN",
+  "requests": [
+    {
+      "action": "GetSpecificPortMappingEntry",
+      "at_monotonic": 206721.1517243,
+      "http_status": 500,
+      "fault": "714",
+      "fields": {}
+    },
+    {
+      "action": "AddPortMapping",
+      "at_monotonic": 206721.9565744,
+      "http_status": 200,
+      "fault": null,
+      "fields": {}
+    },
+    {
+      "action": "GetSpecificPortMappingEntry",
+      "at_monotonic": 206722.8115065,
+      "http_status": 200,
+      "fault": null,
+      "fields": {
+        "NewInternalPort": "18444",
+        "NewInternalClient": "192.168.1.2",
+        "NewEnabled": "1",
+        "NewPortMappingDescription": "homestun-upnp-20261012T103350Z",
+        "NewLeaseDuration": "299"
+      }
+    },
+    {
+      "action": "GetSpecificPortMappingEntry",
+      "at_monotonic": 206844.1812429,
+      "http_status": 200,
+      "fault": null,
+      "fields": {
+        "NewInternalPort": "18444",
+        "NewInternalClient": "192.168.1.2",
+        "NewEnabled": "1",
+        "NewPortMappingDescription": "homestun-upnp-20261012T103350Z",
+        "NewLeaseDuration": "178"
+      }
+    },
+    {
+      "action": "GetSpecificPortMappingEntry",
+      "at_monotonic": 206860.1001461,
+      "http_status": 200,
+      "fault": null,
+      "fields": {
+        "NewInternalPort": "18444",
+        "NewInternalClient": "192.168.1.2",
+        "NewEnabled": "1",
+        "NewPortMappingDescription": "homestun-upnp-20261012T103350Z",
+        "NewLeaseDuration": "162"
+      }
+    }
+  ],
+  "marker": "homestun-upnp-20261012T103350Z-009f025478ce6e1906555e82",
+  "baseline": "52a2755e9a380e1e6d526204ec443dcdd85639f07d2903f64839d073edd55795  /etc/config/firewall\n6ead1d3a553f28348a58b4a3055b8873aee4916b2fe3471b67e960cbfba2dacd  /etc/config/network\n62cb51fe983f98e057c368d4654675d15a34572b68b6ae0fca241887ea9a58c4  /etc/config/passwall2\nHOMESTUN_CONFIG_ABSENT\n0:\tfrom all lookup local\n220:\tfrom all lookup 220\n999:\tfrom all fwmark 0x50535732 lookup 999\n32766:\tfrom all lookup main\n32767:\tfrom all lookup default\ndefault via 192.168.1.1 dev br-lan proto static \n172.17.0.0/16 dev docker0 proto kernel scope link src 172.17.0.1 linkdown \n192.168.1.0/24 dev br-lan proto kernel scope link src 192.168.1.2 \nActive Internet connections (only servers)\nProto Recv-Q Send-Q Local Address           Foreign Address         State       \ntcp        0      0 192.168.1.2:53          0.0.0.0:*               LISTEN      \ntcp        0      0 0.0.0.0:443             0.0.0.0:*               LISTEN      \ntcp        0      0 192.168.1.2:22          0.0.0.0:*               LISTEN      \ntcp        0      0 172.17.0.1:2004         0.0.0.0:*               LISTEN      \ntcp        0      0 192.168.1.2:139         0.0.0.0:*               LISTEN      \ntcp        0      0 0.0.0.0:5355            0.0.0.0:*               LISTEN      \ntcp        0      0 127.0.0.1:53            0.0.0.0:*               LISTEN      \ntcp        0      0 0.0.0.0:80              0.0.0.0:*               LISTEN      \ntcp        0      0 192.168.1.2:445         0.0.0.0:*               LISTEN      \ntcp        0      0 0.0.0.0:1026            0.0.0.0:*               LISTEN      \ntcp        0      0 0.0.0.0:21              0.0.0.0:*               LISTEN      \ntcp        0      0 192.168.1.2:7681        0.0.0.0:*               LISTEN      \ntcp        0      0 127.0.0.1:2002          0.0.0.0:*               LISTEN      \ntcp        0      0 127.0.0.1:2003          0.0.0.0:*               LISTEN      \ntcp        0      0 127.0.0.1:2004          0.0.0.0:*               LISTEN      \ntcp        0      0 172.17.0.1:53           0.0.0.0:*               LISTEN      \ntcp        0      0 0.0.0.0:60000           0.0.0.0:*               LISTEN      \ntcp        0      0 0.0.0.0:3702            0.0.0.0:*               LISTEN      \ntcp        0      0 192.168.1.2:2004        0.0.0.0:*               LISTEN      \ntcp        0      0 fd89:878e:a47f::1:22    :::*                    LISTEN      \ntcp        0      0 ::1:2004                :::*                    LISTEN      \ntcp        0      0 fd89:878e:a47f::1:53    :::*                    LISTEN      \ntcp        0      0 :::5355                 :::*                    LISTEN      \ntcp        0      0 :::80                   :::*                    LISTEN      \ntcp        0      0 :::1070                 :::*                    LISTEN      \ntcp        0      0 fe80::290:a6ff:fee0:382c:53 :::*                    LISTEN      \ntcp        0      0 fe80::290:a6ff:fee0:382c:2004 :::*                    LISTEN      \ntcp        0      0 :::2001                 :::*                    LISTEN      \ntcp        0      0 :::9876                 :::*                    LISTEN      \ntcp        0      0 :::3702                 :::*                    LISTEN      \ntcp        0      0 fd89:878e:a47f::1:2004  :::*                    LISTEN      \ntcp        0      0 ::1:53                  :::*                    LISTEN      \n",
+  "lease_sha256": "540b98eb8be0ed039d9f8bb19b52d287f1b5c7d594321b397e3d8783e50072a4",
+  "forwarder_sha256": "374dd0311b29106ef588467811c8d6802fed85d621be17c490c422e318a86e63",
+  "forwarder_source_sha256": "682a5e76598fd09ed0cadf8f6fb649b0ce337949e125479a9fa3361cb2700666",
+  "stage_hashes": "374dd0311b29106ef588467811c8d6802fed85d621be17c490c422e318a86e63  /tmp/homestun-test/upnp-lease/root/usr/bin/natmap\n540b98eb8be0ed039d9f8bb19b52d287f1b5c7d594321b397e3d8783e50072a4  /tmp/homestun-test/upnp-lease/root/usr/libexec/homestun-lease\n",
+  "native_300_rejection": "REJECTION_EXIT=2\n",
+  "local_started_monotonic": 206717.1613356,
+  "local_preflight": "homestun-upnp-20261012T103350Z-009f025478ce6e1906555e82",
+  "candidate_before_add": {
+    "action": "GetSpecificPortMappingEntry",
+    "at_monotonic": 206721.1517243,
+    "http_status": 500,
+    "fault": "714",
+    "fields": {}
+  },
+  "mapping_started_monotonic": 206721.1524208,
+  "add": {
+    "action": "AddPortMapping",
+    "at_monotonic": 206721.9565744,
+    "http_status": 200,
+    "fault": null,
+    "fields": {}
+  },
+  "readback": {
+    "action": "GetSpecificPortMappingEntry",
+    "at_monotonic": 206722.8115065,
+    "http_status": 200,
+    "fault": null,
+    "fields": {
+      "NewInternalPort": "18444",
+      "NewInternalClient": "192.168.1.2",
+      "NewEnabled": "1",
+      "NewPortMappingDescription": "homestun-upnp-20261012T103350Z",
+      "NewLeaseDuration": "299"
+    }
+  },
+  "accepted_lease_seconds": 299,
+  "external_https": {
+    "exit": 0,
+    "body": "homestun-upnp-20261012T103350Z-009f025478ce6e1906555e82",
+    "stderr": "* Added homestun-test.homelede.com:18444:60.20.170.34 to DNS cache\r\n* Hostname homestun-test.homelede.com was found in DNS cache\r\n* Host homestun-test.homelede.com:18444 was resolved.\r\n* IPv6: (none)\r\n* IPv4: 60.20.170.34\r\n*   Trying 60.20.170.34:18444...\r\n* schannel: disabled automatic use of client certificate\r\n* ALPN: curl offers http/1.1\r\n* schannel: added 1 certificate(s) from CA file 'D:\\DevPortal\\homelede\\feeds-xiaoqingfeng-homestun\\docs\\artifacts\\upnp-lease-private\\attempt2\\test-cert.pem'\r\n* schannel: connection hostname (homestun-test.homelede.com) validated against certificate name (homestun-test.homelede.com)\r\n* ALPN: server accepted http/1.1\r\n* Established connection to homestun-test.homelede.com (60.20.170.34 port 18444) from 172.20.11.143 port 62880 \r\n* using HTTP/1.x\r\n> GET / HTTP/1.1\r\r\n> Host: homestun-test.homelede.com:18444\r\r\n> User-Agent: curl/8.21.0\r\r\n> Accept: */*\r\r\n> \r\r\n* Request completely sent off\r\n< HTTP/1.1 200 OK\r\r\n< Server: nginx/1.21.3\r\r\n< Date: Mon, 12 Oct 2026 10:34:03 GMT\r\r\n< Content-Type: text/plain\r\r\n< Content-Length: 55\r\r\n< Connection: keep-alive\r\r\n< \r\r\n{ [55 bytes data]\r\n* Connection #0 to host homestun-test.homelede.com:18444 left intact\r\n",
+    "marker_matches": true,
+    "elapsed_local": 5.883687100023963
+  },
+  "held_connection": {
+    "bytes": 0,
+    "outcome": "EOF",
+    "elapsed_local": 120.76161400001729
+  },
+  "supervisor_exit": 0,
+  "local_elapsed_to_exit": 121.1176131000102,
+  "post_deadline_new_connection": {
+    "exit": 28,
+    "stderr": "* Added homestun-test.homelede.com:18444:60.20.170.34 to DNS cache\r\n* Hostname homestun-test.homelede.com was found in DNS cache\r\n* Host homestun-test.homelede.com:18444 was resolved.\r\n* IPv6: (none)\r\n* IPv4: 60.20.170.34\r\n*   Trying 60.20.170.34:18444...\r\n* Connection timed out after 5001 milliseconds\r\n* closing connection #0\r\ncurl: (28) Connection timed out after 5001 milliseconds\r\n"
+  },
+  "last_lease_query": {
+    "action": "GetSpecificPortMappingEntry",
+    "at_monotonic": 206844.1812429,
+    "http_status": 200,
+    "fault": null,
+    "fields": {
+      "NewInternalPort": "18444",
+      "NewInternalClient": "192.168.1.2",
+      "NewEnabled": "1",
+      "NewPortMappingDescription": "homestun-upnp-20261012T103350Z",
+      "NewLeaseDuration": "178"
+    }
+  }
+}

@@ -1,0 +1,33 @@
+{
+  "sha256": {
+    "homestun/src/publisher.c": "9bb6f7b7651a0e4c43a910d96f81cbbe8efc6fb863a8723e5e5b34ab49db1bb6",
+    "homestun/src/lease-supervisor.c": "e457ec7c1495975e0f7165db1bb76893b93f4523d56b7de20229e3761f4b8086",
+    "homestun/tests/test-token-validation.py": "ce707be2b082ffd0e2986aa2af280ed00b79e4786ef603623c2f68d08b87e6d4",
+    "homestun/tests/token-io-injection.c": "a5964a2257e4c3c6884d977feccd246bcb0542118e49774f332af913f338903d",
+    "homestun/tests/run-publication-security.sh": "a070037293324c647634652639a34f23a83117e0b3506893fb5173012cd9dc9f",
+    "homestun/tests/test-publication-security.py": "f296d231af11328dbe7765a74f3511ece0f0a34cd1092e80b50f2e06d23a648f"
+  },
+  "regression_suite_counts": [
+    2,
+    3,
+    3,
+    4,
+    1,
+    1,
+    1,
+    30
+  ],
+  "native_tests_total": 45,
+  "token_subcases_per_method": 42,
+  "worker_tests": 8
+}
+CLEANUP_READBACK {
+  "fixture_directories": [
+    "/tmp/homestun-source-1t4b6ata",
+    "/tmp/homestun-source-2wdbrx3o",
+    "/tmp/homestun-source-_2ydhx22",
+    "/tmp/homestun-source-piiz5suc"
+  ],
+  "fixture_processes": [],
+  "publication_hosts_override_present": false
+}

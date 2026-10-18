@@ -1,0 +1,97 @@
+PASS Cancel Start performs zero mutations
+PASS actual LuCI Start activates installed four-protocol generation; real HTTPS marker A
+SERVICE_BUTTONS [
+  'tlstls_passthroughtls.fixture.home由后端提供127.0.0.1:49546编辑删除',
+  'rawtcp_forward49550不需要127.0.0.1:49546编辑删除',
+  'webhttps_proxyhome.iwonderful.top继承入口默认127.0.0.1:49545编辑删除',
+  'sshssh继承共享入口不需要127.0.0.1:49547编辑删除'
+]
+MODAL_BUTTONS [ '关闭', '保存' ]
+PASS native services edit+Save revision2 retains four-protocol active revision1 and real marker A
+REAL_APPLY_STATUS {"desired_state":{"state":"enabled","manual_stop_latch":false},"saved_revision":2,"attempted_revision":1,"pending_config":{"apply_required":true,"saved_revision":2},"capabilities":{"stop":true,"start":true,"preflight":true,"network_inventory":true,"apply":true},"approval":{"revision":1},"runtime":{"cleanup":"unknown","services":{"ssh":{"ready":true,"generation":1},"web":{"ready":true,"hostname":"home.iwonderful.top","generation":1},"tls":{"ready":true,"hostname":"tls.fixture.home","generation":1},"raw":{"ready":true,"generation":1}},"phase":"running","attempt_count":0,"clock_at":1792072025,"boot_id":"3d88e3f4-7a3a-4cda-a480-0ffcb4751a39","active_verified":true,"clock_trusted":true,"generation":1,"stage":"ready","running_since":1792072026},"attempted_config":{"access_profile":{"listeners":[{"listener_id":"v6","network":"lan","address":"fd89:878e:a47f:0:0:0:0:1","family":"ipv6","port":49543}]},"services":[{"enabled":true,"type":"tls_passthrough","name":"tls","hostname":"tls.fixture.home","service_id":"tls","backend":{"host":"127.0.0.1","allowed_ranges":["127.0.0.0/8"],"addressFamily":"ipv4","port":49546},"authentication_review":{"management":false,"authentication":"confirmed"}},{"enabled":true,"type":"tcp_forward","name":"raw","service_id":"raw","listen_port":49550,"backend":{"host":"127.0.0.1","allowed_ranges":["127.0.0.0/8"],"addressFamily":"ipv4","port":49546},"authentication_review":{"management":false,"authentication":"confirmed"}},{"service_id":"web","type":"https_proxy","certificate_mode":"inherit","name":"web","hostname":"home.iwonderful.top","upstream_scheme":"http","enabled":true,"backend":{"host":"127.0.0.1","allowed_ranges":["127.0.0.0/8"],"addressFamily":"ipv4","port":49545},"authentication_review":{"management":false,"authentication":"confirmed"}},{"enabled":true,"type":"ssh","name":"ssh","service_id":"ssh","backend":{"host":"127.0.0.1","allowed_ranges":["127.0.0.0/8"],"addressFamily":"ipv4","port":49547},"authentication_review":{"management":false,"authentication":"confirmed"}}],"default_certificate_ref":"acme:home_rsa","publication_policy":{"mode":"continuous","boot_restore":false},"schema_version":2},"active_config":{"access_profile":{"listeners":[{"listener_id":"v6","network":"lan","address":"fd89:878e:a47f:0:0:0:0:1","family":"ipv6","port":49543}]},"services":[{"enabled":true,"type":"tls_passthrough","name":"tls","hostname":"tls.fixture.home","service_id":"tls","backend":{"host":"127.0.0.1","allowed_ranges":["127.0.0.0/8"],"addressFamily":"ipv4","port":49546},"authentication_review":{"management":false,"authentication":"confirmed"}},{"enabled":true,"type":"tcp_forward","name":"raw","service_id":"raw","listen_port":49550,"backend":{"host":"127.0.0.1","allowed_ranges":["127.0.0.0/8"],"addressFamily":"ipv4","port":49546},"authentication_review":{"management":false,"authentication":"confirmed"}},{"service_id":"web","type":"https_proxy","certificate_mode":"inherit","name":"web","hostname":"home.iwonderful.top","upstream_scheme":"http","enabled":true,"backend":{"host":"127.0.0.1","allowed_ranges":["127.0.0.0/8"],"addressFamily":"ipv4","port":49545},"authentication_review":{"management":false,"authentication":"confirmed"}},{"enabled":true,"type":"ssh","name":"ssh","service_id":"ssh","backend":{"host":"127.0.0.1","allowed_ranges":["127.0.0.0/8"],"addressFamily":"ipv4","port":49547},"authentication_review":{"management":false,"authentication":"confirmed"}}],"default_certificate_ref":"acme:home_rsa","publication_policy":{"mode":"continuous","boot_restore":false},"schema_version":2},"schema_versions":[1,2],"saved_config":{"access_profile":{"listeners":[{"listener_id":"v6","network":"lan","address":"fd89:878e:a47f:0:0:0:0:1","family":"ipv6","port":49543}]},"services":[{"enabled":true,"type":"tls_passthrough","name":"tls","hostname":"tls.fixture.home","service_id":"tls","backend":{"host":"127.0.0.1","allowed_ranges":["127.0.0.0/8"],"addressFamily":"ipv4","port":49546},"authentication_review":{"management":false,"authentication":"confirmed"}},{"enabled":true,"type":"tcp_forward","name":"raw","service_id":"raw","listen_port":49550,"backend":{"host":"127.0.0.1","allowed_ranges":["127.0.0.0/8"],"addressFamily":"ipv4","port":49546},"authentication_review":{"management":false,"authentication":"confirmed"}},{"service_id":"web","type":"https_proxy","certificate_mode":"inherit","name":"web","hostname":"home.iwonderful.top","upstream_scheme":"http","enabled":true,"backend":{"host":"127.0.0.1","allowed_ranges":["127.0.0.0/8"],"addressFamily":"ipv4","port":49556},"authentication_review":{"management":false,"authentication":"confirmed"}},{"enabled":true,"type":"ssh","name":"ssh","service_id":"ssh","backend":{"host":"127.0.0.1","allowed_ranges":["127.0.0.0/8"],"addressFamily":"ipv4","port":49547},"authentication_review":{"management":false,"authentication":"confirmed"}}],"default_certificate_ref":"acme:home_rsa","publication_policy":{"mode":"continuous","boot_restore":false},"schema_version":2},"active_revision":1,"state_version":1,"intent_revision":1}
+REAL_APPLY_DOM 已保存待应用；旧运行配置不会随保存切换
+
+发布状态
+发布状态
+运行中（本机已验证）
+配置状态
+已保存：2；运行：1；已保存待应用
+发布策略
+持续直到停止；截止：未开始；开机恢复：关闭
+公网入口
+IPv4 / IPv6 公网未验证；本机就绪不代表公网可达
+入口状态
+入口	本机监听	地址族	关联网络	配置来源	公网验证
+v6	[fd89:878e:a47f:0:0:0:0:1]:49543	ipv6	lan	运行快照（逐服务就绪另验）	公网未验证
+服务发布状态
+已保存配置	名称	发布方式	匹配 / 端口	家庭后端	地址族路径	当前运行状态
+参与下次发布	tls（tls）	TLS 透传	tls.fixture.home	127.0.0.1:49546	ipv6 → ipv4	内部已就绪
+参与下次发布	raw（raw）	独立 TCP	TCP 49550	127.0.0.1:49546	ipv6 → ipv4	内部已就绪
+参与下次发布；待应用	web（web）	HTTPS 反向代理	home.iwonderful.top	127.0.0.1:49545	ipv6 → ipv4	内部已就绪
+参与下次发布	ssh（ssh）	原生 SSH	共享 SSH 入口	127.0.0.1:49547	ipv6 → ipv4	内部已就绪
+发布操作
+启动发布
+启动发布操作处理中
+应用变更
+应用变更操作处理中
+停止发布
+停止发布操作处理中
+刷新 / 重试
+刷新 / 重试
+配置
+编辑发布服务
+内部状态与失败 / 清理详情
+locator.click: Timeout 30000ms exceeded.
+Call log:
+[2m  - waiting for locator('#hp-apply')[22m
+[2m    - locator resolved to <button id="hp-apply" disabled="true" class="cbi-button cbi-button-action btn btn-purple waves-effect waves-light">应用变更</button>[22m
+[2m  - attempting click action[22m
+[2m    2 × waiting for element to be visible, enabled and stable[22m
+[2m      - element is not enabled[22m
+[2m    - retrying click action[22m
+[2m    - waiting 20ms[22m
+[2m    2 × waiting for element to be visible, enabled and stable[22m
+[2m      - element is not enabled[22m
+[2m    - retrying click action[22m
+[2m      - waiting 100ms[22m
+[2m    57 × waiting for element to be visible, enabled and stable[22m
+[2m       - element is not enabled[22m
+[2m     - retrying click action[22m
+[2m       - waiting 500ms[22m
+
+    at clickAction (D:\DevPortal\homelede\homepublish-product\luci-app-homepublish\tests\p4-lifecycle-browser.cjs:19:79)
+    at D:\DevPortal\homelede\homepublish-product\luci-app-homepublish\tests\p4-lifecycle-browser.cjs:28:181 {
+  log: [
+    "  - waiting for locator('#hp-apply')",
+    '    - locator resolved to <button id="hp-apply" disabled="true" class="cbi-button cbi-button-action btn btn-purple waves-effect waves-light">应用变更</button>',
+    '  - attempting click action',
+    '    2 × waiting for element to be visible, enabled and stable',
+    '      - element is not enabled',
+    '    - retrying click action',
+    '    - waiting 20ms',
+    '    2 × waiting for element to be visible, enabled and stable',
+    '      - element is not enabled',
+    '    - retrying click action',
+    '      - waiting 100ms',
+    '    57 × waiting for element to be visible, enabled and stable',
+    '       - element is not enabled',
+    '     - retrying click action',
+    '       - waiting 500ms'
+  ],
+  name: 'TimeoutError'
+}
+{"desired_state":{"state":"disabled","manual_stop_latch":false},"capabilities":{"stop":true,"start":false,"preflight":true,"network_inventory":true,"apply":false},"runtime":{"phase":"stopped","cleanup":"confirmed","stage":"boot_cleanup","active_verified":false},"pending_config":{"apply_required":true,"saved_revision":1},"schema_versions":[1,2],"saved_revision":1,"intent_revision":0,"state_version":1,"saved_config":{"access_profile":{"listeners":[{"listener_id":"v6","network":"lan","address":"fd89:878e:a47f:0:0:0:0:1","family":"ipv6","port":49543}]},"services":[{"enabled":true,"type":"tls_passthrough","name":"tls","hostname":"tls.fixture.home","service_id":"tls","backend":{"host":"127.0.0.1","allowed_ranges":["127.0.0.0/8"],"addressFamily":"ipv4","port":49546},"authentication_review":{"management":false,"authentication":"confirmed"}},{"enabled":true,"type":"tcp_forward","name":"raw","service_id":"raw","listen_port":49550,"backend":{"host":"127.0.0.1","allowed_ranges":["127.0.0.0/8"],"addressFamily":"ipv4","port":49546},"authentication_review":{"management":false,"authentication":"confirmed"}},{"service_id":"web","type":"https_proxy","certificate_mode":"inherit","name":"web","hostname":"home.iwonderful.top","upstream_scheme":"http","enabled":true,"backend":{"host":"127.0.0.1","allowed_ranges":["127.0.0.0/8"],"addressFamily":"ipv4","port":49545},"authentication_review":{"management":false,"authentication":"confirmed"}},{"enabled":true,"type":"ssh","name":"ssh","service_id":"ssh","backend":{"host":"127.0.0.1","allowed_ranges":["127.0.0.0/8"],"addressFamily":"ipv4","port":49547},"authentication_review":{"management":false,"authentication":"confirmed"}}],"default_certificate_ref":"acme:home_rsa","publication_policy":{"mode":"continuous","boot_restore":false},"schema_version":2}}
+{"desired_state":{"state":"disabled","manual_stop_latch":true},"saved_revision":2,"attempted_revision":1,"pending_config":{"apply_required":true,"saved_revision":2},"capabilities":{"stop":true,"start":true,"preflight":true,"network_inventory":true,"apply":true},"runtime":{"cleanup":"confirmed","services":{"ssh":{"ready":true,"generation":1},"web":{"ready":true,"hostname":"home.iwonderful.top","generation":1},"tls":{"ready":true,"hostname":"tls.fixture.home","generation":1},"raw":{"ready":true,"generation":1}},"phase":"stopped","attempt_count":0,"clock_at":1792072025,"boot_id":"3d88e3f4-7a3a-4cda-a480-0ffcb4751a39","active_verified":false,"clock_trusted":true,"generation":1,"stage":"stop","running_since":1792072026},"attempted_config":{"access_profile":{"listeners":[{"listener_id":"v6","network":"lan","address":"fd89:878e:a47f:0:0:0:0:1","family":"ipv6","port":49543}]},"services":[{"enabled":true,"type":"tls_passthrough","name":"tls","hostname":"tls.fixture.home","service_id":"tls","backend":{"host":"127.0.0.1","allowed_ranges":["127.0.0.0/8"],"addressFamily":"ipv4","port":49546},"authentication_review":{"management":false,"authentication":"confirmed"}},{"enabled":true,"type":"tcp_forward","name":"raw","service_id":"raw","listen_port":49550,"backend":{"host":"127.0.0.1","allowed_ranges":["127.0.0.0/8"],"addressFamily":"ipv4","port":49546},"authentication_review":{"management":false,"authentication":"confirmed"}},{"service_id":"web","type":"https_proxy","certificate_mode":"inherit","name":"web","hostname":"home.iwonderful.top","upstream_scheme":"http","enabled":true,"backend":{"host":"127.0.0.1","allowed_ranges":["127.0.0.0/8"],"addressFamily":"ipv4","port":49545},"authentication_review":{"management":false,"authentication":"confirmed"}},{"enabled":true,"type":"ssh","name":"ssh","service_id":"ssh","backend":{"host":"127.0.0.1","allowed_ranges":["127.0.0.0/8"],"addressFamily":"ipv4","port":49547},"authentication_review":{"management":false,"authentication":"confirmed"}}],"default_certificate_ref":"acme:home_rsa","publication_policy":{"mode":"continuous","boot_restore":false},"schema_version":2},"active_config":{"access_profile":{"listeners":[{"listener_id":"v6","network":"lan","address":"fd89:878e:a47f:0:0:0:0:1","family":"ipv6","port":49543}]},"services":[{"enabled":true,"type":"tls_passthrough","name":"tls","hostname":"tls.fixture.home","service_id":"tls","backend":{"host":"127.0.0.1","allowed_ranges":["127.0.0.0/8"],"addressFamily":"ipv4","port":49546},"authentication_review":{"management":false,"authentication":"confirmed"}},{"enabled":true,"type":"tcp_forward","name":"raw","service_id":"raw","listen_port":49550,"backend":{"host":"127.0.0.1","allowed_ranges":["127.0.0.0/8"],"addressFamily":"ipv4","port":49546},"authentication_review":{"management":false,"authentication":"confirmed"}},{"service_id":"web","type":"https_proxy","certificate_mode":"inherit","name":"web","hostname":"home.iwonderful.top","upstream_scheme":"http","enabled":true,"backend":{"host":"127.0.0.1","allowed_ranges":["127.0.0.0/8"],"addressFamily":"ipv4","port":49545},"authentication_review":{"management":false,"authentication":"confirmed"}},{"enabled":true,"type":"ssh","name":"ssh","service_id":"ssh","backend":{"host":"127.0.0.1","allowed_ranges":["127.0.0.0/8"],"addressFamily":"ipv4","port":49547},"authentication_review":{"management":false,"authentication":"confirmed"}}],"default_certificate_ref":"acme:home_rsa","publication_policy":{"mode":"continuous","boot_restore":false},"schema_version":2},"schema_versions":[1,2],"saved_config":{"access_profile":{"listeners":[{"listener_id":"v6","network":"lan","address":"fd89:878e:a47f:0:0:0:0:1","family":"ipv6","port":49543}]},"services":[{"enabled":true,"type":"tls_passthrough","name":"tls","hostname":"tls.fixture.home","service_id":"tls","backend":{"host":"127.0.0.1","allowed_ranges":["127.0.0.0/8"],"addressFamily":"ipv4","port":49546},"authentication_review":{"management":false,"authentication":"confirmed"}},{"enabled":true,"type":"tcp_forward","name":"raw","service_id":"raw","listen_port":49550,"backend":{"host":"127.0.0.1","allowed_ranges":["127.0.0.0/8"],"addressFamily":"ipv4","port":49546},"authentication_review":{"management":false,"authentication":"confirmed"}},{"service_id":"web","type":"https_proxy","certificate_mode":"inherit","name":"web","hostname":"home.iwonderful.top","upstream_scheme":"http","enabled":true,"backend":{"host":"127.0.0.1","allowed_ranges":["127.0.0.0/8"],"addressFamily":"ipv4","port":49556},"authentication_review":{"management":false,"authentication":"confirmed"}},{"enabled":true,"type":"ssh","name":"ssh","service_id":"ssh","backend":{"host":"127.0.0.1","allowed_ranges":["127.0.0.0/8"],"addressFamily":"ipv4","port":49547},"authentication_review":{"management":false,"authentication":"confirmed"}}],"default_certificate_ref":"acme:home_rsa","publication_policy":{"mode":"continuous","boot_restore":false},"schema_version":2},"intent_revision":2,"state_version":1,"active_revision":1}
+PASS real business certificate/key source hashes + ownership/mode preserved server-only
+PASS final owned listeners absent; private keys removed; live journal/config/management baseline unchanged
+Traceback (most recent call last):
+  File "D:\DevPortal\homelede\homepublish-product\homepublish\tests\run-device-tcp-p4-ui.py", line 21, in <module>
+    exec(compile(tree,str(p),'exec'),{'__file__':str(p),'__name__':'__main__'})
+    ~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\DevPortal\homelede\homepublish-product\homepublish\tests\run-device-tcp-p4-policy.py", line 144, in <module>
+    exercise()
+    ~~~~~~~~^^
+  File "D:\DevPortal\homelede\homepublish-product\homepublish\tests\run-device-tcp-p4-policy.py", line 7, in exercise
+    SCP=['scp','-O','-o','ProxyCommand=none','-o','ProxyJump=none','-o','IdentitiesOnly=yes','-o','BatchMode=yes','-i','D:/DevPortal/CloudHosts/HomePri.key','-P','222']
+            ^^^^^^^^^^^^^^^^^^^^
+AssertionError: ('browser lifecycle failed', 1)

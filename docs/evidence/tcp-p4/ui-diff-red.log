@@ -1,0 +1,9 @@
+AssertionError [ERR_ASSERTION]: ["undefined / 名称：\"家庭 SSH\" → \"新版 SSH\"","undefined / 后端 / 家庭网段：{\"host\":\"127.0.0.1\",\"port\":22} → {\"host\":\"127.0.0.1\",\"port\":23}","删除 undefined（应用关闭其连接，并替换整组）","新增 undefined：{\"service_id\":\"new-tcp\",\"name\":\"新增 TCP\",\"type\":\"tcp_forward\",\"listen_port\":49901}；证书 {\"mode\":\"override\",\"binding\":\"独立指定\"}"]
+    at D:\DevPortal\homelede\homepublish-product\luci-app-homepublish\tests\p4-overview-browser.cjs:20:8 {
+  generatedMessage: false,
+  code: 'ERR_ASSERTION',
+  actual: false,
+  expected: true,
+  operator: '==',
+  diff: 'simple'
+}

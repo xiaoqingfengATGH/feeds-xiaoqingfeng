@@ -1,0 +1,60 @@
+P1 read-only network inventory / exact binding resolution
+Base observed: feature/homepublish-product ef24a28
+Scope: only network-inventory.lua, device-tcp-p1-network.lua and this evidence.
+Target: authorized root@127.0.0.1 port 222 (real OpenWrt Lua 5.1.5).
+SSH options: -o ProxyCommand=none -o ProxyJump=none -o IdentitiesOnly=yes -o BatchMode=yes -i D:/DevPortal/CloudHosts/HomePri.key
+SCP: -O and same options, -P 222.
+Remote root: /tmp/homepublish-tcp-p1-network, created with umask 077.
+No local Lua tests were run. No installed paths, configuration, services, listeners or firewall rules were modified.
+
+API
+local inventory = dofile('/usr/share/homepublish/network-inventory.lua')
+collect() -> inventory | nil,error
+normalize(snapshot,zones) -> inventory | nil,error (pure)
+resolve(binding,inventory) -> resolved | nil,error (pure)
+snapshot: ubus network.interface dump result with interface dense array.
+zones: dense array of {name=string,network=dense string array or whitespace-separated string}; absent network means no logical-network association.
+collect uses real ubus.connect():call('network.interface','dump',{}) and real uci.cursor():load/foreach('firewall','zone')/unload only. No shell and no client input.
+inventory: {status='ok',networks=[{network,device,up,addresses=[{family,address,prefix?,scope,internal}],zones=[string]}],summary=string}
+Address scopes: IPv4 private/global, IPv6 ula/gua. IPv6 delegated prefix local-address included; routed prefixes themselves are not local addresses.
+Only IPv6 ULA fc00::/7 and GUA 2000::/3 eligible. Wildcard, loopback, link-local, multicast and IPv4-mapped excluded; IPv4 0/8,127/8,169.254/16,224/3 excluded.
+summary: deterministic length-prefixed canonical network/device/up/zone/address/prefix/scope summary, NOT a cryptographic digest. No default network/address selected. Duplicate networks remain visible and resolve blocks ambiguity.
+binding: {network,family,address}; address matching is exact string equality, not IPv6 spelling normalization.
+resolved: {network,device,zone,family,address,scope,internal,inventory_summary}
+error: {error_code,field,error,retryable=true}. NETWORK_UNAVAILABLE uses access_profile.listeners.network; ADDRESS_UNAVAILABLE uses access_profile.listeners.address; ZONE_AMBIGUOUS uses access_profile.listeners.network. Callers can add listener array index based on their own iteration. Failed collection/malformed snapshot returns nil,structured error, never empty success.
+
+Device RED 1 (before module existed)
+Command: lua /tmp/homepublish-tcp-p1-network/test.lua /tmp/homepublish-tcp-p1-network
+Exit: 1
+lua: /tmp/homepublish-tcp-p1-network/test.lua:4: P1 inventory module missing
+
+Device GREEN 1 (real ubus/UCI)
+Same command, exit 0:
+PASS live fixed ubus/UCI inventory and exact LAN resolution
+Real target observations: lan -> br-lan -> zone lan, IPv4 192.168.1.2/24; delegated local IPv6 fd89:878e:a47f::1/60. Docker down; loopback never offers eligible addresses.
+
+Harness correction (not product RED): missing closing fixture brace initially caused Lua parse failure; corrected and rerun before interpreting behavioral RED.
+Device RED 2: malformed IPv4 999.2.3.4 was silently excluded instead of unknown.
+Exit 1, check_error assertion at test.lua:66; preceding live and normal fixture assertions passed.
+Fix: distinguish invalid IPv4 syntax/range from valid-but-ineligible addresses and fail normalization.
+
+Device RED 3: malformed IPv6 2001:::1 was silently excluded instead of unknown.
+Command: lua /tmp/homepublish-tcp-p1-network/device-tcp-p1-network.lua /tmp/homepublish-tcp-p1-network
+Exit 1, check_error assertion at device-tcp-p1-network.lua:71.
+Preceding output:
+PASS live fixed ubus/UCI inventory and exact LAN resolution
+PASS classification, delegated local IPv6, exclusion, ambiguity, down/missing, malformed, deterministic summary
+Fix: invalid IPv6 syntax returns distinct invalid marker propagated as NETWORK_UNAVAILABLE.
+
+Final device GREEN (same command, final source and final test)
+Exit 0:
+PASS live fixed ubus/UCI inventory and exact LAN resolution
+PASS classification, delegated local IPv6, exclusion, ambiguity, down/missing, malformed, deterministic summary
+PASS malformed IPv6 and real-adapter dependency failure returns structured unknown
+drwx------    2 root     root           100 Oct 15 15:25 /tmp/homepublish-tcp-p1-network
+Device SHA256:
+eda23190a0638829ca252e82915a4a3244d2b99ee4ec4cf86872214c3669cd8d  network-inventory.lua
+0a3556bbd075260eff9119db2547b6a69e619efb3870c44642b75e26cd1e5b97  device-tcp-p1-network.lua
+Coverage includes real collector, exact LAN resolution, IPv4 private and IPv6 ULA/GUA, delegated local IPv6, unsafe address exclusion, multi-zone ambiguity, network duplicate ambiguity, down/missing network, disappeared address, malformed/sparse structures, malformed IPv4/IPv6 and failed ubus connection. Fault injection only replaces package.loaded.ubus inside the test process and restores it; real successful collection is independently exercised first.
+RPC/provider/schema integration is parent-owned and is not asserted by this module-only acceptance.
+Cleanup and local/device hash comparison are recorded in tcp-p1-network-cleanup.txt.

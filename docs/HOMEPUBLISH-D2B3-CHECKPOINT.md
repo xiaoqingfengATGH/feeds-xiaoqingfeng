@@ -1,0 +1,35 @@
+# D2b3 private socketpair local gate GREEN; production activation disabled
+
+Baseline e85f3f91332a7d57691e725075e7b0041b1de8d7, exclusive feature/homepublish-product; local WSL non-root only.
+
+RED before implementation: real make guardian-nginx exit2; nine records, nine channel EPERM, remaining_owned empty. Evidence in profile scratch/d2b2-pair-red. New private-pair-probe compiled with -Wall -Wextra -Werror and old generic profile failed exit134 because provider could not report successful internal SCM_RIGHTS receipt (global recvmsg deny). Generic protection is not being removed.
+
+Feasibility prototype: Linux connected SOCK_STREAM and SOCK_SEQPACKET socketpair endpoints can bind pathname addresses, but listen returns EINVAL before/after shutdown, external connect ECONNREFUSED, /proc/self/fd socket reopen ENXIO. SOCK_DGRAM pair can bind too and is not safe to permit. Implemented private profile permits AF_UNIX SOCK_STREAM protocol0 socketpair only (optional CLOEXEC/NONBLOCK), denies socket(AF_UNIX) and all other domains except IPv4/IPv6. No numeric FD allowlist. Generic callback retains global recvmsg/recvmmsg denial.
+
+Contract: trusted fixed non-root provider, not hostile filesystem sandbox. External same-UID process interference, mutable executable/library/config authority and native TLS cleanup remain separate unresolved production gates. Production CLI activation remains unavailable.
+
+## Actual capability closure / trust boundary
+
+Private selection exists ONLY in an HP_GUARD_TEST internal test entry absent from public header and production binary. Fixed cached Nginx fixture selects it internally; no public callback flag or arbitrary exec CLI. Production fixed executable/inode/config authority is NOT implemented. Watchdog/guardian remain trusted fixed code, not hostile sandboxed applications.
+
+close_range sweeps external FDs; private argument must be a pipe, bootstrap IPC closes before callback entry. At trusted provider entry no external AF_UNIX socket survives. Real pre-inherited listening/connected/control/regular objects are checked by dev/inode against guardian/watchdog/provider FDs; controller originals preserve identity/control write-read. Receivable UNIX endpoints then arise only from post-boundary private connected STREAM socketpairs or internal SCM_RIGHTS/dup/fcntl copies. Dynamic close/FD reuse, dup/dup2/dup3/F_DUPFD_CLOEXEC transfers pass; no FD-number trust.
+
+Both pathname and abstract pair binds are tested: listen EINVAL before/after shutdown, actual outside connector ECONNREFUSED. Connecting a private stream pair to a foreign listener and addressed sendmsg carrying an endpoint return EISCONN. Raw AF_UNSPEC connect returns EINVAL and subsequent internal transfer works. Bind cannot export an accepting peer. Private socket(AF_UNIX) is EPERM; all other domain values 0..63 except INET/INET6 (including netlink/vsock/AF_ALG) are EPERM. DGRAM/SEQPACKET pairs and non-UNIX pairs denied. This is not an INET type/protocol/firewall scope authorization policy or all-syscall allowlist.
+
+Socket O_RDWR reopen through /proc/self, thread-self and ancestor FD is ENXIO. Ancestor O_PATH open may succeed, but recvmsg on it and its dup is EBADF: no socket capability. pidfd_getfd/ptrace/process_vm read-write/io_uring setup/setns/unshare EPERM; existing identity/namespace/foreign ABI/x32 restrictions retained. dup/fcntl copy owned objects only. Real IPv4 AND IPv6 TCP sendmsg with SCM_RIGHTS transmits its byte but recvmsg has msg_controllen0/no imported descriptors.
+
+Real external pathname AND abstract senders queue a byte plus sentinel-file SCM_RIGHTS FD against old generic policy, whose recvmsg is EPERM. Against private profile the listener remains live but creating a UNIX connector is EPERM; recvmsg(-1) EBADF proves syscall enabled. Sentinel contents preserved. Regular-file opens remain subject to normal DAC; not a filesystem sandbox. Unsandboxed same-UID ancestor/root ptrace/pidfd interference is explicitly OUTSIDE this contract, not blocked by child's seccomp. Arbitrary hostile callbacks/mutable exec authority are not covered.
+
+Upstream Linux v6.18 source reasoning: net/unix/af_unix.c socketpair sets TCP_ESTABLISHED/SS_CONNECTED; stream connect requires TCP_CLOSE; listen requires TCP_CLOSE/TCP_LISTEN; addressed stream sendmsg EISCONN. net/core/scm.c SCM_RIGHTS handling is PF_UNIX-only. Sources retrieved into profile scratch/d2b3-pair-final from https://raw.githubusercontent.com/torvalds/linux/v6.18/net/unix/af_unix.c and https://raw.githubusercontent.com/torvalds/linux/v6.18/net/core/scm.c . This is upstream reasoning plus actual WSL tests, not an exact Microsoft kernel-source audit.
+
+## Final execution
+
+Intermediate test-first local commit 60d8cc3. WSL x86_64 Linux6.18.54.1 UID/GID1000; all real master/workers NoNewPrivs1/Seccomp2. Final command `export TMPDIR=/home/eric/homestun-sdk-check HP_D2B2_EVIDENCE=/mnt/c/Users/xiaoq/AppData/Local/hermes/profiles/ta/cache/scratch/d2b3-pair-final; make -C homepublish/tests guardian direct product guardian-nginx` exit0. Retained 19 tree cases and startup/lifecycle/direct/boundary/product/recipe/package regression gates. New private C probe PASS for pathname and abstract. Twelve integration records = four foreign attack records + eight real Nginx cases; channel_EPERM0/internal_errors0/remaining_owned[]. Two workers, KILL/rebuild, same-master multi-window renewal, CA/SAN TLS IPv4/IPv6, original temporary deadline and controller/guardian/watchdog each single STOP/KILL close stream. Owned PIDs/listeners absent BEFORE fallback; independent post-run 16 loopback listener attempts refused; no runtime fixture dirs remain.
+
+Observed temporary closure1205ms from start; controller KILL/STOP1/536ms, guardian1/181ms, watchdog10/273ms since fault observation. Measurements, not target hard-latency promises. Additional O_PATH regression initially assumed ENOTSOCK; real kernel probe returned EBADF and expectation corrected before final full rerun. No channel assertions removed/suppressed.
+
+SHA256: renewable-guard.c `f9fe9c4448976daa438297f34848e2ee108fdeb339ef1831baf501dba2d32d36`; cached Nginx `39526014e291b8d70f49da6de5d5f3641d966d60da976a54e9c0153bd2bc6ef3`; final.log `7e9360a15a7eef7287c665dc7c1548ca62c65c613cba9ede40082b523908da6a`; summary.json `a5da12579a8318c01d4ecfe2ddbbeb001c2a8e6d5fd27f44a99423eff05a6598`. Diff whitespace/added-line static scan pass. No independent reviewer spawned in this one-shot subagent; parent independent review still required.
+
+## Still blocked / preserved
+
+Native TLS/key/config/pid/temp cleanup NOT implemented: file listings before harness deletion still show artifacts. Harness deletion is not native ownership acceptance. Production immutable exec/inode/library/config/certificate authority, controller scope/DNS/health/journal/fw chain, typed ERROR, SDK/aarch64/procd/public reachability/target latency gates remain. Existing architecture/x32 tests retained; aarch64 not run. Start/Apply unsupported, activation_ready=false, production guardian helper exit78 preserved. No production activation.

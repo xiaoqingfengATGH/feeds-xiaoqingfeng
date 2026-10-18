@@ -1,0 +1,79 @@
+CONSOLE Failed to load resource: the server responded with a status of 404 (Not Found)
+LOADED 旧版配置需要确认迁移
+
+读取不会修改配置。预览保留全部入口与服务；确认保存前备份旧配置，不启动发布。
+
+预览迁移确认迁移
+MIGRATION RESULT HomePublish — 发布入口设置
+精确选择本机监听地址；保存不启动。IPv4 上级路由器需要手工转发到本机地址及端口，公网端口由上级配置决定。
+监听设置
+地址族
+IPv4
+IPv6
+IPv4 / IPv6 双栈
+IPv4 网络
+lan · br-lan
+docker · docker0
+loopback · lo
+IPv4 地址
+192.168.1.2/24
+IPv4 防火墙区域
+lan
+TCP 监听端口
+默认证书
+HTTPS 默认证书
+未选择
+home.iwonderful.top · ECC · Jan 2 14:19:01 2027 GMT
+home.iwonderful.top · RSA · Jan 2 20:59:28 2027 GMT
+仅供 HTTPS 反代继承，TLS 透传、SSH 和 TCP 转发不需要本机证书。
+发布策略
+发布期限
+持续：直到停止
+临时：原截止不延长
+开机恢复
+手动停止或临时剩余时间不确定时不会恢复。
+
+保存只更新本应用配置，不启动发布
+
+保存重置
+PASS explicit migration preview/cancel/confirm/readback
+ENTRY DOM [{"id":"widget.cbid.json.cfg_listener.family","text":"IPv4IPv6IPv4 / IPv6 双栈","value":"ipv4"},{"id":"widget.cbid.json.cfg_listener.ipv4_network","text":"lan · br-landocker · docker0loopback · lo","value":"lan"},{"id":"widget.cbid.json.cfg_listener.ipv4_address","text":"192.168.1.2/24","value":"192.168.1.2"},{"id":"cbid.json.cfg_listener.ipv4_zone","text":"","value":"lan"},{"id":"widget.cbid.json.cfg_listener.ipv6_network","text":"lan · br-landocker · docker0loopback · lo","value":"lan"},{"id":"widget.cbid.json.cfg_listener.ipv6_address","text":"fd89:878e:a47f::1/60 · 内网 IPv6，不能据此直接公网访问","value":"fd89:878e:a47f::1"},{"id":"cbid.json.cfg_listener.ipv6_zone","text":"","value":"lan"},{"id":"widget.cbid.json.cfg_listener.port","text":"","value":"24443"},{"id":"widget.cbid.json.cfg_policy.default_certificate_ref","text":"未选择home.iwonderful.top · ECC · Jan  2 14:19:01 2027 GMThome.iwonderful.top · RSA · Jan  2 20:59:28 2027 GMT","value":""},{"id":"widget.cbid.json.cfg_policy.mode","text":"持续：直到停止临时：原截止不延长","value":"continuous"},{"id":"widget.cbid.json.cfg_policy.temporary_minutes","text":"","value":"30"},{"id":"cb5c3b8369","text":"","value":"1"},{"id":"hp-save","text":"保存","value":""},{"id":"hp-reset","text":"重置","value":""}]
+PASS entry native form/save/private native journal/readback/reload, no activation
+PASS native TCP popup Save + private journal reload
+PASS stable IDs add-two/delete-first/save/reload/add
+PASS dirty modal Save/delete and clean cancellation
+PASS native ssh popup/private Save/reload/type-specific serialization
+PASS native tls_passthrough popup/private Save/reload/type-specific serialization
+PASS native https_proxy popup/private Save/reload/type-specific serialization
+ACTUAL_NETWORK_INVENTORY {"status":"ok","summary":"107:3:lan|6:br-lan|4:true|z3:lan|a4:ipv411:192.168.1.22:247:private|a4:ipv624:fd89:878e:a47f:0:0:0:0:12:603:ula|36:6:docker|7:docker0|5:false|z6:docker|22:8:loopback|2:lo|4:true","networks":[{"zones":["lan"],"network":"lan","up":true,"device":"br-lan","addresses":[{"prefix":24,"address":"192.168.1.2","family":"ipv4","internal":true,"scope":"private"},{"prefix":60,"address":"fd89:878e:a47f::1","family":"ipv6","internal":true,"scope":"ula"}]},{"zones":["docker"],"network":"docker","up":false,"device":"docker0","addresses":[]},{"zones":[],"network":"loopback","up":true,"device":"lo","addresses":[]}]}
+PASS actual LAN dualstack select/save/reload and entry-to-service preservation
+PASS services-to-entry default certificate/policy/both listeners preserved across page refresh
+EMPTY_NETWORK_VALIDATION Save error
+
+An error occurred while saving the form:
+
+Option "IPv4 地址" contains an invalid input value. Expecting: non-empty value
+
+Dismiss
+PASS unavailable network retains explicit address, rejects Save without revision/write/wildcard, reset restores
+PASS real two-page stale revision refusal; draft retained; reset cancel and confirm recover latest revision
+PASS existing HTTPS-to-TCP cancel clean; Save strips hidden HTTPS fields; reverse switch strips port/override and preserves inherit
+CERTIFICATE_TABLE {"headers":["证书域名","密钥类型","包含域名（SAN）","有效期至","状态","被哪些服务使用"],"rows":[{"cells":["home.iwonderful.top","RSA","home.iwonderful.top","Jan  2 20:59:28 2027 GMT","有效","入口默认, p2-https.example.test"],"bounds":[{"left":5,"right":232.046875},{"left":232.046875,"right":351.296875},{"left":351.296875,"right":578.34375},{"left":578.34375,"right":861.65625},{"left":861.65625,"right":937.84375},{"left":937.84375,"right":1275}]},{"cells":["home.iwonderful.top","ECC","home.iwonderful.top","Jan  2 14:19:01 2027 GMT","有效","未被使用"],"bounds":[{"left":5,"right":232.046875},{"left":232.046875,"right":351.296875},{"left":351.296875,"right":578.34375},{"left":578.34375,"right":861.65625},{"left":861.65625,"right":937.84375},{"left":937.84375,"right":1275}]}],"actions":0,"controls":0}
+PASS readonly certificate actual inventory count/six headers/six cells/no action column/default+inherit usage excludes passthrough
+NARROW entry {"viewport":375,"body":375,"html":375,"overflow":[]}
+NARROW services {"viewport":375,"body":375,"html":375,"overflow":[{"tag":"TABLE","cls":"table cbi-section-table","right":693.484375},{"tag":"THEAD","cls":"thead cbi-section-thead","right":693.484375},{"tag":"TR","cls":"tr cbi-section-table-titles anonymous","right":693.484375},{"tag":"TH","cls":"th cbi-section-table-cell","right":388.0625},{"tag":"TH","cls":"th cbi-section-table-cell","right":421.0625},{"tag":"TH","cls":"th cbi-section-table-cell","right":549.5},{"tag":"TH","cls":"th cbi-section-table-cell cbi-section-actions","right":693.484375},{"tag":"TBODY","cls":"tbody cbi-section-tbody","right":693.484375},{"tag":"TR","cls":"tr cbi-section-table-row","right":693.484375},{"tag":"TD","cls":"td cbi-value-field","right":388.0625},{"tag":"TD","cls":"td cbi-value-field","right":421.0625},{"tag":"TD","cls":"td cbi-value-field","right":549.5}]}
+NARROW certificates {"viewport":375,"body":375,"html":375,"overflow":[{"tag":"TABLE","cls":"table cbi-section-table","right":555.71875},{"tag":"THEAD","cls":"thead cbi-section-thead","right":555.71875},{"tag":"TR","cls":"tr cbi-section-table-titles anonymous","right":555.71875},{"tag":"TH","cls":"th cbi-section-table-cell","right":397.21875},{"tag":"TH","cls":"th cbi-section-table-cell","right":430.21875},{"tag":"TH","cls":"th cbi-section-table-cell","right":555.71875},{"tag":"TBODY","cls":"tbody cbi-section-tbody","right":555.71875},{"tag":"TR","cls":"tr cbi-section-table-row","right":555.71875},{"tag":"TD","cls":"td cbi-value-field","right":397.21875},{"tag":"TD","cls":"td cbi-value-field","right":430.21875},{"tag":"TD","cls":"td cbi-value-field","right":555.71875},{"tag":"TR","cls":"tr cbi-section-table-row","right":555.71875}]}
+INSTALLED_FOUR_UNCHANGED_NO_WRITES
+AssertionError [ERR_ASSERTION]: Expected values to be strictly equal:
+
+0 !== 1
+
+    at module.exports (D:\DevPortal\homelede\homepublish-product\luci-app-homepublish\tests\tcp-ingress-device-extended.cjs:50:197)
+    at async D:\DevPortal\homelede\homepublish-product\luci-app-homepublish\tests\tcp-ingress-device-probe.cjs:66:38 {
+  generatedMessage: true,
+  code: 'ERR_ASSERTION',
+  actual: 0,
+  expected: 1,
+  operator: 'strictEqual',
+  diff: 'simple'
+}

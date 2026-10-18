@@ -1,0 +1,18 @@
+# HomeSTUN corrected LuCI package — final checkpoint
+
+- Real SDK artifact: `docs/artifacts/luci-app-homestun_0.1.0-r1_all.ipk`, **4239 bytes**, SHA256 `9fb1269c6b8f3c679d07aa8631caa1e3ea3a817670402a039b37e6f4178949b2`. Supersedes obsolete `c7a0dc...` (3614 bytes) and intermediate `ca8fcc...` packages.
+- Nonroot WSL eric; OpenWrt SDK24.10.5 x86-64; exclusive build.lock, live process checks, bounded clean/compile; final build and inspector exit0. Standard feed discovery/index/symlink verified. LuCI pinned d88390be4ec9722cb427fee03368fc8c8582627d. BuildPackage discovery signature retained.
+- `homestun-luci-sdk.json` binds all current LuCI files to refreshed Linux feed, including source-only tests. Inspector binds browser settings/schema/ACL hashes and compares packaged JS byte-for-byte with SDK jsmin output. Five-file payload allowlist excludes captured target assets, screenshots, fixture JSON, tests and secrets.
+- Inspection verifies architecture all, homestun/luci-base dependencies, view class export, explicit Save → homestun-scoped commit → committed-status refresh, disabled Save & Apply, silent row lifecycle, minimal homestun UCI/status plus uci.commit ACL. Payload root-owned; directories0755, regular files0644, dispatcher0755.
+- New packaging issue caught: DrvFS0777 propagated into initial rebuilt package. RED saved in `homestun-luci-permissions-red.txt`; build script normalizes isolated Linux feed modes, cleans only this LuCI package to invalidate mode-only stale cache, rebuilds; final inspection GREEN. No production source edits needed.
+- No HomeSTUN activation/init/config/firewall payload or activation hooks. **Stock LuCI control scripts do exist**: default_postinst/default_prerm and LuCI cache invalidation/rpcd HUP. Inspected, not executed on router; do not claim absence of all installation scripts.
+- Core artifact preserved, SHA256 `84087e052d2cefacc7ac943ef9bc74000206379d80ca31b4de5f9c58d0ca4c22`; immutable core production binding unchanged, packaged default disabled.
+- Existing [genuine target-assets browser PASS](homestun-luci-browser-PASS.md) matches current source hashes: real DOM Save commits enabled/TTL/host/upstream, unrelated config remains pending, damaged disabled save preserves inactive values, session/committed/backend/status agree, zero page errors, no service apply/start/reload/restart. Cleanup already recorded. This rebuild did not rerun router/browser operations or install corrected IPK.
+- Final local regression: **10 passed / 0 failed**, four explicit Node files (UI4, Save2, validation2, row lifecycle2), `homestun-luci-tests.txt`.
+- Final independent review pending. Real enabled HomeSTUN engines/procd, target HTTPS, real STUN/independent public TCP reachability, Cloudflare deployment/persistence remain independent gates. Mapping unknown, reachability unverified; not production-ready.
+- Final SDK make list empty. No router writes/install, activation, CF/NAT/firewall changes, git commit/merge/push/PR in this task.
+
+## Evidence / reproduction
+`homestun-luci-build-final.txt`, `homestun-luci-inspection.json` and `.txt`, `homestun-luci-sdk.json`, `homestun-luci-discovery-index.txt` are current evidence. Historical discovery failures/old artifact records are superseded. Global SDK unrelated missing-dependency warnings are retained, not claimed fixed.
+
+From repository: `wsl.exe -u eric --exec python3 /mnt/d/DevPortal/homelede/feeds-xiaoqingfeng-homestun/docs/homestun-luci-build.py`, then same with `homestun-luci-inspect.py`. Build/inspection scripts use LF. Node: `node --test luci-app-homestun/tests/ui.test.cjs luci-app-homestun/tests/save.test.cjs luci-app-homestun/tests/validation.test.cjs luci-app-homestun/tests/row-lifecycle.test.cjs`.

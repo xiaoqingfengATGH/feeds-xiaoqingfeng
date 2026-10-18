@@ -1,0 +1,4 @@
+P3_TASK19_RENDER_GREEN
+PASS private processes exited; all snapshots + fixture keys removed
+PASS live journal + firewall/management/proxy configs + system nginx unchanged
+netstat: showing only processes with your user ID

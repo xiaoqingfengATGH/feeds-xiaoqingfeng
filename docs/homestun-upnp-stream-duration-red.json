@@ -1,0 +1,64 @@
+{
+  "mode": "corrected",
+  "scope": "WSL loopback only; no UPnP",
+  "ports": [
+    46463,
+    45501,
+    46381
+  ],
+  "nginx_version": "nginx version: nginx/1.26.1 (x86_64-pc-linux-gnu)",
+  "raw_http": {
+    "headers": "HTTP/1.1 200 OK\r\nServer: nginx/1.26.1\r\nDate: Mon, 12 Oct 2026 12:17:17 GMT\r\nContent-Type: text/plain\r\nTransfer-Encoding: chunked\r\nConnection: close\r\nCache-Control: no-store",
+    "ticks": [
+      {
+        "number": 1,
+        "source_monotonic": 284.603953442,
+        "received_elapsed": 0.004756244000020615
+      },
+      {
+        "number": 2,
+        "source_monotonic": 286.604320075,
+        "received_elapsed": 2.0052587090000316
+      },
+      {
+        "number": 3,
+        "source_monotonic": 288.604284694,
+        "received_elapsed": 4.0047792770000115
+      },
+      {
+        "number": 4,
+        "source_monotonic": 290.604132213,
+        "received_elapsed": 6.0047695289999865
+      },
+      {
+        "number": 5,
+        "source_monotonic": 292.604154293,
+        "received_elapsed": 8.004620859
+      },
+      {
+        "number": 6,
+        "source_monotonic": 294.604097327,
+        "received_elapsed": 10.004584727000008
+      },
+      {
+        "number": 7,
+        "source_monotonic": 296.604203053,
+        "received_elapsed": 12.00491618000001
+      }
+    ],
+    "bytes": 370,
+    "headers_elapsed": 0.0045516750000160755,
+    "outcome": "EOF",
+    "elapsed": 12.004954553999994
+  },
+  "status": "FAIL",
+  "error": "Source ended before bounded observation window; cannot reuse for cutoff",
+  "nginx_error": "",
+  "cleanup": {
+    "process_exited": true,
+    "46463_closed": true,
+    "45501_closed": true,
+    "46381_closed": true,
+    "fixture_directory_removed": true
+  }
+}

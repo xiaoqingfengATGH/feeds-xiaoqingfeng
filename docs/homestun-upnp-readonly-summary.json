@@ -1,0 +1,229 @@
+{
+  "started": "2026-10-12T10:17:48.246555+00:00",
+  "scope": "stage1 read only",
+  "request_log": [
+    {
+      "tag": "device",
+      "action": "HTTP_GET",
+      "url": "http://192.168.1.1:5351/rootDesc.xml",
+      "status": 200,
+      "peer": "192.168.1.1",
+      "port": 5351,
+      "sha256": "82b35b8d740915cae79ca36cfeebc5bd664a63c13ed0e6ff52bbd98ebce304e2",
+      "upnp_error": null
+    },
+    {
+      "tag": "scpd",
+      "action": "HTTP_GET",
+      "url": "http://192.168.1.1:5351/WANIPCn.xml",
+      "status": 200,
+      "peer": "192.168.1.1",
+      "port": 5351,
+      "sha256": "0832b39b8c239e3d57d4cd6cb3a283d30cd7cda6a1af7579fd9b90995482188b",
+      "upnp_error": null
+    },
+    {
+      "tag": "external",
+      "action": "GetExternalIPAddress",
+      "url": "http://192.168.1.1:5351/ctl/IPConn",
+      "status": 200,
+      "peer": "192.168.1.1",
+      "port": 5351,
+      "sha256": "844ee2ffd709bb476ca821629d795351c893011463e5314eefd953aa06079e6e",
+      "upnp_error": null
+    },
+    {
+      "tag": "mapping-00",
+      "action": "GetGenericPortMappingEntry",
+      "url": "http://192.168.1.1:5351/ctl/IPConn",
+      "status": 200,
+      "peer": "192.168.1.1",
+      "port": 5351,
+      "sha256": "b857cc80603ad935242a8670a87ac5c567841b085607088534cd8289d5ea82fe",
+      "upnp_error": null
+    },
+    {
+      "tag": "mapping-01",
+      "action": "GetGenericPortMappingEntry",
+      "url": "http://192.168.1.1:5351/ctl/IPConn",
+      "status": 200,
+      "peer": "192.168.1.1",
+      "port": 5351,
+      "sha256": "9a045188547cbcab0913c0a8c07ef7f46d0e71a4c96c9b43218519ca3753e50f",
+      "upnp_error": null
+    },
+    {
+      "tag": "mapping-02",
+      "action": "GetGenericPortMappingEntry",
+      "url": "http://192.168.1.1:5351/ctl/IPConn",
+      "status": 200,
+      "peer": "192.168.1.1",
+      "port": 5351,
+      "sha256": "1e533ad91909b8dd91526f12cd2851c9131829e0dd13e7b3a40d58f92e610161",
+      "upnp_error": null
+    },
+    {
+      "tag": "mapping-03",
+      "action": "GetGenericPortMappingEntry",
+      "url": "http://192.168.1.1:5351/ctl/IPConn",
+      "status": 200,
+      "peer": "192.168.1.1",
+      "port": 5351,
+      "sha256": "198401fbf82747f6753078b60dc7b7114eea325e880096d23b8452a8ebdde17f",
+      "upnp_error": null
+    },
+    {
+      "tag": "mapping-04",
+      "action": "GetGenericPortMappingEntry",
+      "url": "http://192.168.1.1:5351/ctl/IPConn",
+      "status": 200,
+      "peer": "192.168.1.1",
+      "port": 5351,
+      "sha256": "edfb26cbca6abebb7cf064525851f53f3477d31b22466f0451d105c852cf76e4",
+      "upnp_error": null
+    },
+    {
+      "tag": "mapping-05",
+      "action": "GetGenericPortMappingEntry",
+      "url": "http://192.168.1.1:5351/ctl/IPConn",
+      "status": 200,
+      "peer": "192.168.1.1",
+      "port": 5351,
+      "sha256": "b57c61463223bc3a65cbc9d187e1f8d865d319ee299049444417cedcb229fc4e",
+      "upnp_error": null
+    },
+    {
+      "tag": "mapping-06",
+      "action": "GetGenericPortMappingEntry",
+      "url": "http://192.168.1.1:5351/ctl/IPConn",
+      "status": 200,
+      "peer": "192.168.1.1",
+      "port": 5351,
+      "sha256": "df3e05c07b26a37af5adcecb5ebf9b8a821e4acf972691753b4a4e92b8e518e3",
+      "upnp_error": null
+    },
+    {
+      "tag": "mapping-07",
+      "action": "GetGenericPortMappingEntry",
+      "url": "http://192.168.1.1:5351/ctl/IPConn",
+      "status": 200,
+      "peer": "192.168.1.1",
+      "port": 5351,
+      "sha256": "0aa862069f0ad488bea9dcbec8105197ff843e49a5f3a3c12f14a196c87e9f47",
+      "upnp_error": null
+    },
+    {
+      "tag": "mapping-08",
+      "action": "GetGenericPortMappingEntry",
+      "url": "http://192.168.1.1:5351/ctl/IPConn",
+      "status": 200,
+      "peer": "192.168.1.1",
+      "port": 5351,
+      "sha256": "cbbf5e67cc2b118ea3d8d0e41d51fd3fcac0b3966f927805736b314109004c61",
+      "upnp_error": null
+    },
+    {
+      "tag": "mapping-09",
+      "action": "GetGenericPortMappingEntry",
+      "url": "http://192.168.1.1:5351/ctl/IPConn",
+      "status": 500,
+      "peer": "192.168.1.1",
+      "port": 5351,
+      "sha256": "26becadf0f7d9eec5b3d4491060dfd8435ebab071d25b7b8fea51a420db5a27d",
+      "upnp_error": "713"
+    },
+    {
+      "tag": "candidate-18444-TCP",
+      "action": "GetSpecificPortMappingEntry",
+      "url": "http://192.168.1.1:5351/ctl/IPConn",
+      "status": 500,
+      "peer": "192.168.1.1",
+      "port": 5351,
+      "sha256": "54e29b45dd0e368db54e1f1d895e4f4cefa850e3c90a2d5fe2d1ad9a7a24db7c",
+      "upnp_error": "714"
+    }
+  ],
+  "ssdp_searches": 1,
+  "enumeration_limit": 32,
+  "mapping_writes": 0,
+  "implementation": "SDK-built single-datagram SSDP helper; existing curl 8.15 HTTP transport; local ElementTree XML parser. Avoid miniupnpc automatic discovery/URL fetching to enforce single M-SEARCH and exact origin.",
+  "origin": [
+    "http",
+    "192.168.1.1",
+    5351
+  ],
+  "location": "http://192.168.1.1:5351/rootDesc.xml",
+  "device": {
+    "deviceType": "urn:schemas-upnp-org:device:InternetGatewayDevice:1",
+    "friendlyName": "MiWiFi router",
+    "manufacturer": "Xiaomi",
+    "modelName": "MiWiFi Router",
+    "modelNumber": "20250514"
+  },
+  "service": {
+    "serviceType": "urn:schemas-upnp-org:service:WANIPConnection:1",
+    "serviceId": "urn:upnp-org:serviceId:WANIPConn1",
+    "controlURL": "http://192.168.1.1:5351/ctl/IPConn",
+    "SCPDURL": "http://192.168.1.1:5351/WANIPCn.xml"
+  },
+  "advertised_wan_services": [
+    {
+      "serviceType": "urn:schemas-upnp-org:service:WANIPConnection:1",
+      "serviceId": "urn:upnp-org:serviceId:WANIPConn1",
+      "controlURL": "http://192.168.1.1:5351/ctl/IPConn",
+      "SCPDURL": "http://192.168.1.1:5351/WANIPCn.xml"
+    }
+  ],
+  "supported_actions": [
+    "SetConnectionType",
+    "GetConnectionTypeInfo",
+    "RequestConnection",
+    "ForceTermination",
+    "GetStatusInfo",
+    "GetNATRSIPStatus",
+    "GetGenericPortMappingEntry",
+    "GetSpecificPortMappingEntry",
+    "AddPortMapping",
+    "DeletePortMapping",
+    "GetExternalIPAddress"
+  ],
+  "lease_argument_advertised": true,
+  "external_ip": "60.20.170.34",
+  "external_ip_fault": null,
+  "enumeration_terminal_fault": {
+    "index": 9,
+    "code": "713",
+    "description": "SpecifiedArrayIndexInvalid"
+  },
+  "enumeration_count": 9,
+  "enumeration_complete": true,
+  "enumeration_truncated": false,
+  "candidate": {
+    "port": 18444,
+    "protocol": "TCP",
+    "remote_host": "",
+    "fault": "714",
+    "fault_description": "NoSuchEntryInArray",
+    "status": "free_at_query_not_reserved"
+  },
+  "finite_ttl_verified": false,
+  "ttl_note": "Advertised lease argument/read lease values do not prove finite lease acceptance or expiry. No write/lease test authorized.",
+  "status": "completed",
+  "remote_temp_removed": true,
+  "config_route_listener_unchanged": false,
+  "helper_process_absent": true,
+  "miniupnpd_not_started": true,
+  "ended": "2026-10-12T10:18:09.771304+00:00",
+  "config_and_ipv4_routes_unchanged": true,
+  "tcp_listeners_unchanged": true,
+  "listener_comparison_note": "Full snapshot differs only in an ephemeral IPv4 UDP socket 43989 -> 39963. Later netstat -lntup attributes rotating UDP sockets to existing chinadns-ng/xray. No temporary helper listener remains; do not claim every UDP endpoint unchanged.",
+  "request_counts": {
+    "HTTP_GET": 2,
+    "GetExternalIPAddress": 1,
+    "GetGenericPortMappingEntry": 10,
+    "GetSpecificPortMappingEntry": 1
+  },
+  "evidence_hashes_verified": true,
+  "safety_tests": "PASS: six disallowed URLs rejected, advertised non-default port allowed, DTD rejected, XML entity escaping decoded safely; helper compiled SDK -Wall -Wextra -Werror.",
+  "local_temporary_clients_removed": true
+}

@@ -1,0 +1,62 @@
+CONSOLE Failed to load resource: the server responded with a status of 404 (Not Found)
+LOADED 旧版配置需要确认迁移
+
+读取不会修改配置。预览保留全部入口与服务；确认保存前备份旧配置，不启动发布。
+
+预览迁移确认迁移
+MIGRATION RESULT HomePublish — 发布入口设置
+精确选择本机监听地址；保存不启动。IPv4 上级路由器需要手工转发到本机地址及端口，公网端口由上级配置决定。
+监听设置
+地址族
+IPv4
+IPv6
+IPv4 / IPv6 双栈
+IPv4 网络
+lan · br-lan
+docker · docker0
+loopback · lo
+IPv4 地址
+192.168.1.2/24
+IPv4 防火墙区域
+lan
+TCP 监听端口
+默认证书
+HTTPS 默认证书
+未选择
+home.iwonderful.top · ECC · Jan 2 14:19:01 2027 GMT
+home.iwonderful.top · RSA · Jan 2 20:59:28 2027 GMT
+仅供 HTTPS 反代继承，TLS 透传、SSH 和 TCP 转发不需要本机证书。
+发布策略
+发布期限
+持续：直到停止
+临时：原截止不延长
+开机恢复
+手动停止或临时剩余时间不确定时不会恢复。
+
+保存只更新本应用配置，不启动发布
+
+保存重置
+PASS explicit migration preview/cancel/confirm/readback
+ENTRY DOM [{"id":"widget.cbid.json.cfg_listener.family","text":"IPv4IPv6IPv4 / IPv6 双栈","value":"ipv4"},{"id":"widget.cbid.json.cfg_listener.ipv4_network","text":"lan · br-landocker · docker0loopback · lo","value":"lan"},{"id":"widget.cbid.json.cfg_listener.ipv4_address","text":"192.168.1.2/24","value":"192.168.1.2"},{"id":"cbid.json.cfg_listener.ipv4_zone","text":"","value":"lan"},{"id":"widget.cbid.json.cfg_listener.ipv6_network","text":"lan · br-landocker · docker0loopback · lo","value":"lan"},{"id":"widget.cbid.json.cfg_listener.ipv6_address","text":"","value":""},{"id":"cbid.json.cfg_listener.ipv6_zone","text":"","value":"缺失或不唯一，发布前需要解决"},{"id":"widget.cbid.json.cfg_listener.port","text":"","value":"24443"},{"id":"widget.cbid.json.cfg_policy.default_certificate_ref","text":"未选择home.iwonderful.top · ECC · Jan  2 14:19:01 2027 GMThome.iwonderful.top · RSA · Jan  2 20:59:28 2027 GMT","value":""},{"id":"widget.cbid.json.cfg_policy.mode","text":"持续：直到停止临时：原截止不延长","value":"continuous"},{"id":"widget.cbid.json.cfg_policy.temporary_minutes","text":"","value":"30"},{"id":"cbc8dad82b","text":"","value":"1"},{"id":"hp-save","text":"保存","value":""},{"id":"hp-reset","text":"重置","value":""}]
+PASS entry native form/save/private native journal/readback/reload, no activation
+PASS native TCP popup Save + private journal reload
+PASS stable IDs add-two/delete-first/save/reload/add
+PASS dirty modal Save/delete and clean cancellation
+PASS native ssh popup/private Save/reload/type-specific serialization
+PASS native tls_passthrough popup/private Save/reload/type-specific serialization
+PASS native https_proxy popup/private Save/reload/type-specific serialization
+ACTUAL_NETWORK_INVENTORY {"status":"ok","summary":"107:3:lan|6:br-lan|4:true|z3:lan|a4:ipv411:192.168.1.22:247:private|a4:ipv624:fd89:878e:a47f:0:0:0:0:12:603:ula|36:6:docker|7:docker0|5:false|z6:docker|22:8:loopback|2:lo|4:true","networks":[{"zones":["lan"],"network":"lan","up":true,"device":"br-lan","addresses":[{"prefix":24,"address":"192.168.1.2","family":"ipv4","internal":true,"scope":"private"},{"prefix":60,"address":"fd89:878e:a47f::1","family":"ipv6","internal":true,"scope":"ula"}]},{"zones":["docker"],"network":"docker","up":false,"device":"docker0","addresses":[]},{"zones":[],"network":"loopback","up":true,"device":"lo","addresses":[]}]}
+INSTALLED_FOUR_UNCHANGED_NO_WRITES
+AssertionError [ERR_ASSERTION]: The expression evaluated to a falsy value:
+
+  assert(dual.saved_config.access_profile.listeners.some(l=>l.family===f&&l.address===a&&l.network===lan.network))
+
+    at module.exports (D:\DevPortal\homelede\homepublish-product\luci-app-homepublish\tests\tcp-ingress-device-extended.cjs:19:47)
+    at async D:\DevPortal\homelede\homepublish-product\luci-app-homepublish\tests\tcp-ingress-device-probe.cjs:66:38 {
+  generatedMessage: true,
+  code: 'ERR_ASSERTION',
+  actual: false,
+  expected: true,
+  operator: '==',
+  diff: 'simple'
+}

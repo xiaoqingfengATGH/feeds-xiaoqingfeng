@@ -1,0 +1,2 @@
+nginx: the configuration file /tmp/homestun-real/runner.lock/nginx.conf syntax is ok
+nginx: configuration file /tmp/homestun-real/runner.lock/nginx.conf test is successful

@@ -1,0 +1,314 @@
+{
+  "generation": "homestun-upnp-20261012T120507Z",
+  "local_deadline_seconds": 120,
+  "requested_lease_seconds": 300,
+  "mode": "UPnP explicit mapping; no STUN",
+  "requests": [
+    {
+      "action": "GetSpecificPortMappingEntry",
+      "at_monotonic": 212195.7200273,
+      "http_status": 500,
+      "fault": "714",
+      "fields": {}
+    },
+    {
+      "action": "AddPortMapping",
+      "at_monotonic": 212196.1093892,
+      "http_status": 200,
+      "fault": null,
+      "fields": {}
+    },
+    {
+      "action": "GetSpecificPortMappingEntry",
+      "at_monotonic": 212196.471676,
+      "http_status": 200,
+      "fault": null,
+      "fields": {
+        "NewInternalPort": "18444",
+        "NewInternalClient": "192.168.1.2",
+        "NewEnabled": "1",
+        "NewPortMappingDescription": "homestun-upnp-20261012T120507Z",
+        "NewLeaseDuration": "300"
+      }
+    },
+    {
+      "action": "GetSpecificPortMappingEntry",
+      "at_monotonic": 212315.9998169,
+      "http_status": 200,
+      "fault": null,
+      "fields": {
+        "NewInternalPort": "18444",
+        "NewInternalClient": "192.168.1.2",
+        "NewEnabled": "1",
+        "NewPortMappingDescription": "homestun-upnp-20261012T120507Z",
+        "NewLeaseDuration": "181"
+      }
+    },
+    {
+      "action": "GetSpecificPortMappingEntry",
+      "at_monotonic": 212331.3614243,
+      "http_status": 200,
+      "fault": null,
+      "fields": {
+        "NewInternalPort": "18444",
+        "NewInternalClient": "192.168.1.2",
+        "NewEnabled": "1",
+        "NewPortMappingDescription": "homestun-upnp-20261012T120507Z",
+        "NewLeaseDuration": "165"
+      }
+    },
+    {
+      "action": "GetSpecificPortMappingEntry",
+      "at_monotonic": 212346.7368913,
+      "http_status": 200,
+      "fault": null,
+      "fields": {
+        "NewInternalPort": "18444",
+        "NewInternalClient": "192.168.1.2",
+        "NewEnabled": "1",
+        "NewPortMappingDescription": "homestun-upnp-20261012T120507Z",
+        "NewLeaseDuration": "150"
+      }
+    },
+    {
+      "action": "GetSpecificPortMappingEntry",
+      "at_monotonic": 212362.0902527,
+      "http_status": 200,
+      "fault": null,
+      "fields": {
+        "NewInternalPort": "18444",
+        "NewInternalClient": "192.168.1.2",
+        "NewEnabled": "1",
+        "NewPortMappingDescription": "homestun-upnp-20261012T120507Z",
+        "NewLeaseDuration": "134"
+      }
+    },
+    {
+      "action": "GetSpecificPortMappingEntry",
+      "at_monotonic": 212377.4571262,
+      "http_status": 200,
+      "fault": null,
+      "fields": {
+        "NewInternalPort": "18444",
+        "NewInternalClient": "192.168.1.2",
+        "NewEnabled": "1",
+        "NewPortMappingDescription": "homestun-upnp-20261012T120507Z",
+        "NewLeaseDuration": "119"
+      }
+    },
+    {
+      "action": "GetSpecificPortMappingEntry",
+      "at_monotonic": 212392.8454625,
+      "http_status": 200,
+      "fault": null,
+      "fields": {
+        "NewInternalPort": "18444",
+        "NewInternalClient": "192.168.1.2",
+        "NewEnabled": "1",
+        "NewPortMappingDescription": "homestun-upnp-20261012T120507Z",
+        "NewLeaseDuration": "104"
+      }
+    },
+    {
+      "action": "GetSpecificPortMappingEntry",
+      "at_monotonic": 212408.2164135,
+      "http_status": 200,
+      "fault": null,
+      "fields": {
+        "NewInternalPort": "18444",
+        "NewInternalClient": "192.168.1.2",
+        "NewEnabled": "1",
+        "NewPortMappingDescription": "homestun-upnp-20261012T120507Z",
+        "NewLeaseDuration": "88"
+      }
+    },
+    {
+      "action": "GetSpecificPortMappingEntry",
+      "at_monotonic": 212423.5807635,
+      "http_status": 200,
+      "fault": null,
+      "fields": {
+        "NewInternalPort": "18444",
+        "NewInternalClient": "192.168.1.2",
+        "NewEnabled": "1",
+        "NewPortMappingDescription": "homestun-upnp-20261012T120507Z",
+        "NewLeaseDuration": "73"
+      }
+    },
+    {
+      "action": "GetSpecificPortMappingEntry",
+      "at_monotonic": 212438.9437624,
+      "http_status": 200,
+      "fault": null,
+      "fields": {
+        "NewInternalPort": "18444",
+        "NewInternalClient": "192.168.1.2",
+        "NewEnabled": "1",
+        "NewPortMappingDescription": "homestun-upnp-20261012T120507Z",
+        "NewLeaseDuration": "58"
+      }
+    },
+    {
+      "action": "GetSpecificPortMappingEntry",
+      "at_monotonic": 212454.3033566,
+      "http_status": 200,
+      "fault": null,
+      "fields": {
+        "NewInternalPort": "18444",
+        "NewInternalClient": "192.168.1.2",
+        "NewEnabled": "1",
+        "NewPortMappingDescription": "homestun-upnp-20261012T120507Z",
+        "NewLeaseDuration": "42"
+      }
+    },
+    {
+      "action": "GetSpecificPortMappingEntry",
+      "at_monotonic": 212469.6723845,
+      "http_status": 200,
+      "fault": null,
+      "fields": {
+        "NewInternalPort": "18444",
+        "NewInternalClient": "192.168.1.2",
+        "NewEnabled": "1",
+        "NewPortMappingDescription": "homestun-upnp-20261012T120507Z",
+        "NewLeaseDuration": "27"
+      }
+    },
+    {
+      "action": "GetSpecificPortMappingEntry",
+      "at_monotonic": 212485.0199922,
+      "http_status": 200,
+      "fault": null,
+      "fields": {
+        "NewInternalPort": "18444",
+        "NewInternalClient": "192.168.1.2",
+        "NewEnabled": "1",
+        "NewPortMappingDescription": "homestun-upnp-20261012T120507Z",
+        "NewLeaseDuration": "12"
+      }
+    },
+    {
+      "action": "GetSpecificPortMappingEntry",
+      "at_monotonic": 212500.3709419,
+      "http_status": 500,
+      "fault": "714",
+      "fields": {}
+    },
+    {
+      "action": "GetSpecificPortMappingEntry",
+      "at_monotonic": 212500.7311045,
+      "http_status": 500,
+      "fault": "714",
+      "fields": {}
+    }
+  ],
+  "marker": "homestun-upnp-20261012T120507Z-fbf52f4650071b5e6a0bd6e5",
+  "baseline": "52a2755e9a380e1e6d526204ec443dcdd85639f07d2903f64839d073edd55795  /etc/config/firewall\n6ead1d3a553f28348a58b4a3055b8873aee4916b2fe3471b67e960cbfba2dacd  /etc/config/network\n62cb51fe983f98e057c368d4654675d15a34572b68b6ae0fca241887ea9a58c4  /etc/config/passwall2\nHOMESTUN_CONFIG_ABSENT\n0:\tfrom all lookup local\n220:\tfrom all lookup 220\n999:\tfrom all fwmark 0x50535732 lookup 999\n32766:\tfrom all lookup main\n32767:\tfrom all lookup default\ndefault via 192.168.1.1 dev br-lan proto static \n172.17.0.0/16 dev docker0 proto kernel scope link src 172.17.0.1 linkdown \n192.168.1.0/24 dev br-lan proto kernel scope link src 192.168.1.2 \nActive Internet connections (only servers)\nProto Recv-Q Send-Q Local Address           Foreign Address         State       \ntcp        0      0 192.168.1.2:53          0.0.0.0:*               LISTEN      \ntcp        0      0 0.0.0.0:443             0.0.0.0:*               LISTEN      \ntcp        0      0 192.168.1.2:22          0.0.0.0:*               LISTEN      \ntcp        0      0 172.17.0.1:2004         0.0.0.0:*               LISTEN      \ntcp        0      0 192.168.1.2:139         0.0.0.0:*               LISTEN      \ntcp        0      0 0.0.0.0:5355            0.0.0.0:*               LISTEN      \ntcp        0      0 127.0.0.1:53            0.0.0.0:*               LISTEN      \ntcp        0      0 0.0.0.0:80              0.0.0.0:*               LISTEN      \ntcp        0      0 192.168.1.2:445         0.0.0.0:*               LISTEN      \ntcp        0      0 0.0.0.0:1026            0.0.0.0:*               LISTEN      \ntcp        0      0 0.0.0.0:21              0.0.0.0:*               LISTEN      \ntcp        0      0 192.168.1.2:7681        0.0.0.0:*               LISTEN      \ntcp        0      0 127.0.0.1:2002          0.0.0.0:*               LISTEN      \ntcp        0      0 127.0.0.1:2003          0.0.0.0:*               LISTEN      \ntcp        0      0 127.0.0.1:2004          0.0.0.0:*               LISTEN      \ntcp        0      0 172.17.0.1:53           0.0.0.0:*               LISTEN      \ntcp        0      0 0.0.0.0:60000           0.0.0.0:*               LISTEN      \ntcp        0      0 0.0.0.0:3702            0.0.0.0:*               LISTEN      \ntcp        0      0 192.168.1.2:2004        0.0.0.0:*               LISTEN      \ntcp        0      0 fd89:878e:a47f::1:22    :::*                    LISTEN      \ntcp        0      0 ::1:2004                :::*                    LISTEN      \ntcp        0      0 fd89:878e:a47f::1:53    :::*                    LISTEN      \ntcp        0      0 :::5355                 :::*                    LISTEN      \ntcp        0      0 :::80                   :::*                    LISTEN      \ntcp        0      0 :::1070                 :::*                    LISTEN      \ntcp        0      0 fe80::290:a6ff:fee0:382c:53 :::*                    LISTEN      \ntcp        0      0 fe80::290:a6ff:fee0:382c:2004 :::*                    LISTEN      \ntcp        0      0 :::2001                 :::*                    LISTEN      \ntcp        0      0 :::9876                 :::*                    LISTEN      \ntcp        0      0 :::3702                 :::*                    LISTEN      \ntcp        0      0 fd89:878e:a47f::1:2004  :::*                    LISTEN      \ntcp        0      0 ::1:53                  :::*                    LISTEN      \n",
+  "lease_sha256": "540b98eb8be0ed039d9f8bb19b52d287f1b5c7d594321b397e3d8783e50072a4",
+  "forwarder_sha256": "374dd0311b29106ef588467811c8d6802fed85d621be17c490c422e318a86e63",
+  "forwarder_source_sha256": "682a5e76598fd09ed0cadf8f6fb649b0ce337949e125479a9fa3361cb2700666",
+  "stage_hashes": "374dd0311b29106ef588467811c8d6802fed85d621be17c490c422e318a86e63  /tmp/homestun-test/upnp-lease/root/usr/bin/natmap\n540b98eb8be0ed039d9f8bb19b52d287f1b5c7d594321b397e3d8783e50072a4  /tmp/homestun-test/upnp-lease/root/usr/libexec/homestun-lease\n",
+  "native_300_rejection": "REJECTION_EXIT=2\n",
+  "local_started_monotonic": 212192.9254461,
+  "local_preflight": "homestun-upnp-20261012T120507Z-fbf52f4650071b5e6a0bd6e5",
+  "candidate_before_add": {
+    "action": "GetSpecificPortMappingEntry",
+    "at_monotonic": 212195.7200273,
+    "http_status": 500,
+    "fault": "714",
+    "fields": {}
+  },
+  "mapping_started_monotonic": 212195.720871,
+  "add": {
+    "action": "AddPortMapping",
+    "at_monotonic": 212196.1093892,
+    "http_status": 200,
+    "fault": null,
+    "fields": {}
+  },
+  "readback": {
+    "action": "GetSpecificPortMappingEntry",
+    "at_monotonic": 212196.471676,
+    "http_status": 200,
+    "fault": null,
+    "fields": {
+      "NewInternalPort": "18444",
+      "NewInternalClient": "192.168.1.2",
+      "NewEnabled": "1",
+      "NewPortMappingDescription": "homestun-upnp-20261012T120507Z",
+      "NewLeaseDuration": "300"
+    }
+  },
+  "accepted_lease_seconds": 300,
+  "external_https": {
+    "exit": 0,
+    "body": "homestun-upnp-20261012T120507Z-fbf52f4650071b5e6a0bd6e5",
+    "stderr": "* Added homestun-test.homelede.com:18444:60.20.170.34 to DNS cache\r\n* Hostname homestun-test.homelede.com was found in DNS cache\r\n* Host homestun-test.homelede.com:18444 was resolved.\r\n* IPv6: (none)\r\n* IPv4: 60.20.170.34\r\n*   Trying 60.20.170.34:18444...\r\n* schannel: disabled automatic use of client certificate\r\n* ALPN: curl offers http/1.1\r\n* schannel: added 1 certificate(s) from CA file 'D:\\DevPortal\\homelede\\feeds-xiaoqingfeng-homestun\\docs\\artifacts\\upnp-lease-private\\final-bounded\\test-cert.pem'\r\n* schannel: connection hostname (homestun-test.homelede.com) validated against certificate name (homestun-test.homelede.com)\r\n* ALPN: server accepted http/1.1\r\n* Established connection to homestun-test.homelede.com (60.20.170.34 port 18444) from 10.250.0.245 port 49704 \r\n* using HTTP/1.x\r\n> GET / HTTP/1.1\r\r\n> Host: homestun-test.homelede.com:18444\r\r\n> User-Agent: curl/8.21.0\r\r\n> Accept: */*\r\r\n> \r\r\n* Request completely sent off\r\n< HTTP/1.1 200 OK\r\r\n< Server: nginx/1.21.3\r\r\n< Date: Mon, 12 Oct 2026 12:05:14 GMT\r\r\n< Content-Type: text/plain\r\r\n< Content-Length: 55\r\r\n< Connection: keep-alive\r\r\n< \r\r\n{ [55 bytes data]\r\n* Connection #0 to host homestun-test.homelede.com:18444 left intact\r\n",
+    "marker_matches": true,
+    "elapsed_local": 3.739646100002574
+  },
+  "held_connection": {
+    "bytes": 0,
+    "first_byte_elapsed": null,
+    "ticks": [],
+    "outcome": "EOF",
+    "elapsed_local": 120.28359350000392
+  },
+  "supervisor_exit": 0,
+  "local_elapsed_to_exit": 120.55928990000393,
+  "held_stream_assessment": {
+    "observed": true,
+    "last_byte_before_eof_seconds": null,
+    "tick_count": 0
+  },
+  "post_deadline_new_connection": {
+    "exit": 7,
+    "stderr": "* Added homestun-test.homelede.com:18444:60.20.170.34 to DNS cache\r\n* Hostname homestun-test.homelede.com was found in DNS cache\r\n* Host homestun-test.homelede.com:18444 was resolved.\r\n* IPv6: (none)\r\n* IPv4: 60.20.170.34\r\n*   Trying 60.20.170.34:18444...\r\n* connect to 60.20.170.34 port 18444 from 0.0.0.0 port 64123 failed: Connection refused\r\n* Failed to connect to homestun-test.homelede.com:18444 after 2130 ms: Could not connect to server\r\n* closing connection #0\r\ncurl: (7) Failed to connect to homestun-test.homelede.com:18444 after 2130 ms: Could not connect to server\r\n"
+  },
+  "last_lease_query": {
+    "action": "GetSpecificPortMappingEntry",
+    "at_monotonic": 212500.3709419,
+    "http_status": 500,
+    "fault": "714",
+    "fields": {}
+  },
+  "natural_expiry_verified": true,
+  "expiry_observed_seconds": 304.65061380001134,
+  "status": "finished",
+  "final_mapping": {
+    "action": "GetSpecificPortMappingEntry",
+    "at_monotonic": 212500.7311045,
+    "http_status": 500,
+    "fault": "714",
+    "fields": {}
+  },
+  "cleanup_readback": "Active Internet connections (only servers)\nProto Recv-Q Send-Q Local Address           Foreign Address         State       \ntcp        0      0 192.168.1.2:53          0.0.0.0:*               LISTEN      \ntcp        0      0 0.0.0.0:443             0.0.0.0:*               LISTEN      \ntcp        0      0 192.168.1.2:22          0.0.0.0:*               LISTEN      \ntcp        0      0 172.17.0.1:2004         0.0.0.0:*               LISTEN      \ntcp        0      0 192.168.1.2:139         0.0.0.0:*               LISTEN      \ntcp        0      0 0.0.0.0:5355            0.0.0.0:*               LISTEN      \ntcp        0      0 127.0.0.1:53            0.0.0.0:*               LISTEN      \ntcp        0      0 0.0.0.0:80              0.0.0.0:*               LISTEN      \ntcp        0      0 192.168.1.2:445         0.0.0.0:*               LISTEN      \ntcp        0      0 0.0.0.0:1026            0.0.0.0:*               LISTEN      \ntcp        0      0 0.0.0.0:21              0.0.0.0:*               LISTEN      \ntcp        0      0 192.168.1.2:7681        0.0.0.0:*               LISTEN      \ntcp        0      0 127.0.0.1:2002          0.0.0.0:*               LISTEN      \ntcp        0      0 127.0.0.1:2003          0.0.0.0:*               LISTEN      \ntcp        0      0 127.0.0.1:2004          0.0.0.0:*               LISTEN      \ntcp        0      0 172.17.0.1:53           0.0.0.0:*               LISTEN      \ntcp        0      0 0.0.0.0:60000           0.0.0.0:*               LISTEN      \ntcp        0      0 0.0.0.0:3702            0.0.0.0:*               LISTEN      \ntcp        0      0 192.168.1.2:2004        0.0.0.0:*               LISTEN      \ntcp        0      0 fd89:878e:a47f::1:22    :::*                    LISTEN      \ntcp        0      0 ::1:2004                :::*                    LISTEN      \ntcp        0      0 fd89:878e:a47f::1:53    :::*                    LISTEN      \ntcp        0      0 :::5355                 :::*                    LISTEN      \ntcp        0      0 :::80                   :::*                    LISTEN      \ntcp        0      0 :::1070                 :::*                    LISTEN      \ntcp        0      0 fe80::290:a6ff:fee0:382c:53 :::*                    LISTEN      \ntcp        0      0 fe80::290:a6ff:fee0:382c:2004 :::*                    LISTEN      \ntcp        0      0 :::2001                 :::*                    LISTEN      \ntcp        0      0 :::9876                 :::*                    LISTEN      \ntcp        0      0 :::3702                 :::*                    LISTEN      \ntcp        0      0 fd89:878e:a47f::1:2004  :::*                    LISTEN      \ntcp        0      0 ::1:53                  :::*                    LISTEN      \nNATIVE_SNAPSHOT_ABSENT\n",
+  "fixture_cleanup": "FIXTURE_ABSENT\n",
+  "fixture_removed": true,
+  "final_baseline": "52a2755e9a380e1e6d526204ec443dcdd85639f07d2903f64839d073edd55795  /etc/config/firewall\n6ead1d3a553f28348a58b4a3055b8873aee4916b2fe3471b67e960cbfba2dacd  /etc/config/network\n62cb51fe983f98e057c368d4654675d15a34572b68b6ae0fca241887ea9a58c4  /etc/config/passwall2\nHOMESTUN_CONFIG_ABSENT\n0:\tfrom all lookup local\n220:\tfrom all lookup 220\n999:\tfrom all fwmark 0x50535732 lookup 999\n32766:\tfrom all lookup main\n32767:\tfrom all lookup default\ndefault via 192.168.1.1 dev br-lan proto static \n172.17.0.0/16 dev docker0 proto kernel scope link src 172.17.0.1 linkdown \n192.168.1.0/24 dev br-lan proto kernel scope link src 192.168.1.2 \nActive Internet connections (only servers)\nProto Recv-Q Send-Q Local Address           Foreign Address         State       \ntcp        0      0 192.168.1.2:53          0.0.0.0:*               LISTEN      \ntcp        0      0 0.0.0.0:443             0.0.0.0:*               LISTEN      \ntcp        0      0 192.168.1.2:22          0.0.0.0:*               LISTEN      \ntcp        0      0 172.17.0.1:2004         0.0.0.0:*               LISTEN      \ntcp        0      0 192.168.1.2:139         0.0.0.0:*               LISTEN      \ntcp        0      0 0.0.0.0:5355            0.0.0.0:*               LISTEN      \ntcp        0      0 127.0.0.1:53            0.0.0.0:*               LISTEN      \ntcp        0      0 0.0.0.0:80              0.0.0.0:*               LISTEN      \ntcp        0      0 192.168.1.2:445         0.0.0.0:*               LISTEN      \ntcp        0      0 0.0.0.0:1026            0.0.0.0:*               LISTEN      \ntcp        0      0 0.0.0.0:21              0.0.0.0:*               LISTEN      \ntcp        0      0 192.168.1.2:7681        0.0.0.0:*               LISTEN      \ntcp        0      0 127.0.0.1:2002          0.0.0.0:*               LISTEN      \ntcp        0      0 127.0.0.1:2003          0.0.0.0:*               LISTEN      \ntcp        0      0 127.0.0.1:2004          0.0.0.0:*               LISTEN      \ntcp        0      0 172.17.0.1:53           0.0.0.0:*               LISTEN      \ntcp        0      0 0.0.0.0:60000           0.0.0.0:*               LISTEN      \ntcp        0      0 0.0.0.0:3702            0.0.0.0:*               LISTEN      \ntcp        0      0 192.168.1.2:2004        0.0.0.0:*               LISTEN      \ntcp        0      0 fd89:878e:a47f::1:22    :::*                    LISTEN      \ntcp        0      0 ::1:2004                :::*                    LISTEN      \ntcp        0      0 fd89:878e:a47f::1:53    :::*                    LISTEN      \ntcp        0      0 :::5355                 :::*                    LISTEN      \ntcp        0      0 :::80                   :::*                    LISTEN      \ntcp        0      0 :::1070                 :::*                    LISTEN      \ntcp        0      0 fe80::290:a6ff:fee0:382c:53 :::*                    LISTEN      \ntcp        0      0 fe80::290:a6ff:fee0:382c:2004 :::*                    LISTEN      \ntcp        0      0 :::2001                 :::*                    LISTEN      \ntcp        0      0 :::9876                 :::*                    LISTEN      \ntcp        0      0 :::3702                 :::*                    LISTEN      \ntcp        0      0 fd89:878e:a47f::1:2004  :::*                    LISTEN      \ntcp        0      0 ::1:53                  :::*                    LISTEN      \n",
+  "persistent_config_unchanged": true,
+  "routing_unchanged": true,
+  "rules_structurally_unchanged": true,
+  "management_retained": true,
+  "acceptance": {
+    "explicit_upnp_mapping": true,
+    "independent_external_https_cert_hostname_marker": true,
+    "continuous_application_bytes_on_held_connection": false,
+    "held_connection_eof_near_native_deadline_observed": true,
+    "held_connection_hard_deadline_causation_proven": false,
+    "post_local_expiry_new_connection_refused": true,
+    "gateway_natural_expiry_714": true,
+    "owned_fixture_removed": true,
+    "no_owned_mount_or_process_refs": true,
+    "test_listeners_absent": true,
+    "management_listeners_preserved": true,
+    "passwall2_enabled_not_modified": true,
+    "stun_success": false
+  },
+  "limitations": [
+    "Held /hold connection received zero application bytes; nginx limit_rate/return fixture did not prove continuous traffic. EOF at 120.284s is a correlation, not conclusive guardian-versus-idle attribution, notwithstanding 240s proxy_read/send_timeout.",
+    "One pre-stage attempt was blocked by an empty existing /tmp/homestun-test parent; no mapping created in that attempt. It was not repeated as a second exposure experiment.",
+    "Gateway natural expiry observed by polling at 304.651s after Add request; precise deletion instant bounded by preceding 289.3s remaining-lease query and 304.7s 714 observation."
+  ],
+  "first_attempt_no_exposure": "final-bounded local artifact overwritten on retry; original terminal output shows fixture stage precondition failed, final gateway query 714 and config/routing/rules unchanged"
+}

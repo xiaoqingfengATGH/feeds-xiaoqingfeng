@@ -1,0 +1,1 @@
+2026/10/15 19:21:52 [error] 32100#0: *1 upstream SSL certificate verify error: (18:self-signed certificate) while SSL handshaking to upstream, client: ::1, server: home.iwonderful.top, request: "GET / HTTP/1.1", upstream: "https://127.0.0.1:49447/", host: "home.iwonderful.top:49443"

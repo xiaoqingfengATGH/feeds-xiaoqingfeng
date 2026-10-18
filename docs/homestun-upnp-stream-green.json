@@ -1,0 +1,124 @@
+{
+  "mode": "corrected",
+  "scope": "WSL loopback only; no UPnP",
+  "ports": [
+    46247,
+    46083,
+    45243
+  ],
+  "nginx_version": "nginx version: nginx/1.26.1 (x86_64-pc-linux-gnu)",
+  "raw_http": {
+    "headers": "HTTP/1.1 200 OK\r\nServer: nginx/1.26.1\r\nDate: Mon, 12 Oct 2026 12:18:09 GMT\r\nContent-Type: text/plain\r\nTransfer-Encoding: chunked\r\nConnection: close\r\nCache-Control: no-store",
+    "ticks": [
+      {
+        "number": 1,
+        "source_monotonic": 336.076365488,
+        "received_elapsed": 0.005399332000024515
+      },
+      {
+        "number": 2,
+        "source_monotonic": 338.082539132,
+        "received_elapsed": 2.012000515000011
+      },
+      {
+        "number": 3,
+        "source_monotonic": 340.076851085,
+        "received_elapsed": 4.006255500999998
+      },
+      {
+        "number": 4,
+        "source_monotonic": 342.076699734,
+        "received_elapsed": 6.005997283999989
+      },
+      {
+        "number": 5,
+        "source_monotonic": 344.076581868,
+        "received_elapsed": 8.006417392999992
+      },
+      {
+        "number": 6,
+        "source_monotonic": 346.076653283,
+        "received_elapsed": 10.005737419000013
+      },
+      {
+        "number": 7,
+        "source_monotonic": 348.076561548,
+        "received_elapsed": 12.006050757000025
+      },
+      {
+        "number": 8,
+        "source_monotonic": 350.076478538,
+        "received_elapsed": 14.005802908000021
+      },
+      {
+        "number": 9,
+        "source_monotonic": 352.076657837,
+        "received_elapsed": 16.005893707999974
+      }
+    ],
+    "bytes": 419,
+    "headers_elapsed": 0.005386230999988584,
+    "elapsed": 16.005927213999996
+  },
+  "verified_tls": {
+    "headers": "HTTP/1.1 200 OK\r\nServer: nginx/1.26.1\r\nDate: Mon, 12 Oct 2026 12:18:25 GMT\r\nContent-Type: text/plain\r\nTransfer-Encoding: chunked\r\nConnection: close\r\nCache-Control: no-store",
+    "ticks": [
+      {
+        "number": 1,
+        "source_monotonic": 352.090209153,
+        "received_elapsed": 0.013302129999999579
+      },
+      {
+        "number": 2,
+        "source_monotonic": 354.09045127,
+        "received_elapsed": 2.014157661000013
+      },
+      {
+        "number": 3,
+        "source_monotonic": 356.0903966,
+        "received_elapsed": 4.013830763999977
+      },
+      {
+        "number": 4,
+        "source_monotonic": 358.090391867,
+        "received_elapsed": 6.013923858999988
+      },
+      {
+        "number": 5,
+        "source_monotonic": 360.090358654,
+        "received_elapsed": 8.013601924
+      },
+      {
+        "number": 6,
+        "source_monotonic": 362.090397751,
+        "received_elapsed": 10.014116652999974
+      },
+      {
+        "number": 7,
+        "source_monotonic": 364.09053771,
+        "received_elapsed": 12.013855799999988
+      },
+      {
+        "number": 8,
+        "source_monotonic": 366.090447851,
+        "received_elapsed": 14.014104629999963
+      },
+      {
+        "number": 9,
+        "source_monotonic": 368.090518497,
+        "received_elapsed": 16.01402946999997
+      }
+    ],
+    "bytes": 419,
+    "headers_elapsed": 0.013225855999962732,
+    "elapsed": 16.014130902999966
+  },
+  "status": "PASS",
+  "cleanup": {
+    "process_exited": true,
+    "46247_closed": true,
+    "46083_closed": true,
+    "45243_closed": true,
+    "fixture_directory_removed": true
+  }
+}

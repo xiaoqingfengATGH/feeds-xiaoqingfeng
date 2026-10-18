@@ -1,0 +1,23 @@
+FF
+======================================================================
+FAIL: test_private_component_ownership (__main__.Packaging.test_private_component_ownership)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "D:\DevPortal\homelede\homepublish-product\homepublish\tests\test_p5_packaging.py", line 8, in test_private_component_ownership
+    self.assertTrue(recipe.exists(), 'private engines recipe missing')
+    ~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+AssertionError: False is not true : private engines recipe missing
+
+======================================================================
+FAIL: test_runtime_dependency (__main__.Packaging.test_runtime_dependency)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "D:\DevPortal\homelede\homepublish-product\homepublish\tests\test_p5_packaging.py", line 16, in test_runtime_dependency
+    self.assertIn('+libubus-lua', text)
+    ~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^
+AssertionError: '+libubus-lua' not found in 'include $(TOPDIR)/rules.mk\n\nPKG_NAME:=homepublish\nPKG_VERSION:=0.1.0\nPKG_RELEASE:=9\nPKG_LICENSE:=Apache-2.0\nPKG_BUILD_DIR:=$(BUILD_DIR)/$(PKG_NAME)-$(PKG_VERSION)\n\ninclude $(INCLUDE_DIR)/package.mk\n\ndefine Package/homepublish\n  SECTION:=net\n  CATEGORY:=Network\n  TITLE:=Bounded independent HomePublish HTTPS service\n  DEPENDS:=+libgcc +liblua +lua +libuci-lua +nginx-ssl +luci-lib-nixio +curl +ca-bundle\nendef\n\ndefine Package/homepublish/conffiles\n/etc/config/homepublish\nendef\n\ndefine Build/Prepare\n\tmkdir -p $(PKG_BUILD_DIR)\n\t$(CP) ./src/product-store.c $(PKG_BUILD_DIR)/\nendef\n\ndefine Build/Compile\n\t$(TARGET_CC) $(TARGET_CPPFLAGS) $(TARGET_CFLAGS) -std=c99 -Wall -Wextra -Werror -fPIC -shared -I$(STAGING_DIR)/usr/include -o $(PKG_BUILD_DIR)/homepublish_store.so $(PKG_BUILD_DIR)/product-store.c $(TARGET_LDFLAGS) -llua\nendef\n\ndefine Package/homepublish/install\n\t$(INSTALL_DIR) $(1)/usr/libexec $(1)/usr/lib/lua $(1)/usr/share/homepublish $(1)/etc/config $(1)/etc/init.d $(1)/etc/homepublish\n\t$(INSTALL_DATA) $(PKG_BUILD_DIR)/homepublish_store.so $(1)/usr/lib/lua/homepublish_store.so\n\t$(INSTALL_DATA) ./files/usr/share/homepublish/*.lua $(1)/usr/share/homepublish/\n\t$(INSTALL_CONF) ./files/etc/config/homepublish $(1)/etc/config/homepublish\n\t$(INSTALL_BIN) ./files/etc/init.d/homepublish* $(1)/etc/init.d/\n\tchmod 0700 $(1)/etc/homepublish\nendef\n\n$(eval $(call BuildPackage,homepublish))\n'
+
+----------------------------------------------------------------------
+Ran 2 tests in 0.001s
+
+FAILED (failures=2)

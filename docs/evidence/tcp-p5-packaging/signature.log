@@ -1,0 +1,14 @@
+[GNUPG:] NEWSIG s.kandaurov@f5.com
+gpg: Signature made Fri Oct  2 22:40:20 2026 CST
+gpg:                using RSA key D6786CE303D9A9022998DC6CC8464D549AF75C0A
+gpg:                issuer "s.kandaurov@f5.com"
+[GNUPG:] KEY_CONSIDERED D6786CE303D9A9022998DC6CC8464D549AF75C0A 0
+[GNUPG:] SIG_ID Ch1wBgcmQYfJuKCWo+WY7xodXaU 2026-10-02 1790952020
+[GNUPG:] GOODSIG C8464D549AF75C0A Sergey Kandaurov <s.kandaurov@f5.com>
+gpg: Good signature from "Sergey Kandaurov <s.kandaurov@f5.com>" [unknown]
+gpg:                 aka "Sergey Kandaurov <pluknet@nginx.com>" [unknown]
+[GNUPG:] VALIDSIG D6786CE303D9A9022998DC6CC8464D549AF75C0A 2026-10-02 1790952020 0 4 0 1 8 00 D6786CE303D9A9022998DC6CC8464D549AF75C0A
+[GNUPG:] TRUST_UNDEFINED 0 pgp s.kandaurov@f5.com
+gpg: WARNING: The key's User ID is not certified with a trusted signature!
+gpg:          There is no indication that the signature belongs to the owner.
+Primary key fingerprint: D678 6CE3 03D9 A902 2998  DC6C C846 4D54 9AF7 5C0A

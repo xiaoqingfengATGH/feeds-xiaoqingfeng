@@ -1,0 +1,57 @@
+INITIAL_STABILITY { before: 120, after: 120, focus: '', height: 1987 }
+FIXTURE_DIAG 已保存待应用；旧运行配置不会随保存切换
+
+发布状态
+发布状态
+运行中（本机已验证）
+配置状态
+已保存：2；运行：1；已保存待应用
+发布策略
+临时发布；截止：123456；开机恢复：关闭
+公网入口
+IPv4 / IPv6 公网未验证；本机就绪不代表公网可达
+入口状态
+入口	本机监听	地址族	关联网络	配置来源	公网验证
+v6	[::1]:49888	ipv6	lan	运行快照（逐服务就绪另验）	公网未验证
+服务发布状态
+已保存配置	名称	发布方式	匹配 / 端口	家庭后端	地址族路径	当前运行状态
+参与下次发布；待应用	运行 A（one）	独立 TCP	TCP 49888	127.0.0.1:49889	ipv6 → ipv4	旧运行结果，不计就绪
+发布操作
+启动发布
+启动发布当前阶段不能启动
+应用变更
+应用变更需确认发布范围
+停止发布
+停止发布需确认发布范围
+刷新 / 重试
+刷新 / 重试
+配置
+编辑发布服务
+内部状态与失败 / 清理详情
+{
+  "error": null,
+  "runtime": {
+    "phase": "running",
+    "cleanup": "confirmed",
+    "active_verified": true,
+    "generation": "current",
+    "expires_at": 123456,
+    "services": {
+      "one": {
+        "ready": true,
+        "generation": "old"
+      }
+    }
+  },
+  "desired_state": {
+    "state": "enabled",
+    "manual_stop_latch": false
+  },
+  "saved_revision": 2,
+  "active_revision": 1,
+  "pending_config": {
+    "apply_required": true
+  }
+}
+FIXTURE_STABILITY {"noopChildListMutations":0,"rowIdentity":true,"cellIdentity":true,"focus":true,"horizontalScroll":true,"readinessUpdated":true}
+{"result":"P4_UI_INSTALLED_NATIVE_GREEN","url":"http://127.0.0.1:1081/cgi-bin/luci/admin/services/homepublish/overview","responseFixtures":"status only; no lifecycle command invoked; deferred status preflight revision mismatch","matrix":["diff SSH/TCP stable IDs","submission busy and duplicate click","older poll cannot overwrite action failure","four protocols same generation","missing/stale generation rejected","removed active row","status transport failure retains snapshot","initial read failure no defaults","retry recovery","action gates"],"structure":[{"head":6,"body":6,"actions":0},{"head":7,"body":7,"actions":0}],"viewport":[{"width":1280,"scroll":1280,"tables":[{"client":981,"scroll":981},{"client":981,"scroll":981}]},{"width":375,"scroll":375,"tables":[{"client":331,"scroll":331},{"client":331,"scroll":331}]}],"mutationCalls":0,"errors":[],"navigationAbortErrors":[]}

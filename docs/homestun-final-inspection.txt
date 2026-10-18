@@ -1,0 +1,204 @@
+Mon Oct 12 00:00:53 UTC 2026
+c6e148db828a47f478176ccaa85fb5a92c52e203985ac6bdac70de7425744a0d  /tmp/homestun-test/core.lua
+62bf9f14e1ecc5a76e69dce08092116cd8cabf92896ac25d38ac01186b1eef1a  /tmp/homestun-test/lease-supervisor.bin
+5881738d8ec50fdcf827d6037f16f781e067635af03ce0440cb5d207e0a1ff9d  /tmp/homestun-test/lease-supervisor.c
+3b0d9a6bb1cdb6807d46af6ed6868b11715a1ad7c5152a0a23de0aa037177d07  /tmp/homestun-test/preparation-fault.bin
+46b78740c09eab31ab3fb7dc9c1c7857e3e27f32e674c56691824cea56c13459  /tmp/homestun-test/preparation-fault.c
+a599036e35d7e2785265266af807b278b4e56843f47907ae66eba8c22950d325  /tmp/homestun-test/router-failure.sh
+0ee7cc34c964c057dc6374cee5232e8d869b098265be5314afbb9d5e8e8189ac  /tmp/homestun-test/router-faults.sh
+dbfc4679bb9d89e327edef27012a189bb650f446fb4b388315fd9ee6aedc5af6  /tmp/homestun-test/router-guardian-stop.sh
+477918b959b1edade65c250a360aa463c497f0b6f1e5bd6404195a69112c1ef5  /tmp/homestun-test/router-lock-window.sh
+73a88c424564e69845f15a4916697a9e7d710c16fda031f3003b089f91042e20  /tmp/homestun-test/router-preparation-crash.sh
+994be3983e7bd6d839d17f3e2943724c256f218a27c01f7cc307e6478b920778  /tmp/homestun-test/router-preparation.sh
+7ed918edabce707e3b88dc23ede5b31fd989e04e79dfa862d76632d6246f1d9d  /tmp/homestun-test/router-smoke.sh
+2007f718dcd5143e3afaa50d5f1304fdc47873604cb482b2cbef19096d68f048  /tmp/homestun-test/router-term.sh
+9d77d7aa41c6edce7502893a669bc586313dfb5c4a9fa5bc9be96756c1f1a993  /tmp/homestun-test/router-trust.sh
+d5e85d919ca295bea5f96a1a95cd7faf684303705c77b487fc0b0973ae4e653e  /tmp/homestun-test/test-core.lua
+62bf9f14e1ecc5a76e69dce08092116cd8cabf92896ac25d38ac01186b1eef1a  /tmp/homestun-test/lease-supervisor
+3b0d9a6bb1cdb6807d46af6ed6868b11715a1ad7c5152a0a23de0aa037177d07  /tmp/homestun-test/preparation-fault
+  PID USER       VSZ STAT COMMAND
+    1 root      1820 S<   /sbin/procd
+    2 root         0 SW   [kthreadd]
+    3 root         0 SW   [pool_workqueue_]
+    4 root         0 IW<  [kworker/R-rcu_g]
+    5 root         0 IW<  [kworker/R-sync_]
+    6 root         0 IW<  [kworker/R-kvfre]
+    7 root         0 IW<  [kworker/R-slub_]
+    8 root         0 IW<  [kworker/R-netns]
+   10 root         0 IW<  [kworker/0:0H-ev]
+   12 root         0 IW   [kworker/u512:0-]
+   13 root         0 IW<  [kworker/R-mm_pe]
+   14 root         0 SW   [ksoftirqd/0]
+   15 root         0 IW   [rcu_sched]
+   16 root         0 SW   [rcu_exp_par_gp_]
+   17 root         0 SW   [rcu_exp_gp_kthr]
+   18 root         0 SW   [migration/0]
+   19 root         0 SW   [cpuhp/0]
+   20 root         0 SW   [cpuhp/1]
+   21 root         0 SW   [migration/1]
+   22 root         0 SW   [ksoftirqd/1]
+   24 root         0 IW<  [kworker/1:0H-kb]
+   27 root         0 IW<  [kworker/R-inet_]
+   28 root         0 IW   [rcu_tasks_trace]
+   29 root         0 SW   [oom_reaper]
+   30 root         0 IW<  [kworker/R-write]
+   31 root         0 SW   [kcompactd0]
+   32 root         0 SWN  [khugepaged]
+   33 root         0 IW<  [kworker/R-kbloc]
+   34 root         0 IW<  [kworker/R-blkcg]
+   35 root         0 IW<  [kworker/R-kinte]
+   36 root         0 SW   [irq/9-acpi]
+   37 root         0 IW<  [kworker/R-ata_s]
+   38 root         0 SW   [watchdogd]
+   40 root         0 IW<  [kworker/0:1H-kb]
+   53 root         0 SW   [kswapd0]
+  193 root         0 IW<  [kworker/R-pencr]
+  194 root         0 IW<  [kworker/R-pdecr]
+  196 root         0 IW<  [kworker/R-crypt]
+  198 root         0 IW<  [kworker/R-kthro]
+  330 root         0 IW<  [kworker/R-acpi_]
+  389 root         0 SW   [irq/56-vmw_vmci]
+  390 root         0 SW   [irq/57-vmw_vmci]
+  391 root         0 SW   [irq/58-vmw_vmci]
+  410 root         0 IW<  [kworker/R-nvme-]
+  412 root         0 IW<  [kworker/R-nvme-]
+  414 root         0 IW<  [kworker/R-nvme-]
+  416 root         0 SW   [scsi_eh_0]
+  430 root         0 IW<  [kworker/R-scsi_]
+  433 root         0 SW   [scsi_eh_1]
+  435 root         0 IW<  [kworker/R-scsi_]
+  450 root         0 IW<  [kworker/R-mpt_p]
+  451 root         0 IW<  [kworker/R-mpt/0]
+  453 root         0 SW   [scsi_eh_2]
+  454 root         0 IW<  [kworker/R-scsi_]
+  511 root         0 IW<  [kworker/R-mld]
+  513 root         0 IW<  [kworker/R-ipv6_]
+  514 root         0 IW<  [kworker/R-kstrp]
+  515 root         0 IW   [kworker/u512:1-]
+  849 root         0 IW<  [kworker/1:1H-kb]
+  935 root         0 IW<  [kworker/R-mlx4]
+  954 root         0 IW<  [kworker/R-uas]
+ 1043 root         0 SW   [f2fs_ckpt-7:0]
+ 1044 root         0 SW   [f2fs_flush-7:0]
+ 1045 root         0 SW   [f2fs_gc-7:0]
+ 1258 ubus      1156 S<   /sbin/ubusd
+ 1260 root       816 S    /sbin/askfirst /usr/libexec/login.sh
+ 1295 root       896 S<   /sbin/urngd
+ 1392 root         0 IW<  [kworker/R-ena]
+ 1416 root         0 IW<  [kworker/R-raid5]
+ 1428 root         0 IW<  [kworker/R-cifsi]
+ 1429 root         0 IW<  [kworker/R-smb3d]
+ 1430 root         0 IW<  [kworker/R-cifsf]
+ 1431 root         0 IW<  [kworker/R-cifso]
+ 1432 root         0 IW<  [kworker/R-defer]
+ 1433 root         0 IW<  [kworker/R-serve]
+ 1434 root         0 IW<  [kworker/R-cfid_]
+ 1437 root         0 IW<  [kworker/R-rpcio]
+ 1438 root         0 IW<  [kworker/R-xprti]
+ 1485 root         0 IW<  [kworker/R-ixgbe]
+ 1500 root         0 IW<  [kworker/R-nfsio]
+ 1539 root         0 IW<  [kworker/R-crypt]
+ 1557 root         0 IW<  [kworker/R-bnx2x]
+ 1558 root         0 IW<  [kworker/R-bnx2x]
+ 1618 root         0 IW<  [kworker/R-fullc]
+ 1886 root      6300 S<   /bin/vmtoolsd
+ 1920 root         0 SW   [jbd2/sda3-8]
+ 1921 root         0 IW<  [kworker/R-ext4-]
+ 1981 logd      1900 S<   /sbin/logd -S 128
+ 2828 root      1500 S<   {mwan3track} /bin/sh /usr/sbin/mwan3track wan
+ 2829 root      1732 S<   {mwan3rtmon} /bin/sh /usr/sbin/mwan3rtmon ipv4
+ 2830 root      1732 S<   {mwan3rtmon} /bin/sh /usr/sbin/mwan3rtmon ipv6
+ 2914 root      2180 S<   ip -4 monitor route
+ 2915 root      1736 S<   {mwan3rtmon} /bin/sh /usr/sbin/mwan3rtmon ipv4
+ 2921 root      2180 S<   ip -6 monitor route
+ 2922 root      1736 S<   {mwan3rtmon} /bin/sh /usr/sbin/mwan3rtmon ipv6
+ 3007 root      1200 S<   sleep 2147483647
+ 3028 root      1824 S<   /sbin/netifd -l 2
+ 3142 root      1260 S<   /usr/sbin/odhcpd
+ 3361 root      157m S    /usr/bin/php8-fcgi -b 1026
+ 3568 root      1088 S<   /usr/sbin/nlbwmon -o /var/lib/nlbwmon -b 524288 -i 24h -r 30s -p /usr/share/nlbwmon/protocols -G 10 -I 1
+ 4260 root      157m S    {php8-fpm} php-fpm: master process (/etc/php8-fpm.conf)
+ 4261 nobody    157m S    {php8-fpm} php-fpm: pool www
+ 4262 nobody    157m S    {php8-fpm} php-fpm: pool www
+ 4308 root      1412 S<   /usr/sbin/uhttpd -f -h /www -r HOMELEDE -x /cgi-bin -u /ubus -t 60 -T 30 -k 20 -A 1 -n 50 -N 100 -R -p 0.
+ 4369 root       928 S<   /usr/sbin/vsftpd /etc/vsftpd.conf
+ 4406 root      1428 S    /usr/bin/dbus-daemon --system
+ 4508 root       924 S    xl2tpd -D -l -p /var/run/xl2tpd.pid
+ 4560 nobody    1812 S<   avahi-daemon: running [HOMELEDE-2.local]
+ 5590 root      1204 S<   /bin/sh -c while :; do /usr/bin/ucode /usr/libexec/luci-client-history; sleep 10; done
+ 5871 root     29588 S<   /usr/sbin/smbd -F
+ 5872 root     20724 S<   /usr/sbin/nmbd -F
+ 5950 root      2228 S<   {ntpd} /sbin/ujail -t 5 -n ntpd -U ntp -G ntp -C /etc/capabilities/ntpd.json -c -u -r /bin/ubus -r /usr/b
+ 5982 ntp       1200 S<   /usr/sbin/ntpd -n -N -l -S /usr/sbin/ntpd-hotplug -p ntp1.aliyun.com -p ntp.tencent.com -p ntp.ntsc.ac.cn
+ 6266 ddns-go  1243m S<   /usr/bin/ddns-go -c /etc/ddns-go/config.yaml -l :9876 -f 300 -dns 119.29.29.29
+ 6607 root     1312m S<   /usr/bin/dockerd --config-file=/tmp/dockerd/daemon.json
+ 6682 root     27868 S<   {smbd-notifyd} /usr/sbin/smbd -F
+ 6683 root     27860 S<   {smbd-cleanupd} /usr/sbin/smbd -F
+ 6688 root     28532 S<   /usr/sbin/haproxy -q -W -db -f /etc/haproxy.cfg
+ 6967 root     32584 S<   /usr/sbin/haproxy -q -W -db -f /etc/haproxy.cfg
+ 7714 root     1279m S<   containerd --config /var/run/docker/containerd/containerd.toml
+ 7756 root      9580 S<   /usr/bin/ttyd -i br-lan /bin/login
+ 8119 root       868 S<   /usr/bin/wsdd2 -i br-lan -N HOMELEDE -G WORKGROUP -b vendor:vmware-inc-vmware-virtual-platform,model:VMwa
+11559 root         0 IW   [kworker/u513:3-]
+14786 root         0 IW   [kworker/0:1-eve]
+15550 root      2228 S<   {dnsmasq} /sbin/ujail -t 5 -n dnsmasq -u -l -r /bin/ubus -r /etc/TZ -r /etc/dnsmasq.conf -r /etc/ethers -
+15641 root       848 S<   /tmp/etc/passwall2/bin/chinadns-ng -C /tmp/etc/passwall2/acl/dns_acl_default_direct.conf -v
+15646 dnsmasq   3368 S<   /usr/sbin/dnsmasq -C /var/etc/dnsmasq.conf.cfg01411c -k -x /var/run/dnsmasq/dnsmasq.cfg01411c.pid
+15760 dnsmasq   4584 S<   /tmp/etc/passwall2/bin/dnsmasq_acl_default -C /tmp/etc/passwall2/acl/acl_default_dnsmasq.conf -x /tmp/etc
+15762 root      1348 S<   {lease2hosts.sh} /bin/sh /usr/share/passwall2/lease2hosts.sh
+16371 root     1330m S<   /tmp/etc/passwall2/bin/xray run -c /tmp/etc/passwall2/acl/acl_default.json
+16375 root      1352 S<   {monitor.sh} /bin/sh /usr/share/passwall2/monitor.sh
+16468 root      1208 S<   /usr/sbin/crond -f -c /etc/crontabs -l 7
+32418 root         0 IW   [kworker/u513:2-]
+32457 root         0 IW   [kworker/u514:2-]
+34089 root      1024 S<   /usr/sbin/dropbear -F -P /var/run/dropbear.cfg014dd4.pid -p 192.168.1.2:22 -p fd89:878e:a47f::1:22 -s -a
+37949 root         0 IW   [kworker/1:0-eve]
+38681 root         0 IW   [kworker/u513:0-]
+42380 root         0 IW   [kworker/1:1-eve]
+43996 root         0 IW   [kworker/u514:0-]
+50120 root      1200 S<   sleep 60
+50161 root      1200 S<   sleep 58s
+50194 root      1200 S<   sleep 10
+50204 root      1044 S<   /usr/sbin/dropbear -F -P /var/run/dropbear.cfg014dd4.pid -p 192.168.1.2:22 -p fd89:878e:a47f::1:22 -s -a
+50206 root      1212 S<   ash -c date -u; sha256sum /tmp/homestun-test/core.lua /tmp/homestun-test/lease-supervisor.bin /tmp/homest
+50210 root      1208 R<   ps w
+53800 root      3740 S<   /sbin/rpcd -s /var/run/ubus/ubus.sock -t 30
+66910 root     13416 S<   /usr/lib/ipsec/charon
+76892 root         0 IW   [kworker/u514:3-]
+88981 root         0 IW   [kworker/0:2-eve]
+127379 root      1176 S<   /usr/sbin/dropbear -F -P /var/run/dropbear.cfg014dd4.pid -p 192.168.1.2:22 -p fd89:878e:a47f::1:22 -s -a
+127610 root      1044 S<   /usr/sbin/dropbear -F -P /var/run/dropbear.cfg014dd4.pid -p 192.168.1.2:22 -p fd89:878e:a47f::1:22 -s -a
+Active Internet connections (only servers)
+Proto Recv-Q Send-Q Local Address           Foreign Address         State       PID/Program name    
+tcp        0      0 192.168.1.2:53          0.0.0.0:*               LISTEN      15646/dnsmasq
+tcp        0      0 0.0.0.0:443             0.0.0.0:*               LISTEN      127610/dropbear
+tcp        0      0 192.168.1.2:22          0.0.0.0:*               LISTEN      34089/dropbear
+tcp        0      0 172.17.0.1:2004         0.0.0.0:*               LISTEN      15760/dnsmasq_acl_d
+tcp        0      0 192.168.1.2:139         0.0.0.0:*               LISTEN      5871/smbd
+tcp        0      0 0.0.0.0:5355            0.0.0.0:*               LISTEN      8119/wsdd2
+tcp        0      0 127.0.0.1:53            0.0.0.0:*               LISTEN      15646/dnsmasq
+tcp        0      0 0.0.0.0:80              0.0.0.0:*               LISTEN      4308/uhttpd
+tcp        0      0 192.168.1.2:445         0.0.0.0:*               LISTEN      5871/smbd
+tcp        0      0 0.0.0.0:1026            0.0.0.0:*               LISTEN      3361/php8-fcgi
+tcp        0      0 0.0.0.0:21              0.0.0.0:*               LISTEN      4369/vsftpd
+tcp        0      0 192.168.1.2:7681        0.0.0.0:*               LISTEN      7756/ttyd
+tcp        0      0 127.0.0.1:2002          0.0.0.0:*               LISTEN      16371/xray
+tcp        0      0 127.0.0.1:2003          0.0.0.0:*               LISTEN      15641/chinadns-ng
+tcp        0      0 127.0.0.1:2004          0.0.0.0:*               LISTEN      15760/dnsmasq_acl_d
+tcp        0      0 172.17.0.1:53           0.0.0.0:*               LISTEN      15646/dnsmasq
+tcp        0      0 0.0.0.0:60000           0.0.0.0:*               LISTEN      6967/haproxy
+tcp        0      0 0.0.0.0:3702            0.0.0.0:*               LISTEN      8119/wsdd2
+tcp        0      0 192.168.1.2:2004        0.0.0.0:*               LISTEN      15760/dnsmasq_acl_d
+tcp        0      0 fd89:878e:a47f::1:22    :::*                    LISTEN      34089/dropbear
+tcp        0      0 ::1:2004                :::*                    LISTEN      15760/dnsmasq_acl_d
+tcp        0      0 fd89:878e:a47f::1:53    :::*                    LISTEN      15646/dnsmasq
+tcp        0      0 :::5355                 :::*                    LISTEN      8119/wsdd2
+tcp        0      0 :::80                   :::*                    LISTEN      4308/uhttpd
+tcp        0      0 :::1070                 :::*                    LISTEN      16371/xray
+tcp        0      0 fe80::290:a6ff:fee0:382c:53 :::*                    LISTEN      15646/dnsmasq
+tcp        0      0 fe80::290:a6ff:fee0:382c:2004 :::*                    LISTEN      15760/dnsmasq_acl_d
+tcp        0      0 :::2001                 :::*                    LISTEN      16371/xray
+tcp        0      0 :::9876                 :::*                    LISTEN      6266/ddns-go
+tcp        0      0 :::3702                 :::*                    LISTEN      8119/wsdd2
+tcp        0      0 fd89:878e:a47f::1:2004  :::*                    LISTEN      15760/dnsmasq_acl_d
+tcp        0      0 ::1:53                  :::*                    LISTEN      15646/dnsmasq

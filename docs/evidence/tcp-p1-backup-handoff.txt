@@ -1,0 +1,58 @@
+API HANDOFF
+store.migration_backup == true capability. Callback: return new_bytes, public_response, true. transaction still returns only public_response on success; nil,error on failure. Omitted/nil/false third return does not create backup; other types rejected. Read-only nil new_bytes does not create backup even when third is true. Exact old bytes captured inside C while locked; no caller backup bytes/path accepted.
+
+Target-only RED then GREEN; supplementary regression and injected faults are regression evidence, not individually RED-proven.
+Build executed in WSL SDK, never executed target binaries locally. Root fixed /tmp/homepublish-tcp-p1-backup/store; no installed path/service changes.
+
+Build script:
+C:/Users/xiaoq/AppData/Local/hermes/profiles/ta/cache/scratch/tcp-p1-backup-build.sh
+set -eu
+sdk=/home/eric/homestun-sdk-check/openwrt-sdk-24.10.5-x86-64_gcc-13.3.0_musl.Linux-x86_64
+export STAGING_DIR="$sdk/staging_dir"
+mkdir -p /home/eric/homestun-sdk-check/tcp-p1-backup
+"$sdk/staging_dir/toolchain-x86_64_gcc-13.3.0_musl/bin/x86_64-openwrt-linux-musl-gcc" -std=c99 -Wall -Wextra -Werror -fPIC -shared '-DPRODUCT_ROOT="/tmp/homepublish-tcp-p1-backup/store"' -I"$sdk/staging_dir/target-x86_64_musl/usr/include" /mnt/d/DevPortal/homelede/homepublish-product/homepublish/src/product-store.c -L"$sdk/staging_dir/target-x86_64_musl/usr/lib" -llua -o /mnt/c/Users/xiaoq/AppData/Local/hermes/profiles/ta/cache/scratch/tcp-p1-backup.so
+
+C:/Users/xiaoq/AppData/Local/hermes/profiles/ta/cache/scratch/tcp-p1-backup-fault.c
+#define _GNU_SOURCE
+#include <dlfcn.h>
+#include <unistd.h>
+#include <stdlib.h>
+#include <stdio.h>
+#include <string.h>
+#include <errno.h>
+#include <fcntl.h>
+static int target(int fd,const char *suffix) {
+ char p[64],b[512];snprintf(p,sizeof(p),"/proc/self/fd/%d",fd);
+ ssize_t n=readlink(p,b,sizeof(b)-1);if(n<0)return 0;b[n]=0;
+ return !strcmp(b,suffix);
+}
+static int mode(const char *s) {const char *m=getenv("HP_BACKUP_FAIL");return m&&!strcmp(m,s);}
+#define BACKUP "/tmp/homepublish-tcp-p1-backup/store/migration-v1"
+#define STORE "/tmp/homepublish-tcp-p1-backup/store"
+ssize_t write(int fd,const void *b,size_t n) {
+ ssize_t (*real)(int,const void *,size_t)=dlsym(RTLD_NEXT,"write");
+ static int partial;
+ if(mode("write")&&target(fd,BACKUP)) {if(partial++){errno=ENOSPC;return -1;}return real(fd,b,n>3?3:n);}
+ if(mode("zero")&&target(fd,BACKUP)) return 0;
+ return real(fd,b,n);
+}
+int fsync(int fd) {
+ int (*real)(int)=dlsym(RTLD_NEXT,"fsync");
+ if((mode("fsync")&&target(fd,BACKUP)) || (mode("dirsync")&&target(fd,STORE)&&access(BACKUP,F_OK)==0)) {errno=EIO;return -1;}
+ return real(fd);
+}
+int close(int fd) {
+ int (*real)(int)=dlsym(RTLD_NEXT,"close");
+ int fail=mode("close")&&target(fd,BACKUP);
+ int r=real(fd);if(fail){errno=EIO;return -1;}return r;
+}
+
+Fault shim compiled with same SDK x86_64-openwrt-linux-musl-gcc -std=c99 -Wall -Wextra -Werror -fPIC -shared <shim.c> -ldl -o <fault.so>; compiler reported STAGING_DIR unset for this standalone shim invocation only.
+Device run: for mode in write zero fsync close dirsync; reset owned state/backup/candidate; HP_BACKUP_FAIL=$mode LD_PRELOAD=/tmp/homepublish-tcp-p1-backup/fault.so lua test.lua fault. Repeated fsync and dirsync with test.lua fault equal. Then clean fixture entries and lua test.lua without preload.
+
+Semantics: backup is O_EXCL-created and fully file-fsynced/closed plus directory-fsynced before state rename. Failures remove only a newly-created identity-matched backup; existing equal backups never removed. Interrupted creation/crash can leave an incomplete backup that blocks future migration rather than silently replacing it. Cleanup errors/fstat inability conservatively retain an object and do not commit old state. Existing post-state-rename directory-fsync failure retains legacy durability-unknown semantics; this change cannot roll back a completed atomic state rename.
+
+Local artifact hashes matching target final log:
+module c58dd4e9548ab41e4b21d130e2ea4ceb8ecbe33126831fa2c38015fc0d14e0b6
+test e27660c939f987eea0f7426f284cb5a7d5f7c58dc67b301fefe2f235741065da
+fault shim 6b6c62fac5d0f4ca4e8d36b0be6f64d6192fff06d98162bdb0421d010eb0283f

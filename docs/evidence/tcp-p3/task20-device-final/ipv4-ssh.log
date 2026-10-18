@@ -1,0 +1,9 @@
+[96183] Oct 15 19:40:45 Forced command set to 'echo HP_TASK20_SSH'
+[96183] Oct 15 19:40:45 Not backgrounding
+[96236] Oct 15 19:40:46 Child connection from 127.0.0.1:59686
+[96236] Oct 15 19:40:46 Pubkey auth succeeded for 'root' with ssh-ed25519 key SHA256:MT9/zhfHQ0vvK8QczEmey2wW4FITgYu79jlT0DYzvMM from 127.0.0.1:59686
+[96236] Oct 15 19:40:46 Exit (root) from <127.0.0.1:59686>: Exited normally
+[96278] Oct 15 19:40:46 Child connection from 127.0.0.1:59694
+[96278] Oct 15 19:40:46 Pubkey auth succeeded for 'root' with ssh-ed25519 key SHA256:MT9/zhfHQ0vvK8QczEmey2wW4FITgYu79jlT0DYzvMM from 127.0.0.1:59694
+[96278] Oct 15 19:40:46 Exit (root) from <127.0.0.1:59694>: Exited normally
+[96183] Oct 15 19:40:48 Early exit: Terminated by signal

@@ -1,0 +1,60 @@
+{
+  "artifact": "luci-app-homestun_0.1.0-r1_all.ipk",
+  "bytes": 4239,
+  "sha256": "9fb1269c6b8f3c679d07aa8631caa1e3ea3a817670402a039b37e6f4178949b2",
+  "luci_revision": "luci-d88390be4ec9722cb427fee03368fc8c8582627d",
+  "source_binding": [
+    {
+      "file": "Makefile",
+      "sha256": "342b9cb58ae58c22baa518d8796526c6d904955a8af6610f479132c3b43b26b7"
+    },
+    {
+      "file": "htdocs/luci-static/resources/view/homestun/schema.js",
+      "sha256": "ef9c07deda1c660c7a426fdbe65ce8b77f54be4d51c2290737b2dced4116d939"
+    },
+    {
+      "file": "htdocs/luci-static/resources/view/homestun/settings.js",
+      "sha256": "808cf76e061e34c501f68a957622f009dd2e36b4d5b3825acb690479a67cc1fe"
+    },
+    {
+      "file": "root/usr/libexec/rpcd/homestun",
+      "sha256": "aafb2973af716ed7be32ec14b633f1566f021b1784f7c20f52469894120a7b5b"
+    },
+    {
+      "file": "root/usr/share/luci/menu.d/luci-app-homestun.json",
+      "sha256": "f7389d2fd29af927f6109be217a704b2f20eb00d15f1e481e353798889f8d27d"
+    },
+    {
+      "file": "root/usr/share/rpcd/acl.d/luci-app-homestun.json",
+      "sha256": "93e035b94fa36d67459fe4d3a7b805826722a14078ecd60af9f3aa0498c8b88b"
+    },
+    {
+      "file": "tests/browser-acceptance.cjs",
+      "sha256": "f231c99b1e4a3253a6b2b4cd4a385026eb22cdd0a2b17e38f43f5b875b498639"
+    },
+    {
+      "file": "tests/persistence.cjs",
+      "sha256": "0643383a73c716a20d1a04be19f827a96be3660e671a6efe947e143f42981c78"
+    },
+    {
+      "file": "tests/real-loader.cjs",
+      "sha256": "9f76f66202dfa101848d4641279d7d6d55a598a2c80a8e191abd47c02b9b1354"
+    },
+    {
+      "file": "tests/row-lifecycle.test.cjs",
+      "sha256": "f471e3f1d5de894ef0ed509930da1ca01db990f1dda43160f40447bbb1bd0b31"
+    },
+    {
+      "file": "tests/save.test.cjs",
+      "sha256": "7062d7b1df86701ab418cc23c34abe51aa49d4a7a553f84865cca94e346dca46"
+    },
+    {
+      "file": "tests/ui.test.cjs",
+      "sha256": "3a5d836203c6d1556bd95e1cf628b2cf3b78ae66711d7872b5249034b3c363f4"
+    },
+    {
+      "file": "tests/validation.test.cjs",
+      "sha256": "782170b212047666fd3d895da4cfd021d6930121cfa2218cfef82027cb7528cd"
+    }
+  ]
+}

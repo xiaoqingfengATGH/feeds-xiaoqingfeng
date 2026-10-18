@@ -1,0 +1,28 @@
+{
+  "mode": "legacy",
+  "scope": "WSL loopback only; no UPnP",
+  "ports": [
+    47807,
+    45383,
+    47841
+  ],
+  "nginx_version": "nginx version: nginx/1.26.1 (x86_64-pc-linux-gnu)",
+  "raw_http": {
+    "headers": "HTTP/1.1 200 OK\r\nServer: nginx/1.26.1\r\nDate: Mon, 12 Oct 2026 12:19:20 GMT\r\nContent-Type: text/plain\r\nContent-Length: 168\r\nConnection: close",
+    "ticks": [],
+    "bytes": 312,
+    "headers_elapsed": 0.003481840999995711,
+    "outcome": "EOF",
+    "elapsed": 0.0035396629999695506
+  },
+  "status": "FAIL",
+  "error": "Not enough application ticks: 0",
+  "nginx_error": "",
+  "cleanup": {
+    "process_exited": true,
+    "47807_closed": true,
+    "45383_closed": true,
+    "47841_closed": true,
+    "fixture_directory_removed": true
+  }
+}

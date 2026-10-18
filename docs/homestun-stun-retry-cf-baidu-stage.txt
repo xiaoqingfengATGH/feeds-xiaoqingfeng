@@ -1,0 +1,120 @@
+<s:Envelope xmlns:s="http://schemas.xmlsoap.org/soap/envelope/" s:encodingStyle="http://schemas.xmlsoap.org/soap/encoding/"><s:Body><s:Fault><faultcode>s:Client</faultcode><faultstring>UPnPError</faultstring><detail><UPnPError xmlns="urn:schemas-upnp-org:control-1-0"><errorCode>714</errorCode><errorDescription>NoSuchEntryInArray</errorDescription></UPnPError></detail></s:Fault></s:Body></s:Envelope>
+Active Internet connections (only servers)
+Proto Recv-Q Send-Q Local Address           Foreign Address         State       
+tcp        0      0 192.168.1.2:53          0.0.0.0:*               LISTEN      
+tcp        0      0 0.0.0.0:443             0.0.0.0:*               LISTEN      
+tcp        0      0 192.168.1.2:22          0.0.0.0:*               LISTEN      
+tcp        0      0 172.17.0.1:2004         0.0.0.0:*               LISTEN      
+tcp        0      0 192.168.1.2:139         0.0.0.0:*               LISTEN      
+tcp        0      0 0.0.0.0:5355            0.0.0.0:*               LISTEN      
+tcp        0      0 127.0.0.1:53            0.0.0.0:*               LISTEN      
+tcp        0      0 0.0.0.0:80              0.0.0.0:*               LISTEN      
+tcp        0      0 192.168.1.2:445         0.0.0.0:*               LISTEN      
+tcp        0      0 0.0.0.0:1026            0.0.0.0:*               LISTEN      
+tcp        0      0 0.0.0.0:21              0.0.0.0:*               LISTEN      
+tcp        0      0 192.168.1.2:7681        0.0.0.0:*               LISTEN      
+tcp        0      0 127.0.0.1:2002          0.0.0.0:*               LISTEN      
+tcp        0      0 127.0.0.1:2003          0.0.0.0:*               LISTEN      
+tcp        0      0 127.0.0.1:2004          0.0.0.0:*               LISTEN      
+tcp        0      0 172.17.0.1:53           0.0.0.0:*               LISTEN      
+tcp        0      0 0.0.0.0:60000           0.0.0.0:*               LISTEN      
+tcp        0      0 0.0.0.0:3702            0.0.0.0:*               LISTEN      
+tcp        0      0 192.168.1.2:2004        0.0.0.0:*               LISTEN      
+tcp        0      0 fd89:878e:a47f::1:22    :::*                    LISTEN      
+tcp        0      0 ::1:2004                :::*                    LISTEN      
+tcp        0      0 fd89:878e:a47f::1:53    :::*                    LISTEN      
+tcp        0      0 :::5355                 :::*                    LISTEN      
+tcp        0      0 :::80                   :::*                    LISTEN      
+tcp        0      0 :::1070                 :::*                    LISTEN      
+tcp        0      0 fe80::290:a6ff:fee0:382c:53 :::*                    LISTEN      
+tcp        0      0 fe80::290:a6ff:fee0:382c:2004 :::*                    LISTEN      
+tcp        0      0 :::2001                 :::*                    LISTEN      
+tcp        0      0 :::9876                 :::*                    LISTEN      
+tcp        0      0 :::3702                 :::*                    LISTEN      
+tcp        0      0 fd89:878e:a47f::1:2004  :::*                    LISTEN      
+tcp        0      0 ::1:53                  :::*                    LISTEN      
+6ead1d3a553f28348a58b4a3055b8873aee4916b2fe3471b67e960cbfba2dacd  /etc/config/network
+52a2755e9a380e1e6d526204ec443dcdd85639f07d2903f64839d073edd55795  /etc/config/firewall
+62cb51fe983f98e057c368d4654675d15a34572b68b6ae0fca241887ea9a58c4  /etc/config/passwall2
+
+
+/usr/bin/natmap-real: unrecognized option: -
+Usage:
+ natmap [options]
+
+Options:
+ -4                  use IPv4
+ -6                  use IPv6
+ -u                  UDP mode
+ -d                  run as daemon
+ -i <interface>      network interface or IP address
+ -k <interval>       seconds between each keep-alive
+ -c <count>          UDP STUN check cycle (every <count> intervals)
+ -s <addr>[:port]    domain name or address of STUN server
+ -h <addr>[:port]    domain name or address of HTTP server
+ -e <path>           script path for notify mapped address
+ -f <mark>           fwmark value (hex: 0x1, dec: 1, oct: 01)
+
+Bind options:
+ -b                  port number range for binding
+                     - <0>: random allocation
+                     - <port>: specified
+                     - <port>~<port>: random allocation within the range
+                     - <port>-<port>: sequential allocation within the range
+
+Forward options:
+ -C <congestion>     TCP congestion control algorithm
+ -T <timeout>        port forwarding timeout in seconds
+ -t <address>        domain name or address of forward target
+ -p <port>           port number of forward target (0: use public port)
+
+Version: 20260214
+ba2df4ead5562b0bc0359881ffce1a07d65f62403b6e0b7e0980731be09c45b1  /tmp/homestun-test/stun-retry/root/usr/bin/natmap-real
+540b98eb8be0ed039d9f8bb19b52d287f1b5c7d594321b397e3d8783e50072a4  /tmp/homestun-test/stun-retry/root/usr/libexec/homestun-lease
+
+-----BEGIN CERTIFICATE-----
+MIIDUjCCAjqgAwIBAgIUI6T/CWafT9FVvT9H9Sj1hj0irGcwDQYJKoZIhvcNAQEL
+BQAwJTEjMCEGA1UEAwwaaG9tZXN0dW4tdGVzdC5ob21lbGVkZS5jb20wHhcNMjYx
+MDEyMTMwNzM4WhcNMjYxMDEzMTMwNzM4WjAlMSMwIQYDVQQDDBpob21lc3R1bi10
+ZXN0LmhvbWVsZWRlLmNvbTCCASIwDQYJKoZIhvcNAQEBBQADggEPADCCAQoCggEB
+ALkQUszV7K+/pXp+7Zjz5oD5FXwxlaKWBqyNlUqXtni5Ps/3XngqcBu0spGh2bcs
+n5BNrFr4H3zhTwBKrcbedlwoyrNkVdMryPEyf8OGdXgxnuHqb5BWk34CtZ9DqIy0
+FSeMgBPdfBpCGxX644jbHsRtNUgEo8UIJ8jHQ1h/LRuTVDYebLUfNBBWQJUiLaKr
+vHl1VE3etXdRp955xeg12mXM1thIsHoABIddHvslPCy7gfr1rkwciCWZksxezF+d
+nyBC5328IYlfkX6hLLIf7dZeK7xtvXuUUFWVmi3Nd4s9xKyWXWvRoMfn3twuAUGK
+U+9yZBdNRzCrQqI4K5EPh0sCAwEAAaN6MHgwHQYDVR0OBBYEFBxK1LA1VaxCKDaC
+tOYziDHXkSlvMB8GA1UdIwQYMBaAFBxK1LA1VaxCKDaCtOYziDHXkSlvMA8GA1Ud
+EwEB/wQFMAMBAf8wJQYDVR0RBB4wHIIaaG9tZXN0dW4tdGVzdC5ob21lbGVkZS5j
+b20wDQYJKoZIhvcNAQELBQADggEBAJjn2WVXCg+kDdSx6F1jvlblDOvXOzwoVWXP
+/FY7N1rSIzz05iUXumnDZgYscByFGC3JtOxppolq/ryEXfhlD3EkXg5xIiRxOINx
++8K0VRC9q8Zp3+m3GP6gunlEjKNLBQCpJbHWixbwhC9iMP0l6lCQnFiAHWZQuVLU
+MI1mU2HX9l/AgiFeMyOurkjMEzW3DjrI0jYIXlGtYrIOWvlw85Ma+OxbJdF0t//i
+H5wdnxtQUVB2Jr73S6S9BNoYF86PfFjVl7xdVGjp5PnUP3nuucGIRa3ZYg9Te3Pq
+Wapl5fZsk7UYqGUeKrRFnd2BCB2spaPf/Ou8M9NmqzPAL4AMh8Y=
+-----END CERTIFICATE-----
+
+{
+  "gateway_initial": {
+    "at": "2026-10-12T13:07:37.306136+00:00",
+    "exact_port": 18444,
+    "protocol": "TCP",
+    "fault": "714"
+  },
+  "initial_listeners_config": "Active Internet connections (only servers)\nProto Recv-Q Send-Q Local Address           Foreign Address         State       \ntcp        0      0 192.168.1.2:53          0.0.0.0:*               LISTEN      \ntcp        0      0 0.0.0.0:443             0.0.0.0:*               LISTEN      \ntcp        0      0 192.168.1.2:22          0.0.0.0:*               LISTEN      \ntcp        0      0 172.17.0.1:2004         0.0.0.0:*               LISTEN      \ntcp        0      0 192.168.1.2:139         0.0.0.0:*               LISTEN      \ntcp        0      0 0.0.0.0:5355            0.0.0.0:*               LISTEN      \ntcp        0      0 127.0.0.1:53            0.0.0.0:*               LISTEN      \ntcp        0      0 0.0.0.0:80              0.0.0.0:*               LISTEN      \ntcp        0      0 192.168.1.2:445         0.0.0.0:*               LISTEN      \ntcp        0      0 0.0.0.0:1026            0.0.0.0:*               LISTEN      \ntcp        0      0 0.0.0.0:21              0.0.0.0:*               LISTEN      \ntcp        0      0 192.168.1.2:7681        0.0.0.0:*               LISTEN      \ntcp        0      0 127.0.0.1:2002          0.0.0.0:*               LISTEN      \ntcp        0      0 127.0.0.1:2003          0.0.0.0:*               LISTEN      \ntcp        0      0 127.0.0.1:2004          0.0.0.0:*               LISTEN      \ntcp        0      0 172.17.0.1:53           0.0.0.0:*               LISTEN      \ntcp        0      0 0.0.0.0:60000           0.0.0.0:*               LISTEN      \ntcp        0      0 0.0.0.0:3702            0.0.0.0:*               LISTEN      \ntcp        0      0 192.168.1.2:2004        0.0.0.0:*               LISTEN      \ntcp        0      0 fd89:878e:a47f::1:22    :::*                    LISTEN      \ntcp        0      0 ::1:2004                :::*                    LISTEN      \ntcp        0      0 fd89:878e:a47f::1:53    :::*                    LISTEN      \ntcp        0      0 :::5355                 :::*                    LISTEN      \ntcp        0      0 :::80                   :::*                    LISTEN      \ntcp        0      0 :::1070                 :::*                    LISTEN      \ntcp        0      0 fe80::290:a6ff:fee0:382c:53 :::*                    LISTEN      \ntcp        0      0 fe80::290:a6ff:fee0:382c:2004 :::*                    LISTEN      \ntcp        0      0 :::2001                 :::*                    LISTEN      \ntcp        0      0 :::9876                 :::*                    LISTEN      \ntcp        0      0 :::3702                 :::*                    LISTEN      \ntcp        0      0 fd89:878e:a47f::1:2004  :::*                    LISTEN      \ntcp        0      0 ::1:53                  :::*                    LISTEN      \n6ead1d3a553f28348a58b4a3055b8873aee4916b2fe3471b67e960cbfba2dacd  /etc/config/network\n52a2755e9a380e1e6d526204ec443dcdd85639f07d2903f64839d073edd55795  /etc/config/firewall\n62cb51fe983f98e057c368d4654675d15a34572b68b6ae0fca241887ea9a58c4  /etc/config/passwall2\n",
+  "test_harness_version": "stun-retry-v1",
+  "generation": "realnat-20261012T130736Z",
+  "marker": "realnat-20261012T130736Z-584978b9f5171411e02c4f62",
+  "host": "homestun-test.homelede.com",
+  "ttl_seconds": 70,
+  "staged_at": "2026-10-12T13:07:38.533027+00:00",
+  "variant": "cf-baidu",
+  "stun_server": "141.101.90.1:3478",
+  "http_keeper": "www.baidu.com",
+  "http_keeper_ip": "110.242.70.57",
+  "keep_interval_seconds": 5,
+  "stage": "ready; no lease started",
+  "bypass_method": "upstream -f 0xff SO_MARK for owned base/STUN/listener sockets only; no nft or route edits",
+  "natmap_revision": "f8d7996710677c9885c148dda80a42d626f0a17b",
+  "natmap_sha256": "ba2df4ead5562b0bc0359881ffce1a07d65f62403b6e0b7e0980731be09c45b1",
+  "lease_sha256": "540b98eb8be0ed039d9f8bb19b52d287f1b5c7d594321b397e3d8783e50072a4"
+}

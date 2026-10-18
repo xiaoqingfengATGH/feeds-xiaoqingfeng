@@ -1,0 +1,127 @@
+Updating feed 'luci' from '/home/eric/homestun-sdk-check/upstream/luci-d88390be4ec9722cb427fee03368fc8c8582627d' ...
+Create index file './feeds/luci.index' 
+Updating feed 'homestunlocal' from '/home/eric/homestun-sdk-check/source-feed' ...
+Create index file './feeds/homestunlocal.index' 
+[MCollecting package info: feeds/homestunlocal/homestun[MCollecting package info: merging...[MCollecting package info: done
+[MCollecting target info: merging...[MCollecting target info: done
+WARNING: Makefile 'package/kernel/linux/Makefile' has a dependency on 'eip197-mini-firmware', which does not exist
+WARNING: Makefile 'package/kernel/linux/Makefile' has a dependency on 'airoha-en8811h-firmware', which does not exist
+WARNING: Makefile 'package/kernel/linux/Makefile' has a dependency on 'r8169-firmware', which does not exist
+WARNING: Makefile 'package/kernel/linux/Makefile' has a dependency on 'e100-firmware', which does not exist
+WARNING: Makefile 'package/kernel/linux/Makefile' has a dependency on 'bnx2-firmware', which does not exist
+WARNING: Makefile 'package/kernel/linux/Makefile' has a dependency on 'bnx2x-firmware', which does not exist
+WARNING: Makefile 'package/kernel/linux/Makefile' has a dependency on 'ar3k-firmware', which does not exist
+WARNING: Makefile 'package/kernel/linux/Makefile' has a dependency on 'mwifiex-sdio-firmware', which does not exist
+WARNING: Makefile 'package/kernel/linux/Makefile' has a dependency on 'kmod-phy-bcm-ns-usb2', which does not exist
+WARNING: Makefile 'package/kernel/linux/Makefile' has a dependency on 'edgeport-firmware', which does not exist
+WARNING: Makefile 'package/kernel/linux/Makefile' has a dependency on 'r8152-firmware', which does not exist
+WARNING: Makefile 'package/kernel/linux/Makefile' has a dependency on 'kmod-phy-bcm-ns-usb3', which does not exist
+WARNING: Makefile 'package/kernel/linux/Makefile' has a dependency on 'amdgpu-firmware', which does not exist
+WARNING: Makefile 'package/kernel/linux/Makefile' has a dependency on 'i915-firmware-dmc', which does not exist
+WARNING: Makefile 'package/kernel/linux/Makefile' has a dependency on 'radeon-firmware', which does not exist
+WARNING: Makefile 'package/kernel/linux/Makefile' has a dependency on 'kmod-gpio-button-hotplug', which does not exist
+WARNING: Makefile 'package/kernel/linux/Makefile' has a dependency on 'nu801', which does not exist
+WARNING: No feed for package 'luci-app-homestun' found
+WARNING: Makefile 'package/kernel/linux/Makefile' has a dependency on 'eip197-mini-firmware', which does not exist
+WARNING: Makefile 'package/kernel/linux/Makefile' has a dependency on 'airoha-en8811h-firmware', which does not exist
+WARNING: Makefile 'package/kernel/linux/Makefile' has a dependency on 'r8169-firmware', which does not exist
+WARNING: Makefile 'package/kernel/linux/Makefile' has a dependency on 'e100-firmware', which does not exist
+WARNING: Makefile 'package/kernel/linux/Makefile' has a dependency on 'bnx2-firmware', which does not exist
+WARNING: Makefile 'package/kernel/linux/Makefile' has a dependency on 'bnx2x-firmware', which does not exist
+WARNING: Makefile 'package/kernel/linux/Makefile' has a dependency on 'ar3k-firmware', which does not exist
+WARNING: Makefile 'package/kernel/linux/Makefile' has a dependency on 'mwifiex-sdio-firmware', which does not exist
+WARNING: Makefile 'package/kernel/linux/Makefile' has a dependency on 'kmod-phy-bcm-ns-usb2', which does not exist
+WARNING: Makefile 'package/kernel/linux/Makefile' has a dependency on 'edgeport-firmware', which does not exist
+WARNING: Makefile 'package/kernel/linux/Makefile' has a dependency on 'r8152-firmware', which does not exist
+WARNING: Makefile 'package/kernel/linux/Makefile' has a dependency on 'kmod-phy-bcm-ns-usb3', which does not exist
+WARNING: Makefile 'package/kernel/linux/Makefile' has a dependency on 'amdgpu-firmware', which does not exist
+WARNING: Makefile 'package/kernel/linux/Makefile' has a dependency on 'i915-firmware-dmc', which does not exist
+WARNING: Makefile 'package/kernel/linux/Makefile' has a dependency on 'radeon-firmware', which does not exist
+WARNING: Makefile 'package/kernel/linux/Makefile' has a dependency on 'kmod-gpio-button-hotplug', which does not exist
+WARNING: Makefile 'package/kernel/linux/Makefile' has a dependency on 'nu801', which does not exist
+tmp/.config-package.in:7:warning: ignoring type redefinition of 'PACKAGE_ca-bundle' from 'bool' to 'tristate'
+tmp/.config-package.in:82:warning: ignoring type redefinition of 'PACKAGE_libc' from 'bool' to 'tristate'
+tmp/.config-package.in:109:warning: ignoring type redefinition of 'PACKAGE_libgcc' from 'bool' to 'tristate'
+tmp/.config-package.in:223:warning: ignoring type redefinition of 'PACKAGE_libpthread' from 'bool' to 'tristate'
+tmp/.config-package.in:278:warning: ignoring type redefinition of 'PACKAGE_librt' from 'bool' to 'tristate'
+tmp/.config-package.in:425:warning: ignoring type redefinition of 'PACKAGE_ubus' from 'bool' to 'tristate'
+tmp/.config-package.in:436:warning: ignoring type redefinition of 'PACKAGE_ubusd' from 'bool' to 'tristate'
+tmp/.config-package.in:446:warning: ignoring type redefinition of 'PACKAGE_uci' from 'bool' to 'tristate'
+tmp/.config-package.in:2115:warning: ignoring type redefinition of 'PACKAGE_libmbedtls' from 'bool' to 'tristate'
+tmp/.config-package.in:2330:warning: ignoring type redefinition of 'PACKAGE_libblkid' from 'bool' to 'tristate'
+tmp/.config-package.in:2342:warning: ignoring type redefinition of 'PACKAGE_libblobmsg-json' from 'bool' to 'tristate'
+tmp/.config-package.in:2659:warning: ignoring type redefinition of 'PACKAGE_libjson-c' from 'bool' to 'tristate'
+tmp/.config-package.in:2694:warning: ignoring type redefinition of 'PACKAGE_libmnl' from 'bool' to 'tristate'
+tmp/.config-package.in:2860:warning: ignoring type redefinition of 'PACKAGE_libsmartcols' from 'bool' to 'tristate'
+tmp/.config-package.in:2926:warning: ignoring type redefinition of 'PACKAGE_libubox' from 'bool' to 'tristate'
+tmp/.config-package.in:2944:warning: ignoring type redefinition of 'PACKAGE_libubus' from 'bool' to 'tristate'
+tmp/.config-package.in:2963:warning: ignoring type redefinition of 'PACKAGE_libuci' from 'bool' to 'tristate'
+tmp/.config-package.in:2991:warning: ignoring type redefinition of 'PACKAGE_libuuid' from 'bool' to 'tristate'
+tmp/.config-package.in:3764:warning: ignoring type redefinition of 'PACKAGE_partx-utils' from 'bool' to 'tristate'
+tmp/.config-package.in:4070:warning: ignoring type redefinition of 'PACKAGE_jshn' from 'bool' to 'tristate'
+tmp/.config-package.in:4135:warning: ignoring type redefinition of 'PACKAGE_libjson-script' from 'bool' to 'tristate'
+Config-build.in:1247:warning: defaults for choice values not supported
+Config-build.in:1251:warning: defaults for choice values not supported
+Config-build.in:1255:warning: defaults for choice values not supported
+#
+# configuration written to .config
+#
+WARNING: Makefile 'package/kernel/linux/Makefile' has a dependency on 'eip197-mini-firmware', which does not exist
+WARNING: Makefile 'package/kernel/linux/Makefile' has a dependency on 'airoha-en8811h-firmware', which does not exist
+WARNING: Makefile 'package/kernel/linux/Makefile' has a dependency on 'r8169-firmware', which does not exist
+WARNING: Makefile 'package/kernel/linux/Makefile' has a dependency on 'e100-firmware', which does not exist
+WARNING: Makefile 'package/kernel/linux/Makefile' has a dependency on 'bnx2-firmware', which does not exist
+WARNING: Makefile 'package/kernel/linux/Makefile' has a dependency on 'bnx2x-firmware', which does not exist
+WARNING: Makefile 'package/kernel/linux/Makefile' has a dependency on 'ar3k-firmware', which does not exist
+WARNING: Makefile 'package/kernel/linux/Makefile' has a dependency on 'mwifiex-sdio-firmware', which does not exist
+WARNING: Makefile 'package/kernel/linux/Makefile' has a dependency on 'kmod-phy-bcm-ns-usb2', which does not exist
+WARNING: Makefile 'package/kernel/linux/Makefile' has a dependency on 'edgeport-firmware', which does not exist
+WARNING: Makefile 'package/kernel/linux/Makefile' has a dependency on 'r8152-firmware', which does not exist
+WARNING: Makefile 'package/kernel/linux/Makefile' has a dependency on 'kmod-phy-bcm-ns-usb3', which does not exist
+WARNING: Makefile 'package/kernel/linux/Makefile' has a dependency on 'amdgpu-firmware', which does not exist
+WARNING: Makefile 'package/kernel/linux/Makefile' has a dependency on 'i915-firmware-dmc', which does not exist
+WARNING: Makefile 'package/kernel/linux/Makefile' has a dependency on 'radeon-firmware', which does not exist
+WARNING: Makefile 'package/kernel/linux/Makefile' has a dependency on 'kmod-gpio-button-hotplug', which does not exist
+WARNING: Makefile 'package/kernel/linux/Makefile' has a dependency on 'nu801', which does not exist
+make[2]: Entering directory '/home/eric/homestun-sdk-check/openwrt-sdk-24.10.5-x86-64_gcc-13.3.0_musl.Linux-x86_64/scripts/config'
+make[2]: 'conf' is up to date.
+make[2]: Leaving directory '/home/eric/homestun-sdk-check/openwrt-sdk-24.10.5-x86-64_gcc-13.3.0_musl.Linux-x86_64/scripts/config'
+tmp/.config-package.in:7:warning: ignoring type redefinition of 'PACKAGE_ca-bundle' from 'bool' to 'tristate'
+tmp/.config-package.in:82:warning: ignoring type redefinition of 'PACKAGE_libc' from 'bool' to 'tristate'
+tmp/.config-package.in:109:warning: ignoring type redefinition of 'PACKAGE_libgcc' from 'bool' to 'tristate'
+tmp/.config-package.in:223:warning: ignoring type redefinition of 'PACKAGE_libpthread' from 'bool' to 'tristate'
+tmp/.config-package.in:278:warning: ignoring type redefinition of 'PACKAGE_librt' from 'bool' to 'tristate'
+tmp/.config-package.in:425:warning: ignoring type redefinition of 'PACKAGE_ubus' from 'bool' to 'tristate'
+tmp/.config-package.in:436:warning: ignoring type redefinition of 'PACKAGE_ubusd' from 'bool' to 'tristate'
+tmp/.config-package.in:446:warning: ignoring type redefinition of 'PACKAGE_uci' from 'bool' to 'tristate'
+tmp/.config-package.in:2115:warning: ignoring type redefinition of 'PACKAGE_libmbedtls' from 'bool' to 'tristate'
+tmp/.config-package.in:2330:warning: ignoring type redefinition of 'PACKAGE_libblkid' from 'bool' to 'tristate'
+tmp/.config-package.in:2342:warning: ignoring type redefinition of 'PACKAGE_libblobmsg-json' from 'bool' to 'tristate'
+tmp/.config-package.in:2659:warning: ignoring type redefinition of 'PACKAGE_libjson-c' from 'bool' to 'tristate'
+tmp/.config-package.in:2694:warning: ignoring type redefinition of 'PACKAGE_libmnl' from 'bool' to 'tristate'
+tmp/.config-package.in:2860:warning: ignoring type redefinition of 'PACKAGE_libsmartcols' from 'bool' to 'tristate'
+tmp/.config-package.in:2926:warning: ignoring type redefinition of 'PACKAGE_libubox' from 'bool' to 'tristate'
+tmp/.config-package.in:2944:warning: ignoring type redefinition of 'PACKAGE_libubus' from 'bool' to 'tristate'
+tmp/.config-package.in:2963:warning: ignoring type redefinition of 'PACKAGE_libuci' from 'bool' to 'tristate'
+tmp/.config-package.in:2991:warning: ignoring type redefinition of 'PACKAGE_libuuid' from 'bool' to 'tristate'
+tmp/.config-package.in:3764:warning: ignoring type redefinition of 'PACKAGE_partx-utils' from 'bool' to 'tristate'
+tmp/.config-package.in:4070:warning: ignoring type redefinition of 'PACKAGE_jshn' from 'bool' to 'tristate'
+tmp/.config-package.in:4135:warning: ignoring type redefinition of 'PACKAGE_libjson-script' from 'bool' to 'tristate'
+Config-build.in:1247:warning: defaults for choice values not supported
+Config-build.in:1251:warning: defaults for choice values not supported
+Config-build.in:1255:warning: defaults for choice values not supported
+#
+# No change to .config
+#
+make[1]: Entering directory '/home/eric/homestun-sdk-check/openwrt-sdk-24.10.5-x86-64_gcc-13.3.0_musl.Linux-x86_64'
+make[1]: *** No rule to make target 'package/feeds/homestunlocal/luci-app-homestun/compile'.  Stop.
+make[1]: Leaving directory '/home/eric/homestun-sdk-check/openwrt-sdk-24.10.5-x86-64_gcc-13.3.0_musl.Linux-x86_64'
+make: *** [/home/eric/homestun-sdk-check/openwrt-sdk-24.10.5-x86-64_gcc-13.3.0_musl.Linux-x86_64/include/toplevel.mk:226: package/feeds/homestunlocal/luci-app-homestun/compile] Error 2
+Traceback (most recent call last):
+  File "/mnt/d/DevPortal/homelede/feeds-xiaoqingfeng-homestun/docs/homestun-luci-build.py", line 37, in <module>
+    run(['timeout','300','make','-j2','package/feeds/homestunlocal/luci-app-homestun/compile','V=s'])
+  File "/mnt/d/DevPortal/homelede/feeds-xiaoqingfeng-homestun/docs/homestun-luci-build.py", line 8, in run
+    subprocess.run(args,cwd=cwd,check=True)
+  File "/usr/lib/python3.12/subprocess.py", line 571, in run
+    raise CalledProcessError(retcode, process.args,
+subprocess.CalledProcessError: Command '['timeout', '300', 'make', '-j2', 'package/feeds/homestunlocal/luci-app-homestun/compile', 'V=s']' returned non-zero exit status 2.

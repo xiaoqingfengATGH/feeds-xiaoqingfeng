@@ -1,0 +1,6 @@
+lua: /tmp/homepublish-tcp-p1-json/device-tcp-p1-json.lua:11: public empty array became object: services
+stack traceback:
+	[C]: in function 'assert'
+	/tmp/homepublish-tcp-p1-json/device-tcp-p1-json.lua:11: in main chunk
+	[C]: ?
+EXIT=1

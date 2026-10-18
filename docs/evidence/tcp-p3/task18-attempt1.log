@@ -1,0 +1,11 @@
+PASS private snapshot uid0 mode0600 / runtime0700
+P3_TASK18_RENDER_GREEN
+PASS mixed HTTPS business systemCA/hostname + exact PROXY identity; forged headers replaced
+PASS end-to-end backend TLS hostname/fixtureCA + original client mTLS identity (no PROXY to backend)
+PASS backend certificate fingerprint unchanged through passthrough
+PASS backend mTLS denies missing client certificate, no business marker
+PASS raw garbage/client-PROXY/idle EOF within 4 seconds
+PASS unknown/suffix SNI + no SNI + unrecognized + idle timeout rejected without business fallback
+PASS business source certificate/key SHA256 + uid/gid/mode preserved (server-only comparison)
+PASS private processes exited; all snapshots + fixture keys removed
+PASS live journal + firewall/management/proxy configs + system nginx unchanged

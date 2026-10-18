@@ -1,0 +1,41 @@
+Active Internet connections (only servers)
+Proto Recv-Q Send-Q Local Address           Foreign Address         State       PID/Program name    
+tcp        0      0 192.168.1.2:53          0.0.0.0:*               LISTEN      15646/dnsmasq
+tcp        0      0 0.0.0.0:443             0.0.0.0:*               LISTEN      36655/dropbear
+tcp        0      0 192.168.1.2:22          0.0.0.0:*               LISTEN      34089/dropbear
+tcp        0      0 172.17.0.1:2004         0.0.0.0:*               LISTEN      15760/dnsmasq_acl_d
+tcp        0      0 192.168.1.2:139         0.0.0.0:*               LISTEN      5871/smbd
+tcp        0      0 0.0.0.0:5355            0.0.0.0:*               LISTEN      8119/wsdd2
+tcp        0      0 127.0.0.1:53            0.0.0.0:*               LISTEN      15646/dnsmasq
+tcp        0      0 0.0.0.0:80              0.0.0.0:*               LISTEN      4308/uhttpd
+tcp        0      0 192.168.1.2:445         0.0.0.0:*               LISTEN      5871/smbd
+tcp        0      0 0.0.0.0:1026            0.0.0.0:*               LISTEN      3361/php8-fcgi
+tcp        0      0 0.0.0.0:21              0.0.0.0:*               LISTEN      4369/vsftpd
+tcp        0      0 192.168.1.2:7681        0.0.0.0:*               LISTEN      7756/ttyd
+tcp        0      0 127.0.0.1:2002          0.0.0.0:*               LISTEN      16371/xray
+tcp        0      0 127.0.0.1:2003          0.0.0.0:*               LISTEN      15641/chinadns-ng
+tcp        0      0 127.0.0.1:2004          0.0.0.0:*               LISTEN      15760/dnsmasq_acl_d
+tcp        0      0 172.17.0.1:53           0.0.0.0:*               LISTEN      15646/dnsmasq
+tcp        0      0 0.0.0.0:60000           0.0.0.0:*               LISTEN      6967/haproxy
+tcp        0      0 0.0.0.0:3702            0.0.0.0:*               LISTEN      8119/wsdd2
+tcp        0      0 192.168.1.2:2004        0.0.0.0:*               LISTEN      15760/dnsmasq_acl_d
+tcp        0      0 fd89:878e:a47f::1:22    :::*                    LISTEN      34089/dropbear
+tcp        0      0 ::1:2004                :::*                    LISTEN      15760/dnsmasq_acl_d
+tcp        0      0 fd89:878e:a47f::1:53    :::*                    LISTEN      15646/dnsmasq
+tcp        0      0 :::5355                 :::*                    LISTEN      8119/wsdd2
+tcp        0      0 :::80                   :::*                    LISTEN      4308/uhttpd
+tcp        0      0 :::1070                 :::*                    LISTEN      16371/xray
+tcp        0      0 fe80::290:a6ff:fee0:382c:53 :::*                    LISTEN      15646/dnsmasq
+tcp        0      0 fe80::290:a6ff:fee0:382c:2004 :::*                    LISTEN      15760/dnsmasq_acl_d
+tcp        0      0 :::2001                 :::*                    LISTEN      16371/xray
+tcp        0      0 :::9876                 :::*                    LISTEN      6266/ddns-go
+tcp        0      0 :::3702                 :::*                    LISTEN      8119/wsdd2
+tcp        0      0 fd89:878e:a47f::1:2004  :::*                    LISTEN      15760/dnsmasq_acl_d
+tcp        0      0 ::1:53                  :::*                    LISTEN      15646/dnsmasq
+52a2755e9a380e1e6d526204ec443dcdd85639f07d2903f64839d073edd55795  /etc/config/firewall
+6ead1d3a553f28348a58b4a3055b8873aee4916b2fe3471b67e960cbfba2dacd  /etc/config/network
+43dbb7d14614af6c7a323b97cf24830d2d87533d9b1e03ecc9d56ba5d0ec725b  /etc/config/homepublish
+19d9727d0589bd9ae7314a541a8675a02df46cbbf68617505e8de537cf632d12  /tmp/homepublish-tcp-p0/sslh-select
+37af7f3f46546e4da28197c98f12d5bbecbfc4c4d8ca8b70abfd9debbad7cf87  /tmp/homepublish-tcp-p0/nginx-stream
+PRIVATE_FIXTURE_REMOVED
+EXIT=0

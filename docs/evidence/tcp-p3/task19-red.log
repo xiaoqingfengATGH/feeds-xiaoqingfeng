@@ -1,0 +1,8 @@
+lua: /tmp/homepublish-tcp-p3/device-tcp-p3-tcp-render.lua:9: independent TCP unsupported: P3 route type not implemented: tcp_forward
+stack traceback:
+	[C]: in function 'assert'
+	/tmp/homepublish-tcp-p3/device-tcp-p3-tcp-render.lua:9: in main chunk
+	[C]: ?
+PASS private processes exited; all snapshots + fixture keys removed
+PASS live journal + firewall/management/proxy configs + system nginx unchanged
+netstat: showing only processes with your user ID

@@ -1,0 +1,21 @@
+2026/10/15 15:08:48 [notice] 41567#0: using the "epoll" event method
+2026/10/15 15:08:48 [notice] 41567#0: nginx/1.26.1
+2026/10/15 15:08:48 [notice] 41567#0: built by gcc 13.3.0 (OpenWrt GCC 13.3.0 r29087-d9c5716d1d) 
+2026/10/15 15:08:48 [notice] 41567#0: OS: Linux 6.18.55
+2026/10/15 15:08:48 [notice] 41567#0: getrlimit(RLIMIT_NOFILE): 1024:4096
+Landlock: Failed to create a rulesetPASS BOTH_PROCESSES_NONROOT
+tls:connection from ::1:52126 to ::1:49300 forwarded from 127.0.0.1:37226 to 127.0.0.1:49302
+2026/10/15 15:08:49 [error] 41567#0: *1 connect() failed (111: Connection refused) while proxying connection, client: 127.0.0.1, server: 127.0.0.1:49302, upstream: "127.0.0.1:49301", bytes from/to client:75/0, bytes from/to upstream:0/0
+Proto tls -1: 0/0 cnx
+Proto tls -1: 0/0 cnx
+2026/10/15 15:08:49 [notice] 41567#0: signal 15 (SIGTERM) received from 41564, exiting
+2026/10/15 15:08:49 [notice] 41567#0: exit
+/tmp/homepublish-tcp-p0/device-tcp-p0-identity.lua:32: bad response 
+stack traceback:
+	[C]: in function 'assert'
+	/tmp/homepublish-tcp-p0/device-tcp-p0-identity.lua:32: in function 'request'
+	/tmp/homepublish-tcp-p0/device-tcp-p0-identity.lua:81: in function </tmp/homepublish-tcp-p0/device-tcp-p0-identity.lua:48>
+	[C]: in function 'xpcall'
+	/tmp/homepublish-tcp-p0/device-tcp-p0-identity.lua:88: in main chunk
+	[C]: ?
+EXIT=1

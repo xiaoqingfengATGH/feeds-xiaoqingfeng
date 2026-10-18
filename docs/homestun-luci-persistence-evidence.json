@@ -1,0 +1,26 @@
+{
+  "before": {
+    "state": "disabled",
+    "publication": "disabled",
+    "mapped": "unknown",
+    "reachable": "unverified"
+  },
+  "after": {
+    "state": "configured",
+    "publication": "disabled",
+    "mapped": "unknown",
+    "reachable": "unverified"
+  },
+  "other_changes": {
+    "changes": [
+      [
+        "set",
+        "main",
+        "value",
+        "staged-other"
+      ]
+    ]
+  },
+  "plan_readback": "config fixture 'main'\n option value 'before'\nconfigured\n60\n18444\n18443\nturn.cloudflare.com\nexample.com\n",
+  "stderr": ""
+}

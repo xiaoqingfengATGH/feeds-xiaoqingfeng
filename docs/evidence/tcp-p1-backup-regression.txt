@@ -1,0 +1,15 @@
+PASS exact original bytes, private mode, updated readback, legacy two-return callback, capability
+PASS equal backup reuse keeps inode and response-only API
+PASS unequal backup fail closed
+PASS symlink backup fail closed
+PASS foreign mode fail closed
+PASS foreign owner fail closed
+PASS multiple hardlinks fail closed
+PASS FIFO backup fail closed
+PASS directory backup fail closed
+PASS missing original rejects migration
+PASS read-only true and write false do not create backup
+PASS third return type guarded
+PASS safe preexisting backup survives later failure
+TOTAL backup device assertions PASS
+DEVICE_EXIT=0

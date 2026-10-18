@@ -1,0 +1,4 @@
+PASS owned private directory absent
+6ead1d3a553f28348a58b4a3055b8873aee4916b2fe3471b67e960cbfba2dacd  /etc/config/network
+52a2755e9a380e1e6d526204ec443dcdd85639f07d2903f64839d073edd55795  /etc/config/firewall
+43dbb7d14614af6c7a323b97cf24830d2d87533d9b1e03ecc9d56ba5d0ec725b  /etc/config/homepublish

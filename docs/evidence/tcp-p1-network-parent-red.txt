@@ -1,0 +1,14 @@
+Device: root@127.0.0.1:222; OpenWrt 24.10.5 / HomeLede v2026.10.01.
+All ssh/scp: ProxyCommand=none ProxyJump=none IdentitiesOnly=yes BatchMode=yes -i D:/DevPortal/CloudHosts/HomePri.key; scp -O -P222.
+Private stage /tmp/homepublish-p1-network-parent, mkdir with umask 077.
+Command: lua /tmp/homepublish-p1-network-parent/device-tcp-p1-network.lua /tmp/homepublish-p1-network-parent
+Exit: 1
+PASS live fixed ubus/UCI inventory and exact LAN resolution
+PASS classification, delegated local IPv6, exclusion, ambiguity, down/missing, malformed, deterministic summary
+PASS malformed IPv6 and real-adapter dependency failure returns structured unknown
+lua: ...epublish-p1-network-parent/device-tcp-p1-network.lua:86: canonical IPv6 binding must resolve compressed inventory: ADDRESS_UNAVAILABLE
+Actual canonical-v2.validate produced fd00:0:0:0:0:0:0:1 from FD00::1; fixture inventory retains fd00::1.
+Pre-test config hashes:
+6ead1d3a553f28348a58b4a3055b8873aee4916b2fe3471b67e960cbfba2dacd /etc/config/network
+52a2755e9a380e1e6d526204ec443dcdd85639f07d2903f64839d073edd55795 /etc/config/firewall
+43dbb7d14614af6c7a323b97cf24830d2d87533d9b1e03ecc9d56ba5d0ec725b /etc/config/homepublish

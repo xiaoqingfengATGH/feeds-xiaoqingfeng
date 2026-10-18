@@ -1,0 +1,4 @@
+/etc/config/firewall: OK
+16371
+management HTTP 200
+PASS state/ACME exact backup restored; revision0 disabled latch confirmed; backends/controller/Nginx absent; private runtime and fixture cert/key dirs absent; stale owned control socket removed; both init disabled; listeners routes firewall unchanged; SSH reconnect successful

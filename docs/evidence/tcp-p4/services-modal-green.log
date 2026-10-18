@@ -1,0 +1,70 @@
+ACTUAL_NEW_SERVICE_ACCESS_DOM 新服务
+基本设置
+接入设置
+后端设置
+高级设置
+参与发布
+名称
+发布方式
+HTTPS 反向代理
+TLS 透传
+原生 SSH 共入口
+独立端口 TCP 转发
+域名（精确匹配）
+HTTPS 证书模式
+继承入口默认证书
+独立指定
+后端地址
+填写主机名或裸 IP 地址，不含协议、路径及端口。
+后端端口
+后端协议
+HTTP
+HTTPS（系统 CA 验证）
+允许连接的后端网段
++
+限制本应用可以连接的后端地址范围，不是允许访问服务的客户端来源网段。
+业务鉴权确认
+尚未确认
+已确认后端业务鉴权
+管理服务
+关闭 保存
+PASS dependencies https_proxy
+PASS dependencies tls_passthrough
+locator.click: Timeout 30000ms exceeded.
+Call log:
+[2m  - waiting for locator('#modal_overlay a').filter({ hasText: '接入设置' })[22m
+[2m    - locator resolved to <a href="#" class="nav-link">接入设置</a>[22m
+[2m  - attempting click action[22m
+[2m    2 × waiting for element to be visible, enabled and stable[22m
+[2m      - element is not visible[22m
+[2m    - retrying click action[22m
+[2m    - waiting 20ms[22m
+[2m    2 × waiting for element to be visible, enabled and stable[22m
+[2m      - element is not visible[22m
+[2m    - retrying click action[22m
+[2m      - waiting 100ms[22m
+[2m    59 × waiting for element to be visible, enabled and stable[22m
+[2m       - element is not visible[22m
+[2m     - retrying click action[22m
+[2m       - waiting 500ms[22m
+
+    at D:\DevPortal\homelede\homepublish-product\luci-app-homepublish\tests\p4-services-modal-browser.cjs:7:286 {
+  log: [
+    "  - waiting for locator('#modal_overlay a').filter({ hasText: '接入设置' })",
+    '    - locator resolved to <a href="#" class="nav-link">接入设置</a>',
+    '  - attempting click action',
+    '    2 × waiting for element to be visible, enabled and stable',
+    '      - element is not visible',
+    '    - retrying click action',
+    '    - waiting 20ms',
+    '    2 × waiting for element to be visible, enabled and stable',
+    '      - element is not visible',
+    '    - retrying click action',
+    '      - waiting 100ms',
+    '    59 × waiting for element to be visible, enabled and stable',
+    '       - element is not visible',
+    '     - retrying click action',
+    '       - waiting 500ms'
+  ],
+  name: 'TimeoutError'
+}

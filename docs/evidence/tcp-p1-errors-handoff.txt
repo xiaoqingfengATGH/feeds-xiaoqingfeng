@@ -1,0 +1,23 @@
+P1 public CLI errors repair handoff
+
+Modified only homepublish/files/usr/share/homepublish/product-cli.lua; added homepublish/tests/device-tcp-p1-errors.lua and docs/evidence/tcp-p1-errors*.txt. No C store edits, commit, push, installed writes, restart, listener, or system configuration changes.
+
+Outcomes:
+- Structured nil/table inventory errors no longer invoke err:match and crash. Export fixed NETWORK_UNAVAILABLE shape (field, safe message, retryable boolean), never arbitrary internal table metadata.
+- Exact native-store error vocabulary now maps STATE_UNKNOWN, including post-rename durability unknown, unsafe store metadata, migration backup failure, candidate close failure, busy/store/callback failures. No substring classification and no raw store messages/path/stack exposure.
+- RED network reproduced real CLI stack traceback and wrong downstream classification. GREEN connect failure, unreadable firewall cursor load, malformed ubus inventory each traversed actual JSON -> product-rpc encoder -> CLI/provider/inventory -> product-rpc response JSON with expected field/message/retryable, nonzero CLI, zero stderr.
+- RED actual SDK-built C post-rename directory fsync EIO yielded INVALID_CONFIG. GREEN yielded STATE_UNKNOWN and real status readback revision 0 -> 1. Injection only affects directory FD matching private store dev/inode; regular-file fsync is real.
+- Actual unsafe 0755 store and native migration-backup metadata failure both yield STATE_UNKNOWN; failed migration preserves old v1 journal/revision and preexisting unsafe backup bytes.
+- Existing provider, network, model suites passed on device (tcp-p1-errors-regression.txt). Final full fault suite passed against freshly uploaded current combined Lua sources (tcp-p1-errors-final.txt), with device SHA256s and DEVICE_EXIT=0.
+- Fixture process cwd/exe/root scan empty, /tmp/homepublish-tcp-p1-errors removed and absence read back; SSH responsive (tcp-p1-errors-cleanup.txt).
+
+Reproduction (target execution only; build cross SDK, never execute .so locally):
+1. SDK=/home/eric/homestun-sdk-check/openwrt-sdk-24.10.5-x86-64_gcc-13.3.0_musl.Linux-x86_64 in WSL. Acquire flock /home/eric/homestun-sdk-check/build.lock; export STAGING_DIR=$SDK/staging_dir. CC=$SDK/staging_dir/toolchain-x86_64_gcc-13.3.0_musl/bin/x86_64-openwrt-linux-musl-gcc.
+2. Extract the FAULT_C long-string block from the persisted Lua harness into fault.c (Python regex: r'local FAULT_C = \[=\[(.*?)\]=\]', re.S). This is the complete runnable native fault shim source, not a fake RPC response.
+3. $CC -shared -fPIC -O2 -Wall -Wextra -I"$SDK/staging_dir/target-x86_64_musl/usr/include" '-DPRODUCT_ROOT="/tmp/homepublish-tcp-p1-errors/store"' homepublish/src/product-store.c -o homepublish_store.so
+4. $CC -shared -fPIC -O2 -Wall -Wextra fault.c -o fault.so
+5. SSH root@127.0.0.1 port222, all operations use -o ProxyCommand=none -o ProxyJump=none -o IdentitiesOnly=yes -o BatchMode=yes -i D:/DevPortal/CloudHosts/HomePri.key. Create absent /tmp/homepublish-tcp-p1-errors with umask077 (0700). scp -O same options -P222 current product Lua files, device-tcp-p1-errors.lua and both .so files into it.
+6. lua /tmp/homepublish-tcp-p1-errors/device-tcp-p1-errors.lua all (or network/store). Harness self-resets only named journal files in this dedicated private fixture; uses process-local preload adapters and LD_PRELOAD only for selected CLI invocation. First use of store suite should start with empty fixture. No installed entrypoint mutation.
+7. Check source/device SHA256s, scan /proc/*/{cwd,exe,root} for owned fixture references from cwd /, remove only /tmp/homepublish-tcp-p1-errors, test ! -e and read back cleanup result.
+
+Scope caveat: these are private real-device full transport regressions, not installed rpcd ACL or LuCI authorization acceptance, and not v2 runtime activation.

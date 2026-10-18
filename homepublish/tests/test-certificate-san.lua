@@ -1,0 +1,10 @@
+package.path=arg[1]..'/homepublish/files/usr/share/homepublish/?.lua;'..package.path
+local C=require('certificate-metadata')
+assert(C.match({'*.Example.Test','NAS.Example.Test'},'NAS.example.test')=='exact')
+assert(C.match({'*.example.test'},'photos.example.test')=='wildcard')
+assert(not C.match({'*.example.test'},'example.test'))
+assert(not C.match({'*.example.test'},'a.b.example.test'))
+assert(C.match({'xn--bcher-kva.example'},'XN--BCHER-KVA.example')=='exact')
+assert(not C.match({'example.test'},'example.test.evil'))
+assert(not C.match({'*.example.test'},'*.example.test'))
+print('PASS SAN exact preference, single-label wildcard, ASCII case and IDNA A-labels')

@@ -1,0 +1,15 @@
+ 
+ 
+ 
+ 
+ 
+ Failed to connect to ubus
+
+Traceback (most recent call last):
+  File "D:\DevPortal\homelede\feeds-xiaoqingfeng-homestun\docs\homestun-luci-fixture.py", line 38, in <module>
+    print(call('chroot '+root+' /bin/ubus list').decode())
+          ~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\DevPortal\homelede\feeds-xiaoqingfeng-homestun\docs\homestun-luci-fixture.py", line 6, in call
+    p=subprocess.run(ssh+[c],input=data,capture_output=True,timeout=90);print(p.stdout.decode(errors='replace'),p.stderr.decode(errors='replace'));assert p.returncode==0;return p.stdout
+                                                                                                                                                          ^^^^^^^^^^^^^^^
+AssertionError

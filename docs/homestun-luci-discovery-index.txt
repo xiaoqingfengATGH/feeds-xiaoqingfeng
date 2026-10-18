@@ -1,0 +1,43 @@
+Source-Makefile: feeds/homestunlocal/homestun/Makefile
+
+Package: homestun
+Version: 0.1.0-r1
+Depends: +libc +libgcc +lua +libuci-lua +nginx-ssl +natmap +curl +ca-bundle
+Conflicts: 
+Menu-Depends: 
+Provides: 
+Section: net
+Category: Network
+Repository: base
+Title: Bounded independent HomeSTUN HTTPS service
+Maintainer: 
+Source: 
+License: Apache-2.0
+Type: ipkg
+Description: Bounded independent HomeSTUN HTTPS service
+@@
+
+
+Source-Makefile: feeds/homestunlocal/luci-app-homestun/Makefile
+Build-Depends: lua/host luci-base/host LUCI_CSSTIDY:csstidy/host LUCI_SRCDIET:luasrcdiet/host 
+
+Package: luci-app-homestun
+Submenu: 3. Applications
+Version: 0.1.0-r1
+Depends: +libc +homestun +luci-base
+Conflicts: 
+Menu-Depends: 
+Provides: 
+Section: luci
+Category: LuCI
+Repository: base
+Title: HomeSTUN settings and configuration status
+Maintainer: OpenWrt LuCI community
+Source: 
+License: Apache-2.0
+URL: https://github.com/openwrt/luci
+Type: ipkg
+Description: HomeSTUN settings and configuration status
+@@
+
+

@@ -1,0 +1,5 @@
+{
+  "homepublish/files/usr/share/homepublish/product-v2-runtime.lua": "c82701145c4386b22a12a49d7ceb3df348d35cf95fa6518db3119a8ed4d6fc93",
+  "homepublish/tests/device-tcp-p5-readiness.lua": "82468e2f5413ccb62fb06332e78e37494f9cbbe1524d91f8b3b93906aeab67d4",
+  "homepublish/tests/run-device-tcp-p5-complete.py": "c352590a532f94db93cbb8f668886ee7ac24b65954411332219efa9c07fe6be0"
+}

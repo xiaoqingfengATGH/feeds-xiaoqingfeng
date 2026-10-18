@@ -1,0 +1,68 @@
+
+/usr/bin/natmap-real: unrecognized option: -
+Usage:
+ natmap [options]
+
+Options:
+ -4                  use IPv4
+ -6                  use IPv6
+ -u                  UDP mode
+ -d                  run as daemon
+ -i <interface>      network interface or IP address
+ -k <interval>       seconds between each keep-alive
+ -c <count>          UDP STUN check cycle (every <count> intervals)
+ -s <addr>[:port]    domain name or address of STUN server
+ -h <addr>[:port]    domain name or address of HTTP server
+ -e <path>           script path for notify mapped address
+ -f <mark>           fwmark value (hex: 0x1, dec: 1, oct: 01)
+
+Bind options:
+ -b                  port number range for binding
+                     - <0>: random allocation
+                     - <port>: specified
+                     - <port>~<port>: random allocation within the range
+                     - <port>-<port>: sequential allocation within the range
+
+Forward options:
+ -C <congestion>     TCP congestion control algorithm
+ -T <timeout>        port forwarding timeout in seconds
+ -t <address>        domain name or address of forward target
+ -p <port>           port number of forward target (0: use public port)
+
+Version: 20260214
+ba2df4ead5562b0bc0359881ffce1a07d65f62403b6e0b7e0980731be09c45b1  /tmp/homestun-test/realnat-ingress/root/usr/bin/natmap-real
+540b98eb8be0ed039d9f8bb19b52d287f1b5c7d594321b397e3d8783e50072a4  /tmp/homestun-test/realnat-ingress/root/usr/libexec/homestun-lease
+
+-----BEGIN CERTIFICATE-----
+MIIDUjCCAjqgAwIBAgIUIcnjCQcYcg4+vbxJIKxzs3DG1bMwDQYJKoZIhvcNAQEL
+BQAwJTEjMCEGA1UEAwwaaG9tZXN0dW4tdGVzdC5ob21lbGVkZS5jb20wHhcNMjYx
+MDEyMDkzNjU0WhcNMjYxMDEzMDkzNjU0WjAlMSMwIQYDVQQDDBpob21lc3R1bi10
+ZXN0LmhvbWVsZWRlLmNvbTCCASIwDQYJKoZIhvcNAQEBBQADggEPADCCAQoCggEB
+AK7eOcbty52cnJFcPmIE4ACyxKvjH4VAv6IWYRQC4CA4Mf6nGrCIHwZ8nF1ZSrzG
+h720Rhx8W4ygmEXMcmiESbV69xEXI30J8uYFPLETQdBFdRLYnA8pfBZQskHAN7EH
+HFv7s/W17kf95JMszoMKbUSGf1UiARG51gTDjZQU90NlGwh/hjRVpsi0eFGSv9Pc
+x+Grax6IfI0/xeKvnMHVMEZMsjBtviYFdqBEmCtzFdlSFW/uKU0hKptT/9gjRD5R
+G2rs6n1L4lVJ7L9QD5T1HAXfTbVcJNnWFPrlb2pACuqc+nvyjVclChHgeu641Bp6
+S56utH/JiQr9o9TdYJZtMAMCAwEAAaN6MHgwHQYDVR0OBBYEFG9l4Mm4ir32y+q3
+sYAx+3gEPabxMB8GA1UdIwQYMBaAFG9l4Mm4ir32y+q3sYAx+3gEPabxMA8GA1Ud
+EwEB/wQFMAMBAf8wJQYDVR0RBB4wHIIaaG9tZXN0dW4tdGVzdC5ob21lbGVkZS5j
+b20wDQYJKoZIhvcNAQELBQADggEBAIr0QIrTe0qw/QhW60hnRxuvXoT9IJ+db6nF
+AxxwCJ2nBYG56uTTIbCp3Wf8tiKQ2lL/Le+GuGE2ySPw6Gz8S33lPqjLF85giX+X
+7A+53m3Gsdvml1QV2DcVajei1vL/mzVDZ/kPZOTj/PvJImrcbhUBISj1J4BOgyiZ
+MDrFA2Iw+gxB5qdYzv3MwvXDp32qR5mgIZBNn+Jfxy0Ecyu44inPYalS59cGxEcj
+iN//84FRjFFjc0SF0Ua2Kni6MLe9i1pDC2Sf3KYLEkCW66fZKQIkR57H5Xu+yUfz
+x6Lpwx2Ych4385/XtkAjuWYLjyNIn1hV5ZIb7pzJxLXR++NTT5w=
+-----END CERTIFICATE-----
+
+{
+  "generation": "realnat-20261012T093653Z",
+  "marker": "realnat-20261012T093653Z-3c3a6a6ae0245d0ebffff4be",
+  "host": "homestun-test.homelede.com",
+  "ttl_seconds": 90,
+  "staged_at": "2026-10-12T09:36:54.974330+00:00",
+  "stage": "ready; no lease started",
+  "bypass_method": "upstream -f 0xff SO_MARK for owned base/STUN/listener sockets only; no nft or route edits",
+  "natmap_revision": "f8d7996710677c9885c148dda80a42d626f0a17b",
+  "natmap_sha256": "ba2df4ead5562b0bc0359881ffce1a07d65f62403b6e0b7e0980731be09c45b1",
+  "lease_sha256": "540b98eb8be0ed039d9f8bb19b52d287f1b5c7d594321b397e3d8783e50072a4"
+}

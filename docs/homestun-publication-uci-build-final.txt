@@ -1,0 +1,3 @@
+COMMAND: ['wsl.exe', '-u', 'root', '--exec', 'bash', '-lc', 'cd /mnt/d/DevPortal/homelede/feeds-xiaoqingfeng-homestun && gcc -static -Os -Wall -Wextra -Werror homestun/src/lease-supervisor.c -o /mnt/c/Users/xiaoq/AppData/Local/hermes/profiles/ta/cache/scratch/uci-final-lease']
+
+EXIT_CODE: 0

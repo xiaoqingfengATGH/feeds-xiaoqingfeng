@@ -1,0 +1,5 @@
+lua: ...p/homepublish-tcp-p3/device-tcp-p3-installed-cli.lua:6: installed v2 adapter capability missing
+stack traceback:
+	[C]: in function 'assert'
+	...p/homepublish-tcp-p3/device-tcp-p3-installed-cli.lua:6: in main chunk
+	[C]: ?

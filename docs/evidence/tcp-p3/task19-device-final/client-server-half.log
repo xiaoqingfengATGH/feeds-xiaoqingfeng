@@ -1,0 +1,1 @@
+PASS server write-half closed first; client sent 8192 bytes after observed EOF

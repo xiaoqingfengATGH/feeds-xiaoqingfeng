@@ -1,0 +1,102 @@
+[
+  {
+    "ingress": "ipv4",
+    "ingress_address": "192.168.1.2",
+    "backend": "ipv4",
+    "backend_address": "127.0.0.1",
+    "types": [
+      "https_proxy",
+      "tls_passthrough",
+      "ssh",
+      "tcp_forward"
+    ],
+    "all_ready": true,
+    "traffic": true,
+    "cleanup": "confirmed"
+  },
+  {
+    "ingress": "ipv6",
+    "ingress_address": "fd89:878e:a47f::1",
+    "backend": "ipv4",
+    "backend_address": "127.0.0.1",
+    "types": [
+      "https_proxy",
+      "tls_passthrough",
+      "ssh",
+      "tcp_forward"
+    ],
+    "all_ready": true,
+    "traffic": true,
+    "cleanup": "confirmed"
+  },
+  {
+    "ingress": "ipv4",
+    "ingress_address": "192.168.1.2",
+    "backend": "ipv6",
+    "backend_address": "fd89:878e:a47f::1",
+    "types": [
+      "https_proxy",
+      "tls_passthrough",
+      "ssh",
+      "tcp_forward"
+    ],
+    "all_ready": true,
+    "traffic": true,
+    "cleanup": "confirmed"
+  },
+  {
+    "ingress": "ipv6",
+    "ingress_address": "fd89:878e:a47f::1",
+    "backend": "ipv6",
+    "backend_address": "fd89:878e:a47f::1",
+    "types": [
+      "https_proxy",
+      "tls_passthrough",
+      "ssh",
+      "tcp_forward"
+    ],
+    "all_ready": true,
+    "traffic": true,
+    "cleanup": "confirmed"
+  },
+  {
+    "ingress": "ipv6",
+    "ingress_address": "fd89:878e:a47f::1",
+    "backend": "ipv6",
+    "backend_address": "fd89:878e:a47f::1",
+    "types": [
+      "tls_passthrough",
+      "tcp_forward"
+    ],
+    "all_ready": true,
+    "traffic": true,
+    "cleanup": "confirmed"
+  },
+  {
+    "ingress": "ipv6",
+    "ingress_address": "fd89:878e:a47f::1",
+    "backend": "ipv6",
+    "backend_address": "fd89:878e:a47f::1",
+    "types": [
+      "ssh",
+      "tcp_forward"
+    ],
+    "all_ready": true,
+    "traffic": true,
+    "cleanup": "confirmed"
+  },
+  {
+    "ingress": "ipv6",
+    "ingress_address": "fd89:878e:a47f::1",
+    "backend": "ipv6",
+    "backend_address": "fd89:878e:a47f::1",
+    "types": [
+      "tls_passthrough",
+      "ssh",
+      "tcp_forward"
+    ],
+    "all_ready": true,
+    "traffic": true,
+    "cleanup": "confirmed"
+  }
+]

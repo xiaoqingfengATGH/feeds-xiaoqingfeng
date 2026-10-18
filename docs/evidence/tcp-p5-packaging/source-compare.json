@@ -1,0 +1,38 @@
+{
+  "common_files": 498,
+  "different": [],
+  "release_only": [
+    "CHANGES",
+    "CHANGES.ru",
+    "configure",
+    "html/50x.html",
+    "html/index.html",
+    "man/nginx.8"
+  ],
+  "git_only": [
+    ".github/DISCUSSION_TEMPLATE/general.yml",
+    ".github/DISCUSSION_TEMPLATE/ideas.yml",
+    ".github/DISCUSSION_TEMPLATE/q-a.yml",
+    ".github/ISSUE_TEMPLATE/bug_report.yml",
+    ".github/ISSUE_TEMPLATE/config.yml",
+    ".github/ISSUE_TEMPLATE/feature_request.yml",
+    ".github/pull_request_template.md",
+    ".github/workflows/buildbot.yml",
+    ".github/workflows/check-pr.yml",
+    ".github/workflows/f5_cla.yml",
+    ".gitignore",
+    "auto/configure",
+    "docs/GNUmakefile",
+    "docs/dtd/change_log_conf.dtd",
+    "docs/dtd/changes.dtd",
+    "docs/html/50x.html",
+    "docs/html/index.html",
+    "docs/man/nginx.8",
+    "docs/xml/change_log_conf.xml",
+    "docs/xml/nginx/changes.xml",
+    "docs/xsls/changes.xsls",
+    "docs/xslt/changes.xslt",
+    "misc/GNUmakefile",
+    "misc/README"
+  ]
+}

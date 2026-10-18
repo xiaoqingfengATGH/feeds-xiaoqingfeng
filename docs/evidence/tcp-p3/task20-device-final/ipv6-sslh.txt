@@ -1,0 +1,30 @@
+Landlock: Failed to create a rulesetssh:connection from 127.0.0.1:59778 to 127.0.0.1:49543 forwarded from ::1:44290 to ::1:49547
+tls:connection from 127.0.0.1:59782 to 127.0.0.1:49543 forwarded from ::1:54156 to ::1:49546
+Proto tls -1: 0/0 cnx
+Endpoint 3 -1: 1/0 cnx
+Proto ssh -1: 0/0 cnx
+Endpoint 3 -1: 0/0 cnx
+ssh:connection from ::1:36090 to ::1:49543 forwarded from ::1:44302 to ::1:49547
+tls:connection from ::1:36106 to ::1:49543 forwarded from ::1:54172 to ::1:49546
+Proto tls -1: 0/0 cnx
+Endpoint 4 -1: 1/0 cnx
+Proto ssh -1: 0/0 cnx
+Endpoint 4 -1: 0/0 cnx
+anyprot:connection from ::1:36122 to ::1:49543 forwarded from 127.0.0.1:41552 to 127.0.0.1:49549
+Proto anyprot -1: 0/0 cnx
+Endpoint 4 -1: 0/0 cnx
+anyprot:connection from ::1:36128 to ::1:49543 forwarded from 127.0.0.1:41562 to 127.0.0.1:49549
+Proto anyprot -1: 0/0 cnx
+Endpoint 4 -1: 0/0 cnx
+anyprot:connection from ::1:36140 to ::1:49543 forwarded from 127.0.0.1:41572 to 127.0.0.1:49549
+Proto anyprot -1: 0/0 cnx
+Endpoint 4 -1: 0/0 cnx
+anyprot:connection from ::1:36154 to ::1:49543 forwarded from 127.0.0.1:41586 to 127.0.0.1:49549
+Proto anyprot -1: 0/0 cnx
+Endpoint 4 -1: 0/0 cnx
+anyprot:connection from ::1:36168 to ::1:49543 forwarded from 127.0.0.1:41602 to 127.0.0.1:49549
+Proto anyprot -1: 0/0 cnx
+Endpoint 4 -1: 0/0 cnx
+anyprot:connection from ::1:36182 to ::1:49543 forwarded from 127.0.0.1:41604 to 127.0.0.1:49549
+Proto anyprot -1: 0/0 cnx
+Endpoint 4 -1: 0/0 cnx

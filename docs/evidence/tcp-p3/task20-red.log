@@ -1,0 +1,5 @@
+lua: ...p/homepublish-tcp-p3/device-tcp-p3-matrix-render.lua:12: nonHTTPS graph: shared SSH/TLS without HTTPS not implemented
+stack traceback:
+	[C]: in function 'assert'
+	...p/homepublish-tcp-p3/device-tcp-p3-matrix-render.lua:12: in main chunk
+	[C]: ?

@@ -1,0 +1,23 @@
+PASS PASS real production plan exact LAN nonfixture endpoints
+PASS production IPv4 exact LAN -> IPv4 A; business systemCA hostname
+PASS Save pending preserves A
+PASS Apply new production procd generation B
+PASS second actual eligible IPv6 LAN -> IPv4 B
+PASS owned production Stop confirmed
+PASS anonymous denied save via actual HTTP rpcd
+PASS anonymous denied stop via actual HTTP rpcd
+PASS anonymous denied start via actual HTTP rpcd
+PASS anonymous denied apply via actual HTTP rpcd
+PASS readonly denied save via actual HTTP rpcd
+PASS readonly denied stop via actual HTTP rpcd
+PASS readonly denied start via actual HTTP rpcd
+PASS readonly denied apply via actual HTTP rpcd
+PASS readonly allowed status
+PASS readonly allowed network_inventory
+PASS readonly allowed validate
+PASS readonly allowed certificates
+PASS write allowed start; controller rejects approval required
+PASS write allowed apply; controller rejects approval required
+PASS write allowed start; controller rejects revision conflict
+PASS business source certificate/key hashes and permissions preserved server-only; all owned test listeners absent
+PASS owned group/runtime absent; live journal and management/network configuration unchanged; temporary sessions destroyed

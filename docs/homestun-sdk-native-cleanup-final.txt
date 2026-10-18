@@ -1,0 +1,55 @@
+Mon Oct 12 14:34:32 CST 2026
+/tmp/homestun-test/sdk-native/root/etc/homestun/cert.pem: OK
+/tmp/homestun-test/sdk-native/root/etc/homestun/key.pem: OK
+/tmp/homestun-test/sdk-native/root/tmp/homestun-service-Foreign/key.pem: OK
+540b98eb8be0ed039d9f8bb19b52d287f1b5c7d594321b397e3d8783e50072a4  /tmp/homestun-test/sdk-native/root/usr/libexec/homestun-lease
+2fe80767382dba3691c50aebd72afa40d7ffe46a384e7c4edfa22ae70bba5fcf  /tmp/homestun-test/sdk-native/root/usr/share/homestun/config-cli.lua
+6d30c4421f4ff7071454f22c4dd6c8db35ac10dc851890df2496824226fd1735  /tmp/homestun-test/sdk-native/root/usr/share/homestun/config.lua
+c6e148db828a47f478176ccaa85fb5a92c52e203985ac6bdac70de7425744a0d  /tmp/homestun-test/sdk-native/root/usr/share/homestun/core.lua
+1ba8c5630db7aed170be31824ea8ba82c3db51da74a1ad245537717a6d67271b  /tmp/homestun-test/sdk-native/root/usr/bin/lua
+d24cceeb3b33fb61545b7c50b49be6299167959ffcdebf6d765dc4a67bb3d0f1  /tmp/homestun-test/sdk-native/root/usr/sbin/nginx
+{
+	
+}
+PASS pre-cleanup no fixture process (root/exe/cwd), service or owned runtime; original and foreign hashes unchanged
+Active Internet connections (only servers)
+Proto Recv-Q Send-Q Local Address           Foreign Address         State       
+tcp        0      0 192.168.1.2:53          0.0.0.0:*               LISTEN      
+tcp        0      0 0.0.0.0:443             0.0.0.0:*               LISTEN      
+tcp        0      0 192.168.1.2:22          0.0.0.0:*               LISTEN      
+tcp        0      0 172.17.0.1:2004         0.0.0.0:*               LISTEN      
+tcp        0      0 192.168.1.2:139         0.0.0.0:*               LISTEN      
+tcp        0      0 0.0.0.0:5355            0.0.0.0:*               LISTEN      
+tcp        0      0 127.0.0.1:53            0.0.0.0:*               LISTEN      
+tcp        0      0 0.0.0.0:80              0.0.0.0:*               LISTEN      
+tcp        0      0 192.168.1.2:445         0.0.0.0:*               LISTEN      
+tcp        0      0 0.0.0.0:1026            0.0.0.0:*               LISTEN      
+tcp        0      0 0.0.0.0:21              0.0.0.0:*               LISTEN      
+tcp        0      0 192.168.1.2:7681        0.0.0.0:*               LISTEN      
+tcp        0      0 127.0.0.1:2002          0.0.0.0:*               LISTEN      
+tcp        0      0 127.0.0.1:2003          0.0.0.0:*               LISTEN      
+tcp        0      0 127.0.0.1:2004          0.0.0.0:*               LISTEN      
+tcp        0      0 172.17.0.1:53           0.0.0.0:*               LISTEN      
+tcp        0      0 0.0.0.0:60000           0.0.0.0:*               LISTEN      
+tcp        0      0 0.0.0.0:3702            0.0.0.0:*               LISTEN      
+tcp        0      0 192.168.1.2:2004        0.0.0.0:*               LISTEN      
+tcp        0      0 fd89:878e:a47f::1:22    :::*                    LISTEN      
+tcp        0      0 ::1:2004                :::*                    LISTEN      
+tcp        0      0 fd89:878e:a47f::1:53    :::*                    LISTEN      
+tcp        0      0 :::5355                 :::*                    LISTEN      
+tcp        0      0 :::80                   :::*                    LISTEN      
+tcp        0      0 :::1070                 :::*                    LISTEN      
+tcp        0      0 fe80::290:a6ff:fee0:382c:53 :::*                    LISTEN      
+tcp        0      0 fe80::290:a6ff:fee0:382c:2004 :::*                    LISTEN      
+tcp        0      0 :::2001                 :::*                    LISTEN      
+tcp        0      0 :::9876                 :::*                    LISTEN      
+tcp        0      0 :::3702                 :::*                    LISTEN      
+tcp        0      0 fd89:878e:a47f::1:2004  :::*                    LISTEN      
+tcp        0      0 ::1:53                  :::*                    LISTEN      
+tcp        0      0 192.168.1.2:22          0.0.0.0:*               LISTEN      
+tcp        0      0 fd89:878e:a47f::1:22    :::*                    LISTEN      
+tcp        0      0 0.0.0.0:80              0.0.0.0:*               LISTEN      
+tcp        0      0 :::80                   :::*                    LISTEN      
+tcp        0      0 0.0.0.0:443             0.0.0.0:*               LISTEN      
+PASS exact fixture removed, no processes/services/test listeners, 22/80/443 preserved
+Mon Oct 12 14:34:32 CST 2026

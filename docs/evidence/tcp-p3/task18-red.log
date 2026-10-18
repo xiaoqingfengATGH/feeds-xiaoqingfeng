@@ -1,0 +1,9 @@
+PASS private snapshot uid0 mode0600 / runtime0700
+lua: /tmp/homepublish-tcp-p3/device-tcp-p3-ssh-render.lua:12: mixed exact-SNI route unsupported: P3 route type not implemented: ssh
+stack traceback:
+	[C]: in function 'assert'
+	/tmp/homepublish-tcp-p3/device-tcp-p3-ssh-render.lua:12: in main chunk
+	[C]: ?
+PASS business source certificate/key SHA256 + uid/gid/mode preserved (server-only comparison)
+PASS private processes exited; all snapshots + fixture keys removed
+PASS live journal + firewall/management/proxy configs + system nginx unchanged

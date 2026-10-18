@@ -1,0 +1,2 @@
+READY interface=br-lan peer=123.118.214.120 tcp_port=18444 seconds=70 headers_only no_promisc
+END packets=0

@@ -1,0 +1,83 @@
+Mon Oct 12 13:13:41 UTC 2026
+RETRY_FIXTURE_ABSENT
+PARENT_FIXTURE_ABSENT
+Active Internet connections (only servers)
+Proto Recv-Q Send-Q Local Address           Foreign Address         State       PID/Program name    
+tcp        0      0 192.168.1.2:53          0.0.0.0:*               LISTEN      15646/dnsmasq
+tcp        0      0 0.0.0.0:443             0.0.0.0:*               LISTEN      127610/dropbear
+tcp        0      0 192.168.1.2:22          0.0.0.0:*               LISTEN      34089/dropbear
+tcp        0      0 172.17.0.1:2004         0.0.0.0:*               LISTEN      15760/dnsmasq_acl_d
+tcp        0      0 192.168.1.2:139         0.0.0.0:*               LISTEN      5871/smbd
+tcp        0      0 0.0.0.0:5355            0.0.0.0:*               LISTEN      8119/wsdd2
+tcp        0      0 127.0.0.1:53            0.0.0.0:*               LISTEN      15646/dnsmasq
+tcp        0      0 0.0.0.0:80              0.0.0.0:*               LISTEN      4308/uhttpd
+tcp        0      0 192.168.1.2:445         0.0.0.0:*               LISTEN      5871/smbd
+tcp        0      0 0.0.0.0:1026            0.0.0.0:*               LISTEN      3361/php8-fcgi
+tcp        0      0 0.0.0.0:21              0.0.0.0:*               LISTEN      4369/vsftpd
+tcp        0      0 192.168.1.2:7681        0.0.0.0:*               LISTEN      7756/ttyd
+tcp        0      0 127.0.0.1:2002          0.0.0.0:*               LISTEN      16371/xray
+tcp        0      0 127.0.0.1:2003          0.0.0.0:*               LISTEN      15641/chinadns-ng
+tcp        0      0 127.0.0.1:2004          0.0.0.0:*               LISTEN      15760/dnsmasq_acl_d
+tcp        0      0 172.17.0.1:53           0.0.0.0:*               LISTEN      15646/dnsmasq
+tcp        0      0 0.0.0.0:60000           0.0.0.0:*               LISTEN      6967/haproxy
+tcp        0      0 0.0.0.0:3702            0.0.0.0:*               LISTEN      8119/wsdd2
+tcp        0      0 192.168.1.2:2004        0.0.0.0:*               LISTEN      15760/dnsmasq_acl_d
+tcp        0      0 fd89:878e:a47f::1:22    :::*                    LISTEN      34089/dropbear
+tcp        0      0 ::1:2004                :::*                    LISTEN      15760/dnsmasq_acl_d
+tcp        0      0 fd89:878e:a47f::1:53    :::*                    LISTEN      15646/dnsmasq
+tcp        0      0 :::5355                 :::*                    LISTEN      8119/wsdd2
+tcp        0      0 :::80                   :::*                    LISTEN      4308/uhttpd
+tcp        0      0 :::1070                 :::*                    LISTEN      16371/xray
+tcp        0      0 fe80::290:a6ff:fee0:382c:53 :::*                    LISTEN      15646/dnsmasq
+tcp        0      0 fe80::290:a6ff:fee0:382c:2004 :::*                    LISTEN      15760/dnsmasq_acl_d
+tcp        0      0 :::2001                 :::*                    LISTEN      16371/xray
+tcp        0      0 :::9876                 :::*                    LISTEN      6266/ddns-go
+tcp        0      0 :::3702                 :::*                    LISTEN      8119/wsdd2
+tcp        0      0 fd89:878e:a47f::1:2004  :::*                    LISTEN      15760/dnsmasq_acl_d
+tcp        0      0 ::1:53                  :::*                    LISTEN      15646/dnsmasq
+{
+	
+}
+/dev/root /rom squashfs ro,relatime,errors=continue 0 0
+proc /proc proc rw,nosuid,nodev,noexec,relatime 0 0
+sysfs /sys sysfs rw,nosuid,nodev,noexec,relatime 0 0
+cgroup2 /sys/fs/cgroup cgroup2 rw,nosuid,nodev,noexec,relatime,nsdelegate 0 0
+tmpfs /tmp tmpfs rw,nosuid,nodev,noatime 0 0
+/dev/loop0 /rom/overlay f2fs rw,lazytime,noatime,background_gc=on,nogc_merge,nodiscard,user_xattr,inline_xattr,inline_data,inline_dentry,flush_merge,barrier,extent_cache,mode=adaptive,active_logs=6,alloc_mode=reuse,checkpoint_merge,fsync_mode=posix,memory=normal,errors=continue,lookup_mode=perf 0 0
+overlayfs:/overlay / overlay rw,noatime,lowerdir=/,upperdir=/overlay/upper,workdir=/overlay/work,xino=off 0 0
+/dev/sda1 /boot vfat rw,noatime,fmask=0022,dmask=0022,codepage=437,iocharset=iso8859-1,shortname=mixed,errors=remount-ro 0 0
+/dev/sda1 /boot vfat rw,noatime,fmask=0022,dmask=0022,codepage=437,iocharset=iso8859-1,shortname=mixed,errors=remount-ro 0 0
+tmpfs /dev tmpfs rw,nosuid,noexec,noatime,size=512k,mode=755 0 0
+devpts /dev/pts devpts rw,nosuid,noexec,noatime,mode=600,ptmxmode=000 0 0
+debugfs /sys/kernel/debug debugfs rw,nosuid,nodev,noexec,noatime 0 0
+bpffs /sys/fs/bpf bpf rw,nosuid,nodev,noexec,noatime,mode=700 0 0
+/dev/sda3 /mnt/sda3 ext4 rw,relatime 0 0
+/dev/sda3 /mnt/sda3/docker ext4 rw,relatime 0 0
+6ead1d3a553f28348a58b4a3055b8873aee4916b2fe3471b67e960cbfba2dacd  /etc/config/network
+52a2755e9a380e1e6d526204ec443dcdd85639f07d2903f64839d073edd55795  /etc/config/firewall
+62cb51fe983f98e057c368d4654675d15a34572b68b6ae0fca241887ea9a58c4  /etc/config/passwall2
+0:	from all lookup local
+220:	from all lookup 220
+999:	from all fwmark 0x50535732 lookup 999
+32766:	from all lookup main
+32767:	from all lookup default
+local default dev lo table 999 scope host 
+default via 192.168.1.1 dev br-lan proto static 
+172.17.0.0/16 dev docker0 proto kernel scope link src 172.17.0.1 linkdown 
+192.168.1.0/24 dev br-lan proto kernel scope link src 192.168.1.2 
+local 127.0.0.0/8 dev lo table local proto kernel scope host src 127.0.0.1 
+local 127.0.0.1 dev lo table local proto kernel scope host src 127.0.0.1 
+broadcast 127.255.255.255 dev lo table local proto kernel scope link src 127.0.0.1 
+local 172.17.0.1 dev docker0 table local proto kernel scope host src 172.17.0.1 
+broadcast 172.17.255.255 dev docker0 table local proto kernel scope link src 172.17.0.1 linkdown 
+local 192.168.1.2 dev br-lan table local proto kernel scope host src 192.168.1.2 
+broadcast 192.168.1.255 dev br-lan table local proto kernel scope link src 192.168.1.2 
+fd89:878e:a47f::/64 dev br-lan proto static metric 1024 pref medium
+unreachable fd89:878e:a47f::/48 dev lo proto static metric 2147483647 pref medium
+fe80::/64 dev br-lan proto kernel metric 256 pref medium
+local ::1 dev lo table local proto kernel metric 0 pref medium
+anycast fd89:878e:a47f:: dev br-lan table local proto kernel metric 0 pref medium
+local fd89:878e:a47f::1 dev br-lan table local proto kernel metric 0 pref medium
+anycast fe80:: dev br-lan table local proto kernel metric 0 pref medium
+local fe80::290:a6ff:fee0:382c dev br-lan table local proto kernel metric 0 pref medium
+multicast ff00::/8 dev br-lan table local proto kernel metric 256 pref medium

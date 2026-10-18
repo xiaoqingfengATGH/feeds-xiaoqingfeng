@@ -1,0 +1,7 @@
+# SPDX-License-Identifier: Apache-2.0
+# Capability marker only. Never restore persisted allowances on fw4 reload.
+# A healthy live controller repopulates expiring INPUT sets on its next tick.
+set homepublish_input_guard {
+    type inet_service
+    comment "homepublish:input:v1"
+}

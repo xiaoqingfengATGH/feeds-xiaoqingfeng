@@ -1,0 +1,212 @@
+
+### /home/eric/homestun-sdk-check/openwrt-sdk-24.10.5-x86-64_gcc-13.3.0_musl.Linux-x86_64/feeds.conf
+src-link base /home/eric/homestun-sdk-check/upstream/openwrt-24.10.5
+src-link packages /home/eric/homestun-sdk-check/upstream/packages-953b6d47b4e9f0ad3c39547c6d3f9a828f10e206
+src-link homestunlocal /home/eric/homestun-sdk-check/source-feed
+src-link luci /home/eric/homestun-sdk-check/upstream/luci-d88390be4ec9722cb427fee03368fc8c8582627d
+
+### /home/eric/homestun-sdk-check/openwrt-sdk-24.10.5-x86-64_gcc-13.3.0_musl.Linux-x86_64/include/scan.mk
+include $(TOPDIR)/include/verbose.mk
+include $(TOPDIR)/rules.mk
+TMP_DIR:=$(TOPDIR)/tmp
+
+all: $(TMP_DIR)/.$(SCAN_TARGET)
+
+SCAN_TARGET ?= packageinfo
+SCAN_NAME ?= package
+SCAN_DIR ?= package
+TARGET_STAMP:=$(TMP_DIR)/info/.files-$(SCAN_TARGET).stamp
+FILELIST:=$(TMP_DIR)/info/.files-$(SCAN_TARGET)-$(SCAN_COOKIE)
+OVERRIDELIST:=$(TMP_DIR)/info/.overrides-$(SCAN_TARGET)-$(SCAN_COOKIE)
+
+export ORIG_PATH:=$(if $(ORIG_PATH),$(ORIG_PATH),$(PATH))
+export PATH:=$(STAGING_DIR_HOST)/bin:$(PATH)
+
+define feedname
+$(if $(patsubst feeds/%,,$(1)),,$(word 2,$(subst /, ,$(1))))
+endef
+
+ifeq ($(SCAN_NAME),target)
+  SCAN_DEPS=image/Makefile profiles/*.mk $(TOPDIR)/include/kernel*.mk $(TOPDIR)/include/target.mk image/*.mk
+else
+  SCAN_DEPS=$(TOPDIR)/include/package*.mk
+ifneq ($(call feedname,$(SCAN_DIR)),)
+  SCAN_DEPS += $(TOPDIR)/feeds/$(call feedname,$(SCAN_DIR))/*.mk
+endif
+endif
+
+ifeq ($(IS_TTY),1)
+  ifneq ($(strip $(NO_COLOR)),1)
+    define progress
+	printf "\033[M\r$(1)" >&2;
+    endef
+  else
+    define progress
+	printf "\r$(1)" >&2;
+    endef
+  endif
+else
+  define progress
+	:;
+  endef
+endif
+
+define PackageDir
+  $(TMP_DIR)/.$(SCAN_TARGET): $(TMP_DIR)/info/.$(SCAN_TARGET)-$(1)
+  $(TMP_DIR)/info/.$(SCAN_TARGET)-$(1): $(SCAN_DIR)/$(2)/Makefile $(foreach DEP,$(DEPS_$(SCAN_DIR)/$(2)/Makefile) $(SCAN_DEPS),$(wildcard $(if $(filter /%,$(DEP)),$(DEP),$(SCAN_DIR)/$(2)/$(DEP))))
+	{ \
+		$$(call progress,Collecting $(SCAN_NAME) info: $(SCAN_DIR)/$(2)) \
+		echo Source-Makefile: $(SCAN_DIR)/$(2)/Makefile; \
+		$(if $(3),echo Override: $(3),true); \
+		$(if $(findstring c,$(OPENWRT_VERBOSE)),$(MAKE),$(NO_TRACE_MAKE) --no-print-dir) -r DUMP=1 FEED="$(call feedname,$(2))" -C $(SCAN_DIR)/$(2) $(SCAN_MAKEOPTS) \
+			$(if $(findstring c,$(OPENWRT_VERBOSE)),,2>/dev/null) || { \
+			mkdir -p "$(TOPDIR)/logs/$(SCAN_DIR)/$(2)"; \
+			$(NO_TRACE_MAKE) --no-print-dir -r DUMP=1 FEED="$(call feedname,$(2))" -C $(SCAN_DIR)/$(2) $(SCAN_MAKEOPTS) > $(TOPDIR)/logs/$(SCAN_DIR)/$(2)/dump.txt 2>&1; \
+			$$(call progress,ERROR: please fix $(SCAN_DIR)/$(2)/Makefile - see logs/$(SCAN_DIR)/$(2)/dump.txt for details\n) \
+			rm -f $$@; \
+		}; \
+		echo; \
+	} > $$@.tmp
+	mv $$@.tmp $$@
+endef
+
+$(OVERRIDELIST):
+	rm -f $(TMP_DIR)/info/.overrides-$(SCAN_TARGET)-*
+	touch $@
+
+ifeq ($(SCAN_NAME),target)
+  GREP_STRING=BuildTarget
+else
+  GREP_STRING=(Build/DefaultTargets|BuildPackage|KernelPackage)
+endif
+
+$(FILELIST): $(OVERRIDELIST)
+	rm -f $(TMP_DIR)/info/.files-$(SCAN_TARGET)-*
+	find -L $(SCAN_DIR) -mindepth 1 $(if $(SCAN_DEPTH),-maxdepth $(SCAN_DEPTH)) $(SCAN_EXTRA) -name Makefile | xargs grep -aHE 'call $(GREP_STRING)' | sed -e 's#^$(SCAN_DIR)/##' -e 's#/Makefile:.*##' | uniq | awk -v of=$(OVERRIDELIST) -f include/scan.awk > $@
+
+$(TMP_DIR)/info/.files-$(SCAN_TARGET).mk: $(FILELIST)
+	( \
+		cat $< | awk '{print "$(SCAN_DIR)/" $$0 "/Makefile" }' | xargs grep -HE '^ *SCAN_DEPS *= *' | awk -F: '{ gsub(/^.*DEPS *= */, "", $$2); print "DEPS_" $$1 "=" $$2 }'; \
+		awk -F/ -v deps="$$DEPS" -v of="$(OVERRIDELIST)" ' \
+		BEGIN { \
+			while (getline < (of)) \
+				override[$$NF]=$$0; \
+			close(of) \
+		} \
+		{ \
+			info=$$0; \
+			gsub(/\//, "_", info); \
+			dir=$$0; \
+			pkg=""; \
+			if($$NF in override) \
+				pkg=override[$$NF]; \
+			print "$$(eval $$(call PackageDir," info "," dir "," pkg "))"; \
+		} ' < $<; \
+		true; \
+	) > $@.tmp
+	mv $@.tmp $@
+
+-include $(TMP_DIR)/info/.files-$(SCAN_TARGET).mk
+
+$(TARGET_STAMP)::
+	+( \
+		$(NO_TRACE_MAKE) $(FILELIST); \
+		MD5SUM=$$(cat $(FILELIST) $(OVERRIDELIST) | $(MKHASH) md5 | awk '{print $$1}'); \
+		[ -f "$@.$$MD5SUM" ] || { \
+			rm -f $@.*; \
+			touch $@.$$MD5SUM; \
+			touch $@; \
+		} \
+	)
+
+$(TMP_DIR)/.$(SCAN_TARGET): $(TARGET_STAMP)
+	$(call progress,Collecting $(SCAN_NAME) info: merging...)
+	-cat $(FILELIST) | awk '{gsub(/\//, "_", $$0);print "$(TMP_DIR)/info/.$(SCAN_TARGET)-" $$0}' | xargs cat > $@ 2>/dev/null
+	$(call progress,Collecting $(SCAN_NAME) info: done)
+	echo
+
+FORCE:
+.PHONY: FORCE
+.NOTPARALLEL:
+
+### /home/eric/homestun-sdk-check/openwrt-sdk-24.10.5-x86-64_gcc-13.3.0_musl.Linux-x86_64/include/scan.awk
+BEGIN { FS="/" }
+$1 ~ /^feeds/ { FEEDS[$NF]=$0 }
+$1 !~ /^feeds/ { PKGS[$NF]=$0 }
+END {
+	# Filter-out OpenWrt packages which have a feeds equivalent
+	for (pkg in PKGS)
+		if (pkg in FEEDS) {
+			print PKGS[pkg] > of
+			delete PKGS[pkg]
+		}
+	n = asort(PKGS)
+	for (i=1; i <= n; i++) {
+		print PKGS[i]
+	}
+	n = asort(FEEDS)
+	for (i=1; i <= n; i++){
+		print FEEDS[i]
+	}
+}
+
+### /home/eric/homestun-sdk-check/openwrt-sdk-24.10.5-x86-64_gcc-13.3.0_musl.Linux-x86_64/feeds/homestunlocal.index
+Source-Makefile: feeds/homestunlocal/homestun/Makefile
+
+Package: homestun
+Version: 0.1.0-r1
+Depends: +libc +libgcc +lua +libuci-lua +nginx-ssl +natmap +curl +ca-bundle
+Conflicts: 
+Menu-Depends: 
+Provides: 
+Section: net
+Category: Network
+Repository: base
+Title: Bounded independent HomeSTUN HTTPS service
+Maintainer: 
+Source: 
+License: Apache-2.0
+Type: ipkg
+Description: Bounded independent HomeSTUN HTTPS service
+@@
+
+
+
+### /home/eric/homestun-sdk-check/openwrt-sdk-24.10.5-x86-64_gcc-13.3.0_musl.Linux-x86_64/feeds/homestunlocal.tmp/info/.files-packageinfo.mk
+$(eval $(call PackageDir,homestun,homestun,))
+
+### /home/eric/homestun-sdk-check/openwrt-sdk-24.10.5-x86-64_gcc-13.3.0_musl.Linux-x86_64/feeds/homestunlocal.tmp/info/.packageinfo-luci-app-homestun
+MISSING
+
+### /home/eric/homestun-sdk-check/openwrt-sdk-24.10.5-x86-64_gcc-13.3.0_musl.Linux-x86_64/feeds/homestunlocal/luci-app-homestun/Makefile
+# SPDX-License-Identifier: Apache-2.0
+include $(TOPDIR)/rules.mk
+PKG_NAME:=luci-app-homestun
+PKG_VERSION:=0.1.0
+PKG_RELEASE:=1
+PKG_LICENSE:=Apache-2.0
+PKGARCH:=all
+LUCI_TITLE:=HomeSTUN settings and configuration status
+LUCI_DEPENDS:=+homestun +luci-base
+include $(TOPDIR)/feeds/luci/luci.mk
+feeds/homestunlocal.tmp/.targetinfo
+feeds/homestunlocal.tmp/.packageinfo
+feeds/homestunlocal.tmp/info
+feeds/homestunlocal.tmp/location
+feeds/homestunlocal.tmp/info/.overrides-packageinfo-674037
+feeds/homestunlocal.tmp/info/.files-packageinfo.stamp
+feeds/homestunlocal.tmp/info/.files-targetinfo.stamp
+feeds/homestunlocal.tmp/info/.files-packageinfo.stamp.b4ee73b71b874b10180557716bb30b0a
+feeds/homestunlocal.tmp/info/.files-packageinfo-674037
+feeds/homestunlocal.tmp/info/.overrides-targetinfo-674037
+feeds/homestunlocal.tmp/info/.files-targetinfo-674037
+feeds/homestunlocal.tmp/info/.packageinfo-homestun
+feeds/homestunlocal.tmp/info/.files-targetinfo.stamp.d41d8cd98f00b204e9800998ecf8427e
+feeds/homestunlocal.tmp/info/.files-targetinfo.mk
+feeds/homestunlocal.tmp/info/.files-packageinfo.mk
+Create index file './feeds/homestunlocal.index' 
+rm -f /tmp/info/.overrides-packageinfo-*
+touch /tmp/info/.overrides-packageinfo-
+touch: cannot touch '/tmp/info/.overrides-packageinfo-': No such file or directory
+include/scan.mk:2: /rules.mk: No such file or directory
+make: *** No rule to make target '/rules.mk'.  Stop.

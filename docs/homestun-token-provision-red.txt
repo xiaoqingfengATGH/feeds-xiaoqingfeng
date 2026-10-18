@@ -1,0 +1,259 @@
+test_provision_rejects_before_token_snapshot (__main__.TokenValidation.test_provision_rejects_before_token_snapshot) ... 
+  test_provision_rejects_before_token_snapshot (__main__.TokenValidation.test_provision_rejects_before_token_snapshot) (injected='regular', case='31') ... FAIL
+  test_provision_rejects_before_token_snapshot (__main__.TokenValidation.test_provision_rejects_before_token_snapshot) (injected='regular', case='129') ... FAIL
+  test_provision_rejects_before_token_snapshot (__main__.TokenValidation.test_provision_rejects_before_token_snapshot) (injected='regular', case='512') ... FAIL
+  test_provision_rejects_before_token_snapshot (__main__.TokenValidation.test_provision_rejects_before_token_snapshot) (injected='regular', case='newline') ... FAIL
+  test_provision_rejects_before_token_snapshot (__main__.TokenValidation.test_provision_rejects_before_token_snapshot) (injected='regular', case='invalid') ... FAIL
+  test_provision_rejects_before_token_snapshot (__main__.TokenValidation.test_provision_rejects_before_token_snapshot) (injected='regular', case='nonascii') ... FAIL
+  test_provision_rejects_before_token_snapshot (__main__.TokenValidation.test_provision_rejects_before_token_snapshot) (injected='short', case='31') ... FAIL
+  test_provision_rejects_before_token_snapshot (__main__.TokenValidation.test_provision_rejects_before_token_snapshot) (injected='short', case='32') ... FAIL
+  test_provision_rejects_before_token_snapshot (__main__.TokenValidation.test_provision_rejects_before_token_snapshot) (injected='short', case='127') ... FAIL
+  test_provision_rejects_before_token_snapshot (__main__.TokenValidation.test_provision_rejects_before_token_snapshot) (injected='short', case='128') ... FAIL
+  test_provision_rejects_before_token_snapshot (__main__.TokenValidation.test_provision_rejects_before_token_snapshot) (injected='short', case='129') ... FAIL
+  test_provision_rejects_before_token_snapshot (__main__.TokenValidation.test_provision_rejects_before_token_snapshot) (injected='short', case='512') ... FAIL
+  test_provision_rejects_before_token_snapshot (__main__.TokenValidation.test_provision_rejects_before_token_snapshot) (injected='short', case='newline') ... FAIL
+  test_provision_rejects_before_token_snapshot (__main__.TokenValidation.test_provision_rejects_before_token_snapshot) (injected='short', case='nul') ... FAIL
+  test_provision_rejects_before_token_snapshot (__main__.TokenValidation.test_provision_rejects_before_token_snapshot) (injected='short', case='invalid') ... FAIL
+  test_provision_rejects_before_token_snapshot (__main__.TokenValidation.test_provision_rejects_before_token_snapshot) (injected='short', case='nonascii') ... FAIL
+  test_provision_rejects_before_token_snapshot (__main__.TokenValidation.test_provision_rejects_before_token_snapshot) (injected='eintr', case='31') ... FAIL
+  test_provision_rejects_before_token_snapshot (__main__.TokenValidation.test_provision_rejects_before_token_snapshot) (injected='eintr', case='32') ... FAIL
+  test_provision_rejects_before_token_snapshot (__main__.TokenValidation.test_provision_rejects_before_token_snapshot) (injected='eintr', case='127') ... FAIL
+  test_provision_rejects_before_token_snapshot (__main__.TokenValidation.test_provision_rejects_before_token_snapshot) (injected='eintr', case='128') ... FAIL
+  test_provision_rejects_before_token_snapshot (__main__.TokenValidation.test_provision_rejects_before_token_snapshot) (injected='eintr', case='129') ... FAIL
+  test_provision_rejects_before_token_snapshot (__main__.TokenValidation.test_provision_rejects_before_token_snapshot) (injected='eintr', case='512') ... FAIL
+  test_provision_rejects_before_token_snapshot (__main__.TokenValidation.test_provision_rejects_before_token_snapshot) (injected='eintr', case='newline') ... FAIL
+  test_provision_rejects_before_token_snapshot (__main__.TokenValidation.test_provision_rejects_before_token_snapshot) (injected='eintr', case='nul') ... FAIL
+  test_provision_rejects_before_token_snapshot (__main__.TokenValidation.test_provision_rejects_before_token_snapshot) (injected='eintr', case='invalid') ... FAIL
+  test_provision_rejects_before_token_snapshot (__main__.TokenValidation.test_provision_rejects_before_token_snapshot) (injected='eintr', case='nonascii') ... FAIL
+
+======================================================================
+FAIL: test_provision_rejects_before_token_snapshot (__main__.TokenValidation.test_provision_rejects_before_token_snapshot) (injected='regular', case='31')
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/mnt/d/DevPortal/homelede/feeds-xiaoqingfeng-homestun/homestun/tests/test-token-validation.py", line 57, in test_provision_rejects_before_token_snapshot
+    self.assertNotEqual(result.returncode,0);self.assertNotIn('snapshot',events,'invalid secret copied before validation');self.assertFalse((f.root/'tmp/transport').exists());self.assertFalse((f.root/'tmp/ready').exists())
+    ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+AssertionError: 0 == 0
+
+======================================================================
+FAIL: test_provision_rejects_before_token_snapshot (__main__.TokenValidation.test_provision_rejects_before_token_snapshot) (injected='regular', case='129')
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/mnt/d/DevPortal/homelede/feeds-xiaoqingfeng-homestun/homestun/tests/test-token-validation.py", line 57, in test_provision_rejects_before_token_snapshot
+    self.assertNotEqual(result.returncode,0);self.assertNotIn('snapshot',events,'invalid secret copied before validation');self.assertFalse((f.root/'tmp/transport').exists());self.assertFalse((f.root/'tmp/ready').exists())
+    ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+AssertionError: 0 == 0
+
+======================================================================
+FAIL: test_provision_rejects_before_token_snapshot (__main__.TokenValidation.test_provision_rejects_before_token_snapshot) (injected='regular', case='512')
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/mnt/d/DevPortal/homelede/feeds-xiaoqingfeng-homestun/homestun/tests/test-token-validation.py", line 57, in test_provision_rejects_before_token_snapshot
+    self.assertNotEqual(result.returncode,0);self.assertNotIn('snapshot',events,'invalid secret copied before validation');self.assertFalse((f.root/'tmp/transport').exists());self.assertFalse((f.root/'tmp/ready').exists())
+    ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+AssertionError: 0 == 0
+
+======================================================================
+FAIL: test_provision_rejects_before_token_snapshot (__main__.TokenValidation.test_provision_rejects_before_token_snapshot) (injected='regular', case='newline')
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/mnt/d/DevPortal/homelede/feeds-xiaoqingfeng-homestun/homestun/tests/test-token-validation.py", line 57, in test_provision_rejects_before_token_snapshot
+    self.assertNotEqual(result.returncode,0);self.assertNotIn('snapshot',events,'invalid secret copied before validation');self.assertFalse((f.root/'tmp/transport').exists());self.assertFalse((f.root/'tmp/ready').exists())
+                                             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+AssertionError: 'snapshot' unexpectedly found in 'snapshot\n' : invalid secret copied before validation
+
+======================================================================
+FAIL: test_provision_rejects_before_token_snapshot (__main__.TokenValidation.test_provision_rejects_before_token_snapshot) (injected='regular', case='invalid')
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/mnt/d/DevPortal/homelede/feeds-xiaoqingfeng-homestun/homestun/tests/test-token-validation.py", line 57, in test_provision_rejects_before_token_snapshot
+    self.assertNotEqual(result.returncode,0);self.assertNotIn('snapshot',events,'invalid secret copied before validation');self.assertFalse((f.root/'tmp/transport').exists());self.assertFalse((f.root/'tmp/ready').exists())
+                                             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+AssertionError: 'snapshot' unexpectedly found in 'snapshot\n' : invalid secret copied before validation
+
+======================================================================
+FAIL: test_provision_rejects_before_token_snapshot (__main__.TokenValidation.test_provision_rejects_before_token_snapshot) (injected='regular', case='nonascii')
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/mnt/d/DevPortal/homelede/feeds-xiaoqingfeng-homestun/homestun/tests/test-token-validation.py", line 57, in test_provision_rejects_before_token_snapshot
+    self.assertNotEqual(result.returncode,0);self.assertNotIn('snapshot',events,'invalid secret copied before validation');self.assertFalse((f.root/'tmp/transport').exists());self.assertFalse((f.root/'tmp/ready').exists())
+                                             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+AssertionError: 'snapshot' unexpectedly found in 'snapshot\n' : invalid secret copied before validation
+
+======================================================================
+FAIL: test_provision_rejects_before_token_snapshot (__main__.TokenValidation.test_provision_rejects_before_token_snapshot) (injected='short', case='31')
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/mnt/d/DevPortal/homelede/feeds-xiaoqingfeng-homestun/homestun/tests/test-token-validation.py", line 57, in test_provision_rejects_before_token_snapshot
+    self.assertNotEqual(result.returncode,0);self.assertNotIn('snapshot',events,'invalid secret copied before validation');self.assertFalse((f.root/'tmp/transport').exists());self.assertFalse((f.root/'tmp/ready').exists())
+    ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+AssertionError: 0 == 0
+
+======================================================================
+FAIL: test_provision_rejects_before_token_snapshot (__main__.TokenValidation.test_provision_rejects_before_token_snapshot) (injected='short', case='32')
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/mnt/d/DevPortal/homelede/feeds-xiaoqingfeng-homestun/homestun/tests/test-token-validation.py", line 61, in test_provision_rejects_before_token_snapshot
+    if len(value)<=128:self.assertIn('eof',events)
+                       ^^^^^^^^^^^^^^^^^^^^^^^^^^^
+AssertionError: 'eof' not found in 'short\nsnapshot\n'
+
+======================================================================
+FAIL: test_provision_rejects_before_token_snapshot (__main__.TokenValidation.test_provision_rejects_before_token_snapshot) (injected='short', case='127')
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/mnt/d/DevPortal/homelede/feeds-xiaoqingfeng-homestun/homestun/tests/test-token-validation.py", line 61, in test_provision_rejects_before_token_snapshot
+    if len(value)<=128:self.assertIn('eof',events)
+                       ^^^^^^^^^^^^^^^^^^^^^^^^^^^
+AssertionError: 'eof' not found in 'short\nshort\nshort\nshort\nsnapshot\n'
+
+======================================================================
+FAIL: test_provision_rejects_before_token_snapshot (__main__.TokenValidation.test_provision_rejects_before_token_snapshot) (injected='short', case='128')
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/mnt/d/DevPortal/homelede/feeds-xiaoqingfeng-homestun/homestun/tests/test-token-validation.py", line 61, in test_provision_rejects_before_token_snapshot
+    if len(value)<=128:self.assertIn('eof',events)
+                       ^^^^^^^^^^^^^^^^^^^^^^^^^^^
+AssertionError: 'eof' not found in 'short\nshort\nshort\nshort\nsnapshot\n'
+
+======================================================================
+FAIL: test_provision_rejects_before_token_snapshot (__main__.TokenValidation.test_provision_rejects_before_token_snapshot) (injected='short', case='129')
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/mnt/d/DevPortal/homelede/feeds-xiaoqingfeng-homestun/homestun/tests/test-token-validation.py", line 57, in test_provision_rejects_before_token_snapshot
+    self.assertNotEqual(result.returncode,0);self.assertNotIn('snapshot',events,'invalid secret copied before validation');self.assertFalse((f.root/'tmp/transport').exists());self.assertFalse((f.root/'tmp/ready').exists())
+    ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+AssertionError: 0 == 0
+
+======================================================================
+FAIL: test_provision_rejects_before_token_snapshot (__main__.TokenValidation.test_provision_rejects_before_token_snapshot) (injected='short', case='512')
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/mnt/d/DevPortal/homelede/feeds-xiaoqingfeng-homestun/homestun/tests/test-token-validation.py", line 57, in test_provision_rejects_before_token_snapshot
+    self.assertNotEqual(result.returncode,0);self.assertNotIn('snapshot',events,'invalid secret copied before validation');self.assertFalse((f.root/'tmp/transport').exists());self.assertFalse((f.root/'tmp/ready').exists())
+    ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+AssertionError: 0 == 0
+
+======================================================================
+FAIL: test_provision_rejects_before_token_snapshot (__main__.TokenValidation.test_provision_rejects_before_token_snapshot) (injected='short', case='newline')
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/mnt/d/DevPortal/homelede/feeds-xiaoqingfeng-homestun/homestun/tests/test-token-validation.py", line 57, in test_provision_rejects_before_token_snapshot
+    self.assertNotEqual(result.returncode,0);self.assertNotIn('snapshot',events,'invalid secret copied before validation');self.assertFalse((f.root/'tmp/transport').exists());self.assertFalse((f.root/'tmp/ready').exists())
+                                             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+AssertionError: 'snapshot' unexpectedly found in 'short\nshort\nsnapshot\n' : invalid secret copied before validation
+
+======================================================================
+FAIL: test_provision_rejects_before_token_snapshot (__main__.TokenValidation.test_provision_rejects_before_token_snapshot) (injected='short', case='nul')
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/mnt/d/DevPortal/homelede/feeds-xiaoqingfeng-homestun/homestun/tests/test-token-validation.py", line 61, in test_provision_rejects_before_token_snapshot
+    if len(value)<=128:self.assertIn('eof',events)
+                       ^^^^^^^^^^^^^^^^^^^^^^^^^^^
+AssertionError: 'eof' not found in 'short\nshort\n'
+
+======================================================================
+FAIL: test_provision_rejects_before_token_snapshot (__main__.TokenValidation.test_provision_rejects_before_token_snapshot) (injected='short', case='invalid')
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/mnt/d/DevPortal/homelede/feeds-xiaoqingfeng-homestun/homestun/tests/test-token-validation.py", line 57, in test_provision_rejects_before_token_snapshot
+    self.assertNotEqual(result.returncode,0);self.assertNotIn('snapshot',events,'invalid secret copied before validation');self.assertFalse((f.root/'tmp/transport').exists());self.assertFalse((f.root/'tmp/ready').exists())
+                                             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+AssertionError: 'snapshot' unexpectedly found in 'short\nshort\nsnapshot\n' : invalid secret copied before validation
+
+======================================================================
+FAIL: test_provision_rejects_before_token_snapshot (__main__.TokenValidation.test_provision_rejects_before_token_snapshot) (injected='short', case='nonascii')
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/mnt/d/DevPortal/homelede/feeds-xiaoqingfeng-homestun/homestun/tests/test-token-validation.py", line 57, in test_provision_rejects_before_token_snapshot
+    self.assertNotEqual(result.returncode,0);self.assertNotIn('snapshot',events,'invalid secret copied before validation');self.assertFalse((f.root/'tmp/transport').exists());self.assertFalse((f.root/'tmp/ready').exists())
+                                             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+AssertionError: 'snapshot' unexpectedly found in 'short\nshort\nsnapshot\n' : invalid secret copied before validation
+
+======================================================================
+FAIL: test_provision_rejects_before_token_snapshot (__main__.TokenValidation.test_provision_rejects_before_token_snapshot) (injected='eintr', case='31')
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/mnt/d/DevPortal/homelede/feeds-xiaoqingfeng-homestun/homestun/tests/test-token-validation.py", line 59, in test_provision_rejects_before_token_snapshot
+    self.assertIn('short',events)
+AssertionError: 'short' not found in 'interrupt\n'
+
+======================================================================
+FAIL: test_provision_rejects_before_token_snapshot (__main__.TokenValidation.test_provision_rejects_before_token_snapshot) (injected='eintr', case='32')
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/mnt/d/DevPortal/homelede/feeds-xiaoqingfeng-homestun/homestun/tests/test-token-validation.py", line 55, in test_provision_rejects_before_token_snapshot
+    self.assertEqual(result.returncode,0,result.stderr);self.assertIn('snapshot',events);self.assertTrue((f.root/'tmp/transport').exists());self.assertTrue((f.root/'tmp/ready').exists())
+    ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+AssertionError: 2 != 0 : b'source read: Interrupted system call\n'
+
+======================================================================
+FAIL: test_provision_rejects_before_token_snapshot (__main__.TokenValidation.test_provision_rejects_before_token_snapshot) (injected='eintr', case='127')
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/mnt/d/DevPortal/homelede/feeds-xiaoqingfeng-homestun/homestun/tests/test-token-validation.py", line 55, in test_provision_rejects_before_token_snapshot
+    self.assertEqual(result.returncode,0,result.stderr);self.assertIn('snapshot',events);self.assertTrue((f.root/'tmp/transport').exists());self.assertTrue((f.root/'tmp/ready').exists())
+    ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+AssertionError: 2 != 0 : b'source read: Interrupted system call\n'
+
+======================================================================
+FAIL: test_provision_rejects_before_token_snapshot (__main__.TokenValidation.test_provision_rejects_before_token_snapshot) (injected='eintr', case='128')
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/mnt/d/DevPortal/homelede/feeds-xiaoqingfeng-homestun/homestun/tests/test-token-validation.py", line 55, in test_provision_rejects_before_token_snapshot
+    self.assertEqual(result.returncode,0,result.stderr);self.assertIn('snapshot',events);self.assertTrue((f.root/'tmp/transport').exists());self.assertTrue((f.root/'tmp/ready').exists())
+    ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+AssertionError: 2 != 0 : b'source read: Interrupted system call\n'
+
+======================================================================
+FAIL: test_provision_rejects_before_token_snapshot (__main__.TokenValidation.test_provision_rejects_before_token_snapshot) (injected='eintr', case='129')
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/mnt/d/DevPortal/homelede/feeds-xiaoqingfeng-homestun/homestun/tests/test-token-validation.py", line 59, in test_provision_rejects_before_token_snapshot
+    self.assertIn('short',events)
+AssertionError: 'short' not found in 'interrupt\n'
+
+======================================================================
+FAIL: test_provision_rejects_before_token_snapshot (__main__.TokenValidation.test_provision_rejects_before_token_snapshot) (injected='eintr', case='512')
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/mnt/d/DevPortal/homelede/feeds-xiaoqingfeng-homestun/homestun/tests/test-token-validation.py", line 59, in test_provision_rejects_before_token_snapshot
+    self.assertIn('short',events)
+AssertionError: 'short' not found in 'interrupt\n'
+
+======================================================================
+FAIL: test_provision_rejects_before_token_snapshot (__main__.TokenValidation.test_provision_rejects_before_token_snapshot) (injected='eintr', case='newline')
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/mnt/d/DevPortal/homelede/feeds-xiaoqingfeng-homestun/homestun/tests/test-token-validation.py", line 59, in test_provision_rejects_before_token_snapshot
+    self.assertIn('short',events)
+AssertionError: 'short' not found in 'interrupt\n'
+
+======================================================================
+FAIL: test_provision_rejects_before_token_snapshot (__main__.TokenValidation.test_provision_rejects_before_token_snapshot) (injected='eintr', case='nul')
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/mnt/d/DevPortal/homelede/feeds-xiaoqingfeng-homestun/homestun/tests/test-token-validation.py", line 59, in test_provision_rejects_before_token_snapshot
+    self.assertIn('short',events)
+AssertionError: 'short' not found in 'interrupt\n'
+
+======================================================================
+FAIL: test_provision_rejects_before_token_snapshot (__main__.TokenValidation.test_provision_rejects_before_token_snapshot) (injected='eintr', case='invalid')
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/mnt/d/DevPortal/homelede/feeds-xiaoqingfeng-homestun/homestun/tests/test-token-validation.py", line 59, in test_provision_rejects_before_token_snapshot
+    self.assertIn('short',events)
+AssertionError: 'short' not found in 'interrupt\n'
+
+======================================================================
+FAIL: test_provision_rejects_before_token_snapshot (__main__.TokenValidation.test_provision_rejects_before_token_snapshot) (injected='eintr', case='nonascii')
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/mnt/d/DevPortal/homelede/feeds-xiaoqingfeng-homestun/homestun/tests/test-token-validation.py", line 59, in test_provision_rejects_before_token_snapshot
+    self.assertIn('short',events)
+AssertionError: 'short' not found in 'interrupt\n'
+
+----------------------------------------------------------------------
+Ran 1 test in 26.371s
+
+FAILED (failures=26)

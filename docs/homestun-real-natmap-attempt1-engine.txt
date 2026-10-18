@@ -1,0 +1,22 @@
+Error loading shared library libjson-c.so.5: No such file or directory (needed by /usr/sbin/nginx)
+Error loading shared library libjson-c.so.5: No such file or directory (needed by /lib/libblobmsg_json.so.20260721)
+Error relocating /lib/libblobmsg_json.so.20260721: array_list_length: symbol not found
+Error relocating /lib/libblobmsg_json.so.20260721: json_object_get_type: symbol not found
+Error relocating /lib/libblobmsg_json.so.20260721: json_object_get_boolean: symbol not found
+Error relocating /lib/libblobmsg_json.so.20260721: json_object_get_string: symbol not found
+Error relocating /lib/libblobmsg_json.so.20260721: json_tokener_parse: symbol not found
+Error relocating /lib/libblobmsg_json.so.20260721: json_object_from_file: symbol not found
+Error relocating /lib/libblobmsg_json.so.20260721: json_object_get_int64: symbol not found
+Error relocating /lib/libblobmsg_json.so.20260721: json_object_get_array: symbol not found
+Error relocating /lib/libblobmsg_json.so.20260721: json_object_put: symbol not found
+Error relocating /lib/libblobmsg_json.so.20260721: array_list_get_idx: symbol not found
+Error relocating /lib/libblobmsg_json.so.20260721: json_object_get_double: symbol not found
+Error relocating /lib/libblobmsg_json.so.20260721: json_object_get_object: symbol not found
+Error relocating /usr/sbin/nginx: json_object_array_get_idx: symbol not found
+Error relocating /usr/sbin/nginx: json_tokener_new: symbol not found
+Error relocating /usr/sbin/nginx: json_tokener_parse_ex: symbol not found
+Error relocating /usr/sbin/nginx: json_object_put: symbol not found
+Error relocating /usr/sbin/nginx: json_tokener_free: symbol not found
+Error relocating /usr/sbin/nginx: json_object_get_type: symbol not found
+Error relocating /usr/sbin/nginx: json_object_array_length: symbol not found
+Error relocating /usr/sbin/nginx: json_object_object_get_ex: symbol not found

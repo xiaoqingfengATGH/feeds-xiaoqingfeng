@@ -1,0 +1,15 @@
+PASS live fixed ubus/UCI inventory and exact LAN resolution
+PASS classification, delegated local IPv6, exclusion, ambiguity, down/missing, malformed, deterministic summary
+PASS malformed IPv6 and real-adapter dependency failure returns structured unknown
+PASS canonical normalized IPv6 binding resolves compressed inventory exactly
+PASS semantic summary, deduplication, GUA/case variants and exact-host no-CIDR/no-mapped rejection
+PASS sparse interior-hole interface array fails closed independently of Lua length
+PASS real IPv6 canonical binding on lan
+PASS sparse address/prefix/zone/network arrays and genuine-address summary sensitivity
+TEST_EXIT=0
+0c677d4a05875929639ec519c268170742afcfd9e6efc52a19349969e9528ed7  /tmp/homepublish-p1-network-parent/canonical-v2.lua
+981bd7a4d019774101b9a5a998ed8a097547800b8f62859eee3a0690e7e94478  /tmp/homepublish-p1-network-parent/device-tcp-p1-network.lua
+2606bb1e742e440c8a2d88a91823798bb6d05b158ec23c289b65d7ddae78c8b8  /tmp/homepublish-p1-network-parent/network-inventory.lua
+6ead1d3a553f28348a58b4a3055b8873aee4916b2fe3471b67e960cbfba2dacd  /etc/config/network
+52a2755e9a380e1e6d526204ec443dcdd85639f07d2903f64839d073edd55795  /etc/config/firewall
+43dbb7d14614af6c7a323b97cf24830d2d87533d9b1e03ecc9d56ba5d0ec725b  /etc/config/homepublish

@@ -1,0 +1,16 @@
+SO_MARK=0xff owned preflight socket dst=220.185.184.53:80
+HTTP/1.1 200 OK
+Date: Mon, 12 Oct 2026 09:22:29 GMT
+Content-Type: text/plain; charset=utf-8
+Content-Length: 67
+Connection: close
+Server: WAF
+Access-Control-Allow-Headers: *
+Access-Control-Allow-Origin: *
+Access-Control-Allow-Methods: *
+X-Request-Id: 106d39ca9a2542459d222393154a50cc
+X-Cache: BYPASS
+Accept-Ranges: bytes
+
+当前 IP：60.20.170.34  来自于：中国 辽宁 大连  联通
+PREFLIGHT_EXIT=0

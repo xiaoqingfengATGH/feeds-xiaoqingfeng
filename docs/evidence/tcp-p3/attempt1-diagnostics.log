@@ -1,0 +1,57 @@
+--- /tmp/homepublish-tcp-p3/evidence/backend-config.log
+nginx: [alert] could not open error log file: open() "/tmp/homepublish-tcp-p3/runtime/logs/error.log" failed (2: No such file or directory)
+2026/10/15 19:12:10 [alert] 131033#0: OPENSSL_init_ssl() failed (SSL: error:12800067:DSO support routines::could not load the shared library:filename(/usr/lib/engines-3/devcrypto.so): Dynamic loading not supported error:12800067:DSO support routines::could not load the shared library error:13000084:engine routines::dso not found error:13000074:engine routines::no such engine:id=devcrypto error:13000066:engine routines::engine configuration error:section=devcrypto_sect, name=default_algorithms, value=ALL error:0700006D:configuration file routines::module initialization error:module=engines, value=engines_sect retcode=-1      )
+nginx: the configuration file /tmp/homepublish-tcp-p3/runtime/backend.conf syntax is ok
+nginx: configuration file /tmp/homepublish-tcp-p3/runtime/backend.conf test is successful
+--- /tmp/homepublish-tcp-p3/evidence/backend-error.log
+--- /tmp/homepublish-tcp-p3/evidence/backend-process.log
+nginx: [alert] could not open error log file: open() "/tmp/homepublish-tcp-p3/runtime/logs/error.log" failed (2: No such file or directory)
+2026/10/15 19:12:10 [alert] 131034#0: OPENSSL_init_ssl() failed (SSL: error:12800067:DSO support routines::could not load the shared library:filename(/usr/lib/engines-3/devcrypto.so): Dynamic loading not supported error:12800067:DSO support routines::could not load the shared library error:13000084:engine routines::dso not found error:13000074:engine routines::no such engine:id=devcrypto error:13000066:engine routines::engine configuration error:section=devcrypto_sect, name=default_algorithms, value=ALL error:0700006D:configuration file routines::module initialization error:module=engines, value=engines_sect retcode=-1      )
+--- /tmp/homepublish-tcp-p3/evidence/fixture-generation.log
+.+.......+..+.+...............+.....+.+...+++++++++++++++++++++++++++++++++++++++*....+..+.+.........+...+.....+......+.......+..+............+.+..............+....+......+......+..+...+...+.+...+......+..+...+......+.+.........+.....+..........+...+.....+......+.+......+..............+....+..+++++++++++++++++++++++++++++++++++++++*.++++++
+.....+..+............+...+....+.....+...+.......+........+.+......+...+...+..+.....................+....+......+......+...+......+..+++++++++++++++++++++++++++++++++++++++*.+........+......+............+...+++++++++++++++++++++++++++++++++++++++*..+.+...+..+....+...+.....+...+.........+.+...+.................+....+.........+......+......+........+..........+...........+.+..+.+...................................+......+.+...+.................+............+...+.......+..+.+..+.......+.....+......+...+.+...+........+...+....+...+...+.....+....+..+......+.........+....+..............+.+..............+.+............+.........+......+.........+...+...........+....+...+..+.+..+............+......+.........+.+...........+...............+.+...+.....+....+..+.+...........................+...+.................+................++++++
+-----
+--- /tmp/homepublish-tcp-p3/evidence/http-backend.log
+--- /tmp/homepublish-tcp-p3/evidence/http-config.log
+nginx: [alert] could not open error log file: open() "/tmp/homepublish-tcp-p3/runtime/logs/error.log" failed (2: No such file or directory)
+2026/10/15 19:12:10 [alert] 131035#0: OPENSSL_init_ssl() failed (SSL: error:12800067:DSO support routines::could not load the shared library:filename(/usr/lib/engines-3/devcrypto.so): Dynamic loading not supported error:12800067:DSO support routines::could not load the shared library error:13000084:engine routines::dso not found error:13000074:engine routines::no such engine:id=devcrypto error:13000066:engine routines::engine configuration error:section=devcrypto_sect, name=default_algorithms, value=ALL error:0700006D:configuration file routines::module initialization error:module=engines, value=engines_sect retcode=-1      )
+nginx: the configuration file /tmp/homepublish-tcp-p3/runtime/http.conf syntax is ok
+nginx: configuration file /tmp/homepublish-tcp-p3/runtime/http.conf test is successful
+--- /tmp/homepublish-tcp-p3/evidence/http-process.log
+nginx: [alert] could not open error log file: open() "/tmp/homepublish-tcp-p3/runtime/logs/error.log" failed (2: No such file or directory)
+2026/10/15 19:12:10 [alert] 131037#0: OPENSSL_init_ssl() failed (SSL: error:12800067:DSO support routines::could not load the shared library:filename(/usr/lib/engines-3/devcrypto.so): Dynamic loading not supported error:12800067:DSO support routines::could not load the shared library error:13000084:engine routines::dso not found error:13000074:engine routines::no such engine:id=devcrypto error:13000066:engine routines::engine configuration error:section=devcrypto_sect, name=default_algorithms, value=ALL error:0700006D:configuration file routines::module initialization error:module=engines, value=engines_sect retcode=-1      )
+Active Internet connections (only servers)
+Proto Recv-Q Send-Q Local Address           Foreign Address         State       PID/Program name    
+tcp        0      0 192.168.1.2:53          0.0.0.0:*               LISTEN      15646/dnsmasq
+tcp        0      0 0.0.0.0:443             0.0.0.0:*               LISTEN      36655/dropbear
+tcp        0      0 192.168.1.2:22          0.0.0.0:*               LISTEN      34089/dropbear
+tcp        0      0 172.17.0.1:2004         0.0.0.0:*               LISTEN      15760/dnsmasq_acl_d
+tcp        0      0 192.168.1.2:139         0.0.0.0:*               LISTEN      5871/smbd
+tcp        0      0 0.0.0.0:5355            0.0.0.0:*               LISTEN      8119/wsdd2
+tcp        0      0 127.0.0.1:53            0.0.0.0:*               LISTEN      15646/dnsmasq
+tcp        0      0 0.0.0.0:80              0.0.0.0:*               LISTEN      4308/uhttpd
+tcp        0      0 192.168.1.2:445         0.0.0.0:*               LISTEN      5871/smbd
+tcp        0      0 0.0.0.0:1026            0.0.0.0:*               LISTEN      3361/php8-fcgi
+tcp        0      0 0.0.0.0:21              0.0.0.0:*               LISTEN      4369/vsftpd
+tcp        0      0 192.168.1.2:7681        0.0.0.0:*               LISTEN      7756/ttyd
+tcp        0      0 127.0.0.1:2002          0.0.0.0:*               LISTEN      16371/xray
+tcp        0      0 127.0.0.1:2003          0.0.0.0:*               LISTEN      15641/chinadns-ng
+tcp        0      0 127.0.0.1:2004          0.0.0.0:*               LISTEN      15760/dnsmasq_acl_d
+tcp        0      0 172.17.0.1:53           0.0.0.0:*               LISTEN      15646/dnsmasq
+tcp        0      0 0.0.0.0:60000           0.0.0.0:*               LISTEN      6967/haproxy
+tcp        0      0 0.0.0.0:3702            0.0.0.0:*               LISTEN      8119/wsdd2
+tcp        0      0 192.168.1.2:2004        0.0.0.0:*               LISTEN      15760/dnsmasq_acl_d
+tcp        0      0 fd89:878e:a47f::1:22    :::*                    LISTEN      34089/dropbear
+tcp        0      0 ::1:2004                :::*                    LISTEN      15760/dnsmasq_acl_d
+tcp        0      0 fd89:878e:a47f::1:53    :::*                    LISTEN      15646/dnsmasq
+tcp        0      0 :::5355                 :::*                    LISTEN      8119/wsdd2
+tcp        0      0 :::80                   :::*                    LISTEN      4308/uhttpd
+tcp        0      0 :::1070                 :::*                    LISTEN      16371/xray
+tcp        0      0 fe80::290:a6ff:fee0:382c:53 :::*                    LISTEN      15646/dnsmasq
+tcp        0      0 fe80::290:a6ff:fee0:382c:2004 :::*                    LISTEN      15760/dnsmasq_acl_d
+tcp        0      0 :::2001                 :::*                    LISTEN      16371/xray
+tcp        0      0 :::9876                 :::*                    LISTEN      6266/ddns-go
+tcp        0      0 :::3702                 :::*                    LISTEN      8119/wsdd2
+tcp        0      0 fd89:878e:a47f::1:2004  :::*                    LISTEN      15760/dnsmasq_acl_d
+tcp        0      0 ::1:53                  :::*                    LISTEN      15646/dnsmasq
+ls: /tmp/homepublish-tcp-p3/runtime: No such file or directory

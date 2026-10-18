@@ -1,0 +1,1 @@
+nginx: [alert] could not open error log file: open() "/tmp/homepublish-tcp-p3/matrix-runtime/logs/error.log" failed (2: No such file or directory)

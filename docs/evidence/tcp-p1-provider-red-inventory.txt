@@ -1,0 +1,7 @@
+lua: ...mepublish-tcp-p1-provider/device-tcp-p1-provider.lua:7: unsupported action
+stack traceback:
+	[C]: in function 'assert'
+	...mepublish-tcp-p1-provider/device-tcp-p1-provider.lua:7: in main chunk
+	[C]: ?
+
+exit=1

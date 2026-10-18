@@ -1,0 +1,45 @@
+........x.........
+----------------------------------------------------------------------
+Ran 18 tests in 51.531s
+
+OK (expected failures=1)
+[E] set_reuse_port /home/eric/homestun-natmap-20260214/src/hev-misc.c:201
+E.[E] set_reuse_port /home/eric/homestun-natmap-20260214/src/hev-misc.c:201
+ENATMap seccomp boundary: Invalid argument
+.
+======================================================================
+ERROR: test_occupied_port_preserves_foreign_socket_and_traffic (__main__.Boundary.test_occupied_port_preserves_foreign_socket_and_traffic)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/mnt/d/DevPortal/homelede/feeds-xiaoqingfeng-homestun/homestun/tests/test-socket-boundary.py", line 128, in test_occupied_port_preserves_foreign_socket_and_traffic
+    def test_occupied_port_preserves_foreign_socket_and_traffic(self): self.occupied(False)
+                                                                       ^^^^^^^^^^^^^^^^^^^^
+  File "/mnt/d/DevPortal/homelede/feeds-xiaoqingfeng-homestun/homestun/tests/test-socket-boundary.py", line 119, in occupied
+    with socket.create_connection(('127.0.0.1',port),timeout=1) as client:
+         ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/usr/lib/python3.12/socket.py", line 852, in create_connection
+    raise exceptions[0]
+  File "/usr/lib/python3.12/socket.py", line 837, in create_connection
+    sock.connect(sa)
+OSError: [Errno 101] Network is unreachable
+
+======================================================================
+ERROR: test_startup_race_preserves_foreign_socket_and_traffic (__main__.Boundary.test_startup_race_preserves_foreign_socket_and_traffic)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/mnt/d/DevPortal/homelede/feeds-xiaoqingfeng-homestun/homestun/tests/test-socket-boundary.py", line 129, in test_startup_race_preserves_foreign_socket_and_traffic
+    def test_startup_race_preserves_foreign_socket_and_traffic(self): self.occupied(True)
+                                                                      ^^^^^^^^^^^^^^^^^^^
+  File "/mnt/d/DevPortal/homelede/feeds-xiaoqingfeng-homestun/homestun/tests/test-socket-boundary.py", line 119, in occupied
+    with socket.create_connection(('127.0.0.1',port),timeout=1) as client:
+         ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/usr/lib/python3.12/socket.py", line 852, in create_connection
+    raise exceptions[0]
+  File "/usr/lib/python3.12/socket.py", line 837, in create_connection
+    sock.connect(sa)
+OSError: [Errno 101] Network is unreachable
+
+----------------------------------------------------------------------
+Ran 4 tests in 9.475s
+
+FAILED (errors=2)

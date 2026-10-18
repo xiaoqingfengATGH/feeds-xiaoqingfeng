@@ -1,0 +1,13 @@
+$ scp -O -o ProxyCommand=none -o ProxyJump=none -o IdentitiesOnly=yes -o BatchMode=yes -i D:/DevPortal/CloudHosts/HomePri.key -P 222 D:\DevPortal\homelede\homepublish-product\homepublish\files\usr\share\homepublish\canonical.lua root@127.0.0.1:/tmp/homepublish-tcp-p1-model/canonical.lua
+
+EXIT 0
+$ scp -O -o ProxyCommand=none -o ProxyJump=none -o IdentitiesOnly=yes -o BatchMode=yes -i D:/DevPortal/CloudHosts/HomePri.key -P 222 D:\DevPortal\homelede\homepublish-product\homepublish\files\usr\share\homepublish\canonical-v2.lua root@127.0.0.1:/tmp/homepublish-tcp-p1-model/canonical-v2.lua
+
+EXIT 0
+$ scp -O -o ProxyCommand=none -o ProxyJump=none -o IdentitiesOnly=yes -o BatchMode=yes -i D:/DevPortal/CloudHosts/HomePri.key -P 222 D:\DevPortal\homelede\homepublish-product\homepublish\tests\device-tcp-p1-model.lua root@127.0.0.1:/tmp/homepublish-tcp-p1-model/device-tcp-p1-model.lua
+
+EXIT 0
+$ ssh -o ProxyCommand=none -o ProxyJump=none -o IdentitiesOnly=yes -o BatchMode=yes -i D:/DevPortal/CloudHosts/HomePri.key -p 222 root@127.0.0.1 lua /tmp/homepublish-tcp-p1-model/device-tcp-p1-model.lua /tmp/homepublish-tcp-p1-model conflicts
+FAIL disabled normalized domain conflict: ...tmp/homepublish-tcp-p1-model/device-tcp-p1-model.lua:17: unexpected acceptance
+
+EXIT 1

@@ -1,0 +1,71 @@
+INITIAL_STABILITY { before: 120, after: 120, focus: 'hp-retry', height: 1987 }
+FIXTURE_DIAG 已保存待应用；旧运行配置不会随保存切换
+
+发布状态
+发布状态
+运行中（本机已验证）
+配置状态
+已保存：2；运行：1；已保存待应用
+发布策略
+临时发布；截止：123456；开机恢复：关闭
+公网入口
+IPv4 / IPv6 公网未验证；本机就绪不代表公网可达
+入口状态
+入口	本机监听	地址族	关联网络	配置来源	公网验证
+v6	[::1]:49888	ipv6	lan	运行快照（逐服务就绪另验）	公网未验证
+服务发布状态
+已保存配置	名称	发布方式	匹配 / 端口	家庭后端	地址族路径	当前运行状态
+参与下次发布；待应用	运行 A（one）	独立 TCP	TCP 49888	127.0.0.1:49889	ipv6 → ipv4	旧运行结果，不计就绪
+发布操作
+启动发布
+启动发布当前阶段不能启动
+应用变更
+应用变更需确认发布范围
+停止发布
+停止发布需确认发布范围
+刷新 / 重试
+刷新 / 重试
+配置
+编辑发布服务
+内部状态与失败 / 清理详情
+{
+  "error": null,
+  "runtime": {
+    "phase": "running",
+    "cleanup": "confirmed",
+    "active_verified": true,
+    "generation": "current",
+    "expires_at": 123456,
+    "services": {
+      "one": {
+        "ready": true,
+        "generation": "old"
+      }
+    }
+  },
+  "desired_state": {
+    "state": "enabled",
+    "manual_stop_latch": false
+  },
+  "saved_revision": 2,
+  "active_revision": 1,
+  "pending_config": {
+    "apply_required": true
+  }
+}
+SCROLL_DIAG {
+  html: '<div class="hp-table-viewport" tabindex="0" aria-label="服务发布状态"><div class="col-12"><div class="card"><div id="cbi-json-services" class="cbi-section cbi-tblsection card-body" data-idref="43df8cad"><h3 class="header-title mb-3">服务发布状态</h3><div class="table-responsive"><table class="table cbi-section-table"><thead class="thead cbi-section-thead"><tr class="tr cbi-section-table-titles anonymous"><th class="th cbi-section-table-cell" data-widget="CBI.DummyValue">已保存配置</th><th class="th cbi-section-table-cell" data-widget="CBI.DummyValue">名称</th><th class="th cbi-section-table-cell" data-widget="CBI.DummyValue">发布方式</th><th class="th cbi-section-table-cell" data-widget="CBI.DummyValue">匹配 / 端口</th><th class="th cbi-section-table-cell" data-widget="CBI.DummyValue">家庭后端</th><th class="th cbi-section-table-cell" data-widget="CBI.DummyValue">地址族路径</th><th class="th cbi-section-table-cell" data-widget="CBI.DummyValue">当前运行状态</th></tr></thead><tbody class="tbody cbi-section-tbody"><tr id="cbi-json-services2" class="tr cbi-section-table-row" data-sid="services2" data-section-id="services2" data-hp-key="one"><td class="td cbi-value-field" data-title="已保存配置" data-name="saved" data-widget="CBI.DummyValue">参与下次发布；待应用</td><td class="td cbi-value-field" data-title="名称" data-name="identity" data-widget="CBI.DummyValue">运行 A（one）</td><td class="td cbi-value-field" data-title="发布方式" data-name="kind" data-widget="CBI.DummyValue">独立 TCP</td><td class="td cbi-value-field" data-title="匹配 / 端口" data-name="match" data-widget="CBI.DummyValue">TCP 49888</td><td class="td cbi-value-field" data-title="家庭后端" data-name="backend" data-widget="CBI.DummyValue">127.0.0.1:49889</td><td class="td cbi-value-field" data-title="地址族路径" data-name="path" data-widget="CBI.DummyValue">ipv6 → ipv4</td><td class="td cbi-value-field" data-title="当前运行状态" data-name="readiness" data-widget="CBI.DummyValue">旧运行结果，不计就绪</td></tr></tbody></table></div></div></div></div></div>',
+  style: '#hp-overview{min-width:0;overflow-wrap:anywhere}#hp-overview .hp-table-viewport{max-width:100%;overflow-x:auto}#hp-overview .hp-table-viewport table{min-width:800px}#hp-overview pre{white-space:pre-wrap}',
+  table: '800px',
+  client: 331,
+  scroll: 331
+}
+AssertionError [ERR_ASSERTION]: horizontal stability must exercise a nonzero scroll offset
+    at D:\DevPortal\homelede\homepublish-product\luci-app-homepublish\tests\p4-overview-browser.cjs:44:8 {
+  generatedMessage: false,
+  code: 'ERR_ASSERTION',
+  actual: false,
+  expected: true,
+  operator: '==',
+  diff: 'simple'
+}

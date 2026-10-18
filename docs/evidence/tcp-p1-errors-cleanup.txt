@@ -1,0 +1,2 @@
+PASS no fixture process cwd/exe/root; private fixture absent; SSH responsive
+DEVICE_EXIT=0

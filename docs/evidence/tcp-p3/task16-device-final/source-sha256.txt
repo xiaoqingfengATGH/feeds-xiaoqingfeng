@@ -1,0 +1,14 @@
+0c677d4a05875929639ec519c268170742afcfd9e6efc52a19349969e9528ed7  /tmp/homepublish-tcp-p3/canonical-v2.lua
+b751d71892f91ef5366a6a2007a3fa2d3ff6ee4713e07d8a246a56fdf343499a  /tmp/homepublish-tcp-p3/certificate-metadata.lua
+06da2f95e5cd7fba61331c2b5f45b4758dd0559256147e5a5cac9a2ca15eeb6e  /tmp/homepublish-tcp-p3/device-integrations.lua
+91857bbee98826d84b8c60bf588d16d11c3deca2439d7610da774ebbde52c343  /tmp/homepublish-tcp-p3/device-tcp-p3-mixed-render.lua
+ff265455f245b0733b7007f61fc78e20ab57b0856c470a218ef6ed580409225d  /tmp/homepublish-tcp-p3/device-tcp-p3-reject.lua
+e02e039d2660b16f8c720f929ba62e16e1bd716f6743aef87f06bbfb6f4d535a  /tmp/homepublish-tcp-p3/device-tcp-p3-render.lua
+6b56bb6971d9c87da9f93c9c510ceaaf6958f41fed016427e1cf2997385b4d34  /tmp/homepublish-tcp-p3/direct-address.lua
+f00fbd26b7795abb7c6702f826ee4b6898db0435ed5496ed16b247f4ea5fd539  /tmp/homepublish-tcp-p3/direct-backend.lua
+a8349caacb4e541b1dc4b3f752863a60296c6762a760b91cf68350abf9bb9c8e  /tmp/homepublish-tcp-p3/direct-boundary-fixture.lua
+68a1787773c554585cb6d72036561afa6c0762214e3331454b9c6a769bd4fdd8  /tmp/homepublish-tcp-p3/direct-renderer.lua
+7d959171a7831485b326112596816788ccf88053b3656f90a92f6bd5cbbb595d  /tmp/homepublish-tcp-p3/sslh-renderer.lua
+7cb17284985af041afb9c2929de69bab11eede20a320f64fa95c0e3a6c35c07c  /tmp/homepublish-tcp-p3/tcp-route-plan.lua
+69206fd1ecef606da8e92141089787847c44d67380edc409d904f880b3048d73  /tmp/homepublish-tcp-p3/nginx-private
+02b160e36214f0ad204537aeb31ea2e4c9a8fecf8a78f08b220a79058be31f1d  /tmp/homepublish-tcp-p3/device-tcp-p3.sh

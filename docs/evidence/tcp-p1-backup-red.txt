@@ -1,0 +1,6 @@
+lua: /tmp/homepublish-tcp-p1-backup/test.lua:13: missing exact original-journal backup
+stack traceback:
+	[C]: in function 'assert'
+	/tmp/homepublish-tcp-p1-backup/test.lua:13: in main chunk
+	[C]: ?
+DEVICE_EXIT=1

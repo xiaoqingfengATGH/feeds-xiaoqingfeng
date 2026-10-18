@@ -1,0 +1,46 @@
+PASS target publisher token 31 valid=False
+PASS target provision token 31 valid=False snapshot-before-side-effects
+tmp/session-before tmp/homestun-tokencheck/session differ: byte 68, line 1
+PASS target publisher token 32 valid=True
+PASS target provision token 32 valid=True snapshot-before-side-effects
+tmp/session-before tmp/homestun-tokencheck/session differ: byte 68, line 1
+PASS target publisher token 127 valid=True
+PASS target provision token 127 valid=True snapshot-before-side-effects
+tmp/session-before tmp/homestun-tokencheck/session differ: byte 68, line 1
+PASS target publisher token 128 valid=True
+PASS target provision token 128 valid=True snapshot-before-side-effects
+PASS target publisher token 129 valid=False
+PASS target provision token 129 valid=False snapshot-before-side-effects
+PASS target publisher token 512 valid=False
+PASS target provision token 512 valid=False snapshot-before-side-effects
+PASS target publisher token newline valid=False
+PASS target provision token newline valid=False snapshot-before-side-effects
+PASS target publisher token nul valid=False
+PASS target provision token nul valid=False snapshot-before-side-effects
+PASS target publisher token invalid valid=False
+PASS target provision token invalid valid=False snapshot-before-side-effects
+PASS target publisher token nonascii valid=False
+PASS target provision token nonascii valid=False snapshot-before-side-effects
+PASS target publisher token 128-newline valid=False
+PASS target provision token 128-newline valid=False snapshot-before-side-effects
+PASS target publisher token 128-nul valid=False
+PASS target provision token 128-nul valid=False snapshot-before-side-effects
+PASS target publisher token 128-invalid valid=False
+PASS target provision token 128-invalid valid=False snapshot-before-side-effects
+tmp/session-before tmp/homestun-tokencheck/session differ: byte 68, line 1
+PASS target publisher token allowed valid=True
+PASS target provision token allowed valid=True snapshot-before-side-effects
+b7ab524bc782bfa8e47b03c1b0d51b807e927fb270b5140881022577c8d94222  etc/homestun/cert.pem
+f826f3af6e53138310ef7c38a980b31133f5713585da3854134037c3293aa314  etc/homestun/key.pem
+74e7e5bb9d22d6db26bf76946d40fff3ea9f0346b884fd0694920fccfad15e33  etc/homestun/router.token
+656771905e1ef731f65cd0a0d9fb061238380a1a012e6abdf846ecc7d2ea36fd  tmp/homestun-service-Foreign/key.pem
+publication token size: Invalid argument
+publication token size: Invalid argument
+publication token size: Invalid argument
+publication token bytes: Invalid argument
+publication token bytes: Invalid argument
+publication token bytes: Invalid argument
+publication token bytes: Invalid argument
+publication token size: Invalid argument
+publication token size: Invalid argument
+publication token size: Invalid argument

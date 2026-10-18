@@ -1,0 +1,29 @@
+#!/bin/sh /etc/rc.common
+# SPDX-License-Identifier: Apache-2.0
+START=95
+STOP=10
+USE_PROCD=1
+
+# Idle controller is independent from publication. Never respawn expired intent.
+start_service() {
+ procd_open_instance controller
+ procd_set_param command /usr/bin/lua /usr/share/homepublish/product-daemon.lua
+ procd_set_param stdout 1
+ procd_set_param stderr 1
+ procd_close_instance
+}
+stop_service() {
+ if test -S /var/run/homepublish/control.sock; then
+  echo '{"action":"stop"}' | /usr/bin/lua /usr/share/homepublish/product-device-cli.lua >/dev/null
+ else
+  /usr/bin/lua -e "package.path='/usr/share/homepublish/?.lua;'..package.path; require('product-controller').new(require('product-system-provider')).stop()" >/dev/null
+ fi
+}
+status_service() {
+ echo '{"action":"status"}' | /usr/bin/lua /usr/share/homepublish/product-device-cli.lua
+}
+service_triggers() {
+ # No config/network restart, respawn, or automatic exposure.
+ return 0
+}
+

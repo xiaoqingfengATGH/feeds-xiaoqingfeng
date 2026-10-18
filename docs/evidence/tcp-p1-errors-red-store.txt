@@ -1,0 +1,13 @@
+OBSERVE status cli_exit=0 wire_bytes=349 stderr_bytes=0
+{"pending_config":{"saved_revision":0,"apply_required":false},"capabilities":{"stop":true,"start":true,"preflight":true,"network_inventory":true,"apply":true},"runtime":{"phase":"unsupported"},"schema_versions":[1,2],"saved_revision":0,"intent_revision":0,"state_version":1,"desired_state":{"state":"disabled","manual_stop_latch":false}}
+
+OBSERVE dirsync cli_exit=256 wire_bytes=120 stderr_bytes=0
+{"retryable":false,"field":"request","error":"Request rejected or state unavailable","error_code":"INVALID_CONFIG"}
+
+lua: ...p/homepublish-tcp-p1-errors/device-tcp-p1-errors.lua:63: expected STATE_UNKNOWN, got INVALID_CONFIG
+stack traceback:
+	[C]: in function 'assert'
+	...p/homepublish-tcp-p1-errors/device-tcp-p1-errors.lua:63: in function 'safe_error'
+	...p/homepublish-tcp-p1-errors/device-tcp-p1-errors.lua:84: in main chunk
+	[C]: ?
+DEVICE_EXIT=1

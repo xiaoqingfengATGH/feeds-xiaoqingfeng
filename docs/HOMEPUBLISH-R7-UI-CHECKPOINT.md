@@ -1,0 +1,9 @@
+# r7 UI continuation
+
+Actual source RED/GREEN: Node product-diff first failed missing api.diff, then passes full field/add/delete/no-change assertions. Real headless Chrome official LuCI loader + real isolated rpcd/native journal browser RED reproduced delete dialog never closing, then missing add-listener; fixed both. Final make browser product rpc shared-runtime exit0, /home/eric/homestun-sdk-check/r7-ui-green.log.
+
+Implemented concrete name/hostname/backend/ranges/certificate mode+resolved/default/enabled/auth/listener/access/policy diff, whole-group delete warning and original temporary deadline. Real browser independently edited override certificate, preserved focused draft across 4.5 seconds, deleted service with confirmed dialog, added/deleted listener, restricted interface select, saved and read back canonical state. Poll only updates status; draft and focused controls not re-rendered. Capability disabled fixture remains honest: no fake running.
+
+Package recipes both r7. Historical checkpoint before target continuation: SDK/deploy and capability-enabled browser were pending; the acceptance below supersedes that status.
+
+Current r7 continuation: actual-device Chrome official single LuCI view lifecycle / scoped RPC / real procd Start → shared RSA TLS → Save pending old traffic → Apply independent ECC + original deadline → Stop both held TLS connections and new listener/private snapshots PASS. Target restored revision0/disabled/latch/cleanup confirmed, ACME backup exact, fixtures gone, controller/backends stopped, both init disabled, management/proxy/listeners/routes/firewall preserved. See docs/HOMEPUBLISH-R7-BROWSER-ACCEPTANCE.md. Natural expiry and second-readiness-failure r7 rerun not tested; public activation remains unsupported. Restricted device profile and public activation gates unchanged. No firewall/UPnP/DNS/proxy/ACME issuance changes; no business ECC key use. Keep sketches and __pycache__ untracked.

@@ -1,0 +1,6 @@
+[72810] Oct 15 19:32:46 Forced command set to 'echo HP_P3_ISOLATED_SSH_COMMAND'
+[72810] Oct 15 19:32:46 Not backgrounding
+[73227] Oct 15 19:32:50 Child connection from 127.0.0.1:39514
+[73227] Oct 15 19:32:50 Pubkey auth succeeded for 'root' with ssh-ed25519 key SHA256:rkPXN5PiJ/vlax+t5LgUe/rZx9LStUysX/AX0es7MBA from 127.0.0.1:39514
+[73227] Oct 15 19:32:50 Exit (root) from <127.0.0.1:39514>: Exited normally
+[72810] Oct 15 19:32:50 Early exit: Terminated by signal

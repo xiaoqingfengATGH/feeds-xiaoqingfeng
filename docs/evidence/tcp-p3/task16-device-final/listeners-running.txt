@@ -1,0 +1,38 @@
+Active Internet connections (only servers)
+Proto Recv-Q Send-Q Local Address           Foreign Address         State       PID/Program name    
+tcp        0      0 192.168.1.2:53          0.0.0.0:*               LISTEN      15646/dnsmasq
+tcp        0      0 0.0.0.0:443             0.0.0.0:*               LISTEN      36655/dropbear
+tcp        0      0 127.0.0.1:49446         0.0.0.0:*               LISTEN      31709/ -c backend.c
+tcp        0      0 127.0.0.1:49447         0.0.0.0:*               LISTEN      31709/ -c backend.c
+tcp        0      0 127.0.0.1:49445         0.0.0.0:*               LISTEN      31709/ -c backend.c
+tcp        0      0 192.168.1.2:22          0.0.0.0:*               LISTEN      34089/dropbear
+tcp        0      0 172.17.0.1:2004         0.0.0.0:*               LISTEN      15760/dnsmasq_acl_d
+tcp        0      0 192.168.1.2:139         0.0.0.0:*               LISTEN      5871/smbd
+tcp        0      0 0.0.0.0:5355            0.0.0.0:*               LISTEN      8119/wsdd2
+tcp        0      0 127.0.0.1:53            0.0.0.0:*               LISTEN      15646/dnsmasq
+tcp        0      0 0.0.0.0:80              0.0.0.0:*               LISTEN      4308/uhttpd
+tcp        0      0 192.168.1.2:445         0.0.0.0:*               LISTEN      5871/smbd
+tcp        0      0 0.0.0.0:1026            0.0.0.0:*               LISTEN      3361/php8-fcgi
+tcp        0      0 0.0.0.0:21              0.0.0.0:*               LISTEN      4369/vsftpd
+tcp        0      0 192.168.1.2:7681        0.0.0.0:*               LISTEN      7756/ttyd
+tcp        0      0 127.0.0.1:2002          0.0.0.0:*               LISTEN      16371/xray
+tcp        0      0 127.0.0.1:2003          0.0.0.0:*               LISTEN      15641/chinadns-ng
+tcp        0      0 127.0.0.1:2004          0.0.0.0:*               LISTEN      15760/dnsmasq_acl_d
+tcp        0      0 172.17.0.1:53           0.0.0.0:*               LISTEN      15646/dnsmasq
+tcp        0      0 0.0.0.0:60000           0.0.0.0:*               LISTEN      6967/haproxy
+tcp        0      0 0.0.0.0:3702            0.0.0.0:*               LISTEN      8119/wsdd2
+tcp        0      0 192.168.1.2:2004        0.0.0.0:*               LISTEN      15760/dnsmasq_acl_d
+tcp        0      0 fd89:878e:a47f::1:22    :::*                    LISTEN      34089/dropbear
+tcp        0      0 ::1:2004                :::*                    LISTEN      15760/dnsmasq_acl_d
+tcp        0      0 fd89:878e:a47f::1:53    :::*                    LISTEN      15646/dnsmasq
+tcp        0      0 :::5355                 :::*                    LISTEN      8119/wsdd2
+tcp        0      0 :::80                   :::*                    LISTEN      4308/uhttpd
+tcp        0      0 :::1070                 :::*                    LISTEN      16371/xray
+tcp        0      0 fe80::290:a6ff:fee0:382c:53 :::*                    LISTEN      15646/dnsmasq
+tcp        0      0 fe80::290:a6ff:fee0:382c:2004 :::*                    LISTEN      15760/dnsmasq_acl_d
+tcp        0      0 :::2001                 :::*                    LISTEN      16371/xray
+tcp        0      0 ::1:49443               :::*                    LISTEN      31712/ -c http.conf
+tcp        0      0 :::9876                 :::*                    LISTEN      6266/ddns-go
+tcp        0      0 :::3702                 :::*                    LISTEN      8119/wsdd2
+tcp        0      0 fd89:878e:a47f::1:2004  :::*                    LISTEN      15760/dnsmasq_acl_d
+tcp        0      0 ::1:53                  :::*                    LISTEN      15646/dnsmasq

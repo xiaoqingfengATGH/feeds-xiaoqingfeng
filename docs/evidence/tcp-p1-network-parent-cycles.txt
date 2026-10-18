@@ -1,0 +1,28 @@
+Same authorized device/staging/SSH options as tcp-p1-network-parent-red.txt.
+
+Cycle 1 GREEN after exact-host identity fix:
+Command: lua /tmp/homepublish-p1-network-parent/device-tcp-p1-network.lua /tmp/homepublish-p1-network-parent
+Exit 0. Existing three PASS groups and canonical normalized IPv6 binding PASS.
+
+Cycle 2 RED before semantic summary/dedupe fix:
+Command: lua /tmp/homepublish-p1-network-parent/device-tcp-p1-network.lua /tmp/homepublish-p1-network-parent
+Exit 1.
+lua: ...epublish-p1-network-parent/device-tcp-p1-network.lua:94: equivalent IPv6 spellings must have identical inventory summary
+stack traceback:
+ [C]: in function 'assert'
+ ...epublish-p1-network-parent/device-tcp-p1-network.lua:94: in main chunk
+ [C]: ?
+After fix: exit 0 with all prior PASS groups and PASS semantic summary, deduplication, GUA/case variants and exact-host no-CIDR/no-mapped rejection.
+
+Cycle 3 RED before dense-array fix:
+Command: lua /tmp/homepublish-p1-network-parent/device-tcp-p1-network.lua /tmp/homepublish-p1-network-parent
+Exit 1. Prior five PASS groups passed.
+lua: ...epublish-p1-network-parent/device-tcp-p1-network.lua:32: assertion failed!
+stack traceback:
+ [C]: in function 'assert'
+ ...epublish-p1-network-parent/device-tcp-p1-network.lua:32: in function 'check_error'
+ ...epublish-p1-network-parent/device-tcp-p1-network.lua:111: in main chunk
+ [C]: ?
+Fixture had four dense interface entries then deleted index 2. Old #/pairs guard accepted it and ipairs silently dropped later entries. Fix counts actual keys and raw-checks every index.
+Final GREEN output and transfer hashes: tcp-p1-network-parent-green.txt. Includes supplemental sparse address/prefix/zone/network arrays and real-device LAN IPv6 canonical binding.
+No installed code/config write, restart or listener creation performed.

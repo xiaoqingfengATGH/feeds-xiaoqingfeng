@@ -1,0 +1,41 @@
+OBSERVE connect cli_exit=256 wire_bytes=156 stderr_bytes=0
+{"retryable":true,"field":"access_profile.listeners.network","error":"Network inventory unavailable or malformed","error_code":"NETWORK_UNAVAILABLE"}
+
+PASS full transport connect
+OBSERVE firewall cli_exit=256 wire_bytes=156 stderr_bytes=0
+{"retryable":true,"field":"access_profile.listeners.network","error":"Network inventory unavailable or malformed","error_code":"NETWORK_UNAVAILABLE"}
+
+PASS full transport firewall
+OBSERVE malformed cli_exit=256 wire_bytes=156 stderr_bytes=0
+{"retryable":true,"field":"access_profile.listeners.network","error":"Network inventory unavailable or malformed","error_code":"NETWORK_UNAVAILABLE"}
+
+PASS full transport malformed
+OBSERVE status cli_exit=0 wire_bytes=349 stderr_bytes=0
+{"pending_config":{"saved_revision":0,"apply_required":false},"capabilities":{"stop":true,"start":true,"preflight":true,"network_inventory":true,"apply":true},"runtime":{"phase":"unsupported"},"schema_versions":[1,2],"saved_revision":0,"intent_revision":0,"state_version":1,"desired_state":{"state":"disabled","manual_stop_latch":false}}
+
+OBSERVE dirsync cli_exit=256 wire_bytes=117 stderr_bytes=0
+{"retryable":true,"field":"state","error":"Request rejected or state unavailable","error_code":"STATE_UNKNOWN"}
+
+OBSERVE status cli_exit=0 wire_bytes=601 stderr_bytes=0
+{"desired_state":{"state":"disabled","manual_stop_latch":false},"saved_revision":1,"runtime":{"phase":"unsupported"},"capabilities":{"stop":true,"start":false,"preflight":true,"network_inventory":true,"apply":false},"schema_versions":[1,2],"pending_config":{"saved_revision":1,"apply_required":true},"intent_revision":0,"state_version":1,"saved_config":{"access_profile":{"listeners":[{"listener_id":"lan","network":"lan","address":"192.168.1.2","family":"ipv4","port":24443}]},"publication_policy":{"mode":"continuous","boot_restore":false},"schema_version":2,"services":[]}}
+
+PASS actual post-rename directory fsync EIO, STATE_UNKNOWN, revision 0 -> 1
+OBSERVE status cli_exit=256 wire_bytes=117 stderr_bytes=0
+{"retryable":true,"field":"state","error":"Request rejected or state unavailable","error_code":"STATE_UNKNOWN"}
+
+PASS unsafe store directory classified STATE_UNKNOWN
+OBSERVE save cli_exit=256 wire_bytes=117 stderr_bytes=0
+{"retryable":true,"field":"state","error":"Request rejected or state unavailable","error_code":"STATE_UNKNOWN"}
+
+OBSERVE status cli_exit=0 wire_bytes=681 stderr_bytes=0
+{"desired_state":{"state":"disabled","manual_stop_latch":false},"saved_revision":1,"runtime":{"phase":"stopped"},"capabilities":{"stop":true,"start":true,"preflight":true,"network_inventory":true,"apply":true},"schema_versions":[1,2],"pending_config":{"saved_revision":1,"apply_required":true},"intent_revision":0,"state_version":1,"saved_config":{"access_profile":{"methods_allowed":["manual_ipv4"],"listeners":[{"internal_port":24443,"protocol":"tcp","address":"192.168.1.2","family":"ipv4","external_port":24443,"zone":"lan","interface":"lan"}]},"publication_policy":{"mode":"continuous","boot_restore":false},"schema_version":1,"services":[]}}
+
+PASS native migration backup failure classified STATE_UNKNOWN; old journal and unsafe backup preserved
+TOTAL all full transport fault regressions PASS
+5c25f5d639735efcc760cc9675d91b08aba2fa8c23ea5c590ed755ccbd2efbda  /tmp/homepublish-tcp-p1-errors/product-cli.lua
+789ff382ae64fd53948b0d2e0f8a25dd19b9b00542189d45f3cfc0d251d90472  /tmp/homepublish-tcp-p1-errors/product-rpc.lua
+679f95e8f30fdc37ec406944b608bbbf9d60336dfabe3db194ffbbc3955b4632  /tmp/homepublish-tcp-p1-errors/product-json.lua
+895acf1cd17dad5b2a0b18bd0447c6b970bb69dcb48cb430687d441ee898d23d  /tmp/homepublish-tcp-p1-errors/homepublish_store.so
+853e73f7bad4e8ef2dbb0fcb5acc1f2c23ebb7f0542b63b560ab4fb7fb163828  /tmp/homepublish-tcp-p1-errors/fault.so
+9d911312db7be057278ba9267044537c63cc0c4cd8ed1462449ee4a567d20343  /tmp/homepublish-tcp-p1-errors/device-tcp-p1-errors.lua
+DEVICE_EXIT=0

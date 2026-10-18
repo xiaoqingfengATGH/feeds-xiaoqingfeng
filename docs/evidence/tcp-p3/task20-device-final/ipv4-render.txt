@@ -1,0 +1,2 @@
+PASS controlled libc answer feed: dedup IPv4 preference, changed IPv6 answer, mixed outside-range and public answer reject; not real DNS mutation
+P3_TASK20_NONHTTPS_RENDER_GREEN ipv4

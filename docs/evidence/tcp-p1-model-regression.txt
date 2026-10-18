@@ -1,0 +1,31 @@
+$ ssh -o ProxyCommand=none -o ProxyJump=none -o IdentitiesOnly=yes -o BatchMode=yes -i D:/DevPortal/CloudHosts/HomePri.key -p 222 root@127.0.0.1 umask 077; mkdir -p /tmp/homepublish-tcp-p1-model/homepublish/files/usr/share/homepublish /tmp/homepublish-tcp-p1-model/homepublish/tests; cp /tmp/homepublish-tcp-p1-model/canonical*.lua /tmp/homepublish-tcp-p1-model/homepublish/files/usr/share/homepublish/
+
+EXIT 0
+$ scp -O -o ProxyCommand=none -o ProxyJump=none -o IdentitiesOnly=yes -o BatchMode=yes -i D:/DevPortal/CloudHosts/HomePri.key -P 222 D:\DevPortal\homelede\homepublish-product\homepublish\tests\test-canonical.lua root@127.0.0.1:/tmp/homepublish-tcp-p1-model/homepublish/tests/test-canonical.lua
+
+EXIT 0
+$ scp -O -o ProxyCommand=none -o ProxyJump=none -o IdentitiesOnly=yes -o BatchMode=yes -i D:/DevPortal/CloudHosts/HomePri.key -P 222 D:\DevPortal\homelede\homepublish-product\homepublish\tests\test-certificate-model.lua root@127.0.0.1:/tmp/homepublish-tcp-p1-model/homepublish/tests/test-certificate-model.lua
+
+EXIT 0
+$ ssh -o ProxyCommand=none -o ProxyJump=none -o IdentitiesOnly=yes -o BatchMode=yes -i D:/DevPortal/CloudHosts/HomePri.key -p 222 root@127.0.0.1 lua /tmp/homepublish-tcp-p1-model/homepublish/tests/test-canonical.lua /tmp/homepublish-tcp-p1-model
+PASS canonical defaults and typed service
+PASS strict known fields, types, references and uniqueness
+PASS empty services saveable, runtime plan still rejects empty publication
+PASS address scope, IPv6, methods, duration bounds and detached plans
+
+EXIT 0
+$ ssh -o ProxyCommand=none -o ProxyJump=none -o IdentitiesOnly=yes -o BatchMode=yes -i D:/DevPortal/CloudHosts/HomePri.key -p 222 root@127.0.0.1 lua /tmp/homepublish-tcp-p1-model/homepublish/tests/test-certificate-model.lua /tmp/homepublish-tcp-p1-model
+PASS canonical defaults and typed service
+PASS strict known fields, types, references and uniqueness
+PASS empty services saveable, runtime plan still rejects empty publication
+PASS address scope, IPv6, methods, duration bounds and detached plans
+PASS shared default inheritance, independent override, case-normalized uniqueness and legacy references
+
+EXIT 0
+$ ssh -o ProxyCommand=none -o ProxyJump=none -o IdentitiesOnly=yes -o BatchMode=yes -i D:/DevPortal/CloudHosts/HomePri.key -p 222 root@127.0.0.1 ls -ld /tmp/homepublish-tcp-p1-model; sha256sum /tmp/homepublish-tcp-p1-model/canonical.lua /tmp/homepublish-tcp-p1-model/canonical-v2.lua /tmp/homepublish-tcp-p1-model/device-tcp-p1-model.lua
+drwx------    3 root     root           120 Oct 15 15:28 /tmp/homepublish-tcp-p1-model
+9801b5c822ddc40e31bea2aea5a460baf5038f5efefeac6e262cb7db025262f8  /tmp/homepublish-tcp-p1-model/canonical.lua
+0c677d4a05875929639ec519c268170742afcfd9e6efc52a19349969e9528ed7  /tmp/homepublish-tcp-p1-model/canonical-v2.lua
+512c6f973596863f543701e7fbb8765da8ec7eae49fcf65cadbcc793cc12a9a0  /tmp/homepublish-tcp-p1-model/device-tcp-p1-model.lua
+
+EXIT 0

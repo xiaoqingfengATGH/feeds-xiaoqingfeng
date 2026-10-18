@@ -1,0 +1,15 @@
+PASS private snapshot uid0 mode0600 / runtime0700
+PASS v2 canonical to HTTPS IPv6 route plan/render
+PASS upstream verify=false rejected
+PASS production loopback ingress remains forbidden
+PASS deterministic/override/disabled/unsupported/empty route regressions
+P3_RENDER_GREEN
+PASS actual [::1]:49443 HTTPS system-CA + hostname -> 127.0.0.1:49445 HTTP exact marker
+PASS HTTPS upstream system-CA + explicit hostname/SNI verified marker
+PASS HTTPS upstream wrong verify-name rejected (502 + name mismatch TLS error)
+PASS HTTPS upstream untrusted chain rejected (502 + certificate verify error, no backend marker)
+P3_TASK16_ISOLATED_GREEN
+PASS business source certificate/key SHA256 + uid/gid/mode preserved (server-only comparison)
+PASS private processes exited; all snapshots + fixture keys removed
+PASS live journal + firewall/management/proxy configs + system nginx unchanged
+netstat: showing only processes with your user ID

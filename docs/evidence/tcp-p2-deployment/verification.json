@@ -1,0 +1,137 @@
+{
+  "status{}": {
+    "pending_config": {
+      "saved_revision": 0,
+      "apply_required": false
+    },
+    "capabilities": {
+      "stop": true,
+      "start": true,
+      "preflight": true,
+      "network_inventory": true,
+      "apply": true
+    },
+    "runtime": {
+      "phase": "stopped",
+      "cleanup": "confirmed",
+      "stage": "boot_cleanup",
+      "active_verified": false
+    },
+    "schema_versions": [
+      1,
+      2
+    ],
+    "saved_revision": 0,
+    "intent_revision": 7,
+    "state_version": 1,
+    "desired_state": {
+      "state": "disabled",
+      "manual_stop_latch": true
+    }
+  },
+  "network_inventory{}": {
+    "status": "ok",
+    "summary": "107:3:lan|6:br-lan|4:true|z3:lan|a4:ipv411:192.168.1.22:247:private|a4:ipv624:fd89:878e:a47f:0:0:0:0:12:603:ula|36:6:docker|7:docker0|5:false|z6:docker|22:8:loopback|2:lo|4:true",
+    "networks": [
+      {
+        "zones": [
+          "lan"
+        ],
+        "network": "lan",
+        "up": true,
+        "device": "br-lan",
+        "addresses": [
+          {
+            "prefix": 24,
+            "address": "192.168.1.2",
+            "family": "ipv4",
+            "internal": true,
+            "scope": "private"
+          },
+          {
+            "prefix": 60,
+            "address": "fd89:878e:a47f::1",
+            "family": "ipv6",
+            "internal": true,
+            "scope": "ula"
+          }
+        ]
+      },
+      {
+        "zones": [
+          "docker"
+        ],
+        "network": "docker",
+        "up": false,
+        "device": "docker0",
+        "addresses": []
+      },
+      {
+        "zones": [],
+        "network": "loopback",
+        "up": true,
+        "device": "lo",
+        "addresses": []
+      }
+    ]
+  },
+  "migration_preview{'expected_revision': 99}": {
+    "retryable": true,
+    "field": "expected_revision",
+    "error": "Saved revision changed",
+    "error_code": "REVISION_CONFLICT"
+  },
+  "migration_preview{'expected_revision': 0}": {
+    "retryable": false,
+    "field": "schema_version",
+    "error": "A saved v1 configuration is required",
+    "error_code": "INVALID_CONFIG"
+  },
+  "preflight{'revision': 99}": {
+    "retryable": true,
+    "field": "revision",
+    "error": "Saved revision changed",
+    "error_code": "REVISION_CONFLICT"
+  },
+  "preflight{'revision': 0}": {
+    "retryable": false,
+    "field": "config",
+    "error": "No saved configuration",
+    "error_code": "INVALID_CONFIG"
+  },
+  "native": "migration_backup=true\n",
+  "http_static": [
+    {
+      "url": "http://127.0.0.1:1081/luci-static/resources/view/homepublish/certificates.js",
+      "status": 200,
+      "sha256": "e2008be801d04207dde1fd9224229adb412c72a4fc9c70c402f56553d79e32d6"
+    },
+    {
+      "url": "http://127.0.0.1:1081/luci-static/resources/view/homepublish/entry.js",
+      "status": 200,
+      "sha256": "7999d24360f21e7d772df85af72ad1fe2a6b7c0c9f54b3794441afe629912efd"
+    },
+    {
+      "url": "http://127.0.0.1:1081/luci-static/resources/view/homepublish/overview.js",
+      "status": 200,
+      "sha256": "9d750830af8f528310481509bbc6a01f13d5c75219f34f7fb0f015a0a754dd47"
+    },
+    {
+      "url": "http://127.0.0.1:1081/luci-static/resources/view/homepublish/product.js",
+      "status": 200,
+      "sha256": "e68785444fccc98caed21c6ac0be5de4969a1c0b2bcd63cd18f6cd40f1b2079f"
+    },
+    {
+      "url": "http://127.0.0.1:1081/luci-static/resources/view/homepublish/schema.js",
+      "status": 200,
+      "sha256": "07b65e7330fb753500fb23746daadb9c68ec81894b0bb162f3d8c336596dd2f0"
+    },
+    {
+      "url": "http://127.0.0.1:1081/luci-static/resources/view/homepublish/services.js",
+      "status": 200,
+      "sha256": "494a827148963e8165353c55c475c9747fcf1b0cd85a0e0e80170e7e11d6c3ee"
+    }
+  ],
+  "final_invariants": "/etc/homepublish/product/lock: OK\n/etc/homepublish/product/state: OK\n/etc/config/homepublish: OK\n/etc/config/network: OK\n/etc/config/firewall: OK\ntcp        0      0 0.0.0.0:443             0.0.0.0:*               LISTEN      36655/dropbear\ntcp        0      0 192.168.1.2:22          0.0.0.0:*               LISTEN      34089/dropbear\ntcp        0      0 0.0.0.0:80              0.0.0.0:*               LISTEN      4308/uhttpd\ntcp        0      0 fd89:878e:a47f::1:22    :::*                    LISTEN      34089/dropbear\ntcp        0      0 :::80                   :::*                    LISTEN      4308/uhttpd\n 3936 root      1208 S<   ash -c sha256sum -c '/root/homepublish-backups/20261015-165134/private.sha256'; sha256sum -c '/root/homep\n 3942 root      1204 S<   grep -E [h]omepublish|[n]ginx.*homepublish\n",
+  "backup_manifest_readback": "e67b342a481e5fe1ef00b5a233900df78d4f914a7da4f56e79e8b609f40cae38"
+}

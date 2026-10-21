@@ -62,7 +62,7 @@ local function public(state)
  -- r9: 已安装即真实能力；后端权威校验保留（CLI→device-test channel→controller 拒绝路径不动）
  out.schema_versions={1,2}
  local supported=not state.saved_config or state.saved_config.schema_version==1
- out.capabilities={start=supported,apply=supported,stop=true,network_inventory=true,preflight=true,service_types={'http_proxy','https_proxy','tls_passthrough','ssh','tcp_forward'}}
+ out.capabilities={start=supported,apply=supported,stop=true,network_inventory=true,preflight=true,service_types={'http_proxy','https_proxy','tls_passthrough','ssh','rdp','tcp_forward'}}
  out.pending_config={saved_revision=state.saved_revision,apply_required=state.saved_revision>0 and state.saved_revision~=state.active_revision}
  return out
 end

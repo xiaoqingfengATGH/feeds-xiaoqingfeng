@@ -14,6 +14,8 @@ function M.compile(config)
    plan.tcp=plan.tcp or {};plan.tcp[#plan.tcp+1]={service_id=s.service_id,listen_port=s.listen_port,backend=s.backend}
   elseif s.type=='ssh' then
    plan.ssh={service_id=s.service_id,backend=s.backend}
+  elseif s.type=='rdp' then
+   plan.rdp={service_id=s.service_id,backend=s.backend}
   elseif s.type=='http_proxy' then
    plan.http_services[#plan.http_services+1]={service_id=s.service_id,hostname=s.hostname,backend=s.backend,upstream_scheme=s.upstream_scheme,upstream_tls=s.upstream_tls}
   elseif s.type=='tls_passthrough' then
@@ -26,7 +28,7 @@ function M.compile(config)
   end
   end
  end
- if #plan.services==0 and #plan.http_services==0 and not plan.tcp and not plan.ssh and not plan.passthrough then return nil,'no enabled routes' end
+ if #plan.services==0 and #plan.http_services==0 and not plan.tcp and not plan.ssh and not plan.rdp and not plan.passthrough then return nil,'no enabled routes' end
  return plan
 end
 return M

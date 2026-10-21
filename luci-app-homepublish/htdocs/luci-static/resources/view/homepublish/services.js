@@ -22,13 +22,14 @@ return view.extend({
   function field(tab,cls,key,label,modal){var v=s.taboption(tab,cls,key,label);if(modal!==undefined)v.modalonly=modal;if(cls===form.DummyValue){v.modalonly=false;v.optional=true;}v.rmempty=cls===form.DummyValue;return v;}
   o=field('general',form.Flag,'enabled','启用');o.default='1';o.editable=true;
   o=field('general',form.Value,'name','名称');
-  o=field('general',form.ListValue,'type','接入方式');o.value('http_proxy','HTTP 反向代理');o.value('https_proxy','HTTPS 反向代理');o.value('tls_passthrough','TLS 透传');o.value('ssh','原生 SSH 共入口');o.value('tcp_forward','独立端口 TCP 转发');o.default='https_proxy';o.textvalue=function(sid){return api.serviceType(this.map.data.get(this.map.config,sid).type);};
+  o=field('general',form.ListValue,'type','接入方式');o.value('http_proxy','HTTP 反向代理');o.value('https_proxy','HTTPS 反向代理');o.value('tls_passthrough','TLS 透传');o.value('ssh','SSH 远程登录共入口');o.value('rdp','RDP 远程桌面共入口');o.value('tcp_forward','独立端口 TCP 转发');o.default='https_proxy';o.textvalue=function(sid){return api.serviceType(this.map.data.get(this.map.config,sid).type);};
   o=field('general',form.DummyValue,'access_method_help','适用场景');o.modalonly=true;
   o.renderWidget=function(){return E('ul',{},[
    E('li',{},[E('strong',{},'HTTP 反向代理：'),'外网通过http://域名:共享端口 访问的内网服务；路由器无需配置证书，安全性较低，只在特殊场景使用。']),
    E('li',{},[E('strong',{},'HTTPS 反向代理：'),'外网通过https://域名:共享端口 访问的内网服务；使用本应用配置的证书，外网访问加密，适合绝大多数开放HTTP协议内网服务的场景，支持内网服务使用HTTP或HTTPS；后端使用HTTPS时全链路加密。']),
    E('li',{},[E('strong',{},'TLS 透传：'),'加密连接直达后端，由后端提供证书；路由器无需配置证书。适合已有HTTPS的网站、NAS或管理面板、要求客户端证书的双向认证服务，以及直接使用TLS的MQTT、邮件等TCP服务。客户端须使用域名连接并发送对应域名（SNI），才能与其他服务共用入口端口。需要先建立明文连接再升级加密的STARTTLS，以及UDP服务，不适用此方式。']),
-   E('li',{},[E('strong',{},'原生 SSH 共入口：'),'适合 SSH 远程登录，SSH 客户端连接共享入口端口。']),
+   E('li',{},[E('strong',{},'SSH 远程登录共入口：'),'使用普通 SSH 客户端连接共享入口地址和端口，自动识别后转发至后端（通常为 22 端口），无需网页终端或专用客户端。全局最多配置一条 SSH 规则（停用的规则也计入），可与 RDP 及网站服务共用入口；无需单独域名或入口证书，加密、主机密钥校验与账号认证由 SSH 客户端和后端负责。']),
+   E('li',{},[E('strong',{},'RDP 远程桌面共入口：'),'远程桌面客户端连接共享入口地址和端口，自动识别后转发至后端（默认 3389）。全局最多配置一条 RDP 规则（停用的规则也计入），可与 SSH 及网站服务共用入口，无需单独域名或入口证书；加密、证书与身份验证由后端负责。仅支持 TCP，不转发 RDP UDP。']),
    E('li',{},[E('strong',{},'独立端口 TCP 转发：'),'适合任意 TCP 服务，使用单独的监听端口，不共用入口端口。'])
   ]);};
   o=field('access',form.DummyValue,'match_summary','匹配 / 端口');o.textvalue=function(sid){var r=this.map.data.get(this.map.config,sid);return r.type==='tcp_forward'?'TCP '+(r.listen_port || '待填写'):r.hostname || '共享入口端口';};
@@ -88,6 +89,8 @@ return view.extend({
   o=field('backend',form.DummyValue,'backend_summary','后端地址');o.textvalue=function(sid){var r=this.map.data.get(this.map.config,sid),h=r.backend_host || '';return (h.includes(':')?'['+h+']':h)+':'+(r.backend_port || '');};
   o=field('backend',form.Value,'backend_host','后端地址',true);o.datatype='host';o.description='填写主机名或裸 IP 地址，不含协议、路径及端口。';
   o=field('backend',form.Value,'backend_port','后端端口',true);o.datatype='port';
+  o.cfgvalue=function(sid){var r=row(sid);return r.backend_port || (r.type==='rdp'?'3389':null);};
+  o.placeholder='RDP 通常使用 3389';
   o=field('backend',form.ListValue,'upstream_scheme','后端协议',true);o.value('http','HTTP');o.value('https','HTTPS');o.default='http';o.depends('type','http_proxy');o.depends('type','https_proxy');o.retain=true;
   o=field('backend',form.Value,'backend_host_header','回源 Host',true);o.rmempty=true;o.depends('type','http_proxy');o.depends('type','https_proxy');o.retain=true;o.description='指定后端网站使用的域名，留空使用外网访问域名。后端按域名区分网站时填写。';
   o.validate=function(sid,value){

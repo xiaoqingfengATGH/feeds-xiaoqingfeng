@@ -3,7 +3,7 @@ local source=debug.getinfo(1,'S').source:sub(2):match('^(.*)/')
 local network=dofile(source..'/network-inventory.lua')
 local M={}
 function M.check(config,revision)
- local out={revision=revision,ready=false,blockers={},warnings={},endpoints={},services={},source_address_policy={http_proxy='trusted_internal_proxy_only',https_proxy='trusted_internal_proxy_only',tls_passthrough='proxy_address',ssh='proxy_address',tcp_forward='proxy_address'}}
+ local out={revision=revision,ready=false,blockers={},warnings={},endpoints={},services={},source_address_policy={http_proxy='trusted_internal_proxy_only',https_proxy='trusted_internal_proxy_only',tls_passthrough='proxy_address',ssh='proxy_address',rdp='proxy_address',tcp_forward='proxy_address'}}
  local inv,err=network.collect()
  if inv then out.inventory_summary=inv.summary else out.blockers[#out.blockers+1]=err end
  local enabled,shared=0,false

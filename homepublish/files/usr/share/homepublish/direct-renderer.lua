@@ -80,7 +80,7 @@ function M.render(plan,p)
   plan=lowered
  end
  if plan.tcp then return require('tcp-stream-renderer').render(plan,p) end
- if plan.passthrough or plan.ssh or (plan.http_services and #plan.http_services>0) then return require('sslh-renderer').render(plan,p) end
+ if plan.passthrough or plan.ssh or plan.rdp or (plan.http_services and #plan.http_services>0) then return require('sslh-renderer').render(plan,p) end
  local ok,r=pcall(render,plan,p);if ok then return r end;return nil,tostring(r)
 end
 -- Internal loopback HTTP only: public ingress is always owned by sslh.

@@ -176,7 +176,7 @@ local function validate(c)
   end
  end
  field='services';array(c.services,0,16)
- local service_ids,domains,ports={}, {}, {};local ssh=false
+ local service_ids,domains,ports={}, {}, {};local ssh,rdp=false,false
  for i,s in ipairs(c.services) do
   field='services['..i..']'
   check(type(s)=='table' and getmetatable(s)==nil,'service object required')
@@ -185,7 +185,7 @@ local function validate(c)
   elseif s.type=='http_proxy' then keys.hostname=true;keys.upstream_scheme=true;keys.upstream_tls=true
   elseif s.type=='tls_passthrough' then keys.hostname=true
   elseif s.type=='tcp_forward' then keys.listen_port=true
-  else check(s.type=='ssh','unknown service type') end
+  else check(s.type=='ssh' or s.type=='rdp','unknown service type') end
   object(s,keys);check(type(s.enabled)=='boolean','service enabled boolean')
   check(type(s.name)=='string' and #s.name>=1 and #s.name<=128 and not s.name:find('[%z\1-\31\127]'),'invalid service name')
   local t={service_id=identifier(s.service_id),name=s.name,enabled=s.enabled,type=s.type,backend=endpoint(s.backend)}
@@ -244,6 +244,9 @@ local function validate(c)
   end
   if t.type=='ssh' then
    if ssh then fail('SSH_CONFLICT',field..'.type','only one SSH per ingress',t.service_id) end;ssh=true
+  end
+  if t.type=='rdp' then
+   if rdp then fail('RDP_CONFLICT',field..'.type','only one RDP per ingress',t.service_id) end;rdp=true
   end
   if t.listen_port then
    if t.listen_port==shared or ports[t.listen_port] then fail('PORT_CONFLICT',field..'.listen_port','TCP port conflicts with shared or independent listener',t.service_id) end

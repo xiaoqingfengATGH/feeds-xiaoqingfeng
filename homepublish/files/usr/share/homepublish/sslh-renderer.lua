@@ -28,6 +28,15 @@ local function render(plan,p)
   protocols[#protocols+1]='{ name: "ssh"; host: "'..b.address..'"; port: "'..b.port..'"; }'
   backends[#backends+1]=b
  end
+ if plan.rdp then
+  local b,e=B.select(plan.rdp.backend,p);assert(b,e)
+  -- TPKT header (4 bytes), X.224 length indicator, then CR type E0.
+  -- Long brackets preserve PCRE escapes; libconfig needs doubled backslashes.
+  local pattern=[=[^\x03\x00[\s\S]{3}\xe0]=]
+  pattern=pattern:gsub('\\','\\\\')
+  protocols[#protocols+1]='{ name: "regex"; host: "'..b.address..'"; port: "'..b.port..'"; regex_patterns: [ "'..pattern..'" ]; }'
+  backends[#backends+1]=b
+ end
  protocols[#protocols+1]='{ name: "anyprot"; host: "127.0.0.1"; port: "'..ports.reject..'"; }'
  local r
  if #plan.services>0 then

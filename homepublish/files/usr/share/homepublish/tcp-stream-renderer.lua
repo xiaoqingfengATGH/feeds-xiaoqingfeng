@@ -5,7 +5,7 @@ local A=require('direct-address');local B=require('direct-backend');local M={}
 local function render(plan,p)
  local shared={};for k,v in pairs(plan) do if k~='tcp' then shared[k]=v end end
  local r
- if #plan.services>0 or plan.passthrough or plan.ssh or (plan.http_services and #plan.http_services>0) then
+ if #plan.services>0 or plan.passthrough or plan.ssh or plan.rdp or (plan.http_services and #plan.http_services>0) then
   local e;r,e=require('direct-renderer').render(shared,p);assert(r,e)
  else
   r={configuration='worker_processes 1;\ndaemon off;\npid nginx.pid;\nerror_log stderr error;\nevents { worker_connections 64; }\n',backends={},activation_ready=false,blocker='fixed runtime provider and authoritative DNS/ownership readiness required'}

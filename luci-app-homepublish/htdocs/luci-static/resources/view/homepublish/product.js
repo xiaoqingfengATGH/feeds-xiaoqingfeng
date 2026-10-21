@@ -40,7 +40,7 @@ return baseclass.extend({
   });
  },
  endpoint:function(host,port){return (String(host || '').indexOf(':')>=0?'['+host+']':host || '未知')+':'+(port || '未知');},
- serviceType:function(type){return ({http_proxy:'HTTP 反向代理',https_proxy:'HTTPS 反向代理',tls_passthrough:'TLS 透传',ssh:'原生 SSH',ssh_shared:'原生 SSH',tcp_forward:'独立 TCP'})[type] || type || '未知';},
+ serviceType:function(type){return ({http_proxy:'HTTP 反向代理',https_proxy:'HTTPS 反向代理',tls_passthrough:'TLS 透传',ssh:'SSH 远程登录',rdp:'RDP 远程桌面',ssh_shared:'SSH 远程登录',tcp_forward:'独立 TCP'})[type] || type || '未知';},
  actionGates:function(s,opts){
   s=s || {};opts=opts || {};var r=s.runtime || {},d=s.desired_state || {},caps=s.capabilities || {},pending=!!(s.pending_config && s.pending_config.apply_required),running=this.running(s),clean=r.cleanup==='confirmed',stable=r.phase==='stopped' || r.phase==='failed' || r.phase==='blocked';
   function gate(reason){return {allowed:!reason,reason:reason || '操作前请确认服务范围'};}
@@ -109,7 +109,7 @@ return baseclass.extend({
  migrationPreview:rpc.declare({object:'homepublish',method:'migration_preview',params:['expected_revision'],expect:{},reject:true,nobatch:true}),
  clone:function(v){return JSON.parse(JSON.stringify(v));},
  errorText:function(e){
-  var labels={REVISION_CONFLICT:'配置已被其他页面修改，请重新载入后编辑',DOMAIN_CONFLICT:'域名重复',SSH_CONFLICT:'共享入口只能配置一个 SSH 服务',PORT_CONFLICT:'监听端口冲突',ADDRESS_UNAVAILABLE:'所选地址已不可用',NETWORK_UNAVAILABLE:'网络不可用',ZONE_AMBIGUOUS:'网络区域关联不明确',STATE_UNKNOWN:'状态未知，请重试',DEPENDENCY_UNAVAILABLE:'设备缺少所需能力',INVALID_CONFIG:'配置不完整或无效'};
+  var labels={REVISION_CONFLICT:'配置已被其他页面修改，请重新载入后编辑',DOMAIN_CONFLICT:'域名重复',SSH_CONFLICT:'全局最多配置一条 SSH 远程登录规则（包括停用的规则）',RDP_CONFLICT:'全局最多配置一条 RDP 远程桌面规则（包括停用的规则）',PORT_CONFLICT:'监听端口冲突',ADDRESS_UNAVAILABLE:'所选地址已不可用',NETWORK_UNAVAILABLE:'网络不可用',ZONE_AMBIGUOUS:'网络区域关联不明确',STATE_UNKNOWN:'状态未知，请重试',DEPENDENCY_UNAVAILABLE:'设备缺少所需能力',INVALID_CONFIG:'配置不完整或无效'};
   e=e || {};
   var reason=String(e.error || e.message || ''),label=labels[e.error_code];
   if(/certificate expired or DNS SAN mismatch/.test(reason))label='所选证书已过期或不覆盖服务域名，请检查有效期并选择覆盖该域名的证书（或继承入口默认证书）';

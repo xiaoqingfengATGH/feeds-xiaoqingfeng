@@ -138,7 +138,7 @@ return baseclass.extend({
   });return candidates;
  },
  dnsInventory:function(result){var api=this;return {available:!!(result && result.available),profiles:result && result.available && Array.isArray(result.profiles)?result.profiles.map(function(p){return {id:p.profile_id,name:p.name,provider:p.provider,ipv4_enabled:!!(p.a && p.a.enabled),ipv6_enabled:!!(p.aaaa && p.aaaa.enabled),candidates:api.dnsCandidates([].concat((p.a || {}).domains || [],(p.aaaa || {}).domains || []))};}):[]};},
- serviceRows:function(saved,inventory){return (saved.services || []).map(function(s){var r=JSON.parse(JSON.stringify(s)),b=s.backend || {};r.backend_host=b.host;r.backend_port=String(b.port || '');r.backend_host_header=b.host_header || '';r.tls_verify=(s.upstream_tls || {}).verify===false?'0':'1';r.tls_server_name=(s.upstream_tls || {}).server_name || '';r.enabled=s.enabled?'1':'0';var d=s.dns || {mode:'manual'},profiles=(inventory || {}).profiles || [],profile=profiles.find(function(p){return p.id===d.profile_id;}) || (profiles.length===1?profiles[0]:null);r.dns_mode=d.mode;r.dns_profile=d.profile_id || (profile?profile.id:'');var types=d.record_types || (profile?(profile.ipv4_enabled?['A']:profile.ipv6_enabled?['AAAA']:[]):[]);r.dns_a=types.indexOf('A')>=0?'1':'0';r.dns_aaaa=types.indexOf('AAAA')>=0?'1':'0';return r;});},
+ serviceRows:function(saved,inventory){return (saved.services || []).map(function(s){var r=JSON.parse(JSON.stringify(s)),b=s.backend || {};r.backend_host=b.host;r.backend_port=String(b.port || '');r.backend_host_header=b.host_header || '';r.tls_verify=(s.upstream_tls || {}).verify===false?'0':'1';r.tls_server_name=(s.upstream_tls || {}).server_name || '';r.read_timeout=s.read_timeout?String(s.read_timeout):'';r.enabled=s.enabled?'1':'0';var d=s.dns || {mode:'manual'},profiles=(inventory || {}).profiles || [],profile=profiles.find(function(p){return p.id===d.profile_id;}) || (profiles.length===1?profiles[0]:null);r.dns_mode=d.mode;r.dns_profile=d.profile_id || (profile?profile.id:'');var types=d.record_types || (profile?(profile.ipv4_enabled?['A']:profile.ipv6_enabled?['AAAA']:[]):[]);r.dns_a=types.indexOf('A')>=0?'1':'0';r.dns_aaaa=types.indexOf('AAAA')>=0?'1':'0';return r;});},
  zoneList:function(value){if(Array.isArray(value))return value.slice();if(typeof value==='string')return value.trim()?value.trim().split(/\s+/):[];return [];},
  firewallRules:function(config){
   var profile=config.access_profile || {},fw=profile.firewall || {},rules=[],seen={},zoneList=this.zoneList;
@@ -209,6 +209,7 @@ return baseclass.extend({
       svc.upstream_tls={verify:row.tls_verify!=='0' && row.tls_verify!==false};
       if(row.tls_server_name)svc.upstream_tls.server_name=row.tls_server_name;
      }
+     if(row.read_timeout)svc.read_timeout=Number(row.read_timeout);
     }
     svc.dns=api.dnsEligible(row.type) && row.dns_mode==='ddns_go'?{mode:'ddns_go',profile_id:row.dns_profile,record_types:['A','AAAA'].filter(function(t){return row[t==='A'?'dns_a':'dns_aaaa']==='1';})}:{mode:'manual'};
     if(row.type==='tcp_forward')svc.listen_port=Number(row.listen_port);

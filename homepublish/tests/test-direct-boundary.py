@@ -78,6 +78,8 @@ with tempfile.TemporaryDirectory(prefix='homepublish-boundary-', dir=os.environ.
                 servers.append(server)
                 t = threading.Thread(target=server.serve_forever); t.start(); threads.append(t)
             run(LUA, str(ROOT/'homepublish/tests/direct-boundary-fixture.lua'), str(SHARE), td, str(port), backend, *(str(s.server_port) for s in servers))
+            # Production procd start pre-creates the shared temp spool; mirror it.
+            pathlib.Path('/tmp/homepublish-tmp').mkdir(parents=True, exist_ok=True)
             run(*NGINX, '-p', td+'/', '-c', str(d/'nginx.conf'), '-t')
             proc = subprocess.Popen(NGINX+['-p', td+'/', '-c', str(d/'nginx.conf')], stdout=subprocess.PIPE, stderr=subprocess.PIPE)
             owned.append(proc.pid)
@@ -128,7 +130,12 @@ with tempfile.TemporaryDirectory(prefix='homepublish-boundary-', dir=os.environ.
                     for host in HOSTS:
                         for header in (host+':'+str(port), host.upper()+':'+str(port)):
                             probe(host.upper(), header, accepted=host)
-                        for suffix in (':0', ':65536', ':abc', ':', ':-1', ':443', ':0'+str(port), '.evil', '@second.home', '..', '.'):
+                        # 01dd536: authority port is syntax, not listener
+                        # authorization (NAT remap); any valid 1-65535 is
+                        # accepted, leading zeros and junk stay rejected.
+                        for suffix in (':443',):
+                            probe(host, host+suffix, accepted=host)
+                        for suffix in (':0', ':65536', ':abc', ':', ':-1', ':0'+str(port), '.evil', '@second.home', '..', '.'):
                             probe(host, host+suffix)
                         for lookalike in (host.replace('.', 'x'), host+'x', 'x'+host):
                             probe(host, lookalike)

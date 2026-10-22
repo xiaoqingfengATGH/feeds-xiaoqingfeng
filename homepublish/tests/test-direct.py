@@ -48,6 +48,8 @@ with tempfile.TemporaryDirectory(prefix='homepublish-direct-',dir=os.environ.get
         port=freeport();proc=None
         try:
             subprocess.run([LUA,str(ROOT/'homepublish/tests/direct-fixture.lua'),str(SHARE),td,str(port),backend,str(server.server_port),mode],check=True)
+            # Production procd start pre-creates the shared temp spool; mirror it.
+            (pathlib.Path('/tmp/homepublish-tmp')).mkdir(parents=True,exist_ok=True)
             tested=run(*NGINX,'-p',td+'/', '-c',str(d/'nginx.conf'),'-t');print(tested.stderr.strip())
             proc=subprocess.Popen(NGINX+['-p',td+'/', '-c',str(d/'nginx.conf')],stdout=subprocess.PIPE,stderr=subprocess.PIPE);owned.append(proc.pid)
             end=time.monotonic()+5

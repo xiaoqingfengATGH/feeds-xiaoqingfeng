@@ -22,7 +22,7 @@ local function render(plan,p,plain)
   local bind=f=='ipv6' and '['..l.address..']' or l.address
   listens[#listens+1]='listen '..bind..':'..l.internal_port..(plain and ' proxy_protocol' or ' ssl')..(f=='ipv6' and ' ipv6only=on' or '')..';'
  end
- local out={'worker_processes 1;','daemon off;','pid nginx.pid;','error_log stderr error;','events { worker_connections 64; }','http {','access_log off;','client_body_temp_path body;','proxy_temp_path proxy;'}
+ local out={'worker_processes 1;','daemon off;','pid nginx.pid;','error_log stderr error;','events { worker_connections 64; }','http {','access_log off;','client_body_temp_path /tmp/homepublish-tmp/body;','proxy_temp_path /tmp/homepublish-tmp/proxy;'}
  local server_start=#out+1
  local default={};for _,l in ipairs(listens) do default[#default+1]=l:gsub(';$',' default_server;') end
  out[#out+1]='server { '..table.concat(default,' ')..(plain and ' return 444; }' or ' ssl_reject_handshake on; return 444; }')
@@ -69,7 +69,9 @@ local function render(plan,p,plain)
    if verify then tls=tls..' proxy_ssl_verify_depth 5; proxy_ssl_trusted_certificate /etc/ssl/certs/ca-certificates.crt;' end
   else assert(s.upstream_tls==nil,'HTTP has no upstream TLS') end
   local host_header=s.backend.host_header~=nil and require('canonical-v2').host_header(s.backend.host_header) or nil
-  out[#out+1]='location / { proxy_pass '..scheme..'://'..host..':'..backend.port..'; proxy_next_upstream off; proxy_set_header Host '..(host_header or s.hostname)..'; proxy_set_header X-Real-IP $remote_addr; proxy_set_header X-Forwarded-For $remote_addr; proxy_set_header Forwarded "";'..tls..' proxy_connect_timeout 2s; proxy_read_timeout 5s; } }'
+  -- LLM upstreams stream long responses; default 300s, canonical read_timeout overrides.
+  local read_timeout=s.read_timeout or 300
+  out[#out+1]='location / { proxy_pass '..scheme..'://'..host..':'..backend.port..'; proxy_next_upstream off; proxy_set_header Host '..(host_header or s.hostname)..'; proxy_set_header X-Real-IP $remote_addr; proxy_set_header X-Forwarded-For $remote_addr; proxy_set_header Forwarded "";'..tls..' proxy_connect_timeout 2s; proxy_read_timeout '..read_timeout..'s; } }'
  end
  local servers=table.concat(out,'\n',server_start)..'\n'
  out[#out+1]='}';return {http_servers=servers,configuration=table.concat(out,'\n')..'\n',backends=snapshots,activation_ready=false,blocker='fixed runtime provider and authoritative TLS/DNS/ownership readiness required'}

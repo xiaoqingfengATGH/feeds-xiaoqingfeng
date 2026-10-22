@@ -17,14 +17,14 @@ function M.compile(config)
   elseif s.type=='rdp' then
    plan.rdp={service_id=s.service_id,backend=s.backend}
   elseif s.type=='http_proxy' then
-   plan.http_services[#plan.http_services+1]={service_id=s.service_id,hostname=s.hostname,backend=s.backend,upstream_scheme=s.upstream_scheme,upstream_tls=s.upstream_tls}
+   plan.http_services[#plan.http_services+1]={service_id=s.service_id,hostname=s.hostname,backend=s.backend,upstream_scheme=s.upstream_scheme,upstream_tls=s.upstream_tls,read_timeout=s.read_timeout}
   elseif s.type=='tls_passthrough' then
    plan.passthrough=plan.passthrough or {};plan.passthrough[#plan.passthrough+1]={service_id=s.service_id,hostname=s.hostname,backend=s.backend}
   else
    if s.type~='https_proxy' then return nil,'P3 route type not implemented: '..s.type end
    local ref=s.certificate_mode=='inherit' and c.default_certificate_ref or s.certificate_ref
    if not ref then return nil,'HTTPS certificate binding missing' end
-   plan.services[#plan.services+1]={service_id=s.service_id,hostname=s.hostname,certificate_ref=ref,backend=s.backend,upstream_scheme=s.upstream_scheme,upstream_tls=s.upstream_tls}
+   plan.services[#plan.services+1]={service_id=s.service_id,hostname=s.hostname,certificate_ref=ref,backend=s.backend,upstream_scheme=s.upstream_scheme,upstream_tls=s.upstream_tls,read_timeout=s.read_timeout}
   end
   end
  end

@@ -5,6 +5,8 @@ local function quote(s)return "'"..s:gsub("'","'\\''").."'"end
 local function run(s)return os.execute(s)==0 end
 function M.new(o)
  assert(o.name:match('^homepublish[%w%-]*$') and o.root:match('^/tmp/homepublish[%w%p]*$') and not o.root:find('..',1,true))
+ o.tmp=o.tmp or '/tmp/homepublish-tmp'
+ assert(o.tmp:match('^/tmp/homepublish[%w%-]*$') and not o.tmp:find('..',1,true))
  local function read()
   local f=io.popen('ubus call service list '..quote(J.encode({name=o.name}))..' 2>/dev/null');if not f then return nil end
   local bytes=f:read('*a');local closed=f:close();local ok,r=pcall(J.decode,bytes);if not ok or not closed then return nil end;return r
@@ -71,6 +73,9 @@ function M.new(o)
   if before[o.name] then return false,'procd service already exists' end
   if not run('test ! -e '..quote(o.root)) then return false,'runtime directory already exists' end
   if not run('umask 077; mkdir '..quote(o.root)) then return false,'runtime directory creation failed' end
+  -- nginx body/proxy temp spool outside the 0700 private root: the worker
+  -- (nobody) must traverse/write it; nginx recreates missing levels on boot.
+  if not run('umask 044; mkdir -p '..quote(o.tmp)..'/body '..quote(o.tmp)..'/proxy && chmod 0733 '..quote(o.tmp)..' '..quote(o.tmp)..'/body '..quote(o.tmp)..'/proxy') then return false,'temp directory preparation failed' end
   expected=L.expected(plan);if #expected==0 then return false,'rendered listener plan is empty' end
   if not write('listeners.json',J.encode(expected)) then return false,'listener manifest write failed' end
   plan.generation=g;if not write('generation',tostring(g)..(plan.sslh_configuration and ' sslh' or '')) then return false,'runtime generation write failed' end
@@ -146,6 +151,7 @@ function M.new(o)
    end
    if absent then
     local removed=run('rm -rf '..quote(o.root));if removed then expected=nil;tracked={};tracked_sockets={} end
+    if removed then removed=run('rm -rf '..quote(o.tmp)) end
     return removed,removed and nil or 'runtime directory cleanup failed'
    end
    os.execute('sleep 1')

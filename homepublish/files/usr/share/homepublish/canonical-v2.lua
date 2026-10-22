@@ -180,7 +180,7 @@ local function validate(c)
  for i,s in ipairs(c.services) do
   field='services['..i..']'
   check(type(s)=='table' and getmetatable(s)==nil,'service object required')
-  local keys={service_id=true,name=true,enabled=true,type=true,backend=true,authentication_review=true,dns=true}
+  local keys={service_id=true,name=true,enabled=true,type=true,backend=true,authentication_review=true,dns=true,read_timeout=true}
   if s.type=='https_proxy' then keys.hostname=true;keys.upstream_scheme=true;keys.certificate_mode=true;keys.certificate_ref=true;keys.upstream_tls=true
   elseif s.type=='http_proxy' then keys.hostname=true;keys.upstream_scheme=true;keys.upstream_tls=true
   elseif s.type=='tls_passthrough' then keys.hostname=true
@@ -189,6 +189,8 @@ local function validate(c)
   object(s,keys);check(type(s.enabled)=='boolean','service enabled boolean')
   check(type(s.name)=='string' and #s.name>=1 and #s.name<=128 and not s.name:find('[%z\1-\31\127]'),'invalid service name')
   local t={service_id=identifier(s.service_id),name=s.name,enabled=s.enabled,type=s.type,backend=endpoint(s.backend)}
+  -- Backend response timeout, whole seconds; applies to http and https upstreams.
+  if s.read_timeout~=nil then t.read_timeout=integer(s.read_timeout,1,3600) end
   if s.backend.host_header~=nil then
    check(s.type=='http_proxy' or s.type=='https_proxy','backend Host only supports HTTP reverse proxies')
    t.backend.host_header=M.host_header(s.backend.host_header)
@@ -222,6 +224,11 @@ local function validate(c)
   field='services['..i..']'
   if s.type=='https_proxy' or s.type=='http_proxy' then
    check(s.upstream_scheme=='http' or s.upstream_scheme=='https','upstream scheme');t.upstream_scheme=s.upstream_scheme
+   if s.type=='http_proxy' or s.type=='https_proxy' then
+    check(s.read_timeout==nil or type(s.read_timeout)=='number','invalid read timeout')
+   else
+    check(s.read_timeout==nil,'read timeout only supports HTTP reverse proxies')
+   end
    if s.type=='https_proxy' then
     check(s.certificate_mode=='inherit' or s.certificate_mode=='override','certificate mode');t.certificate_mode=s.certificate_mode
     if s.certificate_mode=='inherit' then check(s.certificate_ref==nil,'inherit must not contain resolved certificate')

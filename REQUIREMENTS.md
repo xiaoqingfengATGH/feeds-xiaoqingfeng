@@ -222,7 +222,18 @@ Previous UI completion claims described the settings-internal tab; the actual me
 
 
 
-## REQ-012 — 测试套件卫生：23 个历史失败清零（A 环境缺失 / B 夹具过期 / C 出生红）
+## REQ-013 — 大请求体 500 与 LLM 上游超时 504 修复（body/proxy 私有目录穿越 + read_timeout 可配置）
+
+2026-10-22 设备 error.log 实证（generation 82，21:14–22:14）：128 次 `POST /v1/chat/completions` 失败——116 次 `[crit] open() body/NNN (13: Permission denied)`（客户端 500）+ 12 次 `upstream timed out`（504）。用户确认两项一起修并部署：
+
+1. **temp 目录移出私有根（方案①）**：nginx worker 运行为 nobody(65534)，无法穿越 0700 root:root 的 `/tmp/homepublish-runtime`。`direct-renderer.lua` 渲染 `client_body_temp_path body; proxy_temp_path proxy;`（相对 `-p` 前缀），`product-procd-group.lua` start 不创建这两个目录。修法：渲染相对 `body`/`proxy` → 绝对 `/tmp/homepublish-tmp/`（systemd-tmpfiles 风格固定目录，mode 0733，无 list 权限防枚举），nginx master 自动创建并 chown worker；`product-procd-group.lua` `assert` 根路径改为 `/tmp/homepublish-tmp`（满足现有 `^/tmp/homepublish` 前缀断言），G.stop 清理时加 `rm -rf` 该 tmp 目录；防御性补 `umask 077; mkdir -p`。stop 的 `rm -rf /tmp/homepublish-runtime` 保持，新增 `/tmp/homepublish-tmp` 清理。
+2. **read_timeout 可配置，默认 300s（方案②）**：`canonical-v2.lua` service 级（非 `upstream_tls` 内）增 `read_timeout` 字段（整数 1–3600 秒，缺省 300）。放在 service 级的原因：`upstream_tls` 仅在 `upstream_scheme=='https'` 时允许存在（「HTTP has no upstream TLS」不变量，test-upstream-tls/test-http-ingress 断言），而超时对 http/https 上游同样需要。`tcp-route-plan.lua` 透传该字段至 plan.services/http_services；`direct-renderer.lua` L72 渲染 `proxy_read_timeout Ns`（缺省 300s），`proxy_connect_timeout` 保持 2s 不变。canonical 层对 http_proxy 与 https_proxy 同样接受（渲染层统一）；LuCI「后端响应超时（秒）」字段同样在 http/https 两种 upstream_scheme 下显示。
+
+**测试债一并清理（用户惯例试点）**：test-direct-boundary.py `:443` 后缀期望与 01dd536 后的语义不一致。时间线已核实：ff49572（2026-10-14 引入该测试，断言「Host 端口必须等于实际监听端口」）；01dd536（2026-10-18 改 map 正则为「任意合法 1–65535 端口」，注释明确 NAT 场景 port 是语法非授权）但未同步更新该测试。测试债成立。迁移时注意：`:0`+port 是**前导零**（`0443`），正则 `[1-9]...` 仍拒绝，保留在拒绝名单；只有 `:443` 移到接受名单（其余 `:0`、`:65536`、`:abc`、`:`、`:-1`、`.evil`、`@second.home`、`..`、`.` 均保留拒绝）。
+
+验收：TDD 红→绿（新测试先红）；WSL `make direct`/`product` 全绿；实机 127.0.0.1:222 scp 直传 4 个 Lua 文件+ LuCI services.js，重启 daemon（控制面重启不碰发布），Apply 生成新 generation，实机验证：a) error.log 无新增 Permission denied b) 大 body（≥16KB）POST 成功 c) 渲染出的 nginx.conf 含 `proxy_read_timeout 300s` 与 `/tmp/homepublish-tmp/` d) 现有正常请求回归。不 push/merge/PR。
+
+基线：master `19d6109`。证据：本轮对话实机 error.log 诊断 + 用户两项修法确认。
 
 2026-10-22 REQ-011 收尾基线对比发现 23 个历史失败（worktree 在 HEAD 干净复跑确认与 REQ-011 无关）。三类根因与修法：
 

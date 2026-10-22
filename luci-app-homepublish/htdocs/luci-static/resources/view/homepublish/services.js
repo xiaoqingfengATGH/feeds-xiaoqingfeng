@@ -105,6 +105,7 @@ return view.extend({
   o=field('backend',form.Flag,'tls_verify','验证后端证书',true);o.default='1';o.depends({type:'http_proxy',upstream_scheme:'https'});o.depends({type:'https_proxy',upstream_scheme:'https'});o.description='关闭后可连接自签名证书的内网服务。';o.retain=true;
   o=field('backend',form.Value,'tls_server_name','后端 HTTPS 域名（SNI）',true);o.datatype='hostname';o.rmempty=true;o.depends({type:'http_proxy',upstream_scheme:'https'});o.depends({type:'https_proxy',upstream_scheme:'https'});o.description='验证证书时必填，须与后端证书域名一致；关闭验证时可留空。';o.retain=true;
   o.validate=function(sid,value){var verify=this.map.lookupOption('tls_verify',sid)[0].formvalue(sid);return verify!=='0' && verify!==false && !value?'请填写后端证书域名':true;};
+  o=field('backend',form.Value,'read_timeout','后端响应超时（秒）',true);o.rmempty=true;o.placeholder='300';o.datatype='and(uinteger,min(1),max(3600))';o.depends('type','http_proxy');o.depends('type','https_proxy');o.retain=true;o.description='等待后端响应的最长时间，范围 1–3600 秒，留空默认 300。后端为 LLM 等长响应/流式服务时可调大。';
   return m.render().then(function(node){
    node.querySelectorAll('table.cbi-section-table').forEach(function(table){
     var viewport=E('div',{style:'max-width:100%;overflow-x:auto',tabindex:0,'aria-label':'服务列表，可横向滚动'});

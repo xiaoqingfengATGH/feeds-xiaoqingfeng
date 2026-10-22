@@ -40,6 +40,7 @@ guardian:
 direct:
 	python3 test-direct.py
 	python3 test-direct-boundary.py
+	$(LUA_TEST) test-req013.lua ../..
 shared-runtime:
 	$(LUA_TEST) test-shared-provider.lua ../files/usr/share/homepublish
 	$(LUA_TEST) test-business-provider.lua ../files/usr/share/homepublish

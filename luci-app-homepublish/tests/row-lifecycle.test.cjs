@@ -70,14 +70,14 @@ function loadApi(){
 		function(){return {appendChild(){},querySelector(){return null}}},{url(){return ''}});
 }
 
-const savedBase={schema_version:1,services:[{
+const savedBase={schema_version:2,services:[{
 		service_id:'fixture',name:'A',hostname:'a.fixture.home',enabled:true,
 		backend:{addressFamily:'ipv4',host:'127.0.0.1',port:49285,allowed_ranges:['192.168.1.0/24']},
 		certificate_ref:'acme:fixture_rsa',certificate_mode:'override',
 		authentication_review:{authentication:'confirmed',management:false}
 	}],
 	default_certificate_ref:'acme:home_rsa',
-	access_profile:{methods_allowed:['manual_ipv4'],listeners:[{family:'ipv4',address:'192.168.1.2',interface:'br-lan',zone:'lan',protocol:'tcp',internal_port:49284,external_port:49284}]},
+	access_profile:{listeners:[{listener_id:'shared_ipv4',family:'ipv4',bind_mode:'address',network:'lan',address:'192.168.1.2',port:49284}],firewall:{ipv4_zones:['lan'],ipv6_zones:[]}},
 	publication_policy:{mode:'continuous',boot_restore:false}};
 
 test('JSONMap row add: new service row lands in data and collectConfig assembles it as canonical',()=>{
@@ -88,13 +88,13 @@ test('JSONMap row add: new service row lands in data and collectConfig assembles
 	assert.equal(cfg.data[sid]['.anonymous'],true);
 	/* user fills the modal options; writes land on the row object */
 	Object.assign(cfg.data[sid],{name:'B',hostname:'b.fixture.home',enabled:'1',
-		backend:{addressFamily:'ipv4',host:'127.0.0.1',port:49286,allowed_ranges:[]},
+		backend_host:'127.0.0.1',backend_port:'49286',
 		certificate_mode:'inherit',backend_url:'http://127.0.0.1:49286',
 		authentication_review:{authentication:'confirmed',management:false}});
-	const map={snapshot:JSON.parse(JSON.stringify(savedBase)),snapshotRevision:2,data:cfg};
+	const map={snapshot:JSON.parse(JSON.stringify(savedBase)),snapshotRevision:2,editor:'services',data:cfg};
 	const out=api.collectConfig(map);
 	assert.equal(out.services.length,2);
-	assert.equal(out.services[1].service_id,'services1');
+	assert.equal(out.services[1].service_id,'svc_1');
 	assert.equal(out.services[1].enabled,true);
 	assert.equal(out.services[1].backend.port,49286);
 	assert.equal('backend_url' in out.services[1],false);
@@ -105,16 +105,16 @@ test('row remove: deleted service disappears from the assembled canonical config
 	const cfg=new JSONConfig({services:JSON.parse(JSON.stringify(savedBase.services))});
 	cfg.add('json','services');
 	cfg.remove('json','services0');
-	const map={snapshot:JSON.parse(JSON.stringify(savedBase)),snapshotRevision:2,data:cfg};
+	const map={snapshot:JSON.parse(JSON.stringify(savedBase)),snapshotRevision:2,editor:'services',data:cfg};
 	const out=api.collectConfig(map);
 	assert.equal(out.services.length,1);
-	assert.equal(out.services[0].service_id,'services1');
+	assert.equal(out.services[0].service_id,'svc_1');
 });
 test('services view drives rows from the JSONMap data (addremove + anonymous + sortable + modalizable)',()=>{
 	const src=fs.readFileSync(path.join(dir,'services.js'),'utf8');
 	assert.match(src,/s\.addremove\s*=\s*true/);
 	assert.match(src,/s\.anonymous\s*=\s*true/);
-	assert.match(src,/s\.sortable\s*=\s*true/);
+	assert.match(src,/s\.sortable\s*=\s*false/); /* P2: service order is not user-configurable */
 	assert.match(src,/s\.modalizable\s*=\s*true/);
 });
 test('certificate_ref column renders inline textvalue resolving the ACME inventory',()=>{

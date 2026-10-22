@@ -28,34 +28,37 @@ test('product.js loads with stubbed LuCI globals exposing the r9 API',()=>{
 });
 test('collectConfig rebuilds canonical config from JSONMap data (services rows + listener + policy)',()=>{
 	const api=loadApi(null);
-	const snapshot={schema_version:1,services:[],default_certificate_ref:'acme:home_rsa',
-		access_profile:{methods_allowed:['manual_ipv4'],listeners:[{family:'ipv4',address:'192.168.1.2',interface:'br-lan',zone:'lan',protocol:'tcp',internal_port:8443,external_port:18443}]},
+	const snapshot={schema_version:2,services:[],default_certificate_ref:'acme:home_rsa',
+		access_profile:{listeners:[{listener_id:'shared_ipv4',family:'ipv4',bind_mode:'address',network:'lan',address:'192.168.1.2',port:8443}],firewall:{ipv4_zones:['lan'],ipv6_zones:[]}},
 		publication_policy:{mode:'continuous',boot_restore:false}};
-	const map={snapshot,snapshotRevision:4,data:{data:{
+	const map={snapshot,snapshotRevision:4,editor:'services',data:{data:{
 			services0:{'.name':'services0','.type':'services','.anonymous':true,'.index':0,
 				name:'NAS',hostname:'nas.example.test',enabled:'1',backend:{addressFamily:'ipv4',host:'192.168.1.10',port:8080,allowed_ranges:['192.168.1.0/24']},
 				certificate_ref:'acme:nas',certificate_mode:'override',authentication_review:{authentication:'confirmed',management:false}},
-			cfg_listener:{family:'ipv4',address:'192.168.1.2',interface:'br-lan',zone:'lan',protocol:'tcp',internal_port:'8443',external_port:'18443'},
-			cfg_policy:{default_certificate_ref:'acme:home_rsa',mode:'temporary',temporary_duration:'1800',boot_restore:'1'}
+			cfg_listener:{family:'ipv4',bind_mode:'address',ipv4_network:'lan',ipv4_address:'192.168.1.2',ipv4_zones:['lan'],port:'8443'},
+			cfg_policy:{default_certificate_ref:'acme:home_rsa',mode:'temporary',temporary_minutes:'30',boot_restore:'1'}
 		},sections:function(){return [this.data.services0];},get:function(c,s){return this.data[s];}}};
 	const out=api.collectConfig(map);
-	assert.equal(out.schema_version,1);
+	assert.equal(out.schema_version,2);
 	assert.equal(out.default_certificate_ref,'acme:home_rsa');
-	assert.deepEqual(out.access_profile.listeners,[{family:'ipv4',address:'192.168.1.2',interface:'br-lan',zone:'lan',protocol:'tcp',internal_port:8443,external_port:18443}]);
-	assert.deepEqual(out.publication_policy,{mode:'temporary',temporary_duration:1800,boot_restore:true});
+	assert.deepEqual(out.access_profile.listeners,[{listener_id:'shared_ipv4',family:'ipv4',bind_mode:'address',network:'lan',address:'192.168.1.2',port:8443}]);
+	assert.deepEqual(out.access_profile.firewall,{ipv4_zones:['lan'],ipv6_zones:[]});
+	assert.deepEqual(out.publication_policy,{mode:'temporary',temporary_duration:1800,boot_restore:false});
 	assert.equal(out.services.length,1);
-	assert.equal(out.services[0].backend.allowed_ranges.length,1);
+	/* 01dd536 service-simplification: v2 replaces per-rule subnets with the zone
+	 * model; UI save deliberately drops allowed_ranges (canonical keeps it migration-only). */
+	assert.equal('allowed_ranges' in out.services[0].backend,false);
 	assert.ok(!('.name' in out.services[0]));
 });
-test('collectConfig keeps allowed_ranges empty-array guard, boolean enabled and drops backend_url',()=>{
+test('collectConfig drops per-rule subnet and backend_url, boolean enabled survives',()=>{
 	const api=loadApi(null);
-	const map={snapshot:{schema_version:1,services:[],access_profile:{methods_allowed:['manual_ipv4'],listeners:[]},publication_policy:{mode:'continuous',boot_restore:false}},snapshotRevision:0,
+	const map={snapshot:{schema_version:2,services:[],access_profile:{listeners:[],firewall:{ipv4_zones:[],ipv6_zones:[]}},publication_policy:{mode:'continuous',boot_restore:false}},snapshotRevision:0,editor:'services',
 		data:{data:{services0:{'.name':'services0','.type':'services','.index':0,name:'X',hostname:'x.example.test',enabled:'0',
 				backend:{addressFamily:'ipv4',host:'10.0.0.5',port:81,allowed_ranges:[]},certificate_mode:'inherit',backend_url:'http://10.0.0.5:81',
 				authentication_review:{authentication:'unconfirmed',management:false}}},
 			sections:function(){return [this.data.services0];},get:function(c,s){return this.data[s];}}};
 	const out=api.collectConfig(map);
-	assert.deepEqual(out.services[0].backend.allowed_ranges,[]);
+	assert.equal('allowed_ranges' in out.services[0].backend,false); /* zone model replaced per-rule subnets (01dd536) */
 	assert.equal(out.services[0].enabled,false);
 	assert.equal('backend_url' in out.services[0],false);
 	assert.equal('certificate_ref' in out.services[0],false);

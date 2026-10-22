@@ -15,7 +15,7 @@ test('UI exposes secure-default checkbox and conditional hostname validation',()
  const options={};function option(_,cls,key,label){return options[key]={label,value(){},depends(){}};}
  const section={tab(){},taboption:option};class Map{constructor(data){this.data=data;}section(){return section;}render(){return Promise.resolve({querySelectorAll:()=>[]});}}
  const view=new Function('form','view','api',fs.readFileSync(path.join(dir,'services.js'),'utf8'))({JSONMap:Map,Value:'value',Flag:'flag',ListValue:'list',DummyValue:'dummy'}, {extend:o=>o},{...api,sortInventory:()=>[],actionBar:n=>n});
- view.render([{saved_config:{schema_version:2,services:[]}}, {certificates:[]}]);
+ view.render([{saved_config:{schema_version:2,services:[]}}, {certificates:[]}, null, {available:false,profiles:[]}]);
  assert.equal(options.tls_verify.label,'验证后端证书');assert.equal(options.tls_verify.default,'1');assert.equal(options.tls_verify.description,'关闭后可连接自签名证书的内网服务。');
  const name=options.tls_server_name;name.map={lookupOption:()=>[{formvalue:()=> '1'}]};assert.notEqual(name.validate('x',''),true);name.map.lookupOption=()=>[{formvalue:()=> '0'}];assert.equal(name.validate('x',''),true);assert.equal(name.validate('x','back.test'),true);
 });

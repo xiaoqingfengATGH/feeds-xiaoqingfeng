@@ -18,8 +18,9 @@ test('services view is a form.Map GridSection over RPC saved_config, not hand-bu
  assert.match(src,/new form\.(JSON)?Map\(/);
  assert.match(src,/form\.GridSection/);
  assert.match(src,/form\.JSONMap/);
- assert.match(src,/api\.status\(\)/);
- for(const opt of [/form\.Flag,\s*'enabled'/,/form\.Value,\s*'name'/,/form\.Value,\s*'hostname'[\s\S]*?datatype\s*=\s*'hostname'/,/form\.Value,\s*'backend_url'/,/form\.ListValue,\s*'certificate_ref'/])
+ /* P2: load = loadEditor + ddnsProfiles, not a raw api.status() call */
+ assert.match(src,/api\.loadEditor\(false\)/);
+ for(const opt of [/form\.Flag,\s*'enabled'/,/form\.Value,\s*'name'/,/form\.Value,\s*'hostname'[\s\S]*?datatype\s*=\s*'hostname'/,/form\.Value,\s*'backend_host'/,/form\.ListValue,\s*'certificate_ref'/])
   assert.match(src,opt);
  assert.match(src,/modalizable|modalonly/);
  assert.doesNotMatch(src,/hp-native|hp-tab-|hp-add-service|hp-edit-submit/,'no hand-built DOM form remains in services view');
@@ -31,7 +32,7 @@ test('entry view is a form.Map NamedSection with listener, certificate and polic
  assert.match(src,/'require form'/);
  assert.match(src,/new form\.(JSON)?Map\(/);
  assert.match(src,/form\.NamedSection/);
- for(const opt of [/internal_port[\s\S]*?datatype\s*=\s*'port'/,/external_port[\s\S]*?datatype\s*=\s*'port'/,/form\.ListValue,\s*'default_certificate_ref'/,/mode[\s\S]*?continuous[\s\S]*?temporary/,/boot_restore/])
+ for(const opt of [/form\.Value,\s*'port','共享入口端口'[\s\S]*?datatype\s*=\s*'range\(1024,65535\)'/,/form\.ListValue,\s*'bind_mode'/,/form\.ListValue,\s*'default_certificate_ref'/,/mode[\s\S]*?continuous[\s\S]*?temporary/,/boot_restore/])
   assert.match(src,opt);
  assert.doesNotMatch(src,/hp-native|data-field=/);
  assert.doesNotMatch(src,/installed public provider unsupported/);
@@ -57,11 +58,11 @@ test('old settings.js route is replaced by the services form view',()=>{
 });
 test('ACL still ubus-only: read status/validate/certificates, write save/stop/start/apply',()=>{
  const acl=JSON.parse(fs.readFileSync(path.join(base,'root/usr/share/rpcd/acl.d/luci-app-homepublish.json'),'utf8'))['luci-app-homepublish'];
- assert.deepEqual(acl.read,{ubus:{homepublish:['status','validate','certificates']}});
+ assert.deepEqual(acl.read,{ubus:{homepublish:['ddns_profiles','probe','status','validate','certificates','network_inventory','preflight','migration_preview']}});
  assert.deepEqual(acl.write,{ubus:{homepublish:['save','stop','start','apply']}});
 });
 test('provider reports real installed capabilities without synthetic unsupported gating',()=>{
  const src=fs.readFileSync(path.join(base,'../homepublish/files/usr/share/homepublish/product-provider.lua'),'utf8');
- assert.match(src,/out\.capabilities=\{start=true,apply=true,stop=true\}/);
+ assert.match(src,/out\.capabilities=\{start=supported,apply=supported,stop=true/);
  assert.doesNotMatch(src,/installed public provider unsupported/);
 });

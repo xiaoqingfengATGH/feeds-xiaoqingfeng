@@ -18,4 +18,5 @@ render_conf
   conf = (pathlib.Path(d)/'conf.d/connection.conf').read_text()
   match = re.search(r'^\s+local_ts = (.*)$',conf,re.M)
   assert match and match.group(1)==expected,(mode,scope,match.group(1) if match else conf)
- print('PASS actual render_conf: legacy/default LAN, subnet selector, all three IPv4 full modes')
+  assert re.search(r'^\s+encap = yes$',conf,re.M), (mode,scope,'UDP encapsulation missing')
+ print('PASS actual render_conf: legacy/default LAN, subnet selector, all three IPv4 full modes use UDP encapsulation')

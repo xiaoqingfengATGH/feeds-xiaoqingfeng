@@ -673,6 +673,7 @@ connections {
         over_time = 10m
         fragmentation = yes
         mobike = yes
+        encap = yes
         dpd_delay = 60s
         send_cert = always
         pools = $conn_pools

@@ -55,8 +55,12 @@ remove the lock or retry writes until the entire transaction is quiescent.
     through the tunnel. Client reconnect may be needed after changing scope.
     The selector alone does not install a default-route NAT/forwarding policy:
     ensure the router can forward VPN client traffic to WAN and return traffic
-    can reach the client pool (or configure appropriate NAT). In particular,
-    side routers and LAN-subnet pools may need additional network setup.
+    can reach the client pool (or configure appropriate NAT). On the reference
+    HomeLede router, full-tunnel phone traffic was verified to reach the
+    internet and follow the configured Passwall2 split-routing policy. Other
+    routers must have suitable forwarding/NAT and policy-routing rules; this
+    selector does not configure those rules itself. Side routers and
+    LAN-subnet pools may need additional network setup.
   - **DHCP pool addressing**: VPN clients get real LAN leases from dnsmasq
     (dhcp plugin), and the farp plugin answers ARP for them — LAN peers can
     initiate toward VPN clients (Samba/mDNS/peer-to-peer both ways)

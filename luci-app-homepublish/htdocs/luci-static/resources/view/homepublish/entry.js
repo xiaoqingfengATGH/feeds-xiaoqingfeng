@@ -102,6 +102,7 @@ return view.extend({
   s=m.section(form.NamedSection,'cfg_policy','policy','运行方式');
   o=s.option(form.ListValue,'mode','运行方式');o.value('continuous','持续运行');o.value('temporary','限定时长');o.rmempty=false;
   o=s.option(form.Value,'temporary_minutes','运行时长（分钟）');o.datatype='range(1,1440)';o.depends('mode','temporary');o.rmempty=false;o.description='达到设定时长后自动停止，设备重启后不恢复。';
+  o=s.option(form.Flag,'boot_restore','重启后恢复发布');o.depends('mode','continuous');o.rmempty=false;o.description='设备重启后自动恢复到发布状态；重启前已手动停止则保持停止。限定时长模式不支持重启恢复。';
   return m.render().then(function(node){
    var preview=E('div',{id:'hp-firewall-preview',class:'cbi-section','aria-live':'polite'});
    function refreshPreview(){

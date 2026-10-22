@@ -44,6 +44,21 @@
 
 # Requirements
 
+## REQ-011 — 控制面自愈与重启恢复闭环（boot_restore 界面露出 + daemon respawn + 部署程序修正）
+
+2026-10-22 路由器重启后 HomePublish 管理面全死（LuCI 状态页报错、Start 不可用）暴露的三层缺口，用户已确认三项一起修：
+
+1. **boot_restore 界面露出**：`publication_policy.boot_restore` 在 canonical schema v1/v2、收集侧（product.js `collectConfig`）、diff 文案（"运行方式 / 开机恢复"）里都存在，但入口设置页「运行方式」区段未渲染任何表单控件——用户无法开启"重启后自动恢复发布"。在 entry.js 运行方式区段加 Flag（`depends('mode','continuous')`），文案「重启后恢复发布」，说明"设备重启后自动恢复到发布状态（限定时长模式重启后不恢复；重启前处于已停止则保持停止）"。限定时长模式强制 false（现有收集逻辑保留）。
+2. **controller daemon respawn**：`/etc/init.d/homepublish` 无 `procd_set_param respawn`，daemon 崩溃后管理面死锁（只能 SSH 恢复）。加 `procd_set_param respawn 3600 5 0`——daemon 是空闲控制进程，不等于发布；respawn 只拉起控制面，发布恢复仍由 journal desired_state + boot_restore 决定，不违反「Never respawn expired intent」契约（该注释指发布意图，不是控制进程）。
+3. **部署程序修正**：此前 IPK 部署用 `IPKG_NO_SCRIPT=1` 绕过 default_postinst（避免自动 enable/start），导致 init 从未被 enable——重启后没人拉起 daemon。修正：日常部署保留 `IPKG_NO_SCRIPT=1` + 明确 `enable && start`；里程碑 IPK 用标准安装（default_postinst 只 enable+start 空闲 daemon，不碰发布）。
+4. **关机路径不写 manual latch（实机验证发现）**：原 init `stop_service` 经 CLI `action:stop` 写 `manual_stop_latch=true`，而正常关机走 `K10homepublish → shutdown → stop` 同一路径——boot_restore=true 时正常重启后发布也不恢复（开关被关机路径整体废掉）。修正：init 覆写 `shutdown()`，关机时仅 `procd_kill homepublish`（杀进程不写 latch），journal 保持 desired_state=enabled，开机 daemon restore 判定（`desired_state=='enabled' or phase~='stopped'`）通过。用户手动 Stop 仍走 CLI 显式 latch，语义分层完整。实机循环验证：boot_restore=true + running → `shutdown`（latch 保持 false、desired=enabled）→ `start` → 自动恢复 running + HTTPS 200。
+
+分层语义（本轮固化，写入文档）：LuCI「启用」开关=停/起发布（journal desired_state）；init enable=控制面常驻（基础设施，随安装而非随发布开关）；`boot_restore`=发布策略（随保存的配置）；卸载=彻底停用（default_prerm 自动 disable+stop）。停发布不 disable init——否则管理面死锁、boot_restore 通道被破坏。
+
+验收：TDD（Lua/node 测试先红后绿）+ 实机 127.0.0.1:222 scp 直传验证（rpcd reload 后浏览器/LuCI 路由渲染、Flag 控件、保存回读、daemon kill 后 respawn、模拟重启：stop daemon→start，journal/revision 保持）。不 push/merge/PR，不改防火墙/公网暴露。
+
+基线：master `aa8f2fc`（设备实跑 r9 + e40a679 canonical 修复已含）。证据：本轮对话实机诊断记录。
+
 ## REQ-007 — TCP 统一发布与 IPv6→IPv4（P0/P1完成；P2配置UI与部署切片提交；下一阶段P3）
 
 用户已确认四种发布方式：HTTPS反向代理、TLS/SNI透传、一个原生SSH目标共享入口、独立端口TCP转发。IPv6入站→家庭IPv4后端为核心验收路径；入口/后端地址族解耦，支持双栈和只有LAN的旁路由。页面优先原生LuCI JSONMap/NamedSection/GridSection、真实网络地址选择和条件字段。保存不启动、明确应用、整组停止、原临时截止不延长、未知流量不兜底业务。

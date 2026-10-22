@@ -5,11 +5,14 @@ STOP=10
 USE_PROCD=1
 
 # Idle controller is independent from publication. Never respawn expired intent.
+# REQ-011: respawn the idle controller process only; publication recovery stays
+# governed by the journal (desired_state + publication_policy.boot_restore).
 start_service() {
  procd_open_instance controller
  procd_set_param command /usr/bin/lua /usr/share/homepublish/product-daemon.lua
  procd_set_param stdout 1
  procd_set_param stderr 1
+ procd_set_param respawn 3600 5 0
  procd_close_instance
 }
 stop_service() {
@@ -25,5 +28,11 @@ status_service() {
 service_triggers() {
  # No config/network restart, respawn, or automatic exposure.
  return 0
+}
+# REQ-011: system shutdown is not a manual stop. Kill the controller without
+# the stop CLI so the journal keeps desired_state and boot_restore can act on
+# the next boot. A user's manual stop stays an explicit LuCI/CLI action.
+shutdown() {
+ procd_kill homepublish
 }
 

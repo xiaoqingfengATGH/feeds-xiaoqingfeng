@@ -43,6 +43,11 @@ function now() {
 	return int(time());
 }
 
+function firmware_version() {
+	const mark = trim(readfile('/etc/buildmark') ?? '');
+	return mark != '' ? `HomeLede ${mark}` : null;
+}
+
 // ------------------------------------------------------------------ config ----
 // `show_apps` / `show_wol` / `show_storage` control whether the overview page
 // renders the corresponding block. They are read here rather than in the
@@ -854,6 +859,7 @@ function status() {
 		ts: now(),
 		backend: 'homestatus',
 		version: VERSION,
+		firmware_version: firmware_version(),
 		config: cfg,
 		disks: disks,
 		apps: apps

@@ -112,14 +112,14 @@
 			+ ' ' + p(dt.getHours()) + ':' + p(dt.getMinutes()) + ':' + p(dt.getSeconds());
 	}
 
-	/* "HomeLede " + "24.10.5" -> "HomeLede 24.10.5" (revision rides along
-	 * as the dim second line, e.g. "v2024.08.03 based on OpenWrt R26.05.20") */
-	function fwLine(board) {
-		var s = ((board && board.description) || '') + ' ' + ((board && board.version) || '');
-
-		s = s.replace(/\s+/g, ' ').trim();
-
-		return s || null;
+	/* Keep the vendor build mark separate from OpenWrt's base release. */
+	function fwLine(board, firmware) {
+		board = board || {};
+		var s = board.description || [ board.distribution, board.version ].filter(Boolean).join(' ');
+		var rev = board.revision || '';
+		if (rev && s.split(/\s+/).indexOf(rev) < 0)
+			s += (s ? ' ' : '') + rev;
+		return [ firmware, s ].filter(Boolean).join(' · ') || null;
 	}
 
 	function pct(used, total) {
@@ -1075,10 +1075,9 @@
 		var board = d.board.release || {};
 
 		var sub = [
-			(board.description || '') + (board.revision || ''),
+			fwLine(board, d.hs && d.hs.firmware_version),
 			board.target,
-			d.board.kernel ? ('内核 ' + d.board.kernel) : null,
-			board.distribution
+			d.board.kernel ? ('内核 ' + d.board.kernel) : null
 		].filter(function(x) { return x != null && x !== ''; }).join(' · ');
 
 		if (h.reasons.length)
@@ -1140,7 +1139,7 @@
 			[ '型号',     b.model || '—' ],
 			[ '架构',     b.system || '—' ],
 			[ '目标平台', rel.target || '—' ],
-			[ '固件版本', fwLine(rel) || '—' ],
+			[ '固件版本', fwLine(rel, d.hs && d.hs.firmware_version) || '—' ],
 			[ '内核版本', b.kernel ? ('Linux ' + b.kernel) : '—' ],
 			[ '本地时间', fmtLocalTime(d.unixtime) || '—' ]
 		];

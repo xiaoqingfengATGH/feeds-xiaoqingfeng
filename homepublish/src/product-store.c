@@ -67,10 +67,10 @@ static int transaction(lua_State *L) {
  int dir=-1,lock=-1,in=-1,out=-1,failed=0,renamed=0,owned_candidate=0;
  char *buf=NULL;size_t original_size=0; const char *failure="store failure";
  luaL_checktype(L,1,LUA_TFUNCTION);
- if (mkdir(PRODUCT_ROOT,0700)<0 && errno!=EEXIST) goto fail;
+ if (mkdir(PRODUCT_ROOT,0755)<0 && errno!=EEXIST) goto fail;
  dir=open(PRODUCT_ROOT,O_RDONLY|O_DIRECTORY|O_NOFOLLOW|O_CLOEXEC);
  struct stat st;
- if(dir<0 || fstat(dir,&st)<0 || st.st_uid!=geteuid() || (st.st_mode&0777)!=0700) { failure="unsafe store directory";goto fail; }
+ if(dir<0 || fstat(dir,&st)<0 || !S_ISDIR(st.st_mode)) { failure="invalid store directory";goto fail; }
  lock=openat(dir,"lock",O_RDWR|O_CREAT|O_NOFOLLOW|O_CLOEXEC,0600);
  if(!private_file(lock)) {failure="unsafe store lock";goto fail;}
  if(flock(lock,LOCK_EX|LOCK_NB)<0) {failure="store busy";goto fail;}

@@ -31,7 +31,7 @@ if not response then
  -- Exact native-store vocabulary, not substring heuristics: notably a failed
  -- directory fsync happens AFTER rename and must direct the caller to readback.
  local store_errors={
-  ['store failure']=true,['unsafe store directory']=true,
+  ['store failure']=true,['invalid store directory']=true,
   ['unsafe store lock']=true,['store busy']=true,
   ['unsafe store state']=true,['unsafe store candidate']=true,
   ['invalid stored state or request']=true,

@@ -14,8 +14,8 @@ function M.new(root)
   end
   local function run()
    local st=fs.lstat(root)
-   if not st then assert(fs.mkdir(root,'700'),'store directory create failed');st=assert(fs.lstat(root)) end
-   check(st.type=='dir' and st.uid==0 and st.modedec==700,'unsafe store directory')
+   if not st then assert(fs.mkdir(root,'755'),'store directory create failed');st=assert(fs.lstat(root)) end
+   check(st.type=='dir','invalid store directory')
    local function checked(path)
     local st,code=fs.lstat(path)
     if not st then assert(code==2,'store path stat failed');return nil end

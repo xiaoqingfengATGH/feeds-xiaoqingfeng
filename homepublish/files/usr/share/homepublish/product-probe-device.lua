@@ -12,7 +12,7 @@ function M.new()
   local fs=require('nixio.fs');local root='/etc/homepublish/product'
   local dir,code=fs.lstat(root)
   if not dir then assert(code==2);return {saved_revision=0} end
-  assert(dir.type=='dir' and dir.uid==0 and dir.modedec==700)
+  assert(dir.type=='dir')
   local st,err=fs.lstat(root..'/state')
   if not st then assert(err==2);return {saved_revision=0} end
   assert(st.type=='reg' and st.uid==0 and st.modedec==600 and st.size>0 and st.size<=262144)

@@ -186,7 +186,7 @@ class ProbeTests(unittest.TestCase):
    local d=dofile(adapter_path).new()
    assert(d.snapshot().saved_revision==0)
    package.loaded['nixio.fs'].lstat=function(path)
-    if path=='/etc/homepublish/product' then return {type='dir',uid=0,modedec=700} end
+    if path=='/etc/homepublish/product' then return {type='dir',uid=65534,modedec=493} end
     return nil,13
    end
    assert(not pcall(d.snapshot),'permission failure is not absence')

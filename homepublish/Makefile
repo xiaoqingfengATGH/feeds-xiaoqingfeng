@@ -2,7 +2,7 @@ include $(TOPDIR)/rules.mk
 
 PKG_NAME:=homepublish
 PKG_VERSION:=0.1.0
-PKG_RELEASE:=9
+PKG_RELEASE:=10
 PKG_LICENSE:=Apache-2.0
 PKG_BUILD_DIR:=$(BUILD_DIR)/$(PKG_NAME)-$(PKG_VERSION)
 
@@ -28,12 +28,14 @@ endef
 
 define Package/homepublish/install
 	$(INSTALL_DIR) $(1)/usr/libexec $(1)/usr/share/homepublish $(1)/etc/config $(1)/etc/init.d $(1)/etc/homepublish
+	$(INSTALL_DIR) $(1)/lib/upgrade/keep.d
 	$(INSTALL_DIR) $(1)/etc/homestatus-probes
 	$(INSTALL_BIN) ./files/etc/homestatus-probes/homepublish $(1)/etc/homestatus-probes/homepublish
 	$(INSTALL_DATA) ./files/usr/share/homepublish/*.lua $(1)/usr/share/homepublish/
 	$(INSTALL_DIR) $(1)/usr/share/nftables.d/table-post
 	$(INSTALL_DATA) ./files/usr/share/nftables.d/table-post/90-homepublish.nft $(1)/usr/share/nftables.d/table-post/90-homepublish.nft
 	$(INSTALL_CONF) ./files/etc/config/homepublish $(1)/etc/config/homepublish
+	$(INSTALL_DATA) ./files/lib/upgrade/keep.d/homepublish $(1)/lib/upgrade/keep.d/homepublish
 	$(INSTALL_BIN) ./files/etc/init.d/homepublish* $(1)/etc/init.d/
 	chmod 0700 $(1)/etc/homepublish
 endef

@@ -3,6 +3,8 @@
 'require form';
 'require view';
 'require validation';
+'require dom';
+'require ui';
 'require view.homepublish.product as api';
 return view.extend({
  handleSave:null,handleSaveApply:null,handleReset:null,
@@ -19,10 +21,30 @@ return view.extend({
   s.addremove=true;s.anonymous=true;s.sortable=false;s.nodescriptions=true;s.modalizable=true;
   s.tab('general','基本设置');s.tab('access','接入设置');s.tab('backend','后端设置');
   s.modaltitle=function(sid){var r=this.map.data.get(this.map.config,sid);return r && r.name || '新服务';};
+  s.renderMoreOptionsModal=function(){
+   return Promise.resolve(form.GridSection.prototype.renderMoreOptionsModal.apply(this,arguments)).then(function(result){
+    var modal=document.querySelector('#modal_overlay .modal'),button=modal && modal.querySelector('.button-row .cbi-button-positive');
+    if(button)button.textContent='填写完毕';
+    if(modal && !modal.querySelector('.hp-modal-draft-notice'))modal.insertBefore(E('p',{class:'hp-modal-draft-notice'},'填写完毕仅更新当前页面草稿；请点击页面底部“仅保存”或“保存并应用”，才会存储配置。'),modal.querySelector('.button-row'));
+    return result;
+   });
+  };
+  s.handleModalSave=function(modalMap,ev){
+   var section=this,mapNode=this.getActiveModalMap(),activeMap=dom.findClassInstance(mapNode),saveTasks=activeMap.save(null,true),modal=document.querySelector('body.modal-overlay-active > #modal_overlay .cbi-modal'),alert=modal && modal.querySelector('.hp-modal-validation-alert');
+   if(!alert && modal){alert=E('p',{class:'hp-modal-validation-alert',role:'alert','aria-live':'assertive'});var buttons=modal.querySelector('.button-row');modal.insertBefore(alert,buttons || null);}
+   return saveTasks.then(function(){var map=activeMap;while(map.parent){map=map.parent;saveTasks=saveTasks.then(L.bind(map.load,map)).then(L.bind(map.reset,map));}return saveTasks;}).then(L.bind(section.handleModalCancel,section,modalMap,ev,true)).catch(function(e){
+    var invalid=modal && Array.from(modal.querySelectorAll('.cbi-input-invalid')).find(function(input){return input.offsetParent!==null;});
+    if(invalid){invalid.setAttribute('aria-invalid','true');var pane=invalid.closest('[data-tab]'),menu=pane && pane.parentNode && pane.parentNode.previousElementSibling,tab=pane && menu && menu.querySelector('[data-tab="'+pane.getAttribute('data-tab')+'"] a');if(tab)tab.click();window.requestAnimationFrame(function(){invalid.focus();invalid.scrollIntoView({block:'center'});});}
+    if(alert){alert.textContent=(invalid && (invalid.getAttribute('data-tooltip') || invalid.title)) || (e && e.message) || '请检查输入';if(invalid){var field=invalid.closest('.cbi-value-field') || invalid.parentNode;field.appendChild(alert);invalid.setAttribute('aria-describedby','hp-modal-validation-error');alert.id='hp-modal-validation-error';window.requestAnimationFrame(function(){alert.scrollIntoView({block:'center'});});}}
+    return Promise.reject(e);
+   });
+  };
   function field(tab,cls,key,label,modal){var v=s.taboption(tab,cls,key,label);if(modal!==undefined)v.modalonly=modal;if(cls===form.DummyValue){v.modalonly=false;v.optional=true;}v.rmempty=cls===form.DummyValue;return v;}
   o=field('general',form.Flag,'enabled','启用');o.default='1';o.editable=true;
   o=field('general',form.Value,'name','名称');
   o=field('general',form.ListValue,'type','接入方式');o.value('http_proxy','HTTP 反向代理');o.value('https_proxy','HTTPS 反向代理');o.value('tls_passthrough','TLS 透传');o.value('ssh','SSH 远程登录共入口');o.value('rdp','RDP 远程桌面共入口');o.value('tcp_forward','独立端口 TCP 转发');o.default='https_proxy';o.textvalue=function(sid){return api.serviceType(this.map.data.get(this.map.config,sid).type);};
+  function portHint(type){return type==='ssh'?'SSH 通常使用 22':type==='rdp'?'RDP 通常使用 3389':'请输入后端端口';}
+  o.onchange=function(ev,sid,value){var option=this.map.lookupOption('backend_port',sid)[0],root=document.getElementById(option.cbid(sid)),control=root && (root.matches('input')?root:root.querySelector('input'));if(control)control.placeholder=portHint(value);};
   o=field('general',form.DummyValue,'access_method_help','适用场景');o.modalonly=true;
   o.renderWidget=function(){return E('ul',{},[
    E('li',{},[E('strong',{},'HTTP 反向代理：'),'外网通过http://域名:共享端口 访问的内网服务；路由器无需配置证书，安全性较低，只在特殊场景使用。']),
@@ -87,10 +109,21 @@ return view.extend({
   (saved.services || []).forEach(function(svc){if(svc.certificate_ref && !inventory.some(function(c){return c.certificate_ref===svc.certificate_ref;}))o.value(svc.certificate_ref,svc.certificate_ref+'（不可用）');});
   o=field('access',form.DummyValue,'certificate_summary','证书');o.textvalue=function(sid){var r=this.map.data.get(this.map.config,sid);return r.type==='https_proxy'?(r.certificate_mode==='override'?r.certificate_ref || '未选择':'继承入口默认'):r.type==='tls_passthrough'?'由后端提供':'不需要';};
   o=field('backend',form.DummyValue,'backend_summary','后端地址');o.textvalue=function(sid){var r=this.map.data.get(this.map.config,sid),h=r.backend_host || '';return (h.includes(':')?'['+h+']':h)+':'+(r.backend_port || '');};
-  o=field('backend',form.Value,'backend_host','后端地址',true);o.datatype='host';o.description='填写主机名或裸 IP 地址，不含协议、路径及端口。';
+  o=field('backend',form.Value,'backend_host','后端地址',true);o.description='填写主机名或裸 IP 地址，不含协议、路径及端口。';
+  o.validate=function(sid,value){
+   var error='请填写有效的后端地址：主机名或裸 IP 地址，不含协议、路径及端口。';
+   if(!value)return error;
+   if(value.indexOf(':')>=0)return validation.parseIPv6(value)?true:error;
+   if(/^[0-9.]+$/.test(value))return validation.parseIPv4(value)?true:error;
+   return value.length<=253 && value.split('.').every(function(label){return /^[a-zA-Z0-9](?:[a-zA-Z0-9-]{0,61}[a-zA-Z0-9])?$/.test(label);})?true:error;
+  };
   o=field('backend',form.Value,'backend_port','后端端口',true);o.datatype='port';
-  o.cfgvalue=function(sid){var r=row(sid);return r.backend_port || (r.type==='rdp'?'3389':null);};
-  o.placeholder='RDP 通常使用 3389';
+  o.cfgvalue=function(sid){return row(sid).backend_port;};
+  o.renderWidget=function(sid,index,value){
+   var node=form.Value.prototype.renderWidget.call(this,sid,index,value),input=node.querySelector('input');
+   if(input){var type=row(sid).type;input.placeholder=type==='ssh'?'SSH 通常使用 22':type==='rdp'?'RDP 通常使用 3389':'请输入后端端口';}
+   return node;
+  };
   o=field('backend',form.ListValue,'upstream_scheme','后端协议',true);o.value('http','HTTP');o.value('https','HTTPS');o.default='http';o.depends('type','http_proxy');o.depends('type','https_proxy');o.retain=true;
   o=field('backend',form.Value,'backend_host_header','回源 Host',true);o.rmempty=true;o.depends('type','http_proxy');o.depends('type','https_proxy');o.retain=true;o.description='指定后端网站使用的域名，留空使用外网访问域名。后端按域名区分网站时填写。';
   o.validate=function(sid,value){

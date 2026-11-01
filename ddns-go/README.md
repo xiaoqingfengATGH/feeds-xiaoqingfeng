@@ -2,15 +2,25 @@
 
 Self-feed replacement of upstream packages/net/ddns-go, pinned archive SHA256
 `f7001004e092d9641aad5a94158e0b4cae4a53a7f5c7d96d5c6af3d246c56fcc`,
-release 3. Attribution/service configuration follow upstream ImmortalWrt packaging.
+release 4. Attribution/service configuration follow upstream ImmortalWrt packaging.
 Go package include uses the packages feed's absolute build-tree path.
 No firmware selection, HomePublish integration, production installation, daemon
 restart or provider write is performed by this package's tests.
 
-## Opt-in and authorization
+## Local integration and authorization
 
 UCI `ddns-go.config.local_api=1` adds
-`-local-api /var/run/ddns-go/local-api.sock`; the shipped default is **0**.
+`-local-api /var/run/ddns-go/local-api.sock`; the shipped default is **1**.
+The main service's `enabled=0` default is unchanged. Explicit `local_api=0`
+remains supported; retained configurations are not forcibly migrated on upgrade.
+LuCI (`feeds-xiaoqingfeng/luci-app-ddns-go`) exposes “允许本机应用联动”
+with the help text “允许 HomePublish 等本机应用读取域名配置并请求维护解析记录。”
+Run `node ddns-go/tests/test-default-ui.cjs` from the self-feed root to check
+both the shipped default and the sibling luci-app-ddns-go option declaration.
+The firmware preparation script explicitly uninstalls and reinstalls both
+`ddns-go` and `luci-app-ddns-go` from `xiaoqingfeng`, then checks each provider
+symlink. Missing packages, install failures and wrong links stop preparation;
+feed ordering alone is not used to select these two packages.
 The daemon flag defaults to empty. The init wrapper creates a 0700 runtime
 directory owned by ddns-go:ddns-go; the listener requires a private existing parent
 and sets the socket to 0600. Root callers and the service identity can connect.

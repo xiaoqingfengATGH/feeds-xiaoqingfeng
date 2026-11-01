@@ -1,0 +1,12 @@
+{
+	"admin/services/ddns-go": {
+		"title": "DDNS-Go",
+		"action": {
+			"type": "view",
+			"path": "ddns-go"
+		},
+		"depends": {
+			"acl": [ "luci-app-ddns-go" ]
+		}
+	}
+}

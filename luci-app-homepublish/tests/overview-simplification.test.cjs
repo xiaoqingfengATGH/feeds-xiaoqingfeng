@@ -5,15 +5,15 @@ async function render(state,error){
  const maps=[],calls=[];
  function E(tag,attrs,children){return {tag,attrs:attrs||{},children,append(){},appendChild(){},querySelector(s){return s==='#cbi-json-services'?{append(){}}:null},querySelectorAll(){return []},textContent:''};}
  class Map{constructor(rows,title){this.rows=rows;this.title=title;this.sections=[];maps.push(this);}section(type,id,kind,title){const s={id,title,options:[],option(type,key,title){const o={key,title,renderWidget(){return E('button');}};this.options.push(o);return o;}};this.sections.push(s);return s;}render(){return Promise.resolve(E('div'));}}
- const api={running:s=>s.runtime?.phase==='running'&&s.runtime.active_verified===true&&s.desired_state?.state==='enabled',actionGates:(s,o={})=>Object.fromEntries(['start','stop','apply'].map(k=>[k,{allowed:!o.busy&&!o.unknown,reason:''}])),serviceType:s=>s,endpoint:(h,p)=>h+':'+p,errorText:e=>e.message,actionDialog:(...a)=>{calls.push(a);},status:()=>Promise.resolve(state),checked:s=>s};
+ const api={running:s=>s.runtime?.phase==='running'&&s.runtime.active_verified===true&&s.desired_state?.state==='enabled',actionGates:(s,o={})=>Object.fromEntries(['start','stop','apply'].map(k=>[k,{allowed:!o.busy&&!o.unknown&&s.capabilities?.[k]!==false,reason:o.unknown?'状态未知，请先刷新':s.capabilities?.[k]===false?'当前通道不支持启动':''}])),serviceType:s=>s,endpoint:(h,p)=>h+':'+p,errorText:e=>e.message,actionDialog:(...a)=>{calls.push(a);},status:()=>Promise.resolve(state),checked:s=>s};
  const view=new Function('view','form','poll','dom','api','E','L','rpc','probes',source)({extend:o=>o},{JSONMap:Map,GridSection:function(){},TableSection:{prototype:{}},NamedSection:function(){},DummyValue:function(){},Button:function(){}},{add(){}},{content(){}},api,E,{url:()=>'/services'},{declare:()=>()=>Promise.resolve({ok:true,summary:'成功'})},{create:()=>({pending:()=>false,run:()=>Promise.resolve()})});
  await view.render({state,error});return {map:maps[0],calls};
 }
 function fixture(){return {saved_revision:17,active_revision:16,desired_state:{state:'enabled'},runtime:{phase:'running',cleanup:'confirmed',active_verified:true,generation:'g',services:{a:{ready:true,generation:'g'}}},saved_config:{services:[{service_id:'a',name:'A',enabled:true}]},active_config:{services:[{service_id:'a',name:'A'}]},pending_config:{apply_required:true}};}
 test('overview hides revisions and public reachability from ordinary fields',async()=>{const {map}=await render(fixture());assert.equal(map.rows.summary.config,'有待应用变更');assert.equal(map.rows.summary.external,undefined);assert.ok(map.sections.every(s=>s.options.every(o=>o.key!=='external')));assert.equal(map.rows.summary.publication,'运行中');});
-test('master control uses desired intent and existing confirmation, not separate start/stop buttons',async()=>{const {map,calls}=await render(fixture());const actions=map.sections.find(s=>s.id==='summary');assert.equal(map.sections.some(s=>s.id==='actions'),false);const control=actions.options.find(o=>o.key==='enable').renderWidget();assert.equal(control.attrs.type,'checkbox');assert.equal(control.attrs.checked,true);control.attrs.change({target:control.attrs});assert.equal(calls[0][2],'stop');const stopped=fixture();stopped.desired_state.state='disabled';stopped.runtime.phase='stopped';const next=await render(stopped);const c=next.map.sections.find(s=>s.id==='summary').options.find(o=>o.key==='enable').renderWidget();c.attrs.change({target:c.attrs});assert.equal(next.calls[0][2],'start');});
+test('master control uses desired intent and existing confirmation, not separate start/stop buttons',async()=>{const {map,calls}=await render(fixture());const actions=map.sections.find(s=>s.id==='summary');assert.equal(map.sections.some(s=>s.id==='actions'),false);const control=actions.options.find(o=>o.key==='enable').renderWidget();assert.equal((control.children?.[0] || control).attrs.type,'checkbox');assert.equal((control.children?.[0] || control).attrs.checked,true);(control.children?.[0] || control).attrs.change({target:(control.children?.[0] || control).attrs});assert.equal(calls[0][2],'stop');const stopped=fixture();stopped.desired_state.state='disabled';stopped.runtime.phase='stopped';const next=await render(stopped);const c=next.map.sections.find(s=>s.id==='summary').options.find(o=>o.key==='enable').renderWidget();(c.children?.[0] || c).attrs.change({target:(c.children?.[0] || c).attrs});assert.equal(next.calls[0][2],'start');});
 test('stopped runtime never reports service ready from retained active snapshot',async()=>{const s=fixture();s.runtime.phase='stopped';const {map}=await render(s);assert.equal(map.rows.services[0].readiness,'未运行');assert.equal(map.rows.summary.publication,'已停止');});
-test('unknown status blocks master changes and does not claim stopped',async()=>{const {map,calls}=await render(fixture(),'offline');const control=map.sections.find(s=>s.id==='summary').options.find(o=>o.key==='enable').renderWidget();assert.equal(control.attrs.disabled,true);control.attrs.change({target:control.attrs});assert.equal(calls.length,0);assert.match(map.rows.summary.publication,/未知/);});
+test('unknown status blocks master changes and does not claim stopped',async()=>{const {map,calls}=await render(fixture(),'offline');const control=map.sections.find(s=>s.id==='summary').options.find(o=>o.key==='enable').renderWidget();assert.equal((control.children?.[0] || control).attrs.disabled,true);(control.children?.[0] || control).attrs.change({target:(control.children?.[0] || control).attrs});assert.equal(calls.length,0);assert.match(map.rows.summary.publication,/未知/);});
 test('firewall runtime uses the top-level contract and exposes read-only rule and lease status',async()=>{const s=fixture();s.firewall={state:'open',rule_count:3,lease_seconds:10};const {map}=await render(s);assert.equal(map.rows.summary.firewall,'已放行（3 条规则）');assert.doesNotMatch(map.rows.summary.firewall,/租约|10 秒/);const field=map.sections.find(s=>s.id==='summary').options.find(o=>o.key==='firewall');assert.equal(field.title,'入站防火墙');assert.equal(field.editable,undefined);});
 test('firewall distinguishes closed, unmanaged, legacy, unconfigured and unknown without inferring from running',async()=>{
  const s=fixture();s.saved_config.access_profile={firewall:{ipv4_zones:['wan'],ipv6_zones:[]}};
@@ -37,5 +37,20 @@ test('SSH summary names the shared entry port without changing other match value
  const {map}=await render(s);
  assert.deepEqual(map.rows.services.map(r=>r.match),['共享入口端口','web.test','TCP 9443']);
  assert.doesNotMatch(source,/共享 SSH 入口/);
+});
+test('disabled enable checkbox explains empty services inline, while allowed state has no reason',async()=>{
+ const s=fixture();s.desired_state.state='disabled';s.runtime.phase='stopped';s.capabilities={start:false};s.saved_config.services=[];
+ const {map}=await render(s);const widget=map.sections[0].options.find(o=>o.key==='enable').renderWidget();
+ assert.equal(widget.children[0].attrs.disabled,true);
+ assert.equal(widget.children[0].attrs['aria-describedby'],'hp-enable-reason');
+ assert.equal(widget.children[1].attrs.id,'hp-enable-reason');
+ assert.equal(widget.children[1].children,'请先在服务页面添加并保存至少一条已启用服务');
+ const ready=await render(fixture());const w=ready.map.sections[0].options.find(o=>o.key==='enable').renderWidget();
+ assert.equal(w.children[1].children,'');
+});
+test('unknown status shows its actual disabled reason, not empty-services advice',async()=>{
+ const s=fixture();s.saved_config.services=[];s.capabilities={stop:false};
+ const {map}=await render(s,'offline');const w=map.sections[0].options.find(o=>o.key==='enable').renderWidget();
+ assert.equal(w.children[1].children,'状态未知，请先刷新');
 });
 module.exports={render,fixture};

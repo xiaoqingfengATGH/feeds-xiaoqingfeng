@@ -141,13 +141,16 @@ return view.extend({
    var m=new form.JSONMap(rows,'HomePublish','提供内网服务开放到公网统一入口，支持多协议共享端口。');m.readonly=false;
    var section=m.section(form.NamedSection,'summary','summary','运行状态');
    var enabled=(s.desired_state || {}).state==='enabled',toggleKind=enabled?'stop':'start';
+   var toggleGate=gates[toggleKind],toggleReason=toggleGate.allowed?'':toggleGate.reason;
+   if(!toggleGate.allowed && !unknown && !busy && !actionBusy && toggleKind==='start' && s.saved_revision && s.saved_config && r.cleanup==='confirmed' && ['stopped','failed','blocked'].indexOf(r.phase)>=0 && !(saved.services || []).some(function(v){return v.enabled!==false;}))
+    toggleReason='请先在服务页面添加并保存至少一条已启用服务';
    var enable=section.option(form.DummyValue,'enable','启用');
-   enable.renderWidget=function(){return E('input',{id:'hp-enable',type:'checkbox',checked:enabled,disabled:!gates[toggleKind].allowed,'aria-label':'启用',change:function(ev){
+   enable.renderWidget=function(){return E('span',{style:'display:inline-flex;align-items:center;gap:0.75rem;flex-wrap:wrap'},[E('input',{id:'hp-enable',type:'checkbox',checked:enabled,disabled:!toggleGate.allowed,'aria-label':'启用','aria-describedby':'hp-enable-reason',change:function(ev){
     ev.target.checked=(state.desired_state || {}).state==='enabled';
     var kind=ev.target.checked?'stop':'start';
     if(!api.actionGates(state,{unknown:!!unknown,busy:busy || actionBusy})[kind].allowed)return;
     return api.actionDialog(root,state,kind,function(st){++epoch;state=st;unknown=null;draw();},function(e){++epoch;unknown=api.errorText(e);draw();},function(pending){actionBusy=pending;++epoch;draw();});
-   }});};
+   }}),E('span',{id:'hp-enable-reason','aria-live':'polite'},toggleReason)]);};
    [['publication','运行状态'],['firewall','入站防火墙'],['config','配置状态'],['policy','运行策略']].forEach(function(c){section.option(form.DummyValue,c[0],c[1]);});
    var entrySection=readonlyGrid(m,'entries','入口状态',[['identity','名称 / 用途'],['endpoint','本机监听'],['family','地址族'],['network','关联网络'],['status','运行状态']]);
    var serviceSection=readonlyGrid(m,'services','服务运行状态',[['saved','启用'],['identity','名称'],['kind','接入方式'],['public_entry','公网入口地址'],['match','匹配 / 端口'],['backend','后端地址'],['path','入口 → 后端'],['readiness','运行状态']]);
@@ -159,7 +162,8 @@ return view.extend({
    text(message,unknown?'状态读取失败，请重试；不能判定已停止':pending?'已保存待应用；旧运行配置不会随保存切换':'');
    if(body.querySelector('.cbi-map')){
     updateRow(body.querySelector('#cbi-json-summary'),rows.summary,['publication','firewall','config','policy']);
-    var toggle=body.querySelector('#hp-enable');toggle.disabled=!gates[toggleKind].allowed;toggle.checked=enabled;
+    var toggle=body.querySelector('#hp-enable');toggle.disabled=!toggleGate.allowed;toggle.checked=enabled;
+    text(body.querySelector('#hp-enable-reason'),toggleReason);
     return Promise.all([syncGrid(entrySection,'entries',rows.entries,['identity','endpoint','family','network','status'],rendering),syncGrid(serviceSection,'services',rows.services,['saved','identity','kind','public_entry','match','backend','path','readiness'],rendering)]).then(refreshProbes);
    }
    return m.render().then(function(node){if(rendering!==renderEpoch)return;dom.content(body,node);['entries','services'].forEach(function(type){body.querySelectorAll('#cbi-json-'+type+' tbody tr:not(.placeholder)').forEach(function(row,i){row.dataset.hpKey=rows[type][i]._key;});});body.querySelector('#cbi-json-services').append(probeHelp);refreshProbes();});

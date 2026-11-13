@@ -73,6 +73,9 @@ function M.new(o)
   if before[o.name] then return false,'procd service already exists' end
   if not run('test ! -e '..quote(o.root)) then return false,'runtime directory already exists' end
   if not run('umask 077; mkdir '..quote(o.root)) then return false,'runtime directory creation failed' end
+  -- nginx -t opens its default relative log path before workers exist.  Keep
+  -- that bootstrap path private and present before testing the configuration.
+  if not run('mkdir -p '..quote(o.root..'/logs')..' && chmod 0700 '..quote(o.root..'/logs')) then return false,'log directory preparation failed' end
   -- nginx body/proxy temp spool outside the 0700 private root: the worker
   -- (nobody) must traverse/write it; nginx recreates missing levels on boot.
   if not run('umask 044; mkdir -p '..quote(o.tmp)..'/body '..quote(o.tmp)..'/proxy && chmod 0733 '..quote(o.tmp)..' '..quote(o.tmp)..'/body '..quote(o.tmp)..'/proxy') then return false,'temp directory preparation failed' end

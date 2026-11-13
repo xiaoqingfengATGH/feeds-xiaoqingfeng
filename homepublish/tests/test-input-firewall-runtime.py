@@ -189,6 +189,42 @@ live={nftables={}};assert(not F.reconcile(r));assert(F.clear(),'missing fw4 must
 live={nftables={{set={family='inet',table='fw4',name='homepublish_in4_wan',comment='foreign'}}}};assert(not F.clear());assert(F.status().state=='cleanup_failed')
 ''')
 
+    def test_transient_renew_contract_preserves_details_and_rejects_unsafe(self):
+        self.lua().execute('''
+package.loaded['direct-renderer']={};package.loaded['direct-backend']={};package.loaded['device-integrations']={}
+package.loaded['network-inventory']={collect=function()return {} end,resolve=function()return true end}
+package.loaded['product-procd-group']={new=function()return {healthy=function()return true end,start=function()return true end,stop=function()return true end}end}
+local calls=0
+local firewall={reconcile=function()calls=calls+1;return false,'fw4 lock wait timed out',{kind='transient',code='lock_timeout'}end,clear=function()return true end,status=function()return {state='open'}end}
+local V=require('product-v2-runtime').new({available=function()return true end,firewall=firewall})
+local p={generation=7,services={},listeners={},snapshots={},firewall_rules={}}
+assert(V.start(p,7,10000));local ok,detail,class=V.renew()
+assert(not ok and detail=='fw4 lock wait timed out' and class.kind=='transient' and class.code=='lock_timeout' and calls==1)
+local unsafe={reconcile=function()return false,'listener identity mismatch',{kind='unsafe',code='listener_identity'}end,clear=function()return true end,status=function()return {state='open'}end}
+local V2=require('product-v2-runtime').new({available=function()return true end,firewall=unsafe})
+assert(V2.start(p,7,10000));ok,detail,class=V2.renew();assert(not ok and detail=='listener identity mismatch' and class.kind=='unsafe','unsafe renewal must remain classified unsafe')
+''')
+
+    def test_controller_graces_only_classified_transient_renewals_and_bounds_backoff(self):
+        self.lua().execute('''
+package.loaded['product-wire']={encode=function(v)return v end,decode=function(v)return v end}
+local config={schema_version=2,services={{service_id='web'}},publication_policy={mode='continuous'}}
+local state={saved_revision=1,saved_config=config,active_revision=1,active_config=config,intent_revision=1,desired_state={state='enabled',manual_stop_latch=false},approval={revision=1},runtime={phase='running',generation=1,cleanup='confirmed',active_verified=true},capabilities={}}
+package.loaded['product-provider']={handle=function()return state end,controller_transaction=function(fn)fn(state);return state end}
+local stops=0;local renews=0;local now=100
+local p={runtime_plan=function(c)return c end,plan=function(c)return c end,stop=function()stops=stops+1;return true end,
+ renew=function()renews=renews+1;return false,'lock wait expired',{kind='transient',code='lock_timeout'}end}
+local C=require('product-controller').new(p,{clock=function()return {now=now,boot_id='b',trusted=true}end})
+C.generation=1
+local s=C.tick(1);assert(s.runtime.phase=='running' and stops==0 and s.runtime.last_error=='lock wait expired' and s.runtime.next_retry==101 and s.desired_state.state=='enabled' and not s.desired_state.manual_stop_latch)
+now=101;s=C.tick(1);assert(s.runtime.phase=='running' and stops==0 and s.runtime.next_retry==103)
+now=103;s=C.tick(1);assert(s.runtime.phase=='running' and stops==0 and s.runtime.next_retry==107)
+now=107;s=C.tick(1);assert(s.runtime.phase=='retry_wait' and stops==1 and s.desired_state.state=='enabled' and not s.desired_state.manual_stop_latch,'bounded transient grace must clean up without disabling intent')
+state.runtime={phase='running',generation=1,cleanup='confirmed',active_verified=true};stops=0;renews=0
+p.renew=function()return false,'certificate identity mismatch',{kind='unsafe',code='certificate_identity'}end
+s=C.tick(1);assert(s.runtime.phase=='blocked' and stops==1 and s.desired_state.state=='enabled' and not s.desired_state.manual_stop_latch,'unsafe renewal must remain blocked without disabling intent')
+''')
+
     def test_runtime_opens_only_after_health_and_revokes_before_stop(self):
         self.lua().execute('''
 package.loaded['direct-renderer']={};package.loaded['direct-backend']={};package.loaded['device-integrations']={}
@@ -251,6 +287,7 @@ assert(exit==1 and result.ok==false and result.error=='firewall controller lease
     def test_expiry_renew_health_reload_and_legacy_empty_rules(self):
         self.lua().execute('''
 package.loaded['direct-renderer']={};package.loaded['direct-backend']={};package.loaded['device-integrations']={}
+package.loaded['network-inventory']={collect=function()return {} end,resolve=function()return true end}
 local now=100;os.time=function()return now end
 local healthy=true;local batches={};local cleared=0
 package.loaded['product-procd-group']={new=function()return {start=function(p,g)p.generation=g;return true end,healthy=function()return healthy end,stop=function()return true end}end}

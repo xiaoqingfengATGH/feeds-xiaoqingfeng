@@ -32,7 +32,7 @@ local function validate_state(s)
  assert(s.desired_state.state=='disabled' or s.desired_state.state=='enabled','journal desired')
  assert(type(s.desired_state.manual_stop_latch)=='boolean','journal latch')
  assert(not s.desired_state.manual_stop_latch or s.desired_state.state=='disabled','latched enabled intent')
- known(s.runtime,{phase=true,generation=true,last_error=true,cleanup=true,expires_at=true,stage=true,active_verified=true,services=true,attempt_count=true,next_retry=true,reason=true,running_since=true,boot_id=true,clock_at=true,clock_trusted=true})
+ known(s.runtime,{phase=true,generation=true,last_error=true,cleanup=true,expires_at=true,stage=true,active_verified=true,services=true,attempt_count=true,next_retry=true,reason=true,running_since=true,boot_id=true,clock_at=true,clock_trusted=true,failure_class=true,renew_failures=true})
  local phases={unsupported=true,cleanup_required=true,starting=true,running=true,stopping=true,stopped=true,blocked=true,retry_wait=true}
  assert(phases[s.runtime.phase],'runtime unavailable')
  if s.runtime.generation~=nil then revision(s.runtime.generation) end
@@ -44,6 +44,12 @@ local function validate_state(s)
  for _,k in ipairs({'attempt_count','next_retry','running_since','clock_at'}) do if s.runtime[k]~=nil then revision(s.runtime[k]) end end
  if s.runtime.attempt_count then assert(s.runtime.attempt_count<=3,'retry budget') end
  if s.runtime.reason then assert(type(s.runtime.reason)=='string' and #s.runtime.reason<=128,'retry reason') end
+ if s.runtime.failure_class~=nil then
+  known(s.runtime.failure_class,{kind=true,code=true})
+  assert(s.runtime.failure_class.kind=='transient' or s.runtime.failure_class.kind=='unsafe','runtime failure kind')
+  assert(s.runtime.failure_class.code=='lock_timeout' or s.runtime.failure_class.code=='worker_unavailable' or s.runtime.failure_class.code=='listener_unhealthy' or s.runtime.failure_class.code=='listener_identity' or s.runtime.failure_class.code=='certificate_identity' or s.runtime.failure_class.code=='backend_identity' or s.runtime.failure_class.code=='lease_expired' or s.runtime.failure_class.code=='inactive' or s.runtime.failure_class.code=='worker_rejected','runtime failure code')
+ end
+ if s.runtime.renew_failures~=nil then assert(type(s.runtime.renew_failures)=='number' and s.runtime.renew_failures%1==0 and s.runtime.renew_failures>=0 and s.runtime.renew_failures<=3,'renew failure budget') end
  if s.runtime.boot_id then assert(type(s.runtime.boot_id)=='string' and #s.runtime.boot_id<=128,'boot identity') end
  if s.runtime.clock_trusted~=nil then assert(type(s.runtime.clock_trusted)=='boolean','clock trust') end
  if s.runtime.services then

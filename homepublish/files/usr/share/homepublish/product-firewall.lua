@@ -129,9 +129,9 @@ function M.new(deps)
   lease=lease or MAX_LEASE
   local groups,err=validate(rules)
   if not groups or not integer(lease,MAX_LEASE) then state.state='update_failed';state.error=err or 'invalid firewall lease';return false,state.error end
-  local ok
+  local ok,class
   if not deps.snapshot then
-   ok,err=require('product-firewall-system').reconcile(rules,lease)
+   ok,err,class=require('product-firewall-system').reconcile(rules,lease)
   else
    local snapshot=deps.snapshot();local batch={};local present=false
    if type(snapshot)~='table' or type(snapshot.nftables)~='table' then err='firewall status unavailable'
@@ -174,7 +174,7 @@ function M.new(deps)
     end
    end
   end
-  if not ok then state.state='update_failed';state.error=err or 'firewall update failed';return false,state.error end
+  if not ok then state.state='update_failed';state.error=err or 'firewall update failed';return false,state.error,class end
   state={state=#rules>0 and 'open' or 'closed',rule_count=#rules,lease_seconds=lease};return true
  end
  function F.clear()local ok,err=F.reconcile({});if not ok then state.state='cleanup_failed' end;return ok,err end

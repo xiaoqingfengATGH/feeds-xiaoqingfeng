@@ -5,8 +5,10 @@ class Package(unittest.TestCase):
   make=ROOT/'Makefile'
   self.assertTrue(make.exists(), 'missing OpenWrt package')
   text=make.read_text()
-  self.assertIn('$(TARGET_CC)',text)
-  self.assertIn('$(PKG_BUILD_DIR)/homepublish_store.so',text)
+  # The current store is Lua-only; do not require the retired C extension.
+  self.assertIn('./files/usr/share/homepublish/*.lua',text)
+  self.assertTrue((ROOT/'files/usr/share/homepublish/product-store-core.lua').is_file())
+  self.assertNotIn('homepublish_store.so',text)
   self.assertNotIn('homepublish_device.so',text)
   self.assertNotIn('tests/',text)
   defaults=(ROOT/'files/etc/config/homepublish').read_text()

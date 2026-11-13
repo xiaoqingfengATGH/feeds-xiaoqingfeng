@@ -4,10 +4,13 @@ assert(#arg==0,'no daemon arguments')
 package.path='/usr/share/homepublish/?.lua;'..package.path
 local N=require('product-channel');local W=require('product-json')
 local C=require('product-controller').new(require('product-system-provider'))
+local R=require('product-restart')
+-- Consume before opening a replacement socket, even for idle/manual intent.
+local initial=C.status()
+local restart=R.consume(initial)
 local server=N.listen()
 -- Do not rewrite a stopped/manual-latched journal merely to run idle control.
-local initial=C.status()
-if initial.desired_state.state=='enabled' or initial.runtime.phase~='stopped' then C.restore() end
+if initial.desired_state.state=='enabled' or initial.runtime.phase~='stopped' then C.restore(restart) end
 while true do
  local bytes,client=N.receive(server)
  if bytes then
@@ -16,7 +19,8 @@ while true do
    for k in pairs(q)do assert(k=='action' or k=='revision' or k=='approved','unknown field')end
    if q.action=='start' then return C.start(q.revision,q.approved)
    elseif q.action=='apply' then return C.apply(q.revision,q.approved)
-   elseif q.action=='stop' then return C.stop()
+   elseif q.action=='stop' then R.clear();return C.stop()
+   elseif q.action=='prepare_restart' then return {restart_prepared=R.prepare(C.status())==true}
    elseif q.action=='status' then return C.status()
    else return {error='unsupported device-test operation'}end
   end)

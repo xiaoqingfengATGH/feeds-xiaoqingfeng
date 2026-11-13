@@ -27,6 +27,13 @@ local status=assert(P.handle{action='status'})
 assert(status.saved_revision==1 and status.active_revision==nil)
 local after=assert(io.open(root..'/state','rb'));assert(after:read('*a')==bytes);after:close()
 assert(P.controller_transaction(function(s) s.intent_revision=s.intent_revision+1 end).intent_revision==1)
+local persisted=P.controller_transaction(function(s)
+ s.runtime={phase='retry_wait',generation=1,cleanup='confirmed',active_verified=false,attempt_count=3,next_retry=9,reason='recovery budget exhausted',last_error='lock wait timed out',failure_class={kind='transient',code='lock_timeout'},renew_failures=3}
+end)
+assert(persisted.runtime.failure_class.code=='lock_timeout' and persisted.runtime.renew_failures==3)
+local reread=P.handle{action='status'}
+assert(reread.runtime.phase=='retry_wait' and reread.runtime.attempt_count==3 and reread.runtime.last_error=='lock wait timed out')
+assert(P.controller_transaction(function(s) s.runtime={phase='stopped'} end).runtime.phase=='stopped')
 assert(P.handle{action='status'}.saved_revision==1)
 assert(package.loaded.homepublish_store==nil, 'native store loaded')
 print('PROVIDER_LUA_SAVE_CONFLICT_CONTROLLER_GREEN')

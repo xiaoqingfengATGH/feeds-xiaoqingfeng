@@ -134,7 +134,9 @@ class ProbeTests(unittest.TestCase):
    st.type='lnk';assert(not pcall(d.snapshot));assert(opened==1)
    st.type='reg';st.modedec=644;assert(not pcall(d.snapshot));assert(opened==1)
    st.modedec=600;st.size=262145;assert(not pcall(d.snapshot));assert(opened==1)
-   st.size=#bytes;dir.uid=1000;assert(not pcall(d.snapshot));assert(opened==1)
+   st.size=#bytes;dir.uid=1000;dir.modedec=755;assert(d.snapshot().saved_revision==0 and opened==2)
+   st.uid=1000;assert(not pcall(d.snapshot));assert(opened==2)
+   st.uid=0;dir.type='lnk';assert(not pcall(d.snapshot));assert(opened==2)
   ''')
  def test_worker_success_failure_and_fork_cleanup(self):
   self.lua.globals().adapter_path=str(ROOT/'product-probe-device.lua').replace('\\','/')

@@ -2,7 +2,7 @@ include $(TOPDIR)/rules.mk
 
 PKG_NAME:=homepublish
 PKG_VERSION:=0.1.0
-PKG_RELEASE:=11
+PKG_RELEASE:=12
 PKG_LICENSE:=Apache-2.0
 PKG_BUILD_DIR:=$(BUILD_DIR)/$(PKG_NAME)-$(PKG_VERSION)
 
@@ -36,7 +36,7 @@ define Package/homepublish/install
 	$(INSTALL_DATA) ./files/usr/share/nftables.d/table-post/90-homepublish.nft $(1)/usr/share/nftables.d/table-post/90-homepublish.nft
 	$(INSTALL_CONF) ./files/etc/config/homepublish $(1)/etc/config/homepublish
 	$(INSTALL_DATA) ./files/lib/upgrade/keep.d/homepublish $(1)/lib/upgrade/keep.d/homepublish
-	$(INSTALL_BIN) ./files/etc/init.d/homepublish* $(1)/etc/init.d/
+	$(INSTALL_BIN) ./files/etc/init.d/homepublish $(1)/etc/init.d/homepublish
 endef
 
 $(eval $(call BuildPackage,homepublish))

@@ -9,7 +9,7 @@ local function identity(source)
 end
 
 function M.new(o)
- local G=require('product-procd-group').new(o);local active,next_check,lease_deadline
+ local G=require('product-procd-group').new(o);local active,next_check,lease_deadline,firewall_retry_at,firewall_retry_delay
  local firewall=o.firewall
  local function lease()
   if not lease_deadline then return 10 end
@@ -71,34 +71,46 @@ function M.new(o)
  function V.readiness(p)
   -- Startup readiness describes our components, not target availability. Targets
   -- may start later or reject HTTP/TLS/SSH without stopping unrelated services.
-  local healthy,err=G.healthy();local out={}
+  local healthy,err=G.healthy();local class;local out={}
   if healthy and firewall then
    local ttl=lease()
    if not ttl then healthy=false;err='firewall publication lease expired'
-   else healthy,err=firewall.reconcile(p.firewall_rules or {},ttl) end
+   else healthy,err,class=firewall.reconcile(p.firewall_rules or {},ttl) end
   end
   for _,s in ipairs(p.services) do out[s.service_id]={ready=healthy==true,generation=p.generation} end
-  return healthy==true,out,err
+  return healthy==true,out,err,class
  end
  function V.renew()
-  if not active or not G.healthy() then return false end
-  if os.time()>=(next_check or 0) then
-   next_check=os.time()+30
-   if not verify_bindings(active.listeners) then return false end
-   for _,s in ipairs(active.snapshots) do if identity(s.source)~=s.identity then return false end end
-   for _,s in ipairs(active.services) do
-    local b=B.select(s.backend,{resolve=I.resolve,authorize_backend=o.authorize_backend,healthy=function()return true end})
-    local old=active.selected[s.service_id];if not b or b.address~=old.address or b.port~=old.port then return false end
-   end
+  if not active then return false,'runtime is not active',{kind='unsafe',code='inactive'} end
+  local healthy,health_error=G.healthy()
+  if not healthy then return false,health_error or 'component unhealthy',{kind='unsafe',code='listener_unhealthy'} end
+  -- Health and identity are safety checks, not lease-refresh work.  Run them
+  -- on every grace tick, including ticks where firewall publication is backed
+  -- off, so a changed listener/certificate/backend cannot hide behind retry.
+  next_check=os.time()+30
+  local bound,binding_error=verify_bindings(active.listeners);if not bound then return false,binding_error or 'listener binding verification failed',{kind='unsafe',code='listener_identity'} end
+  for _,s in ipairs(active.snapshots) do if identity(s.source)~=s.identity then return false,'certificate identity mismatch',{kind='unsafe',code='certificate_identity'} end end
+  for _,s in ipairs(active.services) do
+   local b=B.select(s.backend,{resolve=I.resolve,authorize_backend=o.authorize_backend,healthy=function()return true end})
+   local old=active.selected[s.service_id];if not b or not old or b.address~=old.address or b.port~=old.port then return false,'backend identity mismatch',{kind='unsafe',code='backend_identity'} end
   end
-  if firewall then local ttl=lease();if not ttl then return false end;return firewall.reconcile(active.firewall_rules or {},ttl) end
+  if firewall then
+   local now=os.time()
+   if firewall_retry_at and now<firewall_retry_at then return false,'firewall reconciliation backoff',{kind='transient',code='lock_timeout'} end
+   local ttl=lease();if not ttl then return false,'firewall publication lease expired',{kind='unsafe',code='lease_expired'} end
+   local ok,err,class=firewall.reconcile(active.firewall_rules or {},ttl)
+   if ok then firewall_retry_at=nil;firewall_retry_delay=nil;return true end
+   if class and class.kind=='transient' then firewall_retry_delay=math.min(4,(firewall_retry_delay or 1)*2);firewall_retry_at=now+firewall_retry_delay end
+   return false,err or 'firewall reconciliation failed',class or {kind='unsafe',code='worker_rejected'}
+  end
   return true
  end
  function V.stop()
   -- Always revoke before terminating listeners. Still terminate components on
   -- nft failure, but retain cleanup=unknown so the controller retries removal.
   local revoked=true;if firewall then revoked=firewall.clear() end
-  local stopped=G.stop();if stopped then active=nil;next_check=nil;lease_deadline=nil end
+  local stopped=G.stop()
+  if stopped then active=nil;next_check=nil;lease_deadline=nil;firewall_retry_at=nil;firewall_retry_delay=nil end
   return revoked==true and stopped==true
  end
  function V.firewall_status()return firewall and firewall.status() or {state='unmanaged',rule_count=0} end

@@ -28,7 +28,12 @@ function M.reconcile(rules,lease)
  local code=os.execute('timeout 5 flock -x /var/run/fw4.lock /usr/bin/lua /usr/share/homepublish/product-firewall-apply.lua '..directory..' >/dev/null 2>&1')
  local result=io.open(directory..'/result.json');local bytes=result and result:read('*a');if result then result:close() end
  local ok,r=pcall(J.decode,bytes or '');clean()
- if code~=0 or not ok or type(r)~='table' or r.ok~=true then return false,ok and type(r)=='table' and r.error or 'firewall worker unavailable' end
+ local status=tonumber(code) or -1
+ if status==124 or status==124*256 then return false,'firewall lock/worker timeout',{kind='transient',code='lock_timeout'} end
+ if code~=0 or not ok or type(r)~='table' or r.ok~=true then
+  return false,ok and type(r)=='table' and r.error or 'firewall worker unavailable',
+   (ok and type(r)=='table' and r.error) and {kind='unsafe',code='worker_rejected'} or {kind='transient',code='worker_unavailable'}
+ end
  return true
 end
 return M

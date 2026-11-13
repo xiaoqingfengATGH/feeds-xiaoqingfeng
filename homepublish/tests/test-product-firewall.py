@@ -13,6 +13,14 @@ class FirewallTests(unittest.TestCase):
    end
    function valid(c) local r,e=C.validate(c);assert(r,e);return r end
   ''')
+ def test_transport_failure_class_reaches_runtime(self):
+  self.lua.execute('''
+   package.loaded['direct-address']=dofile(root..'/direct-address.lua')
+   package.loaded['product-firewall-system']={reconcile=function() return false,'lock timeout',{kind='transient',code='lock_timeout'} end}
+   local f=dofile(root..'/product-firewall.lua').new()
+   local ok,err,class=f.reconcile({},10)
+   assert(not ok and err=='lock timeout' and class and class.kind=='transient' and class.code=='lock_timeout','transport failure classification lost')
+  ''')
  def test_auto_is_explicit_and_legacy_remains_unchanged(self):
   self.lua.execute('''
    local old=valid(config());assert(old.access_profile.listeners[1].bind_mode==nil)

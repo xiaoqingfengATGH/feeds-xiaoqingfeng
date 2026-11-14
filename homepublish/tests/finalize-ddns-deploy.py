@@ -1,3 +1,4 @@
+raise SystemExit('RETIRED_PRODUCTION_TOOL: historical production writer; use the current isolated suite. Source retained only for coverage migration.')
 import json,subprocess,hashlib,re,shlex
 from pathlib import Path
 R=Path('D:/DevPortal/Openwrt/feeds-xiaoqingfeng');E=R/'docs/evidence/lua-store/ddns-phase2-deploy';p=E/'deployment.json';d=json.loads(p.read_text());SSH=['ssh','-o','BatchMode=yes','-i','D:/DevPortal/CloudHosts/HomePri.key','root@192.168.1.2']

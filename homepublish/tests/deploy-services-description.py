@@ -1,3 +1,4 @@
+raise SystemExit('RETIRED_PRODUCTION_TOOL: historical production writer; use the current isolated suite. Source retained only for coverage migration.')
 """Deploy only services.js; read-only production snapshots, no lifecycle RPC."""
 import hashlib,json,subprocess,uuid
 from pathlib import Path

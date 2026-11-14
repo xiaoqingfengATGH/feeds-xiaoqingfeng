@@ -1,3 +1,4 @@
+raise SystemExit('RETIRED_PRODUCTION_TOOL: historical production writer; use the current isolated suite. Source retained only for coverage migration.')
 """Deploy only canonical loader fix using established protected source deployment."""
 from pathlib import Path
 source=Path(__file__).with_name('deploy-upstream-tls-source.py')

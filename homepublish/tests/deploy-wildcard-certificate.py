@@ -1,3 +1,4 @@
+raise SystemExit('RETIRED_PRODUCTION_TOOL: historical production writer; use the current isolated suite. Source retained only for coverage migration.')
 """Narrow wildcard source deploy, established controller/config-preserving sequence."""
 from pathlib import Path
 source=Path(__file__).with_name('deploy-upstream-tls-source.py')

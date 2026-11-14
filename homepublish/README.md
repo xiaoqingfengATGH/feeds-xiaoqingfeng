@@ -59,8 +59,14 @@ The package depends on `lua`, `libuci-lua`, `nginx-ssl`, `natmap`; a real OpenWr
 
 ## Reproducible tests
 
+Current implementation, runnable commands and acceptance boundaries are documented in [TEST-SUITE.md](tests/TEST-SUITE.md). The native lease/store implementation described above is historical, not the current build/install graph.
+
+### Historical verification record (not runnable instructions)
+
+The former native runtime tests and their exclusive fixtures have been removed; use the current suite rather than the historical commands below.
+
 - Windows: `python homepublish/tests/test-package.py`
-- Linux/WSL: `python3 homepublish/tests/test-recipe.py` (temporary macro harness; real compile/install, no packages installed)
+- Current test entry and real IPK verification: see `homepublish/tests/TEST-SUITE.md`. The obsolete native-store recipe test has been removed.
 - Root Linux/WSL: `unshare -n sh -c 'ip link set lo up; python3 homepublish/tests/test-socket-boundary.py -v'` (isolated namespace enforced; pinned upstream checkout from `NATMAP_SOURCE` (default set by the environment); occupied-port/race real-socket checks and seccomp-install fail-closed checks). Set `HOMEPUBLISH_SECURITY_NEGATIVE_CONTROL=1` and select the two socket tests to reproduce the vulnerability only inside the namespace.
 - Root Linux/WSL: `python3 homepublish/tests/test-lifecycle.py` (chroot fixture binaries, no networking)
 - Root Linux/WSL: `python3 homepublish/tests/test-source-cleanup.py -v` (30 final native/legacy cleanup cases; read-only init registration/submission rejection, concurrent provisioning, exec failures, render fault matrix and inode preservation; procd/Lua stubbed).

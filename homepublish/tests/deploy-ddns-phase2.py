@@ -1,3 +1,4 @@
+raise SystemExit('RETIRED_PRODUCTION_TOOL: historical production writer; use the current isolated suite. Source retained only for coverage migration.')
 """Scoped DDNS source deployment with private rollback; no DNS mutation."""
 import hashlib,json,shlex,subprocess,time,uuid
 from pathlib import Path

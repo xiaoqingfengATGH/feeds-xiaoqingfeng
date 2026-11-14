@@ -1,5 +1,7 @@
 # r8 实际 overview 路由验收（纠正此前遗漏）
 
+> 历史记录/初步审查，非当前执行指南。R8/R9 危险生产驱动已删除，历史生产写入入口已禁用；最终保留/删除决定及有效命令见 homepublish/tests/TEST-AUDIT-DECISIONS.md 与 TEST-SUITE.md。
+
 源码包基线：`9b7b93e`，分支 `feature/homepublish-product`。后续测试/记录提交不改变已构建运行源码。
 
 此前 settings 内“概览”tab 不能代表 menu 的 `admin/services/homepublish/overview` 已交付；旧 overview.js 确实只有 15 行英文内部状态文本。已替换为独立中文概览，非 redirect、非复制配置编辑器：已保存/本机/TLS/公网/期限状态卡、只读服务表、入口/证书摘要、pending 提示、能力门控开启/应用/停止、刷新重试、默认折叠内部诊断。product.js 共用差异与操作确认；settings 使用同一动作确认。

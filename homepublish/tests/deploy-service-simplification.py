@@ -1,3 +1,4 @@
+raise SystemExit('RETIRED_PRODUCTION_TOOL: historical production writer; use the current isolated suite. Source retained only for coverage migration.')
 """Direct source/UI deployment; preserve saved config, intent and UCI; no package/firewall reload."""
 import hashlib, io, json, os, shlex, subprocess, tarfile, time, uuid
 from pathlib import Path

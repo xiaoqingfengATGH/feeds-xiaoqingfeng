@@ -1,3 +1,4 @@
+raise SystemExit('RETIRED_PRODUCTION_TOOL: historical production writer; use the current isolated suite. Source retained only for coverage migration.')
 """Deploy only exact requested entry wording, no browser refresh or lifecycle."""
 import hashlib,json,subprocess
 from pathlib import Path

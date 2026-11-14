@@ -1,3 +1,4 @@
+raise SystemExit('RETIRED_PRODUCTION_TOOL: historical production writer; use the current isolated suite. Source retained only for coverage migration.')
 """Authorized Host override direct deployment; no saved-policy changes/new DNS names."""
 import hashlib,json,shlex,subprocess,time,uuid
 from pathlib import Path

@@ -1,5 +1,7 @@
 # HOMEPUBLISH r9 重构执行计划（两轮已验证侦察固化）
 
+> 历史记录/初步审查，非当前执行指南。R8/R9 危险生产驱动已删除，历史生产写入入口已禁用；最终保留/删除决定及有效命令见 homepublish/tests/TEST-AUDIT-DECISIONS.md 与 TEST-SUITE.md。
+
 > 本文件由 TA 固化两轮只读侦察结论。执行者**先读本文件，再动手**，不要重复侦察。
 > 仓库：`D:/DevPortal/homelede/homepublish-product`，分支 `feature/homepublish-product`，基线 HEAD `71643ac`（r8 已装设备、已完全清理：revision0/disabled/stopped/cleanup confirmed）。
 > untracked 必须保持不入 commit：`homepublish/tests/__pycache__/`、`sketches/001-guided-setup/`、`sketches/001-native-list/`。

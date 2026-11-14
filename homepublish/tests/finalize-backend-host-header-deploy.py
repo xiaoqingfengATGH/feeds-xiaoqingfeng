@@ -1,3 +1,4 @@
+raise SystemExit('RETIRED_PRODUCTION_TOOL: historical production writer; use the current isolated suite. Source retained only for coverage migration.')
 import importlib.util,json,hashlib,subprocess
 from pathlib import Path
 R=Path('D:/DevPortal/Openwrt/feeds-xiaoqingfeng');spec=importlib.util.spec_from_file_location('deploy',R/'homepublish/tests/deploy-backend-host-header.py');m=importlib.util.module_from_spec(spec);spec.loader.exec_module(m)

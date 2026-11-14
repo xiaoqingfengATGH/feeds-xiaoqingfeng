@@ -1,3 +1,4 @@
+raise SystemExit('RETIRED_PRODUCTION_TOOL: historical production writer; use the current isolated suite. Source retained only for coverage migration.')
 """Deploy product UI recovery only; never refresh browser or mutate runtime/config."""
 import hashlib,json,subprocess,uuid
 from pathlib import Path

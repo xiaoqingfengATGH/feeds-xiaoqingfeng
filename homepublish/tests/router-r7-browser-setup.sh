@@ -1,4 +1,6 @@
 #!/bin/sh
+echo 'RETIRED_PRODUCTION_TOOL: historical R7 production fixture disabled; use private-root tests.' >&2
+exit 2
 set -eu
 e=/tmp/homepublish-r7-evidence
 for p in /etc/homepublish/device-test '/etc/acme/*.fixture.home' '/etc/acme/*.fixture.home_ecc'; do test ! -e "$p"; done

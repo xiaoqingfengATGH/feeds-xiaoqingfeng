@@ -1,3 +1,4 @@
+raise SystemExit('RETIRED_PRODUCTION_TOOL: historical production writer; use the current isolated suite. Source retained only for coverage migration.')
 from pathlib import Path
 p=Path('D:/DevPortal/Openwrt/feeds-xiaoqingfeng/homepublish/tests/deploy-ddns-phase2.py')
 code=p.read_text();ns={};exec(code[:code.index('def main():')],ns)

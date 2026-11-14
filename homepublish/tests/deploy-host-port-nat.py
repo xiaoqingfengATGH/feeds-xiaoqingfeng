@@ -1,3 +1,4 @@
+raise SystemExit('RETIRED_PRODUCTION_TOOL: historical production writer; use the current isolated suite. Source retained only for coverage migration.')
 """Deploy only proven Host/NAT renderer fix to authorized router, no save/fw reload."""
 import hashlib,json,pathlib,shlex,subprocess,time,uuid
 REPO=pathlib.Path(__file__).resolve().parents[2]

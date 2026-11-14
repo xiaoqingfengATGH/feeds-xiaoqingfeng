@@ -1,3 +1,4 @@
+raise SystemExit('RETIRED_PRODUCTION_TOOL: historical production writer; use the current isolated suite. Source retained only for coverage migration.')
 """Deploy only three LuCI JS files; no configuration/lifecycle/firewall writes."""
 import hashlib,json,subprocess,uuid
 from pathlib import Path

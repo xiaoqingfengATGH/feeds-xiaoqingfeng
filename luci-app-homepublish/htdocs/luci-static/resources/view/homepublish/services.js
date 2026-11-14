@@ -36,7 +36,10 @@ return view.extend({
     var invalid=modal && Array.from(modal.querySelectorAll('.cbi-input-invalid')).find(function(input){return input.offsetParent!==null;});
     if(invalid){invalid.setAttribute('aria-invalid','true');var pane=invalid.closest('[data-tab]'),menu=pane && pane.parentNode && pane.parentNode.previousElementSibling,tab=pane && menu && menu.querySelector('[data-tab="'+pane.getAttribute('data-tab')+'"] a');if(tab)tab.click();window.requestAnimationFrame(function(){invalid.focus();invalid.scrollIntoView({block:'center'});});}
     if(alert){alert.textContent=(invalid && (invalid.getAttribute('data-tooltip') || invalid.title)) || (e && e.message) || '请检查输入';if(invalid){var field=invalid.closest('.cbi-value-field') || invalid.parentNode;field.appendChild(alert);invalid.setAttribute('aria-describedby','hp-modal-validation-error');alert.id='hp-modal-validation-error';window.requestAnimationFrame(function(){alert.scrollIntoView({block:'center'});});}}
-    return Promise.reject(e);
+    // Native button handlers do not observe rejected Promises. Keep validation
+    // local to this modal; report unexpected failures explicitly as well.
+    if(!invalid)ui.addNotification(null,E('p',{},'无法完成服务填写：'+((e && e.message) || String(e))),'error');
+    return false;
    });
   };
   function field(tab,cls,key,label,modal){var v=s.taboption(tab,cls,key,label);if(modal!==undefined)v.modalonly=modal;if(cls===form.DummyValue){v.modalonly=false;v.optional=true;}v.rmempty=cls===form.DummyValue;return v;}

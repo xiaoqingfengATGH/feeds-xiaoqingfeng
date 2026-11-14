@@ -77,7 +77,7 @@ function M.new(provider,options)
   local plan;if effective then plan,err=provider.plan(effective) end
   if not plan then
    if recovery then
-    change(function(v)v.runtime.attempt_count=(v.runtime.attempt_count or 0)+1 end)
+    change(function(v)v.runtime.attempt_count=math.min(3,(v.runtime.attempt_count or 0)+1) end)
     return finish('blocked',err or 'scope denied','confirmed','recovery_plan')
    end
    return {error=err or 'scope denied'}
@@ -211,7 +211,10 @@ function M.new(provider,options)
   if s.runtime.expires_at and (now()>=s.runtime.expires_at or (options.clock and not valid_clock(s))) then return C.stop() end
   if s.runtime.phase=='blocked' and s.runtime.cleanup=='unknown' then
    local clean=provider.stop()
-   return finish('blocked',s.runtime.last_error,clean and 'confirmed' or 'unknown','cleanup_retry')
+   local restore=s.runtime.stage=='restart_cleanup' or (s.runtime.stage=='boot_cleanup' and s.active_config and s.active_config.publication_policy.boot_restore)
+   local result=finish('blocked',s.runtime.last_error,clean and 'confirmed' or 'unknown',clean and 'cleanup_retry' or s.runtime.stage)
+   if clean and restore and s.active_config and s.approval and s.approval.revision==s.active_revision then return schedule('controller restart cleanup recovered') end
+   return result
   end
   if s.runtime.phase=='blocked' and s.runtime.cleanup=='confirmed' and transient_class(s.runtime.failure_class) then
    return schedule(s.runtime.last_error)

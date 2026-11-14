@@ -29,4 +29,32 @@ fail_start=true;provider.renew=function()return false,'bad listener',{kind='tran
 for i=1,12 do now=now+10;s=C.tick();assert(not s.error,'retry journal error');assert(s.runtime.attempt_count<=3,'retry bound');end
 assert(s.desired_state.state=='enabled' and not s.desired_state.manual_stop_latch,'fault must preserve intent')
 fail_start=false;now=now+10;s=C.tick();assert(s.runtime.phase=='running','transient recovery must eventually succeed')
+-- Planning failure at exhausted budget must not corrupt the real journal.
+assert(P.controller_transaction(function(v) v.runtime.phase='retry_wait';v.runtime.cleanup='confirmed';v.runtime.attempt_count=3;v.runtime.next_retry=now;v.runtime.failure_class={kind='transient',code='lock_timeout'} end))
+provider.runtime_plan=function() return nil,'network unavailable' end
+local plan_ok,plan_state=pcall(C.tick)
+assert(plan_ok, 'planning failure exceeded real journal retry budget: '..tostring(plan_state))
+assert(plan_state.runtime.attempt_count<=3,'planning failure retry bound')
+-- Failed restart cleanup must retry safely and resume the approved snapshot.
+provider.runtime_plan=function(c)return c end
+now=300;fail_start=false;s=C.start(2,true);assert(s.runtime.phase=='running')
+local stop_calls=0;provider.stop=function()stop_calls=stop_calls+1;return stop_calls>1 end
+C=controller();s=C.restore(true);assert(s.runtime.phase=='blocked' and s.runtime.cleanup=='unknown')
+s=C.tick();assert(s.runtime.cleanup=='confirmed','cleanup retry must be confirmed')
+for i=1,8 do now=now+5;s=C.tick() end
+assert(s.runtime.phase=='running' and s.active_revision==2 and not s.desired_state.manual_stop_latch,'restart recovery after cleanup')
+-- Unmarked boot must respect boot_restore and use approved active revision.
+provider.stop=function()return true end
+config.publication_policy.boot_restore=true;assert(P.handle{action='save',expected_revision=2,config=config})
+C.stop();now=400;s=C.start(3,true);assert(s.runtime and s.runtime.phase=='running',s.error or 'start failed')
+config.services[1].hostname='new-pending.example.com';assert(P.handle{action='save',expected_revision=3,config=config})
+C=controller();s=C.restore(false);assert(s.runtime.phase=='retry_wait');now=now+10;s=C.tick();assert(s.runtime.phase=='running' and s.active_revision==3 and s.saved_revision==4 and seen.services[1].hostname=='pending.example.com','boot restore approved active snapshot')
+-- Repeated failed boot cleanup never bypasses disabled boot policy.
+assert(P.controller_transaction(function(v)v.active_config.publication_policy.boot_restore=false end))
+local attempts=0;provider.stop=function()attempts=attempts+1;return attempts>2 end
+C=controller();s=C.restore(false);assert(s.runtime.cleanup=='unknown');s=C.tick();assert(s.runtime.cleanup=='unknown');s=C.tick();assert(s.runtime.cleanup=='confirmed');now=now+10;s=C.tick();assert(s.runtime.phase=='blocked','disabled boot restore must not resume')
+-- An expired approved temporary publication cannot resume after cleanup succeeds.
+provider.stop=function()return true end;now=500;s=C.start(4,true);assert(s.runtime and s.runtime.phase=='running')
+local deadline=s.runtime.expires_at;attempts=0;provider.stop=function()attempts=attempts+1;return attempts>1 end
+C=controller();s=C.restore(true);assert(s.runtime.cleanup=='unknown');now=deadline;s=C.tick();assert(s.runtime.phase=='stopped' and s.desired_state.manual_stop_latch,'expired cleanup must not re-enable')
 print('RESTART_CONTROLLER_GREEN')
